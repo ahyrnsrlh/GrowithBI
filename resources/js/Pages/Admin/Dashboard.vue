@@ -90,7 +90,7 @@
                                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                                         />
                                     </svg>
-                                    Review Aplikasi
+                                    Review Pendaftar
                                     <span
                                         v-if="
                                             safeStats.pending_applications > 0
@@ -142,64 +142,48 @@
             </div>
         </div>
 
-        <!-- Enhanced Statistics Cards dengan Better Responsiveness -->
-        <div
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8"
-        >
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Total Applications -->
             <div
-                class="group bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
-                title="Klik untuk melihat detail aplikasi"
+                class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                title="Klik untuk melihat detail Pendaftar"
                 @click="router.visit(safeRoute('admin.applications.index'))"
             >
                 <div class="flex items-center justify-between">
                     <div>
-                        <div class="flex items-center mb-3">
-                            <div
-                                class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg"
-                            >
-                                <svg
-                                    class="w-6 h-6 text-white"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
-                        <p class="text-sm font-medium text-gray-500 mb-1">
+                        <p class="text-blue-100 text-sm font-medium">
                             Total Pendaftaran
                         </p>
-                        <p class="text-3xl font-bold text-gray-900 mb-2">
+                        <p class="text-3xl font-bold">
                             {{ safeStats.total_applications }}
                         </p>
-                        <div class="flex items-center text-sm">
-                            <span class="text-green-600 font-medium">+12%</span>
-                            <span class="text-gray-500 ml-1"
-                                >dari bulan lalu</span
-                            >
-                        </div>
+                        <p class="text-blue-100 text-xs mt-1">
+                            +12% dari bulan lalu
+                        </p>
                     </div>
-                    <div
-                        class="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors"
-                    >
-                        <div
-                            class="w-8 h-8 bg-blue-500 rounded-lg transform rotate-45"
-                        ></div>
+                    <div class="bg-blue-400 bg-opacity-30 rounded-full p-3">
+                        <svg
+                            class="w-8 h-8"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                        </svg>
                     </div>
                 </div>
             </div>
 
             <!-- Pending Applications -->
             <div
-                class="group bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
-                title="Klik untuk review aplikasi pending"
+                class="bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl shadow-lg p-6 text-white cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                title="Klik untuk review Pendaftar pending"
                 @click="
                     router.visit(
                         safeRoute('admin.applications.index', {
@@ -210,59 +194,38 @@
             >
                 <div class="flex items-center justify-between">
                     <div>
-                        <div class="flex items-center mb-3">
-                            <div
-                                class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg"
-                            >
-                                <svg
-                                    class="w-6 h-6 text-white"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                    />
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <div
-                                    class="w-2 h-2 bg-yellow-500 rounded-full animate-ping"
-                                ></div>
-                            </div>
-                        </div>
-                        <p class="text-sm font-medium text-gray-500 mb-1">
+                        <p class="text-yellow-100 text-sm font-medium">
                             Menunggu Review
                         </p>
-                        <p class="text-3xl font-bold text-gray-900 mb-2">
+                        <p class="text-3xl font-bold">
                             {{ safeStats.pending_applications }}
                         </p>
-                        <div class="flex items-center text-sm">
-                            <span class="text-yellow-600 font-medium"
-                                >{{ pendingRate }}%</span
-                            >
-                            <span class="text-gray-500 ml-1"
-                                >dari total aplikasi</span
-                            >
-                        </div>
+                        <p class="text-yellow-100 text-xs mt-1">
+                            {{ pendingRate }}% dari total Pendaftar
+                        </p>
                     </div>
-                    <div
-                        class="w-16 h-16 bg-yellow-50 rounded-xl flex items-center justify-center group-hover:bg-yellow-100 transition-colors"
-                    >
-                        <div
-                            class="w-8 h-8 bg-yellow-500 rounded-lg transform rotate-45"
-                        ></div>
+                    <div class="bg-yellow-400 bg-opacity-30 rounded-full p-3">
+                        <svg
+                            class="w-8 h-8"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
                     </div>
                 </div>
             </div>
 
             <!-- Accepted Applications -->
             <div
-                class="group bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
-                title="Klik untuk melihat aplikasi yang diterima"
+                class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                title="Klik untuk melihat Pendaftar yang diterima"
                 @click="
                     router.visit(
                         safeRoute('admin.applications.index', {
@@ -273,96 +236,66 @@
             >
                 <div class="flex items-center justify-between">
                     <div>
-                        <div class="flex items-center mb-3">
-                            <div
-                                class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg"
-                            >
-                                <svg
-                                    class="w-6 h-6 text-white"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
-                        <p class="text-sm font-medium text-gray-500 mb-1">
+                        <p class="text-green-100 text-sm font-medium">
                             Diterima
                         </p>
-                        <p class="text-3xl font-bold text-gray-900 mb-2">
+                        <p class="text-3xl font-bold">
                             {{ safeStats.accepted_applications }}
                         </p>
-                        <div class="flex items-center text-sm">
-                            <span class="text-green-600 font-medium"
-                                >{{ acceptanceRate }}%</span
-                            >
-                            <span class="text-gray-500 ml-1"
-                                >tingkat penerimaan</span
-                            >
-                        </div>
+                        <p class="text-green-100 text-xs mt-1">
+                            {{ acceptanceRate }}% tingkat penerimaan
+                        </p>
                     </div>
-                    <div
-                        class="w-16 h-16 bg-green-50 rounded-xl flex items-center justify-center group-hover:bg-green-100 transition-colors"
-                    >
-                        <div
-                            class="w-8 h-8 bg-green-500 rounded-lg transform rotate-45"
-                        ></div>
+                    <div class="bg-green-400 bg-opacity-30 rounded-full p-3">
+                        <svg
+                            class="w-8 h-8"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
                     </div>
                 </div>
             </div>
 
             <!-- Active Divisions -->
             <div
-                class="group bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
+                class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                 title="Klik untuk mengelola divisi"
                 @click="router.visit(safeRoute('admin.divisions.index'))"
             >
                 <div class="flex items-center justify-between">
                     <div>
-                        <div class="flex items-center mb-3">
-                            <div
-                                class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg"
-                            >
-                                <svg
-                                    class="w-6 h-6 text-white"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
-                        <p class="text-sm font-medium text-gray-500 mb-1">
+                        <p class="text-purple-100 text-sm font-medium">
                             Divisi Aktif
                         </p>
-                        <p class="text-3xl font-bold text-gray-900 mb-2">
+                        <p class="text-3xl font-bold">
                             {{ safeStats.active_divisions }}
                         </p>
-                        <div class="flex items-center text-sm">
-                            <span class="text-purple-600 font-medium">{{
-                                safeStats.total_supervisors
-                            }}</span>
-                            <span class="text-gray-500 ml-1">pembimbing</span>
-                        </div>
+                        <p class="text-purple-100 text-xs mt-1">
+                            {{ safeStats.total_supervisors }} pembimbing
+                        </p>
                     </div>
-                    <div
-                        class="w-16 h-16 bg-purple-50 rounded-xl flex items-center justify-center group-hover:bg-purple-100 transition-colors"
-                    >
-                        <div
-                            class="w-8 h-8 bg-purple-500 rounded-lg transform rotate-45"
-                        ></div>
+                    <div class="bg-purple-400 bg-opacity-30 rounded-full p-3">
+                        <svg
+                            class="w-8 h-8"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                            />
+                        </svg>
                     </div>
                 </div>
             </div>
@@ -383,7 +316,7 @@
                                 Pendaftaran Terbaru
                             </h3>
                             <p class="text-sm text-gray-500 mt-1">
-                                Pantau aplikasi yang baru masuk
+                                Pantau Pendaftar yang baru masuk
                             </p>
                         </div>
                         <Link
@@ -509,11 +442,11 @@
                             ></div>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Belum ada aplikasi baru hari ini
+                            Belum ada Pendaftar baru hari ini
                         </h3>
                         <p class="text-gray-500 mb-6 max-w-sm mx-auto">
-                            Aplikasi pendaftaran magang baru akan muncul di sini
-                            secara real-time
+                            Pendaftar pendaftaran magang baru akan muncul di
+                            sini secara real-time
                         </p>
                         <Link
                             :href="safeRoute('admin.applications.index')"
@@ -532,7 +465,7 @@
                                     d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                                 />
                             </svg>
-                            Lihat Semua Aplikasi
+                            Lihat Semua Pendaftar
                         </Link>
                     </div>
                 </div>
@@ -840,7 +773,7 @@
                             <h4
                                 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-yellow-700"
                             >
-                                Review Aplikasi
+                                Review Pendaftar
                             </h4>
                             <p class="text-sm text-gray-600 mb-3">
                                 Tinjau pendaftaran baru
@@ -1122,7 +1055,7 @@
                                 </div>
                                 <span
                                     class="text-sm font-semibold text-gray-700 group-hover:text-green-700 transition-colors"
-                                    >Aplikasi</span
+                                    >Pendaftar</span
                                 >
                                 <div class="text-xs text-gray-500 mt-1">
                                     {{ safeStats.total_applications || 0 }}
@@ -1312,9 +1245,9 @@ const systemStatus = computed(() => {
 const systemStatusText = computed(() => {
     switch (systemStatus.value) {
         case "warning":
-            return "Banyak aplikasi pending";
+            return "Banyak Pendaftar pending";
         case "info":
-            return "Ada aplikasi perlu review";
+            return "Ada Pendaftar perlu review";
         case "success":
             return "Semua terkendali";
         default:
