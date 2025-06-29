@@ -5,12 +5,12 @@
             <div class="container mx-auto px-4 py-4">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-2">
-                        <div
-                            class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
-                        >
-                            <span class="text-white font-bold text-sm">G</span>
-                        </div>
-                        <h1 class="text-2xl font-bold text-gray-900">
+                        <img
+                            src="/logo.png"
+                            alt="GrowithBI Logo"
+                            class="w-8 h-8 object-contain"
+                        />
+                        <h1 class="text-2xl font-bold text-blue-600">
                             GrowithBI
                         </h1>
                     </div>
@@ -39,6 +39,18 @@
                         >
                             About
                         </Link>
+                        <Link
+                            href="/admin/dashboard"
+                            :class="{
+                                'text-blue-600 font-semibold':
+                                    $page.component.startsWith('Admin/'),
+                                'text-gray-600 hover:text-gray-800':
+                                    !$page.component.startsWith('Admin/'),
+                            }"
+                            class="transition-colors"
+                        >
+                            Admin
+                        </Link>
                         <button
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
                         >
@@ -61,12 +73,12 @@
                     <div
                         class="flex items-center justify-center space-x-2 mb-4"
                     >
-                        <div
-                            class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center"
-                        >
-                            <span class="text-white font-bold text-xs">G</span>
-                        </div>
-                        <span class="text-xl font-bold text-gray-900"
+                        <img
+                            src="/logo.png"
+                            alt="GrowithBI Logo"
+                            class="w-6 h-6 object-contain"
+                        />
+                        <span class="text-xl font-bold text-blue-600"
                             >GrowithBI</span
                         >
                     </div>

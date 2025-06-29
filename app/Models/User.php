@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'phone',
+        'address',
+        'profile_photo',
+        'is_active',
     ];
 
     /**
@@ -43,6 +48,44 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
+    }
+
+    // Role helper methods
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isPembimbing(): bool
+    {
+        return $this->role === 'pembimbing';
+    }
+
+    public function isPeserta(): bool
+    {
+        return $this->role === 'peserta';
+    }
+
+    // Relationships
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
+
+    public function logbooks()
+    {
+        return $this->hasMany(Logbook::class);
+    }
+
+    public function supervisedDivisions()
+    {
+        return $this->hasMany(Division::class, 'supervisor_id');
+    }
+
+    public function supervisedApplications()
+    {
+        return $this->hasManyThrough(Application::class, Division::class, 'supervisor_id', 'division_id');
     }
 }
