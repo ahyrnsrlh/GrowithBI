@@ -28,7 +28,7 @@ class DivisionController extends Controller
         $stats = [
             'total_divisions' => Division::count(),
             'active_divisions' => Division::where('is_active', true)->count(),
-            'total_quota' => Division::sum('quota'),
+            'total_quota' => Division::sum('max_interns'),
             'total_applications' => Division::withCount('applications')->get()->sum('applications_count'),
         ];
 
@@ -58,7 +58,7 @@ class DivisionController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'quota' => 'required|integer|min:1|max:100',
+            'max_interns' => 'required|integer|min:1|max:100',
             'supervisor_id' => 'nullable|exists:users,id',
             'requirements' => 'nullable|string',
             'is_active' => 'boolean'
@@ -107,7 +107,7 @@ class DivisionController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'quota' => 'required|integer|min:1|max:100',
+            'max_interns' => 'required|integer|min:1|max:100',
             'supervisor_id' => 'nullable|exists:users,id',
             'requirements' => 'nullable|string',
             'is_active' => 'boolean'

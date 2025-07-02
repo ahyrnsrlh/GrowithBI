@@ -223,7 +223,7 @@
                         </div>
                         <div class="text-center">
                             <p class="text-2xl font-bold text-gray-600">
-                                {{ division.quota }}
+                                {{ division.max_interns }}
                             </p>
                             <p class="text-xs text-gray-500">Kuota</p>
                         </div>
@@ -239,7 +239,7 @@
                                 >{{
                                     Math.round(
                                         (division.accepted_count /
-                                            division.quota) *
+                                            division.max_interns) *
                                             100
                                     )
                                 }}%</span
@@ -249,7 +249,7 @@
                             <div
                                 class="bg-blue-600 h-2 rounded-full"
                                 :style="`width: ${Math.min(
-                                    (division.accepted_count / division.quota) *
+                                    (division.accepted_count / division.max_interns) *
                                         100,
                                     100
                                 )}%`"

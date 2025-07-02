@@ -13,6 +13,11 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        // Check if user is admin
+        if (!auth()->check() || auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized access. Admin role required.');
+        }
+
         // Real data from database
         $stats = [
             'total_applications' => Application::count(),
@@ -52,7 +57,7 @@ class DashboardController extends Controller
                 return [
                     'id' => $division->id,
                     'name' => $division->name,
-                    'quota' => $division->quota,
+                    'max_interns' => $division->max_interns,
                     'applications' => $division->applications_count,
                     'accepted' => $division->accepted_count,
                     'supervisor' => $division->supervisor ? $division->supervisor->name : 'Belum ditentukan'

@@ -12,7 +12,8 @@ class Division extends Model
     protected $fillable = [
         'name',
         'description',
-        'quota',
+        'requirements',
+        'max_interns',
         'supervisor_id',
         'start_date',
         'end_date',
@@ -47,6 +48,6 @@ class Division extends Model
     // Helper methods
     public function getAvailableQuotaAttribute()
     {
-        return $this->quota - $this->applications()->where('status', 'diterima')->count();
+        return $this->max_interns - $this->applications()->where('status', 'diterima')->count();
     }
 }

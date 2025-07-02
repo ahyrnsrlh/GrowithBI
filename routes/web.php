@@ -5,19 +5,60 @@ use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\SupervisorController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboardController;
+use App\Http\Controllers\Peserta\DashboardController as PesertaDashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 });
 
-Route::get('/about', function () {
-    return Inertia::render('About');
+// Public routes (accessible without authentication)
+Route::get('/divisi', [PublicController::class, 'divisions'])->name('public.divisions');
+Route::get('/daftar', [PublicController::class, 'applicationForm'])->name('public.application.form');
+Route::post('/daftar', [PublicController::class, 'storeApplication'])->name('public.application.store');
+
+// Authentication routes
+require __DIR__.'/auth.php';
+
+// Default dashboard route (will redirect based on role)
+Route::get('/dashboard', function () {
+    $user = Auth::user();
+    if (!$user) {
+        return redirect()->route('login');
+    }
+    
+    switch ($user->role) {
+        case 'admin':
+            return redirect()->route('admin.dashboard');
+        case 'pembimbing':
+            return redirect()->route('pembimbing.dashboard');
+        case 'peserta':
+            return redirect()->route('peserta.dashboard');
+        default:
+            return redirect()->route('login');
+    }
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+// Profile routes (accessible by all authenticated users)
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Admin Routes
-Route::prefix('admin')->name('admin.')->group(function () {
+// Admin Routes (require admin role)
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Applications Management
@@ -40,4 +81,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Reports & Analytics
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::post('/reports/export', [ReportController::class, 'export'])->name('reports.export');
+});
+
+// Pembimbing Routes (require pembimbing role)
+Route::prefix('pembimbing')->name('pembimbing.')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [PembimbingDashboardController::class, 'index'])->name('dashboard');
+    
+    // TODO: Add more pembimbing routes as needed
+});
+
+// Peserta Routes (require peserta role)
+Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [PesertaDashboardController::class, 'index'])->name('dashboard');
+    
+    // TODO: Add more peserta routes as needed
 });
