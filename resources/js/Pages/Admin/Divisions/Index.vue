@@ -249,7 +249,8 @@
                             <div
                                 class="bg-blue-600 h-2 rounded-full"
                                 :style="`width: ${Math.min(
-                                    (division.accepted_count / division.max_interns) *
+                                    (division.accepted_count /
+                                        division.max_interns) *
                                         100,
                                     100
                                 )}%`"

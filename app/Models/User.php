@@ -26,6 +26,7 @@ class User extends Authenticatable
         'address',
         'profile_photo',
         'is_active',
+        'supervisor_id',
     ];
 
     /**
@@ -69,6 +70,16 @@ class User extends Authenticatable
     }
 
     // Relationships
+    public function supervisor()
+    {
+        return $this->belongsTo(User::class, 'supervisor_id');
+    }
+
+    public function students()
+    {
+        return $this->hasMany(User::class, 'supervisor_id');
+    }
+
     public function applications()
     {
         return $this->hasMany(Application::class);

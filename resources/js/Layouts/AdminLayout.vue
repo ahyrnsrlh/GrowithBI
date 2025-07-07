@@ -331,9 +331,9 @@
                                     </span>
                                 </a>
                                 <hr class="my-1" />
-                                <a
-                                    href="#"
-                                    class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                <button
+                                    @click="logout"
+                                    class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                 >
                                     <span class="flex items-center">
                                         <svg
@@ -351,7 +351,7 @@
                                         </svg>
                                         Logout
                                     </span>
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -368,6 +368,7 @@
 
 <script setup>
 import { Link } from "@inertiajs/vue3";
+import { router } from "@inertiajs/vue3";
 import { ref } from "vue";
 
 const props = defineProps({
@@ -390,4 +391,19 @@ const props = defineProps({
 });
 
 const showProfileMenu = ref(false);
+
+const logout = () => {
+    router.post(
+        route("logout"),
+        {},
+        {
+            onSuccess: () => {
+                window.location.href = route("login");
+            },
+            onError: (errors) => {
+                console.error("Logout error:", errors);
+            },
+        }
+    );
+};
 </script>
