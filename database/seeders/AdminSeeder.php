@@ -25,40 +25,40 @@ class AdminSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        // Create Pembimbing users
-        $pembimbings = [
+        // Create additional Admin users (formerly Pembimbing)
+        $additionalAdmins = [
             [
                 'name' => 'Dr. Andi Wijaya',
-                'email' => 'andi.wijaya@growithbi.com',
+                'email' => 'andi.wijaya@bi.go.id',
                 'password' => Hash::make('password'),
-                'role' => 'pembimbing',
+                'role' => 'admin',
                 'phone' => '081234567891',
             ],
             [
                 'name' => 'Sarah Novita, M.Kom',
-                'email' => 'sarah.novita@growithbi.com',
+                'email' => 'sarah.novita@bi.go.id',
                 'password' => Hash::make('password'),
-                'role' => 'pembimbing',
+                'role' => 'admin',
                 'phone' => '081234567892',
             ],
             [
                 'name' => 'Dimas Yoga, S.E',
-                'email' => 'dimas.yoga@growithbi.com',
+                'email' => 'dimas.yoga@bi.go.id',
                 'password' => Hash::make('password'),
-                'role' => 'pembimbing',
+                'role' => 'admin',
                 'phone' => '081234567893',
             ],
             [
                 'name' => 'Lia Kurniawan, M.T',
-                'email' => 'lia.kurniawan@growithbi.com',
+                'email' => 'lia.kurniawan@bi.go.id',
                 'password' => Hash::make('password'),
-                'role' => 'pembimbing',
+                'role' => 'admin',
                 'phone' => '081234567894',
             ],
         ];
 
-        foreach ($pembimbings as $pembimbing) {
-            User::create($pembimbing);
+        foreach ($additionalAdmins as $admin) {
+            User::create($admin);
         }
 
         // Create Divisions

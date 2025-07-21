@@ -65,13 +65,13 @@ class ReportController extends Controller
             ->map(function ($division) {
                 $total = $division->applications_count;
                 $acceptance_rate = $total > 0 ? round(($division->accepted_count / $total) * 100, 1) : 0;
-                $quota_filled = $division->max_interns > 0 ? round(($division->accepted_count / $division->max_interns) * 100, 1) : 0;
+                $quota_filled = $division->quota > 0 ? round(($division->accepted_count / $division->quota) * 100, 1) : 0;
                 
                 return [
                     'id' => $division->id,
                     'name' => $division->name,
                     'supervisor' => $division->supervisor ? $division->supervisor->name : 'Belum ditentukan',
-                    'quota' => $division->max_interns,
+                    'quota' => $division->quota,
                     'applications_count' => $division->applications_count,
                     'accepted_count' => $division->accepted_count,
                     'rejected_count' => $division->rejected_count,

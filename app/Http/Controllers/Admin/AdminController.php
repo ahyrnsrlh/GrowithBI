@@ -181,7 +181,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'requirements' => 'nullable|string',
-            'max_interns' => 'required|integer|min:1',
+            'quota' => 'required|integer|min:1',
             'supervisor_id' => 'nullable|exists:users,id',
         ]);
 
@@ -210,7 +210,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'requirements' => 'nullable|string',
-            'max_interns' => 'required|integer|min:1',
+            'quota' => 'required|integer|min:1',
             'supervisor_id' => 'nullable|exists:users,id',
         ]);
 

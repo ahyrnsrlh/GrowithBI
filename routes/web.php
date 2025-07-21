@@ -5,7 +5,6 @@ use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\SupervisorController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboardController;
 use App\Http\Controllers\Peserta\DashboardController as PesertaDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicController;
@@ -41,8 +40,6 @@ Route::get('/dashboard', function () {
     switch ($user->role) {
         case 'admin':
             return redirect()->route('admin.dashboard');
-        case 'pembimbing':
-            return redirect()->route('pembimbing.dashboard');
         case 'peserta':
             return redirect()->route('peserta.dashboard');
         default:
@@ -70,24 +67,22 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Divisions Management
     Route::resource('divisions', App\Http\Controllers\Admin\DivisionController::class);
     
-    // Supervisors Management
+    // Supervisors Management (now part of admin)
     Route::resource('supervisors', SupervisorController::class);
     
-    // Participants Management
+    // Participants Management (now part of admin)
     Route::get('/participants', [ParticipantController::class, 'index'])->name('participants.index');
     Route::get('/participants/{participant}', [ParticipantController::class, 'show'])->name('participants.show');
     Route::put('/participants/{participant}/status', [ParticipantController::class, 'updateStatus'])->name('participants.update-status');
     
+    // Logbooks Management (merged from pembimbing)
+    Route::get('/logbooks', [\App\Http\Controllers\Admin\LogbookController::class, 'index'])->name('logbooks.index');
+    Route::get('/logbooks/{logbook}', [\App\Http\Controllers\Admin\LogbookController::class, 'show'])->name('logbooks.show');
+    Route::put('/logbooks/{logbook}/approve', [\App\Http\Controllers\Admin\LogbookController::class, 'approve'])->name('logbooks.approve');
+    
     // Reports & Analytics
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::post('/reports/export', [ReportController::class, 'export'])->name('reports.export');
-});
-
-// Pembimbing Routes (require pembimbing role)
-Route::prefix('pembimbing')->name('pembimbing.')->middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [PembimbingDashboardController::class, 'index'])->name('dashboard');
-    
-    // TODO: Add more pembimbing routes as needed
 });
 
 // Peserta Routes (require peserta role)

@@ -26,9 +26,9 @@ class PublicController extends Controller
                     'name' => $division->name,
                     'description' => $division->description,
                     'requirements' => $division->requirements,
-                    'max_interns' => $division->max_interns,
+                    'quota' => $division->quota,
                     'current_interns' => $division->accepted_count,
-                    'available_slots' => $division->max_interns - $division->accepted_count,
+                    'available_slots' => $division->quota - $division->accepted_count,
                     'supervisor' => $division->supervisor ? $division->supervisor->name : 'Belum ditentukan',
                     'supervisor_email' => $division->supervisor ? $division->supervisor->email : null,
                 ];

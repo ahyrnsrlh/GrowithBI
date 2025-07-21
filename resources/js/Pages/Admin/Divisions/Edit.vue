@@ -111,15 +111,15 @@
                     <!-- Kuota -->
                     <div>
                         <label
-                            for="max_interns"
+                            for="quota"
                             class="block text-sm font-medium text-gray-700 mb-2"
                         >
                             Kuota Peserta *
                         </label>
                         <input
                             type="number"
-                            id="max_interns"
-                            v-model="form.max_interns"
+                            id="quota"
+                            v-model="form.quota"
                             min="1"
                             max="50"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -127,10 +127,10 @@
                             required
                         />
                         <div
-                            v-if="form.errors.max_interns"
+                            v-if="form.errors.quota"
                             class="mt-1 text-sm text-red-600"
                         >
-                            {{ form.errors.max_interns }}
+                            {{ form.errors.quota }}
                         </div>
                     </div>
 
@@ -301,7 +301,7 @@ const form = useForm({
     name: props.division.name,
     description: props.division.description,
     supervisor_id: props.division.supervisor_id,
-    max_interns: props.division.max_interns,
+    quota: props.division.quota,
     requirements: props.division.requirements,
     is_active: props.division.is_active,
 });

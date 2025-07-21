@@ -53,9 +53,6 @@
                                 >
                                     <option value="">Semua Role</option>
                                     <option value="admin">Admin</option>
-                                    <option value="pembimbing">
-                                        Pembimbing
-                                    </option>
                                     <option value="peserta">Peserta</option>
                                 </select>
                             </div>
@@ -353,7 +350,6 @@ const showCreateModal = ref(false);
 const getRoleBadgeClass = (role) => {
     const classes = {
         admin: "bg-purple-100 text-purple-800",
-        pembimbing: "bg-blue-100 text-blue-800",
         peserta: "bg-green-100 text-green-800",
     };
     return classes[role] || "bg-gray-100 text-gray-800";
@@ -362,7 +358,6 @@ const getRoleBadgeClass = (role) => {
 const getRoleLabel = (role) => {
     const labels = {
         admin: "Admin",
-        pembimbing: "Pembimbing",
         peserta: "Peserta",
     };
     return labels[role] || role;

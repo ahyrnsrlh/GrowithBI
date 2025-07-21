@@ -530,10 +530,10 @@
                                     class="w-3 h-3 rounded-full"
                                     :class="[
                                         division.accepted >=
-                                        division.max_interns
+                                        division.quota
                                             ? 'bg-green-400'
                                             : division.accepted >=
-                                              division.max_interns * 0.8
+                                              division.quota * 0.8
                                             ? 'bg-yellow-400'
                                             : 'bg-red-400',
                                     ]"
@@ -577,7 +577,7 @@
                                     >
                                         <span
                                             class="text-xl font-bold text-purple-600"
-                                            >{{ division.max_interns }}</span
+                                            >{{ division.quota }}</span
                                         >
                                     </div>
                                     <p
@@ -599,13 +599,13 @@
                                             'font-bold',
                                             Math.round(
                                                 (division.accepted /
-                                                    division.max_interns) *
+                                                    division.quota) *
                                                     100
                                             ) >= 100
                                                 ? 'text-green-600'
                                                 : Math.round(
                                                       (division.accepted /
-                                                          division.max_interns) *
+                                                          division.quota) *
                                                           100
                                                   ) >= 80
                                                 ? 'text-yellow-600'
@@ -615,7 +615,7 @@
                                         {{
                                             Math.round(
                                                 (division.accepted /
-                                                    division.max_interns) *
+                                                    division.quota) *
                                                     100
                                             )
                                         }}%
@@ -629,13 +629,13 @@
                                         :class="[
                                             Math.round(
                                                 (division.accepted /
-                                                    division.max_interns) *
+                                                    division.quota) *
                                                     100
                                             ) >= 100
                                                 ? 'bg-gradient-to-r from-green-400 to-green-500'
                                                 : Math.round(
                                                       (division.accepted /
-                                                          division.max_interns) *
+                                                          division.quota) *
                                                           100
                                                   ) >= 80
                                                 ? 'bg-gradient-to-r from-yellow-400 to-orange-400'
@@ -643,7 +643,7 @@
                                         ]"
                                         :style="`width: ${Math.min(
                                             (division.accepted /
-                                                division.max_interns) *
+                                                division.quota) *
                                                 100,
                                             100
                                         )}%`"
@@ -654,18 +654,18 @@
                                 >
                                     <span
                                         >{{ division.accepted }} /
-                                        {{ division.max_interns }} Slot</span
+                                        {{ division.quota }} Slot</span
                                     >
                                     <span
                                         v-if="
-                                            division.max_interns -
+                                            division.quota -
                                                 division.accepted >
                                             0
                                         "
                                         class="text-blue-600 font-medium"
                                     >
                                         {{
-                                            division.max_interns -
+                                            division.quota -
                                             division.accepted
                                         }}
                                         tersisa

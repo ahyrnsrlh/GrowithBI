@@ -1,62 +1,4 @@
-<script setup>
-import { Head, Link } from "@inertiajs/vue3";
-import { ref, onMounted } from 'vue'
-
-defineProps({
-    canLogin: {
-        type: Boolean,
-    },
-    canRegister: {
-        type: Boolean,
-    },
-});
-
-const mobileMenuOpen = ref(false)
-const divisions = ref([])
-
-onMounted(async () => {
-    try {
-        // Fetch divisions data
-        const response = await fetch('/api/divisions')
-        if (response.ok) {
-            divisions.value = await response.json()
-        }
-    } catch (error) {
-        console.error('Error fetching divisions:', error)
-        // Set some dummy data if API fails
-        divisions.value = [
-            {
-                id: 1,
-                name: 'Business Intelligence Banking',
-                description: 'Pelajari sistem BI perbankan, dashboard analitik, dan reporting untuk mendukung pengambilan keputusan strategis Bank Indonesia.',
-                icon: 'fas fa-chart-line',
-                quota: 8,
-                is_active: true
-            },
-            {
-                id: 2,
-                name: 'Data Analytics & Research',
-                description: 'Kuasai analisis data ekonomi dan keuangan menggunakan tools modern untuk mendukung riset kebijakan moneter.',
-                icon: 'fas fa-search-dollar',
-                quota: 6,
-                is_active: true
-            },
-            {
-                id: 3,
-                name: 'Financial Technology',
-                description: 'Eksplorasi teknologi keuangan digital dan inovasi sistem pembayaran dalam ekosistem perbankan Indonesia.',
-                icon: 'fas fa-mobile-alt',
-                quota: 5,
-                is_active: true
-            }
-        ]
-    }
-})
-</script>
-
 <template>
-    <Head title="GrowithBI - Platform Magang Business Intelligence" />
-    
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
         <!-- Navigation -->
         <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
@@ -80,10 +22,10 @@ onMounted(async () => {
                         <a href="#about" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">About</a>
                         <a href="#divisions" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Divisions</a>
                         <a href="#contact" class="text-gray-600 hover:text-blue-600 transition-colors font-medium">Contact</a>
-                        <Link v-if="canLogin" :href="route('login')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105">
+                        <Link :href="route('login')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105">
                             Login
                         </Link>
-                        <Link v-if="canRegister" :href="route('register')" class="border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-lg font-medium transition-all">
+                        <Link :href="route('register')" class="border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-lg font-medium transition-all">
                             Daftar
                         </Link>
                     </div>
@@ -105,11 +47,11 @@ onMounted(async () => {
                         <a href="#about" class="text-gray-600 hover:text-blue-600">About</a>
                         <a href="#divisions" class="text-gray-600 hover:text-blue-600">Divisions</a>
                         <a href="#contact" class="text-gray-600 hover:text-blue-600">Contact</a>
-                        <div v-if="canLogin || canRegister" class="flex space-x-2 pt-2">
-                            <Link v-if="canLogin" :href="route('login')" class="bg-blue-600 text-white px-4 py-2 rounded-lg flex-1 text-center">
+                        <div class="flex space-x-2 pt-2">
+                            <Link :href="route('login')" class="bg-blue-600 text-white px-4 py-2 rounded-lg flex-1 text-center">
                                 Login
                             </Link>
-                            <Link v-if="canRegister" :href="route('register')" class="border border-blue-600 text-blue-600 px-4 py-2 rounded-lg flex-1 text-center">
+                            <Link :href="route('register')" class="border border-blue-600 text-blue-600 px-4 py-2 rounded-lg flex-1 text-center">
                                 Daftar
                             </Link>
                         </div>
@@ -130,18 +72,18 @@ onMounted(async () => {
                         </span>
                     </h1>
                     <p class="text-xl lg:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
-                        Program magang eksklusif Bank Indonesia KPW Lampung untuk mahasiswa yang ingin mengembangkan
-                        keahlian di bidang Business Intelligence dan Data Analytics
+                        Platform magang terdepan yang menggabungkan teknologi modern dengan pengalaman praktis 
+                        dalam dunia Business Intelligence dan Data Analytics
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <Link v-if="canRegister" :href="route('register')" 
+                        <Link :href="route('register')" 
                               class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl">
                             🚀 Mulai Magang Sekarang
                         </Link>
-                        <a href="#divisions" 
+                        <Link :href="route('public.divisions')" 
                               class="border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all">
                             📊 Lihat Program Kami
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -172,7 +114,7 @@ onMounted(async () => {
                             </svg>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 mb-3">Bimbingan Expert</h3>
-                        <p class="text-gray-600">Didampingi oleh praktisi berpengalaman dari Bank Indonesia dan ahli Business Intelligence terkemuka</p>
+                        <p class="text-gray-600">Didampingi oleh praktisi berpengalaman di bidang Business Intelligence dan Data Analytics</p>
                     </div>
 
                     <div class="group p-8 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
@@ -182,7 +124,7 @@ onMounted(async () => {
                             </svg>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 mb-3">Project Real</h3>
-                        <p class="text-gray-600">Mengerjakan project nyata dengan data perbankan dan kasus bisnis sesungguhnya dari Bank Indonesia</p>
+                        <p class="text-gray-600">Mengerjakan project nyata dengan data dan kasus bisnis yang sesungguhnya</p>
                     </div>
 
                     <div class="group p-8 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
@@ -202,7 +144,7 @@ onMounted(async () => {
                             </svg>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 mb-3">Sertifikat</h3>
-                        <p class="text-gray-600">Dapatkan sertifikat resmi dari Bank Indonesia yang diakui industri perbankan dan keuangan</p>
+                        <p class="text-gray-600">Dapatkan sertifikat resmi yang diakui industri setelah menyelesaikan program</p>
                     </div>
 
                     <div class="group p-8 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
@@ -212,7 +154,7 @@ onMounted(async () => {
                             </svg>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 mb-3">Networking</h3>
-                        <p class="text-gray-600">Bangun jaringan profesional dengan sesama peserta dan pegawai Bank Indonesia</p>
+                        <p class="text-gray-600">Bangun jaringan profesional dengan sesama peserta dan mentor berpengalaman</p>
                     </div>
 
                     <div class="group p-8 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
@@ -222,7 +164,7 @@ onMounted(async () => {
                             </svg>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 mb-3">Flexible Schedule</h3>
-                        <p class="text-gray-600">Program magang yang fleksibel dan dapat disesuaikan dengan jadwal kuliah mahasiswa</p>
+                        <p class="text-gray-600">Program magang yang fleksibel, bisa disesuaikan dengan jadwal kuliah Anda</p>
                     </div>
                 </div>
             </div>
@@ -237,31 +179,30 @@ onMounted(async () => {
                             Tentang GrowithBI
                         </h2>
                         <p class="text-lg text-gray-600 mb-6 leading-relaxed">
-                            GrowithBI adalah program magang eksklusif yang diselenggarakan oleh Bank Indonesia 
-                            Kantor Perwakilan Wilayah (KPW) Lampung. Program ini dirancang khusus untuk mahasiswa 
-                            yang ingin mengembangkan keahlian di bidang Business Intelligence dan Data Analytics.
+                            GrowithBI adalah platform magang terdepan yang fokus pada pengembangan talenta di bidang 
+                            Business Intelligence dan Data Analytics. Kami berkomitmen untuk memberikan pengalaman 
+                            praktis yang relevan dengan kebutuhan industri.
                         </p>
                         <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-                            Sebagai bagian dari Bank Indonesia, kami memberikan kesempatan kepada mahasiswa untuk 
-                            belajar langsung dari praktisi berpengalaman dan menggunakan teknologi terdepan dalam 
-                            industri perbankan dan keuangan.
+                            Dengan menggabungkan pembelajaran teoritis dan praktik langsung, kami mempersiapkan 
+                            peserta magang untuk menjadi profesional yang siap berkontribusi di dunia kerja.
                         </p>
                         <div class="grid grid-cols-2 gap-6">
                             <div class="text-center p-4 bg-white rounded-xl shadow-sm">
-                                <div class="text-3xl font-bold text-blue-600 mb-2">150+</div>
+                                <div class="text-3xl font-bold text-blue-600 mb-2">500+</div>
                                 <div class="text-gray-600">Alumni</div>
                             </div>
                             <div class="text-center p-4 bg-white rounded-xl shadow-sm">
-                                <div class="text-3xl font-bold text-green-600 mb-2">92%</div>
+                                <div class="text-3xl font-bold text-green-600 mb-2">95%</div>
                                 <div class="text-gray-600">Job Placement</div>
                             </div>
                             <div class="text-center p-4 bg-white rounded-xl shadow-sm">
-                                <div class="text-3xl font-bold text-purple-600 mb-2">15+</div>
-                                <div class="text-gray-600">Partner Universitas</div>
+                                <div class="text-3xl font-bold text-purple-600 mb-2">50+</div>
+                                <div class="text-gray-600">Partner Perusahaan</div>
                             </div>
                             <div class="text-center p-4 bg-white rounded-xl shadow-sm">
-                                <div class="text-3xl font-bold text-orange-600 mb-2">4.8</div>
-                                <div class="text-gray-600">Rating Program</div>
+                                <div class="text-3xl font-bold text-orange-600 mb-2">4.9</div>
+                                <div class="text-gray-600">Rating</div>
                             </div>
                         </div>
                     </div>
@@ -269,23 +210,22 @@ onMounted(async () => {
                         <div class="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-8 text-white">
                             <h3 class="text-2xl font-bold mb-4">Visi Kami</h3>
                             <p class="text-blue-100 mb-6">
-                                Menjadi program magang unggulan Bank Indonesia yang menghasilkan talenta-talenta 
-                                terbaik di bidang Business Intelligence dan Data Analytics untuk mendukung 
-                                transformasi digital sektor perbankan.
+                                Menjadi platform magang terdepan yang menghasilkan talenta-talenta terbaik 
+                                di bidang Business Intelligence dan Data Analytics.
                             </p>
                             <h3 class="text-2xl font-bold mb-4">Misi Kami</h3>
                             <ul class="text-blue-100 space-y-2">
                                 <li class="flex items-start">
                                     <span class="text-yellow-400 mr-2">•</span>
-                                    Memberikan pelatihan berkualitas tinggi sesuai standar Bank Indonesia
+                                    Memberikan pelatihan berkualitas tinggi
                                 </li>
                                 <li class="flex items-start">
                                     <span class="text-yellow-400 mr-2">•</span>
-                                    Mengembangkan SDM yang kompeten di bidang data analytics
+                                    Menghubungkan talenta dengan industri
                                 </li>
                                 <li class="flex items-start">
                                     <span class="text-yellow-400 mr-2">•</span>
-                                    Mendukung inovasi teknologi di sektor perbankan
+                                    Mengembangkan ekosistem data analytics
                                 </li>
                             </ul>
                         </div>
@@ -310,8 +250,7 @@ onMounted(async () => {
                     <div v-for="division in divisions" :key="division.id" 
                          class="group bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
                         <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <i v-if="division.icon" :class="division.icon + ' text-white text-2xl'"></i>
-                            <svg v-else class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM21 17a2 2 0 11-4 0 2 2 0 014 0z M8 12h8l-1-9H9l-1 9z"/>
                             </svg>
                         </div>
@@ -323,13 +262,10 @@ onMounted(async () => {
                                 {{ division.is_active ? 'Tersedia' : 'Tidak Tersedia' }}
                             </span>
                         </div>
-                        <Link v-if="canRegister" :href="route('register')" 
+                        <Link :href="route('register')" 
                               class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 rounded-xl font-semibold text-center transition-all transform hover:scale-105 block">
                             Daftar Sekarang
                         </Link>
-                        <div v-else class="w-full bg-gray-400 text-white py-3 rounded-xl font-semibold text-center">
-                            Registrasi Ditutup
-                        </div>
                     </div>
                 </div>
 
@@ -353,17 +289,17 @@ onMounted(async () => {
                     Siap Memulai Perjalanan Anda?
                 </h2>
                 <p class="text-xl text-blue-100 mb-8 leading-relaxed">
-                    Bergabunglah dengan mahasiswa-mahasiswa terbaik Lampung dalam program magang eksklusif Bank Indonesia
+                    Bergabunglah dengan ribuan peserta lainnya yang telah mengembangkan karir mereka bersama GrowithBI
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link v-if="canRegister" :href="route('register')" 
+                    <Link :href="route('register')" 
                           class="bg-white hover:bg-gray-100 text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
                         🚀 Daftar Magang
                     </Link>
-                    <a href="#divisions" 
+                    <Link :href="route('public.divisions')" 
                           class="border-2 border-white hover:bg-white hover:text-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all">
                         📋 Lihat Program
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>
@@ -382,12 +318,17 @@ onMounted(async () => {
                             <h3 class="ml-3 text-2xl font-bold">GrowithBI</h3>
                         </div>
                         <p class="text-gray-300 mb-6 max-w-md">
-                            Program magang eksklusif Bank Indonesia KPW Lampung untuk mengembangkan talenta di bidang Business Intelligence dan Data Analytics.
+                            Platform magang terdepan untuk mengembangkan karir di bidang Business Intelligence dan Data Analytics.
                         </p>
                         <div class="flex space-x-4">
                             <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
                                 </svg>
                             </a>
                             <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
@@ -420,33 +361,75 @@ onMounted(async () => {
                                 <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                 </svg>
-                                growithbi@bi.go.id
+                                info@growithbi.com
                             </li>
                             <li class="flex items-center">
-                                <svg class="w-5 w-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                                 </svg>
-                                (0721) 123 4567
+                                +62 21 1234 5678
                             </li>
                             <li class="flex items-start">
                                 <svg class="w-5 h-5 mr-3 mt-1" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 </svg>
-                                Bank Indonesia KPW Lampung<br>
-                                Jl. Wolter Monginsidi No. 2<br>
-                                Bandar Lampung 35115
+                                Jakarta, Indonesia
                             </li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-                    <p>&copy; 2025 GrowithBI - Bank Indonesia KPW Lampung. All rights reserved. Made with ❤️ for future data professionals.</p>
+                    <p>&copy; 2025 GrowithBI. All rights reserved. Made with ❤️ for future data professionals.</p>
                 </div>
             </div>
         </footer>
     </div>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import { Link } from '@inertiajs/vue3'
+
+const mobileMenuOpen = ref(false)
+const divisions = ref([])
+
+onMounted(async () => {
+    try {
+        // Fetch divisions data
+        const response = await fetch('/api/divisions')
+        if (response.ok) {
+            divisions.value = await response.json()
+        }
+    } catch (error) {
+        console.error('Error fetching divisions:', error)
+        // Set some dummy data if API fails
+        divisions.value = [
+            {
+                id: 1,
+                name: 'Data Analytics',
+                description: 'Pelajari cara menganalisis data dan membuat insights bisnis yang actionable menggunakan tools modern.',
+                quota: 10,
+                is_active: true
+            },
+            {
+                id: 2,
+                name: 'Business Intelligence',
+                description: 'Kuasai pembuatan dashboard dan reporting untuk mendukung pengambilan keputusan bisnis.',
+                quota: 8,
+                is_active: true
+            },
+            {
+                id: 3,
+                name: 'Data Science',
+                description: 'Eksplorasi machine learning dan predictive analytics untuk menyelesaikan masalah bisnis.',
+                quota: 6,
+                is_active: true
+            }
+        ]
+    }
+})
+</script>
 
 <style scoped>
 /* Custom animations */

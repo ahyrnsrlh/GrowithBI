@@ -13,7 +13,7 @@ class Division extends Model
         'name',
         'description',
         'requirements',
-        'max_interns',
+        'quota',
         'supervisor_id',
         'start_date',
         'end_date',
@@ -48,6 +48,6 @@ class Division extends Model
     // Helper methods
     public function getAvailableQuotaAttribute()
     {
-        return $this->max_interns - $this->applications()->where('status', 'diterima')->count();
+        return $this->quota - $this->applications()->where('status', 'diterima')->count();
     }
 }

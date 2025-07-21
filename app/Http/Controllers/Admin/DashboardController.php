@@ -57,7 +57,7 @@ class DashboardController extends Controller
                 return [
                     'id' => $division->id,
                     'name' => $division->name,
-                    'max_interns' => $division->max_interns,
+                    'quota' => $division->quota,
                     'applications' => $division->applications_count,
                     'accepted' => $division->accepted_count,
                     'supervisor' => $division->supervisor ? $division->supervisor->name : 'Belum ditentukan'

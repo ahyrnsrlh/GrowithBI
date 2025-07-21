@@ -85,14 +85,14 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
                             <label
-                                for="max_interns"
+                                for="quota"
                                 class="block text-sm font-medium text-gray-700 mb-2"
                             >
                                 Kuota <span class="text-red-500">*</span>
                             </label>
                             <input
-                                id="max_interns"
-                                v-model.number="form.max_interns"
+                                id="quota"
+                                v-model.number="form.quota"
                                 type="number"
                                 min="1"
                                 max="100"
@@ -101,10 +101,10 @@
                                 required
                             />
                             <p
-                                v-if="errors.max_interns"
+                                v-if="errors.quota"
                                 class="mt-1 text-sm text-red-600"
                             >
-                                {{ errors.max_interns }}
+                                {{ errors.quota }}
                             </p>
                         </div>
 
@@ -280,7 +280,7 @@ const props = defineProps({
 const form = useForm({
     name: "",
     description: "",
-    max_interns: 10,
+    quota: 10,
     supervisor_id: "",
     start_date: "",
     end_date: "",
