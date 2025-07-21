@@ -529,8 +529,7 @@
                                 <div
                                     class="w-3 h-3 rounded-full"
                                     :class="[
-                                        division.accepted >=
-                                        division.quota
+                                        division.accepted >= division.quota
                                             ? 'bg-green-400'
                                             : division.accepted >=
                                               division.quota * 0.8
@@ -658,16 +657,12 @@
                                     >
                                     <span
                                         v-if="
-                                            division.quota -
-                                                division.accepted >
+                                            division.quota - division.accepted >
                                             0
                                         "
                                         class="text-blue-600 font-medium"
                                     >
-                                        {{
-                                            division.quota -
-                                            division.accepted
-                                        }}
+                                        {{ division.quota - division.accepted }}
                                         tersisa
                                     </span>
                                     <span
