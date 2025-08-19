@@ -1,37 +1,42 @@
 <template>
   <Head :title="division.name" />
   <GuestLayout>
-    <!-- Notification -->
-    <div v-if="notification.show" class="fixed top-4 right-4 z-50 max-w-sm">
-      <div :class="[
-        'p-4 rounded-lg shadow-lg border',
-        notification.type === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
-      ]">
-        <div class="flex items-start">
-          <div class="flex-shrink-0">
-            <svg v-if="notification.type === 'success'" class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <svg v-else class="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-            </svg>
-          </div>
-          <div class="ml-3 flex-1">
-            <p :class="[
-              'text-sm font-medium',
-              notification.type === 'success' ? 'text-green-800' : 'text-red-800'
-            ]">
-              {{ notification.message }}
-            </p>
-          </div>
-          <div class="ml-4 flex-shrink-0">
-            <button @click="notification.show = false" :class="[
-              'rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
-              notification.type === 'success' ? 'text-green-500 hover:text-green-600 focus:ring-green-500' : 'text-red-500 hover:text-red-600 focus:ring-red-500'
-            ]">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+    <!-- Modal Notification Overlay -->
+    <div v-if="notification.show" class="fixed inset-0 z-50 overflow-y-auto">
+      <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
+          <div class="text-center">
+            <!-- Icon -->
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full mb-4" :class="notification.type === 'success' ? 'bg-green-100' : 'bg-red-100'">
+              <svg v-if="notification.type === 'success'" class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
               </svg>
+              <svg v-else class="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </div>
+            
+            <!-- Title -->
+            <h3 class="text-lg font-medium text-gray-900 mb-3">
+              {{ notification.type === 'success' ? 'Berhasil' : 'Gagal' }}
+            </h3>
+            
+            <!-- Message -->
+            <div class="text-sm text-gray-600 mb-6">
+              {{ notification.message }}
+            </div>
+            
+            <!-- Button -->
+            <button
+              @click="notification.show = false"
+              class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:text-sm"
+              :class="notification.type === 'success' ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500' : 'bg-red-600 hover:bg-red-700 focus:ring-red-500'"
+            >
+              OK
             </button>
           </div>
         </div>
@@ -305,9 +310,6 @@ const showNotification = (type, message) => {
     type,
     message
   }
-  setTimeout(() => {
-    notification.value.show = false
-  }, 5000)
 }
 
 const quickRegister = async () => {
