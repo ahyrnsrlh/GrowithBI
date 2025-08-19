@@ -9,6 +9,10 @@ defineProps({
     canRegister: {
         type: Boolean,
     },
+    auth: {
+        type: Object,
+        default: null,
+    },
 });
 
 const mobileMenuOpen = ref(false);
@@ -111,20 +115,48 @@ onMounted(async () => {
                             class="text-gray-600 hover:text-blue-600 transition-colors font-medium"
                             >Contact</a
                         >
-                        <Link
-                            v-if="canLogin"
-                            :href="route('login')"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105"
-                        >
-                            Login
-                        </Link>
-                        <Link
-                            v-if="canRegister"
-                            :href="route('register')"
-                            class="border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-lg font-medium transition-all"
-                        >
-                            Daftar
-                        </Link>
+                        
+                        <!-- Authenticated User Menu -->
+                        <div v-if="auth?.user" class="flex items-center space-x-4">
+                            <Link
+                                :href="route('profile.index')"
+                                class="text-gray-600 hover:text-blue-600 transition-colors font-medium"
+                            >
+                                Profil
+                            </Link>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                    <span class="text-white text-sm font-semibold">{{ auth.user.name.charAt(0).toUpperCase() }}</span>
+                                </div>
+                                <span class="text-gray-700 font-medium">{{ auth.user.name }}</span>
+                            </div>
+                            <Link
+                                :href="route('logout')"
+                                method="post"
+                                as="button"
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all"
+                            >
+                                Logout
+                            </Link>
+                        </div>
+                        
+                        <!-- Guest User Menu -->
+                        <div v-else class="flex items-center space-x-4">
+                            <Link
+                                v-if="canLogin"
+                                :href="route('login')"
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105"
+                            >
+                                Login
+                            </Link>
+                            <Link
+                                v-if="canRegister"
+                                :href="route('register')"
+                                class="border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-lg font-medium transition-all"
+                            >
+                                Daftar
+                            </Link>
+                        </div>
                     </div>
 
                     <!-- Mobile menu button -->
@@ -176,8 +208,34 @@ onMounted(async () => {
                             class="text-gray-600 hover:text-blue-600"
                             >Contact</a
                         >
+                        
+                        <!-- Authenticated User Mobile Menu -->
+                        <div v-if="auth?.user" class="pt-2 border-t border-gray-200">
+                            <div class="flex items-center space-x-2 mb-4">
+                                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                    <span class="text-white text-sm font-semibold">{{ auth.user.name.charAt(0).toUpperCase() }}</span>
+                                </div>
+                                <span class="text-gray-700 font-medium">{{ auth.user.name }}</span>
+                            </div>
+                            <Link
+                                :href="route('profile.index')"
+                                class="block text-gray-600 hover:text-blue-600 py-2"
+                            >
+                                Profil Saya
+                            </Link>
+                            <Link
+                                :href="route('logout')"
+                                method="post"
+                                as="button"
+                                class="w-full bg-red-600 text-white px-4 py-2 rounded-lg text-center mt-2"
+                            >
+                                Logout
+                            </Link>
+                        </div>
+                        
+                        <!-- Guest User Mobile Menu -->
                         <div
-                            v-if="canLogin || canRegister"
+                            v-else-if="canLogin || canRegister"
                             class="flex space-x-2 pt-2"
                         >
                             <Link
@@ -543,82 +601,109 @@ onMounted(async () => {
                 </div>
 
                 <div
-                    class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
                     v-if="divisions.length > 0"
                 >
                     <div
                         v-for="division in divisions"
                         :key="division.id"
-                        class="group bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                        class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
                     >
-                        <div
-                            class="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
-                        >
-                            <i
-                                v-if="division.icon"
-                                :class="division.icon + ' text-white text-2xl'"
-                            ></i>
-                            <svg
-                                v-else
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM21 17a2 2 0 11-4 0 2 2 0 014 0z M8 12h8l-1-9H9l-1 9z"
-                                />
-                            </svg>
+                        <!-- Card Header -->
+                        <div class="p-8">
+                            <div class="flex items-center mb-6">
+                                <div
+                                    class="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center"
+                                >
+                                    <i
+                                        v-if="division.icon"
+                                        :class="division.icon + ' text-white text-2xl'"
+                                    ></i>
+                                    <svg
+                                        v-else
+                                        class="w-8 h-8 text-white"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM21 17a2 2 0 11-4 0 2 2 0 014 0z M8 12h8l-1-9H9l-1 9z"
+                                        />
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <h3 class="text-xl font-bold text-gray-900 mb-3 leading-tight">
+                                {{ division.name }}
+                            </h3>
+                            
+                            <p class="text-gray-600 mb-6 leading-relaxed text-sm">
+                                {{ division.description }}
+                            </p>
+                            
+                            <div class="flex items-center justify-between mb-6">
+                                <span
+                                    :class="[
+                                        'px-3 py-1 rounded-full text-xs font-medium',
+                                        division.is_active
+                                            ? 'bg-green-100 text-green-700'
+                                            : 'bg-gray-100 text-gray-600'
+                                    ]"
+                                >
+                                    {{
+                                        division.is_active
+                                            ? "Tersedia"
+                                            : "Tidak Tersedia"
+                                    }}
+                                </span>
+                            </div>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">
-                            {{ division.name }}
-                        </h3>
-                        <p class="text-gray-600 mb-6 leading-relaxed">
-                            {{ division.description }}
-                        </p>
-                        <div
-                            class="flex items-center justify-between text-sm text-gray-500 mb-6"
-                        >
-                            <span>Kuota: {{ division.quota }} peserta</span>
-                            <span
-                                class="px-3 py-1 bg-green-100 text-green-600 rounded-full font-medium"
+                        
+                        <!-- Card Footer -->
+                        <div class="px-8 pb-8 pt-4 border-t border-gray-100 bg-gray-50/50">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="text-sm text-gray-600">
+                                    <i class="fas fa-users mr-2"></i>
+                                    <span class="font-medium">{{ division.quota }}</span> posisi
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    <span class="font-medium">6</span> bulan
+                                </div>
+                            </div>
+                            
+                            <Link
+                                :href="route('public.division.detail', division.id)"
+                                class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-2.5 rounded-xl font-semibold text-center transition-all transform hover:scale-105 block text-sm"
                             >
-                                {{
-                                    division.is_active
-                                        ? "Tersedia"
-                                        : "Tidak Tersedia"
-                                }}
-                            </span>
-                        </div>
-                        <Link
-                            v-if="canRegister"
-                            :href="route('register')"
-                            class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 rounded-xl font-semibold text-center transition-all transform hover:scale-105 block"
-                        >
-                            Daftar Sekarang
-                        </Link>
-                        <div
-                            v-else
-                            class="w-full bg-gray-400 text-white py-3 rounded-xl font-semibold text-center"
-                        >
-                            Registrasi Ditutup
+                                Lihat Detail
+                            </Link>
                         </div>
                     </div>
                 </div>
 
                 <!-- Loading state -->
-                <div v-else class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     <div
-                        v-for="n in 6"
+                        v-for="n in 8"
                         :key="n"
-                        class="bg-gray-100 rounded-2xl p-8 animate-pulse"
+                        class="bg-white rounded-2xl shadow-lg border border-gray-100 animate-pulse"
                     >
-                        <div
-                            class="w-16 h-16 bg-gray-300 rounded-xl mb-6"
-                        ></div>
-                        <div class="h-6 bg-gray-300 rounded mb-3"></div>
-                        <div class="h-4 bg-gray-300 rounded mb-2"></div>
-                        <div class="h-4 bg-gray-300 rounded mb-6"></div>
-                        <div class="h-10 bg-gray-300 rounded"></div>
+                        <div class="p-8">
+                            <div
+                                class="w-16 h-16 bg-gray-300 rounded-2xl mb-6"
+                            ></div>
+                            <div class="h-6 bg-gray-300 rounded mb-3"></div>
+                            <div class="h-4 bg-gray-300 rounded mb-2"></div>
+                            <div class="h-4 bg-gray-300 rounded mb-6"></div>
+                            <div class="h-6 bg-gray-300 rounded mb-6"></div>
+                        </div>
+                        <div class="px-8 pb-8 pt-4 border-t border-gray-100 bg-gray-50/50">
+                            <div class="flex justify-between mb-4">
+                                <div class="h-4 bg-gray-300 rounded w-20"></div>
+                                <div class="h-4 bg-gray-300 rounded w-16"></div>
+                            </div>
+                            <div class="h-10 bg-gray-300 rounded"></div>
+                        </div>
                     </div>
                 </div>
             </div>

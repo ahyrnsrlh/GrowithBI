@@ -8,37 +8,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Logbook extends Model
 {
     protected $fillable = [
-        'user_id',
-        'division_id',
+        'application_id',
+        'activity',
+        'learning_outcome',
         'date',
-        'time_in',
-        'time_out',
-        'activities',
-        'notes',
         'status',
-        'supervisor_notes',
-        'submitted_at',
-        'approved_at',
         'approved_by',
     ];
 
     protected $casts = [
         'date' => 'date',
-        'time_in' => 'datetime:H:i',
-        'time_out' => 'datetime:H:i',
-        'submitted_at' => 'datetime',
-        'approved_at' => 'datetime',
     ];
 
     // Relationships
-    public function user(): BelongsTo
+    public function application(): BelongsTo
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function division(): BelongsTo
-    {
-        return $this->belongsTo(Division::class);
+        return $this->belongsTo(Application::class);
     }
 
     public function approvedBy(): BelongsTo
@@ -47,14 +32,9 @@ class Logbook extends Model
     }
 
     // Status helper methods
-    public function isDraft(): bool
+    public function isPending(): bool
     {
-        return $this->status === 'draft';
-    }
-
-    public function isSubmitted(): bool
-    {
-        return $this->status === 'submitted';
+        return $this->status === 'pending';
     }
 
     public function isApproved(): bool
@@ -68,14 +48,9 @@ class Logbook extends Model
     }
 
     // Scopes
-    public function scopeByUser($query, $userId)
+    public function scopeByApplication($query, $applicationId)
     {
-        return $query->where('user_id', $userId);
-    }
-
-    public function scopeByDivision($query, $divisionId)
-    {
-        return $query->where('division_id', $divisionId);
+        return $query->where('application_id', $applicationId);
     }
 
     public function scopeByStatus($query, $status)

@@ -44,4 +44,9 @@ class Application extends Model
     {
         return $this->belongsTo(User::class, 'reviewed_by');
     }
+
+    public function logbooks()
+    {
+        return $this->hasMany(Logbook::class);
+    }
 }

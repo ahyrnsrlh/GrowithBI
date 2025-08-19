@@ -25,8 +25,14 @@ class User extends Authenticatable
         'phone',
         'address',
         'profile_photo',
+        'profile_photo_path',
         'is_active',
         'supervisor_id',
+        'ktp_path',
+        'cv_path',
+        'surat_lamaran_path',
+        'transkrip_path',
+        'foto_path',
     ];
 
     /**
@@ -87,7 +93,7 @@ class User extends Authenticatable
 
     public function logbooks()
     {
-        return $this->hasMany(Logbook::class);
+        return $this->hasManyThrough(Logbook::class, Application::class);
     }
 
     public function supervisedDivisions()

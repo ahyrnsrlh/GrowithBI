@@ -27,8 +27,8 @@ class DashboardController extends Controller
             ->latest()
             ->get();
 
-        // Get user's logbooks
-        $logbooks = Logbook::where('user_id', $user->id)
+        // Get user's logbooks through applications
+        $logbooks = $user->logbooks()
             ->latest()
             ->take(10)
             ->get();

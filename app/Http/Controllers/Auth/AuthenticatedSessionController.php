@@ -33,33 +33,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Redirect based on user role
-        $user = Auth::user();
-        return $this->redirectBasedOnRole($user);
-    }
-
-    /**
-     * Redirect user based on their role after login
-     */
-    private function redirectBasedOnRole($user): RedirectResponse
-    {
-        if (!$user->is_active) {
-            Auth::logout();
-            return redirect()->route('login')->withErrors([
-                'email' => 'Akun Anda tidak aktif. Silakan hubungi administrator.',
-            ]);
-        }
-
-        switch ($user->role) {
-            case 'admin':
-                return redirect()->route('admin.dashboard');
-            case 'pembimbing':
-                return redirect()->route('pembimbing.dashboard');
-            case 'peserta':
-                return redirect()->route('peserta.dashboard');
-            default:
-                return redirect()->intended(route('dashboard', absolute: false));
-        }
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**

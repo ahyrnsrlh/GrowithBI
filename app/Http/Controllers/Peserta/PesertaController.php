@@ -14,27 +14,24 @@ class PesertaController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
-        $recentLogbooks = Logbook::where('user_id', $user->id)
+        $recentLogbooks = $user->logbooks()
             ->latest()
             ->take(5)
             ->get();
 
-        $totalLogbooks = Logbook::where('user_id', $user->id)->count();
-        $averageRating = Logbook::where('user_id', $user->id)
-            ->whereNotNull('supervisor_rating')
-            ->avg('supervisor_rating');
+        $totalLogbooks = $user->logbooks()->count();
 
         return Inertia::render('Peserta/Dashboard', [
             'recentLogbooks' => $recentLogbooks,
             'totalLogbooks' => $totalLogbooks,
-            'averageRating' => round($averageRating, 2),
             'supervisor' => $user->supervisor
         ]);
     }
 
     public function logbooks()
     {
-        $logbooks = Logbook::where('user_id', Auth::id())
+        $user = Auth::user();
+        $logbooks = $user->logbooks()
             ->latest()
             ->paginate(15);
 

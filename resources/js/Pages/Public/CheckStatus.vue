@@ -59,34 +59,33 @@
 
                             <div>
                                 <InputLabel
-                                    for="application_id"
-                                    value="ID Aplikasi"
+                                    for="phone"
+                                    value="Nomor Telepon"
                                 />
                                 <TextInput
-                                    id="application_id"
-                                    type="text"
+                                    id="phone"
+                                    type="tel"
                                     class="mt-1 block w-full"
-                                    v-model="form.application_id"
+                                    v-model="form.phone"
                                     required
-                                    placeholder="Nomor ID aplikasi dari email konfirmasi"
+                                    placeholder="08XXXXXXXXXX"
                                 />
                                 <InputError
                                     class="mt-2"
-                                    :message="form.errors.application_id"
+                                    :message="form.errors.phone"
                                 />
                                 <p class="mt-1 text-sm text-gray-500">
-                                    ID aplikasi dapat ditemukan di email
-                                    konfirmasi yang dikirim setelah pendaftaran
+                                    Masukkan nomor telepon yang sama dengan saat pendaftaran
                                 </p>
                             </div>
 
                             <!-- Error Display -->
                             <div
-                                v-if="form.errors.error"
+                                v-if="form.errors.search"
                                 class="p-4 bg-red-50 border border-red-200 rounded-lg"
                             >
                                 <p class="text-red-700 text-sm">
-                                    {{ form.errors.error }}
+                                    {{ form.errors.search }}
                                 </p>
                             </div>
 
@@ -105,6 +104,54 @@
                             </div>
                         </div>
                     </form>
+                </div>
+
+                <!-- Application Result -->
+                <div v-if="$page.props.application" class="mt-8 bg-green-50 border border-green-200 rounded-xl p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-green-800">Status Aplikasi Ditemukan</h3>
+                    </div>
+                    
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Nama:</span>
+                            <span class="font-medium text-gray-900">{{ $page.props.application.name }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Email:</span>
+                            <span class="font-medium text-gray-900">{{ $page.props.application.email }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Divisi:</span>
+                            <span class="font-medium text-gray-900">{{ $page.props.application.division }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Status:</span>
+                            <span 
+                                :class="{
+                                    'bg-yellow-100 text-yellow-800': $page.props.application.status === 'menunggu',
+                                    'bg-green-100 text-green-800': $page.props.application.status === 'diterima',
+                                    'bg-red-100 text-red-800': $page.props.application.status === 'ditolak'
+                                }"
+                                class="px-3 py-1 rounded-full text-xs font-medium"
+                            >
+                                {{ getStatusText($page.props.application.status) }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Tanggal Daftar:</span>
+                            <span class="font-medium text-gray-900">{{ $page.props.application.created_at }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Terakhir Update:</span>
+                            <span class="font-medium text-gray-900">{{ $page.props.application.updated_at }}</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Help Section -->
@@ -134,7 +181,7 @@
                     <p class="text-gray-600">
                         Belum mendaftar?
                         <Link
-                            :href="route('public.apply')"
+                            :href="route('public.application.form')"
                             class="text-blue-600 hover:text-blue-800 font-medium"
                         >
                             Daftar magang sekarang
@@ -164,10 +211,22 @@ import TextInput from "@/Components/TextInput.vue";
 
 const form = useForm({
     email: "",
-    application_id: "",
+    phone: "",
 });
 
 const submit = () => {
-    form.post(route("public.get.status"));
+    form.post(route("public.search.status"), {
+        preserveState: true,
+        preserveScroll: true
+    });
+};
+
+const getStatusText = (status) => {
+    const statusMap = {
+        'menunggu': 'Menunggu Review',
+        'diterima': 'Diterima',
+        'ditolak': 'Ditolak'
+    };
+    return statusMap[status] || status;
 };
 </script>
