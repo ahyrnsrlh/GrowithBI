@@ -21,18 +21,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
-        'phone',
-        'address',
-        'profile_photo',
-        'profile_photo_path',
-        'is_active',
-        'supervisor_id',
-        'ktp_path',
-        'cv_path',
-        'surat_lamaran_path',
-        'transkrip_path',
-        'foto_path',
     ];
 
     /**
@@ -55,54 +43,6 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_active' => 'boolean',
         ];
-    }
-
-    // Role helper methods
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
-
-    public function isPembimbing(): bool
-    {
-        return $this->role === 'pembimbing';
-    }
-
-    public function isPeserta(): bool
-    {
-        return $this->role === 'peserta';
-    }
-
-    // Relationships
-    public function supervisor()
-    {
-        return $this->belongsTo(User::class, 'supervisor_id');
-    }
-
-    public function students()
-    {
-        return $this->hasMany(User::class, 'supervisor_id');
-    }
-
-    public function applications()
-    {
-        return $this->hasMany(Application::class);
-    }
-
-    public function logbooks()
-    {
-        return $this->hasManyThrough(Logbook::class, Application::class);
-    }
-
-    public function supervisedDivisions()
-    {
-        return $this->hasMany(Division::class, 'supervisor_id');
-    }
-
-    public function supervisedApplications()
-    {
-        return $this->hasManyThrough(Application::class, Division::class, 'supervisor_id', 'division_id');
     }
 }
