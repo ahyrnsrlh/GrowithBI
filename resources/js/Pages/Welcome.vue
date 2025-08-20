@@ -119,7 +119,7 @@ onMounted(async () => {
                         <!-- Authenticated User Menu -->
                         <div v-if="auth?.user" class="flex items-center space-x-4">
                             <Link
-                                :href="route('profile.index')"
+                                :href="route('profile.edit')"
                                 class="text-gray-600 hover:text-blue-600 transition-colors font-medium"
                             >
                                 Profil
@@ -218,7 +218,7 @@ onMounted(async () => {
                                 <span class="text-gray-700 font-medium">{{ auth.user.name }}</span>
                             </div>
                             <Link
-                                :href="route('profile.index')"
+                                :href="route('profile.edit')"
                                 class="block text-gray-600 hover:text-blue-600 py-2"
                             >
                                 Profil Saya

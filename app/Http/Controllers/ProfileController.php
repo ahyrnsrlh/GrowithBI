@@ -8,18 +8,41 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Application;
+use App\Models\Division;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Display the user's profile form with complete information.
      */
     public function edit(Request $request): Response
     {
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+        $user = $request->user();
+        
+        // Get user's applications with division info
+        $applications = Application::where('email', $user->email)
+            ->with('division')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        // Calculate profile completion percentage
+        $profileCompletion = $this->calculateProfileCompletion($user);
+        
+        // Get available divisions for new applications
+        $divisions = Division::where('is_active', true)
+            ->select('id', 'name', 'quota')
+            ->get();
+
+        return Inertia::render('Profile/Index', [
+            'user' => $user,
+            'applications' => $applications,
+            'divisions' => $divisions,
+            'profileCompletion' => $profileCompletion,
+            'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
         ]);
     }
@@ -29,15 +52,119 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
 
-        return Redirect::route('profile.edit');
+        return Redirect::route('profile.edit')->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    /**
+     * Upload profile photo
+     */
+    public function uploadPhoto(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $user = $request->user();
+        
+        // Delete old photo if exists
+        if ($user->profile_photo_path) {
+            Storage::delete($user->profile_photo_path);
+        }
+
+        // Store new photo
+        $path = $request->file('photo')->store('profile-photos', 'public');
+        
+        $user->update([
+            'profile_photo_path' => $path
+        ]);
+
+        return Redirect::route('profile.edit')->with('success', 'Foto profil berhasil diperbarui!');
+    }
+
+    /**
+     * Upload documents
+     */
+    public function uploadDocument(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'document_type' => 'required|in:ktp,cv,surat_lamaran,transkrip,ijazah,sertifikat',
+            'document' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120', // 5MB max
+        ]);
+
+        $user = $request->user();
+        $documentType = $request->document_type;
+        
+        // Delete old document if exists
+        $oldPath = $user->{$documentType . '_path'};
+        if ($oldPath) {
+            Storage::delete($oldPath);
+        }
+
+        // Store new document
+        $path = $request->file('document')->store('documents/' . $documentType, 'public');
+        
+        $user->update([
+            $documentType . '_path' => $path
+        ]);
+
+        $documentNames = [
+            'ktp' => 'KTP',
+            'cv' => 'CV',
+            'surat_lamaran' => 'Surat Lamaran',
+            'transkrip' => 'Transkrip Nilai',
+            'ijazah' => 'Ijazah',
+            'sertifikat' => 'Sertifikat'
+        ];
+
+        return Redirect::route('profile.edit')->with('success', $documentNames[$documentType] . ' berhasil diunggah!');
+    }
+
+    /**
+     * Create new application
+     */
+    public function createApplication(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'division_id' => 'required|exists:divisions,id',
+            'motivation' => 'required|string|min:100|max:1000',
+        ]);
+
+        $user = $request->user();
+
+        // Check if user already has an active application for this division
+        $existingApplication = Application::where('email', $user->email)
+            ->where('division_id', $request->division_id)
+            ->whereIn('status', ['menunggu', 'dalam_review', 'wawancara'])
+            ->exists();
+
+        if ($existingApplication) {
+            return Redirect::route('profile.edit')->with('error', 'Anda sudah memiliki lamaran aktif untuk divisi ini!');
+        }
+
+        Application::create([
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'address' => $user->address,
+            'division_id' => $request->division_id,
+            'motivation' => $request->motivation,
+            'status' => 'menunggu',
+            'cv_path' => $user->cv_path,
+            'surat_lamaran_path' => $user->surat_lamaran_path,
+            'transkrip_path' => $user->transkrip_path,
+            'ktp_path' => $user->ktp_path,
+        ]);
+
+        return Redirect::route('profile.edit')->with('success', 'Lamaran berhasil dikirim!');
     }
 
     /**
@@ -59,5 +186,34 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    /**
+     * Calculate profile completion percentage
+     */
+    private function calculateProfileCompletion($user): array
+    {
+        $fields = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'address' => $user->address,
+            'profile_photo_path' => $user->profile_photo_path,
+            'ktp_path' => $user->ktp_path,
+            'cv_path' => $user->cv_path,
+            'surat_lamaran_path' => $user->surat_lamaran_path,
+            'transkrip_path' => $user->transkrip_path,
+        ];
+
+        $completed = collect($fields)->filter()->count();
+        $total = count($fields);
+        $percentage = round(($completed / $total) * 100);
+
+        return [
+            'percentage' => $percentage,
+            'completed' => $completed,
+            'total' => $total,
+            'missing' => array_keys(array_filter($fields, fn($value) => empty($value)))
+        ];
     }
 }

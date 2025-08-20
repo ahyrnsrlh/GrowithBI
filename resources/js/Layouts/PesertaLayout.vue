@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <script setup>
 import { ref, onMounted } from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
@@ -250,4 +248,3 @@ const page = usePage();
         </div>
     </div>
 </template>
->>>>>>> parent of b610151 (feat: Add Divisions page with search and filter functionality)

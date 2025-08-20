@@ -247,10 +247,6 @@
                   <span class="text-gray-600">Pelamar</span>
                   <span class="font-medium">{{ division.quota - division.available_slots }} pelamar</span>
                 </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Supervisor</span>
-                  <span class="font-medium text-right">{{ division.supervisor }}</span>
-                </div>
               </div>
             </div>
 

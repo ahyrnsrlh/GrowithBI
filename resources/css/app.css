@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom utilities for responsive design */
+@layer utilities {
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    /* Responsive container with better spacing */
+    .container-responsive {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+    
+    /* Better grid system for cards */
+    .grid-responsive {
+        @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-6 sm:gap-8;
+    }
+    
+    /* Smooth hover animations */
+    .card-hover {
+        @apply transition-all duration-300 hover:shadow-xl hover:border-blue-300 hover:-translate-y-1 sm:hover:-translate-y-2;
+    }
+}

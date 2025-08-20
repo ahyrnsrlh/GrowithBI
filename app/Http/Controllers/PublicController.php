@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Division;
+use App\Models\Application;
+use Inertia\Inertia;
 
 class PublicController extends Controller
 {
@@ -75,5 +78,73 @@ class PublicController extends Controller
         ]);
 
         return redirect()->back()->with('message', 'Aplikasi berhasil dikirim! Kami akan menghubungi Anda segera.');
+    }
+
+    public function divisionDetail(Division $division)
+    {
+        return Inertia::render('Public/DivisionDetail', [
+            'division' => $division->load('supervisor')
+        ]);
+    }
+
+    public function checkStatus()
+    {
+        return Inertia::render('Public/CheckStatus');
+    }
+
+    public function searchStatus(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'phone' => 'required|string'
+        ]);
+
+        $application = Application::where('email', $request->email)
+            ->where('phone', $request->phone)
+            ->with('division')
+            ->first();
+
+        if (!$application) {
+            return back()->withErrors(['message' => 'Data tidak ditemukan']);
+        }
+
+        return Inertia::render('Public/ApplicationStatus', [
+            'application' => $application
+        ]);
+    }
+
+    public function quickRegister(Request $request)
+    {
+        $request->validate([
+            'division_id' => 'required|exists:divisions,id'
+        ]);
+
+        $user = $request->user();
+        
+        // Check if user already has application for this division
+        $existingApplication = Application::where('email', $user->email)
+            ->where('division_id', $request->division_id)
+            ->first();
+
+        if ($existingApplication) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda sudah mendaftar untuk divisi ini'
+            ]);
+        }
+
+        Application::create([
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone ?? '',
+            'address' => $user->address ?? '',
+            'division_id' => $request->division_id,
+            'status' => 'menunggu',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pendaftaran berhasil! Kami akan menghubungi Anda segera.'
+        ]);
     }
 }
