@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <template>
     <Head title="Cek Status Pendaftaran" />
 
@@ -173,4 +171,3 @@ const submit = () => {
     form.post(route("public.get.status"));
 };
 </script>
->>>>>>> parent of b610151 (feat: Add Divisions page with search and filter functionality)
