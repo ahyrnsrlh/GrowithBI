@@ -64,97 +64,54 @@ onMounted(async () => {
 <template>
     <Head title="GrowithBI - Platform Magang Business Intelligence" />
 
-    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div class="min-h-screen relative">
+        <!-- Grid Background -->
+        <div class="fixed inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/50"></div>
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.15) 1px, transparent 0); background-size: 40px 40px;"></div>
+        </div>
+
         <!-- Navigation -->
-        <nav
-            class="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50"
-        >
+        <nav class="relative z-50 bg-white/90 backdrop-blur-md border-b border-gray-200/50 sticky top-0">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
                     <!-- Logo -->
                     <div class="flex items-center">
-                        <div
-                            class="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-lg"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                                />
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                             </svg>
                         </div>
-                        <h1
-                            class="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
-                        >
-                            GrowithBI
-                        </h1>
+                        <h1 class="ml-3 text-xl font-bold text-gray-900">GrowithBI</h1>
                     </div>
 
                     <!-- Navigation Links -->
                     <div class="hidden md:flex items-center space-x-8">
-                        <a
-                            href="#features"
-                            class="text-gray-600 hover:text-blue-600 transition-colors font-medium"
-                            >Features</a
-                        >
-                        <a
-                            href="#about"
-                            class="text-gray-600 hover:text-blue-600 transition-colors font-medium"
-                            >About</a
-                        >
-                        <a
-                            href="#divisions"
-                            class="text-gray-600 hover:text-blue-600 transition-colors font-medium"
-                            >Divisions</a
-                        >
-                        <a
-                            href="#contact"
-                            class="text-gray-600 hover:text-blue-600 transition-colors font-medium"
-                            >Contact</a
-                        >
+                        <a href="#features" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">Kriteria</a>
+                        <a href="#about" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">Benefit</a>
+                        <a href="#divisions" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">Persyaratan</a>
+                        <a href="#contact" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">FAQ</a>
                         
                         <!-- Authenticated User Menu -->
                         <div v-if="auth?.user" class="flex items-center space-x-4">
-                            <Link
-                                :href="route('profile.edit')"
-                                class="text-gray-600 hover:text-blue-600 transition-colors font-medium"
-                            >
-                                Profil
-                            </Link>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                            <div class="flex items-center space-x-3 px-3 py-2 bg-green-50 rounded-lg border border-green-200">
+                                <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
                                     <span class="text-white text-sm font-semibold">{{ auth.user.name.charAt(0).toUpperCase() }}</span>
                                 </div>
-                                <span class="text-gray-700 font-medium">{{ auth.user.name }}</span>
+                                <span class="text-green-700 font-medium">{{ auth.user.name }}</span>
                             </div>
-                            <Link
-                                :href="route('logout')"
-                                method="post"
-                                as="button"
-                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all"
-                            >
-                                Logout
+                            <Link :href="route('dashboard')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all">
+                                Dashboard
                             </Link>
                         </div>
                         
                         <!-- Guest User Menu -->
                         <div v-else class="flex items-center space-x-4">
-                            <Link
-                                v-if="canLogin"
-                                :href="route('login')"
-                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105"
-                            >
+                            <Link v-if="canLogin" :href="route('login')" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
                                 Login
                             </Link>
-                            <Link
-                                v-if="canRegister"
-                                :href="route('register')"
-                                class="border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-lg font-medium transition-all"
-                            >
-                                Daftar
+                            <Link v-if="canRegister" :href="route('register')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-all shadow-md hover:shadow-lg">
+                                Daftar Sekarang
                             </Link>
                         </div>
                     </div>
@@ -259,219 +216,142 @@ onMounted(async () => {
         </nav>
 
         <!-- Hero Section -->
-        <section class="relative overflow-hidden py-20 lg:py-32">
-            <div
-                class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-indigo-600/10"
-            ></div>
-            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h1
-                        class="text-5xl lg:text-7xl font-bold text-gray-900 mb-6"
-                    >
-                        Grow Your Career with
-                        <span
-                            class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
-                        >
-                            Business Intelligence
-                        </span>
+        <section class="relative z-10 py-12 lg:py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-4xl mx-auto">
+                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+                        GrowithBI Program
                     </h1>
-                    <p
-                        class="text-xl lg:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed"
-                    >
-                        Program magang eksklusif Bank Indonesia KPW Lampung
-                        untuk mahasiswa yang ingin mengembangkan keahlian di
-                        bidang Business Intelligence dan Data Analytics
+                    <h2 class="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-6">
+                        Lead, Innovate, Inspire
+                    </h2>
+                    <p class="text-base md:text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+                        Bentuk masa depan teknologi dan komunitas di kampus kamu, 
+                        diberdayakan oleh Bank Indonesia KPW Lampung.
                     </p>
-                    <div
-                        class="flex flex-col sm:flex-row gap-4 justify-center items-center"
-                    >
-                        <Link
-                            v-if="canRegister"
-                            :href="route('register')"
-                            class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
-                        >
-                            🚀 Mulai Magang Sekarang
+                    
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center items-center mb-12">
+                        <Link v-if="canRegister" :href="route('register')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                            Daftar Sekarang
                         </Link>
-                        <a
-                            href="#divisions"
-                            class="border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all"
-                        >
-                            📊 Lihat Program Kami
+                        <a href="#divisions" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors px-6 py-3">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                            </svg>
+                            Lihat Program
                         </a>
+                    </div>
+
+                    <!-- Hero Image Placeholder -->
+                    <div class="relative">
+                        <div class="bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-xl border border-gray-200/50">
+                            <div class="aspect-video bg-gradient-to-br from-blue-100 to-indigo-200 rounded-lg flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Business Intelligence Platform</h3>
+                                    <p class="text-sm text-gray-600">Teknologi canggih untuk analisis data perbankan</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Floating decorative elements -->
+                        <div class="absolute -top-2 -left-2 w-6 h-6 bg-blue-400 rounded-full opacity-60 animate-bounce"></div>
+                        <div class="absolute -top-1 -right-3 w-4 h-4 bg-indigo-400 rounded-full opacity-50 animate-pulse"></div>
+                        <div class="absolute -bottom-2 left-6 w-3 h-3 bg-purple-400 rounded-full opacity-40 animate-bounce" style="animation-delay: 1s"></div>
                     </div>
                 </div>
             </div>
-
-            <!-- Floating Elements -->
-            <div
-                class="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20 animate-bounce"
-            ></div>
-            <div
-                class="absolute top-40 right-20 w-16 h-16 bg-indigo-200 rounded-full opacity-30 animate-pulse"
-            ></div>
-            <div
-                class="absolute bottom-20 left-20 w-12 h-12 bg-purple-200 rounded-full opacity-25 animate-bounce"
-                style="animation-delay: 1s"
-            ></div>
         </section>
 
         <!-- Features Section -->
-        <section id="features" class="py-20 bg-white">
+        <section id="features" class="relative z-10 py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
                         Mengapa Memilih GrowithBI?
                     </h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Kami menyediakan pengalaman magang yang komprehensif
-                        dengan teknologi terkini
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Kami menyediakan pengalaman magang yang komprehensif dengan teknologi terkini
                     </p>
                 </div>
 
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div
-                        class="group p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
-                    >
-                        <div
-                            class="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                                />
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="group p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-gray-200/50 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-md">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Bimbingan Expert
-                        </h3>
-                        <p class="text-gray-600">
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Bimbingan Expert</h3>
+                        <p class="text-gray-600 text-sm">
                             Didampingi oleh praktisi berpengalaman dari Bank
                             Indonesia dan ahli Business Intelligence terkemuka
                         </p>
                     </div>
 
-                    <div
-                        class="group p-8 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
-                    >
-                        <div
-                            class="w-16 h-16 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
+                    <div class="group p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Project Real
-                        </h3>
-                        <p class="text-gray-600">
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Project Real</h3>
+                        <p class="text-gray-600 text-sm">
                             Mengerjakan project nyata dengan data perbankan dan
                             kasus bisnis sesungguhnya dari Bank Indonesia
                         </p>
                     </div>
 
-                    <div
-                        class="group p-8 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
-                    >
-                        <div
-                            class="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
+                    <div class="group p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-gray-200/50 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-md">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Teknologi Modern
-                        </h3>
-                        <p class="text-gray-600">
-                            Menggunakan tools terkini seperti Power BI, Tableau,
-                            Python, dan SQL
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Teknologi Modern</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            Menggunakan tools terkini seperti Power BI, Tableau, Python, dan SQL
                         </p>
                     </div>
 
-                    <div
-                        class="group p-8 bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
-                    >
-                        <div
-                            class="w-16 h-16 bg-gradient-to-r from-orange-600 to-red-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
-                                />
+                    <div class="group p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-gray-200/50 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-md">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Sertifikat
-                        </h3>
-                        <p class="text-gray-600">
-                            Dapatkan sertifikat resmi dari Bank Indonesia yang
-                            diakui industri perbankan dan keuangan
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Sertifikat Resmi</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            Dapatkan sertifikat resmi dari Bank Indonesia yang diakui industri perbankan dan keuangan
                         </p>
                     </div>
 
-                    <div
-                        class="group p-8 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
-                    >
-                        <div
-                            class="w-16 h-16 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20a3 3 0 01-3-3v-2a3 3 0 013-3m3-3a3 3 0 110-6 3 3 0 010 6m0 3a3 3 0 110-6 3 3 0 010 6m3 3h1m-4 0h1m-4 0v-2a3 3 0 013-3m-3 3H7m3-3v3"
-                                />
+                    <div class="group p-6 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20a3 3 0 01-3-3v-2a3 3 0 013-3m3-3a3 3 0 110-6 3 3 0 010 6m0 3a3 3 0 110-6 3 3 0 010 6m3 3h1m-4 0h1m-4 0v-2a3 3 0 013-3m-3 3H7m3-3v3"/>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Networking
-                        </h3>
-                        <p class="text-gray-600">
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Networking</h3>
+                        <p class="text-gray-600 text-sm">
                             Bangun jaringan profesional dengan sesama peserta
                             dan pegawai Bank Indonesia
                         </p>
                     </div>
 
-                    <div
-                        class="group p-8 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
-                    >
-                        <div
-                            class="w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
+                    <div class="group p-6 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="w-12 h-12 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Flexible Schedule
-                        </h3>
-                        <p class="text-gray-600">
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Flexible Schedule</h3>
+                        <p class="text-gray-600 text-sm">
                             Program magang yang fleksibel dan dapat disesuaikan
                             dengan jadwal kuliah mahasiswa
                         </p>
@@ -481,17 +361,14 @@ onMounted(async () => {
         </section>
 
         <!-- About Section -->
-        <section
-            id="about"
-            class="py-20 bg-gradient-to-br from-gray-50 to-blue-50"
-        >
+        <section id="about" class="relative z-10 py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="grid lg:grid-cols-2 gap-8 items-center">
                     <div>
-                        <h2 class="text-4xl font-bold text-gray-900 mb-6">
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
                             Tentang GrowithBI
                         </h2>
-                        <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+                        <p class="text-base text-gray-600 mb-4 leading-relaxed">
                             GrowithBI adalah program magang eksklusif yang
                             diselenggarakan oleh Bank Indonesia Kantor
                             Perwakilan Wilayah (KPW) Lampung. Program ini
@@ -499,79 +376,59 @@ onMounted(async () => {
                             mengembangkan keahlian di bidang Business
                             Intelligence dan Data Analytics.
                         </p>
-                        <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        <p class="text-base text-gray-600 mb-6 leading-relaxed">
                             Sebagai bagian dari Bank Indonesia, kami memberikan
                             kesempatan kepada mahasiswa untuk belajar langsung
                             dari praktisi berpengalaman dan menggunakan
                             teknologi terdepan dalam industri perbankan dan
                             keuangan.
                         </p>
-                        <div class="grid grid-cols-2 gap-6">
-                            <div
-                                class="text-center p-4 bg-white rounded-xl shadow-sm"
-                            >
-                                <div
-                                    class="text-3xl font-bold text-blue-600 mb-2"
-                                >
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center p-3 bg-white rounded-lg shadow-sm">
+                                <div class="text-2xl font-bold text-blue-600 mb-1">
                                     150+
                                 </div>
-                                <div class="text-gray-600">Alumni</div>
+                                <div class="text-sm text-gray-600">Alumni</div>
                             </div>
-                            <div
-                                class="text-center p-4 bg-white rounded-xl shadow-sm"
-                            >
-                                <div
-                                    class="text-3xl font-bold text-green-600 mb-2"
-                                >
+                            <div class="text-center p-3 bg-white rounded-lg shadow-sm">
+                                <div class="text-2xl font-bold text-green-600 mb-1">
                                     92%
                                 </div>
-                                <div class="text-gray-600">Job Placement</div>
+                                <div class="text-sm text-gray-600">Job Placement</div>
                             </div>
-                            <div
-                                class="text-center p-4 bg-white rounded-xl shadow-sm"
-                            >
-                                <div
-                                    class="text-3xl font-bold text-purple-600 mb-2"
-                                >
+                            <div class="text-center p-3 bg-white rounded-lg shadow-sm">
+                                <div class="text-2xl font-bold text-purple-600 mb-1">
                                     15+
                                 </div>
-                                <div class="text-gray-600">
-                                    Partner Universitas
-                                </div>
+                                <div class="text-sm text-gray-600">Partner Universitas</div>
                             </div>
-                            <div
-                                class="text-center p-4 bg-white rounded-xl shadow-sm"
-                            >
-                                <div
-                                    class="text-3xl font-bold text-orange-600 mb-2"
-                                >
+                            <div class="text-center p-3 bg-white rounded-lg shadow-sm">
+                                <div class="text-2xl font-bold text-orange-600 mb-1">
                                     4.8
                                 </div>
-                                <div class="text-gray-600">Rating Program</div>
+                                <div class="text-sm text-gray-600">Rating Program</div>
                             </div>
                         </div>
                     </div>
                     <div class="relative">
-                        <div
-                            class="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl p-8 text-white"
-                        >
-                            <h3 class="text-2xl font-bold mb-4">Visi Kami</h3>
-                            <p class="text-blue-100 mb-6">
+                        <div class="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl p-6 text-white">
+                            <h3 class="text-xl font-bold mb-3">Visi Kami</h3>
+                            <p class="text-blue-100 mb-4 text-sm">
                                 Menjadi program magang unggulan Bank Indonesia
                                 yang menghasilkan talenta-talenta terbaik di
                                 bidang Business Intelligence dan Data Analytics
                                 untuk mendukung transformasi digital sektor
                                 perbankan.
                             </p>
-                            <h3 class="text-2xl font-bold mb-4">Misi Kami</h3>
-                            <ul class="text-blue-100 space-y-2">
+                            <h3 class="text-xl font-bold mb-3">Misi Kami</h3>
+                            <ul class="text-blue-100 space-y-1 text-sm">
                                 <li class="flex items-start">
-                                    <span class="text-yellow-400 mr-2">•</span>
+                                    <span class="text-yellow-400 mr-2 text-xs">•</span>
                                     Memberikan pelatihan berkualitas tinggi
                                     sesuai standar Bank Indonesia
                                 </li>
                                 <li class="flex items-start">
-                                    <span class="text-yellow-400 mr-2">•</span>
+                                    <span class="text-yellow-400 mr-2 text-xs">•</span>
                                     Mengembangkan SDM yang kompeten di bidang
                                     data analytics
                                 </li>
@@ -588,40 +445,40 @@ onMounted(async () => {
         </section>
 
         <!-- Divisions Section -->
-        <section id="divisions" class="py-20 bg-white">
+        <section id="divisions" class="py-16 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
                         Program Magang Kami
                     </h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                         Pilih program yang sesuai dengan minat dan tujuan karir
                         Anda
                     </p>
                 </div>
 
                 <div
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
                     v-if="divisions.length > 0"
                 >
                     <div
                         v-for="division in divisions"
                         :key="division.id"
-                        class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+                        class="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden"
                     >
                         <!-- Card Header -->
-                        <div class="p-8">
-                            <div class="flex items-center mb-6">
+                        <div class="p-6">
+                            <div class="flex items-center justify-center mb-4">
                                 <div
-                                    class="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center"
+                                    class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
                                 >
                                     <i
                                         v-if="division.icon"
-                                        :class="division.icon + ' text-white text-2xl'"
+                                        :class="division.icon + ' text-white text-lg'"
                                     ></i>
                                     <svg
                                         v-else
-                                        class="w-8 h-8 text-white"
+                                        class="w-6 h-6 text-white"
                                         fill="currentColor"
                                         viewBox="0 0 24 24"
                                     >
@@ -632,18 +489,18 @@ onMounted(async () => {
                                 </div>
                             </div>
                             
-                            <h3 class="text-xl font-bold text-gray-900 mb-3 leading-tight">
+                            <h3 class="text-lg font-bold text-gray-900 mb-2 text-center leading-tight">
                                 {{ division.name }}
                             </h3>
                             
-                            <p class="text-gray-600 mb-6 leading-relaxed text-sm">
+                            <p class="text-gray-600 mb-4 text-center leading-relaxed text-sm line-clamp-3">
                                 {{ division.description }}
                             </p>
                             
-                            <div class="flex items-center justify-between mb-6">
+                            <div class="flex justify-center mb-4">
                                 <span
                                     :class="[
-                                        'px-3 py-1 rounded-full text-xs font-medium',
+                                        'px-2.5 py-1 rounded-full text-xs font-medium',
                                         division.is_active
                                             ? 'bg-green-100 text-green-700'
                                             : 'bg-gray-100 text-gray-600'
@@ -659,21 +516,25 @@ onMounted(async () => {
                         </div>
                         
                         <!-- Card Footer -->
-                        <div class="px-8 pb-8 pt-4 border-t border-gray-100 bg-gray-50/50">
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="text-sm text-gray-600">
-                                    <i class="fas fa-users mr-2"></i>
+                        <div class="px-6 pb-6 border-t border-gray-50 bg-gray-50/30">
+                            <div class="flex items-center justify-center gap-4 mb-4 pt-4">
+                                <div class="text-xs text-gray-600 flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
                                     <span class="font-medium">{{ division.quota }}</span> posisi
                                 </div>
-                                <div class="text-sm text-gray-600">
-                                    <i class="fas fa-clock mr-2"></i>
+                                <div class="text-xs text-gray-600 flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
                                     <span class="font-medium">6</span> bulan
                                 </div>
                             </div>
                             
                             <Link
                                 :href="route('public.division.detail', division.id)"
-                                class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-2.5 rounded-xl font-semibold text-center transition-all transform hover:scale-105 block text-sm"
+                                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-lg font-medium text-center transition-all duration-200 block text-sm hover:shadow-md"
                             >
                                 Lihat Detail
                             </Link>
