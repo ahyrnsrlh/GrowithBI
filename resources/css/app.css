@@ -13,7 +13,7 @@
     
     /* Responsive container with better spacing */
     .container-responsive {
-        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12;
     }
     
     /* Better grid system for cards */
@@ -24,5 +24,99 @@
     /* Smooth hover animations */
     .card-hover {
         @apply transition-all duration-300 hover:shadow-xl hover:border-blue-300 hover:-translate-y-1 sm:hover:-translate-y-2;
+    }
+    
+    /* Responsive text sizes */
+    .text-responsive-xl {
+        @apply text-xl sm:text-2xl lg:text-3xl xl:text-4xl;
+    }
+    
+    .text-responsive-lg {
+        @apply text-lg sm:text-xl lg:text-2xl xl:text-3xl;
+    }
+    
+    .text-responsive-base {
+        @apply text-base sm:text-lg lg:text-xl;
+    }
+    
+    /* Responsive spacing */
+    .spacing-responsive {
+        @apply p-4 sm:p-6 lg:p-8 xl:p-12;
+    }
+    
+    .spacing-responsive-sm {
+        @apply p-3 sm:p-4 lg:p-6 xl:p-8;
+    }
+    
+    /* Desktop-optimized grid layouts */
+    .grid-desktop-main {
+        @apply grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8 xl:gap-12;
+    }
+    
+    .grid-desktop-sidebar {
+        @apply grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-1 gap-6 lg:gap-8;
+    }
+    
+    /* Better responsive buttons */
+    .btn-responsive {
+        @apply px-4 py-2 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg;
+    }
+    
+    /* Responsive flex layouts */
+    .flex-responsive {
+        @apply flex flex-col sm:flex-row sm:items-center sm:justify-between;
+    }
+    
+    .flex-responsive-reverse {
+        @apply flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between;
+    }
+    
+    /* Better responsive spacing */
+    .section-spacing {
+        @apply py-8 sm:py-12 lg:py-16 xl:py-20;
+    }
+    
+    .content-spacing {
+        @apply space-y-6 sm:space-y-8 lg:space-y-12;
+    }
+    
+    /* Sticky sidebar for desktop */
+    .sticky-sidebar {
+        @apply sticky top-6 lg:top-8 xl:top-12;
+    }
+}
+
+/* Component styles */
+@layer components {
+    /* Enhanced card component */
+    .card-enhanced {
+        @apply bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200;
+    }
+    
+    /* Responsive navigation */
+    .nav-responsive {
+        @apply flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6 xl:space-x-8;
+    }
+    
+    /* Responsive form elements */
+    .input-responsive {
+        @apply w-full rounded-md border border-gray-300 px-3 py-2 lg:px-4 lg:py-3 text-sm lg:text-base focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20;
+    }
+    
+    .label-responsive {
+        @apply block text-sm lg:text-base font-medium text-gray-700 mb-2;
+    }
+}
+
+/* Responsive breakpoint customizations */
+@media (min-width: 1280px) {
+    .xl-container {
+        max-width: 1280px;
+    }
+}
+
+@media (min-width: 1536px) {
+    .xxl-container {
+        max-width: 1400px;
     }
 }
