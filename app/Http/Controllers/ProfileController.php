@@ -44,6 +44,7 @@ class ProfileController extends Controller
             'profileCompletion' => $profileCompletion,
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
+            'selectedDivisionId' => $request->get('division_id') ?? session('division_id'),
         ]);
     }
 
@@ -93,10 +94,10 @@ class ProfileController extends Controller
     /**
      * Upload documents
      */
-    public function uploadDocument(Request $request): RedirectResponse
+    public function uploadDocument(Request $request)
     {
         $request->validate([
-            'document_type' => 'required|in:ktp,cv,surat_lamaran,transkrip,ijazah,sertifikat',
+            'document_type' => 'required|in:surat_pengantar,cv,motivation_letter,transkrip,ktp,npwp,buku_rekening,pas_foto',
             'document' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120', // 5MB max
         ]);
 
@@ -117,13 +118,24 @@ class ProfileController extends Controller
         ]);
 
         $documentNames = [
-            'ktp' => 'KTP',
+            'surat_pengantar' => 'Surat Pengantar',
             'cv' => 'CV',
-            'surat_lamaran' => 'Surat Lamaran',
+            'motivation_letter' => 'Motivation Letter',
             'transkrip' => 'Transkrip Nilai',
-            'ijazah' => 'Ijazah',
-            'sertifikat' => 'Sertifikat'
+            'ktp' => 'KTP',
+            'npwp' => 'NPWP',
+            'buku_rekening' => 'Buku Rekening Tabungan',
+            'pas_foto' => 'Pas Foto'
         ];
+
+        // Return JSON response for AJAX requests
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $documentNames[$documentType] . ' berhasil diunggah!',
+                'user' => $user->fresh() // Get updated user data
+            ]);
+        }
 
         return Redirect::route('profile.edit')->with('success', $documentNames[$documentType] . ' berhasil diunggah!');
     }
@@ -147,6 +159,12 @@ class ProfileController extends Controller
             ->exists();
 
         if ($existingApplication) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda sudah memiliki lamaran aktif untuk divisi ini!'
+                ], 422);
+            }
             return Redirect::route('profile.edit')->with('error', 'Anda sudah memiliki lamaran aktif untuk divisi ini!');
         }
 
@@ -159,10 +177,17 @@ class ProfileController extends Controller
             'motivation' => $request->motivation,
             'status' => 'menunggu',
             'cv_path' => $user->cv_path,
-            'surat_lamaran_path' => $user->surat_lamaran_path,
+            'surat_lamaran_path' => $user->motivation_letter_path, // Use motivation letter instead
             'transkrip_path' => $user->transkrip_path,
             'ktp_path' => $user->ktp_path,
         ]);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lamaran berhasil dikirim!'
+            ]);
+        }
 
         return Redirect::route('profile.edit')->with('success', 'Lamaran berhasil dikirim!');
     }
@@ -199,10 +224,14 @@ class ProfileController extends Controller
             'phone' => $user->phone,
             'address' => $user->address,
             'profile_photo_path' => $user->profile_photo_path,
-            'ktp_path' => $user->ktp_path,
+            'surat_pengantar_path' => $user->surat_pengantar_path,
             'cv_path' => $user->cv_path,
-            'surat_lamaran_path' => $user->surat_lamaran_path,
+            'motivation_letter_path' => $user->motivation_letter_path,
             'transkrip_path' => $user->transkrip_path,
+            'ktp_path' => $user->ktp_path,
+            'buku_rekening_path' => $user->buku_rekening_path,
+            'pas_foto_path' => $user->pas_foto_path,
+            // npwp_path is optional, so not included in completion calculation
         ];
 
         $completed = collect($fields)->filter()->count();

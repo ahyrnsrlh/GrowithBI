@@ -21,6 +21,20 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_photo_path',
+        'phone',
+        'address',
+        'university',
+        'major',
+        'semester',
+        'surat_pengantar_path',
+        'cv_path',
+        'motivation_letter_path',
+        'transkrip_path',
+        'ktp_path',
+        'npwp_path',
+        'buku_rekening_path',
+        'pas_foto_path',
     ];
 
     /**

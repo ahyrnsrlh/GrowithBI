@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Division;
 use App\Models\Application;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class PublicController extends Controller
@@ -83,7 +84,10 @@ class PublicController extends Controller
     public function divisionDetail(Division $division)
     {
         return Inertia::render('Public/DivisionDetail', [
-            'division' => $division->load('supervisor')
+            'division' => $division->load('supervisor'),
+            'auth' => [
+                'user' => Auth::user()
+            ]
         ]);
     }
 

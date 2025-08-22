@@ -271,11 +271,11 @@
               <h2 class="text-xl font-semibold text-gray-900 mb-6">Dokumen Persyaratan</h2>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- KTP -->
+                <!-- Surat Pengantar -->
                 <DocumentUpload 
-                  title="KTP/Kartu Identitas"
-                  type="ktp"
-                  :current-file="user.ktp_path"
+                  title="Surat Pengantar"
+                  type="surat_pengantar"
+                  :current-file="user.surat_pengantar_path"
                   @upload="uploadDocument"
                   required
                 />
@@ -289,11 +289,11 @@
                   required
                 />
 
-                <!-- Surat Lamaran -->
+                <!-- Motivation Letter -->
                 <DocumentUpload 
-                  title="Surat Lamaran"
-                  type="surat_lamaran"
-                  :current-file="user.surat_lamaran_path"
+                  title="Motivation Letter"
+                  type="motivation_letter"
+                  :current-file="user.motivation_letter_path"
                   @upload="uploadDocument"
                   required
                 />
@@ -307,20 +307,39 @@
                   required
                 />
 
-                <!-- Ijazah -->
+                <!-- KTP -->
                 <DocumentUpload 
-                  title="Ijazah Terakhir"
-                  type="ijazah"
-                  :current-file="user.ijazah_path"
+                  title="KTP"
+                  type="ktp"
+                  :current-file="user.ktp_path"
+                  @upload="uploadDocument"
+                  required
+                />
+
+                <!-- NPWP -->
+                <DocumentUpload 
+                  title="NPWP"
+                  type="npwp"
+                  :current-file="user.npwp_path"
                   @upload="uploadDocument"
                 />
 
-                <!-- Sertifikat -->
+                <!-- Buku Rekening -->
                 <DocumentUpload 
-                  title="Sertifikat Pendukung"
-                  type="sertifikat"
-                  :current-file="user.sertifikat_path"
+                  title="Buku Rekening Tabungan"
+                  type="buku_rekening"
+                  :current-file="user.buku_rekening_path"
                   @upload="uploadDocument"
+                  required
+                />
+
+                <!-- Pas Foto -->
+                <DocumentUpload 
+                  title="Pas Foto 3x4 atau 4x6"
+                  type="pas_foto"
+                  :current-file="user.pas_foto_path"
+                  @upload="uploadDocument"
+                  required
                 />
               </div>
             </div>
@@ -449,7 +468,11 @@ const props = defineProps({
   profileCompletion: Object,
   mustVerifyEmail: Boolean,
   status: String,
+  selectedDivisionId: [String, Number],
 })
+
+// Reactive user data to handle updates
+const user = reactive({ ...props.user })
 
 // State
 const activeTab = ref('profile')
@@ -460,26 +483,29 @@ const notificationMessage = ref('')
 
 // Forms
 const profileForm = useForm({
-  name: props.user.name,
-  email: props.user.email,
-  phone: props.user.phone,
-  address: props.user.address,
-  university: props.user.university,
-  major: props.user.major,
-  semester: props.user.semester,
+  name: user.name,
+  email: user.email,
+  phone: user.phone,
+  address: user.address,
+  university: user.university,
+  major: user.major,
+  semester: user.semester,
 })
 
 const applicationForm = useForm({
-  division_id: '',
+  division_id: props.selectedDivisionId || '',
   motivation: '',
 })
 
 // Computed
 const canSubmitApplication = computed(() => {
-  return props.user.ktp_path && 
-         props.user.cv_path && 
-         props.user.surat_lamaran_path && 
-         props.user.transkrip_path &&
+  return user.surat_pengantar_path && 
+         user.cv_path && 
+         user.motivation_letter_path && 
+         user.transkrip_path &&
+         user.ktp_path &&
+         user.buku_rekening_path &&
+         user.pas_foto_path &&
          applicationForm.motivation.length >= 100
 })
 
@@ -531,12 +557,17 @@ const uploadDocument = (type, file) => {
   window.axios.post(route('profile.upload-document'), formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
     },
-  }).then(() => {
-    showToast('success', 'Dokumen berhasil diunggah!')
-    setTimeout(() => window.location.reload(), 1000)
-  }).catch(() => {
-    showToast('error', 'Gagal mengunggah dokumen!')
+  }).then((response) => {
+    // Update reactive user data in-place without page reload
+    if (response.data.user) {
+      Object.assign(user, response.data.user);
+    }
+    showToast('success', response.data.message || 'Dokumen berhasil diunggah!')
+  }).catch((error) => {
+    const message = error.response?.data?.message || 'Gagal mengunggah dokumen!'
+    showToast('error', message)
   })
 }
 
@@ -557,6 +588,12 @@ const submitApplication = () => {
 onMounted(() => {
   if (props.status) {
     showToast('success', props.status)
+  }
+  
+  // If selectedDivisionId is provided, switch to applications tab
+  if (props.selectedDivisionId) {
+    activeTab.value = 'applications'
+    showToast('info', 'Silakan lengkapi profil dan upload dokumen sebelum melamar magang.')
   }
 })
 </script>

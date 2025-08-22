@@ -54,9 +54,9 @@ class AuthenticatedSessionController extends Controller
             case 'admin':
                 return redirect()->route('admin.dashboard');
             case 'pembimbing':
-                return redirect()->route('pembimbing.dashboard');
+                return redirect()->route('profile.edit');
             case 'peserta':
-                return redirect()->route('peserta.dashboard');
+                return redirect()->route('profile.edit');
             default:
                 return redirect()->intended(route('dashboard', absolute: false));
         }

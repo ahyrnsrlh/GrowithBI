@@ -247,54 +247,6 @@
                         <!-- Apply Button -->
                         <div class="lg:flex-shrink-0 lg:ml-6 mt-4 lg:mt-0">
                             <button
-                                v-if="!auth.user"
-                                @click="handleApply"
-                                :disabled="
-                                    division.available_slots <= 0 || isLoading
-                                "
-                                class="w-full lg:w-auto bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed disabled:shadow-none"
-                            >
-                                <span
-                                    v-if="!isLoading"
-                                    class="flex items-center justify-center"
-                                >
-                                    <span class="text-base">
-                                        {{
-                                            division.available_slots <= 0
-                                                ? "Kuota Penuh"
-                                                : "Daftar Sekarang"
-                                        }}
-                                    </span>
-                                </span>
-                                <span
-                                    v-else
-                                    class="flex items-center justify-center"
-                                >
-                                    <svg
-                                        class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle
-                                            class="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            stroke-width="4"
-                                        ></circle>
-                                        <path
-                                            class="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                        ></path>
-                                    </svg>
-                                    Memproses...
-                                </span>
-                            </button>
-                            <button
-                                v-else
                                 @click="handleApply"
                                 :disabled="
                                     division.available_slots <= 0 || isLoading
@@ -655,6 +607,10 @@ const notification = ref({
 
 // Methods
 const handleApply = async () => {
+    console.log('=== HANDLE APPLY START ===');
+    console.log('Division:', props.division);
+    console.log('Auth user:', props.auth?.user);
+    
     if (props.division.available_slots <= 0) {
         showNotification(
             "error",
@@ -664,20 +620,144 @@ const handleApply = async () => {
         return;
     }
 
+    // Check if user is authenticated
+    if (!props.auth?.user) {
+        console.log('User not authenticated, showing login option');
+        showNotification(
+            "error",
+            "Login Diperlukan",
+            "Silakan login terlebih dahulu untuk mendaftar magang."
+        );
+        
+        // Redirect to login after 2 seconds
+        setTimeout(() => {
+            window.location.href = `/login`;
+        }, 2000);
+        return;
+    }
+
+    console.log('User authenticated, starting validation process');
     isLoading.value = true;
 
     try {
-        // Simulate API call delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Check if user already has application for this division
+        console.log('Fetching user data...');
+        const checkResponse = await window.axios.get('/api/user');
+        const user = checkResponse.data;
+        console.log('User data:', user);
+        
+        // Check if user has existing application for this division
+        console.log('Checking existing application...');
+        const existingApplicationResponse = await window.axios.get(`/api/applications/check/${props.division.id}`);
+        console.log('Existing application check:', existingApplicationResponse.data);
+        
+        if (existingApplicationResponse.data.hasApplication) {
+            showNotification(
+                "error",
+                "Lamaran Sudah Ada",
+                "Anda sudah memiliki lamaran aktif untuk divisi ini."
+            );
+            isLoading.value = false;
+            return;
+        }
 
-        // For now, just redirect to application form
-        window.location.href = `/divisions/${props.division.id}/apply`;
-    } catch (error) {
+        // Validate required documents
+        console.log('Validating documents...');
+        const requiredDocuments = [
+            { field: 'surat_pengantar_path', name: 'Surat Pengantar' },
+            { field: 'cv_path', name: 'Curriculum Vitae (CV)' },
+            { field: 'motivation_letter_path', name: 'Motivation Letter' },
+            { field: 'transkrip_path', name: 'Transkrip Nilai' },
+            { field: 'ktp_path', name: 'KTP' },
+            { field: 'buku_rekening_path', name: 'Buku Rekening Tabungan' },
+            { field: 'pas_foto_path', name: 'Pas Foto 3x4 atau 4x6' }
+        ];
+
+        const missingDocuments = requiredDocuments.filter(doc => !user[doc.field]);
+        console.log('Missing documents:', missingDocuments);
+        
+        if (missingDocuments.length > 0) {
+            const missingNames = missingDocuments.map(doc => doc.name).join(', ');
+            showNotification(
+                "error",
+                "Dokumen Belum Lengkap",
+                `Silakan lengkapi dokumen berikut terlebih dahulu: ${missingNames}`
+            );
+            isLoading.value = false;
+            
+            // Show popup for 5 seconds before allowing any action
+            console.log('Showing document validation error for 5 seconds...');
+            setTimeout(() => {
+                console.log('Document error timeout completed');
+            }, 5000);
+            
+            return;
+        }
+
+        // Validate profile completion
+        console.log('Validating profile...');
+        const requiredProfile = [
+            { field: 'name', name: 'Nama Lengkap' },
+            { field: 'phone', name: 'Nomor Telepon' },
+            { field: 'address', name: 'Alamat' },
+            { field: 'university', name: 'Universitas' },
+            { field: 'major', name: 'Jurusan' }
+        ];
+
+        const missingProfile = requiredProfile.filter(field => !user[field.field]);
+        console.log('Missing profile:', missingProfile);
+        
+        if (missingProfile.length > 0) {
+            const missingProfileNames = missingProfile.map(field => field.name).join(', ');
+            showNotification(
+                "error",
+                "Profil Belum Lengkap",
+                `Silakan lengkapi data profil berikut: ${missingProfileNames}. Anda akan diarahkan ke halaman profil.`
+            );
+            setTimeout(() => {
+                window.location.href = `/profile?division_id=${props.division.id}`;
+            }, 3000);
+            isLoading.value = false;
+            return;
+        }
+
+        // All requirements met, submit application automatically
+        console.log('All requirements met, submitting application...');
+        const applicationResponse = await window.axios.post('/profile/create-application', {
+            division_id: props.division.id,
+            motivation: `Saya tertarik bergabung dengan program magang di divisi ${props.division.name}. Saya berkomitmen untuk memberikan kontribusi terbaik dan belajar secara maksimal selama program magang berlangsung.`
+        });
+
+        console.log('Application submitted successfully:', applicationResponse.data);
         showNotification(
-            "error",
-            "Error",
-            "Terjadi kesalahan saat memproses lamaran Anda."
+            "success",
+            "Lamaran Berhasil Dikirim!",
+            `Selamat! Lamaran Anda untuk posisi magang di divisi ${props.division.name} telah berhasil dikirim. Tim HRD akan menghubungi Anda segera melalui email atau telepon.`
         );
+
+        // Redirect to profile after 3 seconds to give user time to read success message
+        setTimeout(() => {
+            window.location.href = '/profile';
+        }, 3000);
+
+    } catch (error) {
+        console.error('Application error:', error);
+        
+        if (error.response?.status === 422) {
+            // Validation error
+            const errorMsg = error.response.data.message || 'Ada kesalahan validasi data.';
+            showNotification("error", "Gagal Mengirim Lamaran", errorMsg);
+        } else if (error.response?.status === 401) {
+            // Not authenticated
+            console.log('Authentication error, redirecting to login');
+            window.location.href = `/login?redirect=/divisi/${props.division.id}`;
+        } else {
+            showNotification(
+                "error",
+                "Error",
+                "Terjadi kesalahan saat memproses lamaran Anda. Silakan coba lagi."
+            );
+        }
     } finally {
         isLoading.value = false;
     }

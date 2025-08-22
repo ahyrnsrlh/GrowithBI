@@ -18,9 +18,11 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('Auth/Register');
+        return Inertia::render('Auth/Register', [
+            'division_id' => $request->get('division_id')
+        ]);
     }
 
     /**
@@ -53,24 +55,27 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        // Redirect based on role
-        return $this->redirectBasedOnRole($user);
+        // Redirect based on role with division_id if provided
+        return $this->redirectBasedOnRole($user, $request->get('division_id'));
     }
 
     /**
      * Redirect user based on their role after registration
      */
-    private function redirectBasedOnRole(User $user): RedirectResponse
+    private function redirectBasedOnRole(User $user, $divisionId = null): RedirectResponse
     {
-        switch ($user->role) {
-            case 'admin':
-                return redirect()->route('admin.dashboard');
-            case 'pembimbing':
-                return redirect()->route('pembimbing.dashboard');
-            case 'peserta':
-                return redirect()->route('peserta.dashboard');
-            default:
-                return redirect()->route('dashboard');
+        $redirect = match ($user->role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'pembimbing' => redirect()->route('profile.edit'),
+            'peserta' => redirect()->route('profile.edit'),
+            default => redirect()->route('dashboard'),
+        };
+
+        // Add division_id parameter if provided
+        if ($divisionId) {
+            $redirect->with('division_id', $divisionId);
         }
+
+        return $redirect;
     }
 }
