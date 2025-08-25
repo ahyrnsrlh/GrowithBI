@@ -75,7 +75,7 @@ class ApplicationController extends Controller
      */
     public function show(Application $application)
     {
-        $application->load(['division']);
+        $application->load(['division', 'user:id,name,email,phone,address,surat_pengantar_path,cv_path,motivation_letter_path,transkrip_path,ktp_path,npwp_path,buku_rekening_path,pas_foto_path']);
 
         return Inertia::render('Admin/Applications/Show', [
             'application' => $application

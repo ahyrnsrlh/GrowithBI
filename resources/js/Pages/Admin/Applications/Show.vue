@@ -203,99 +203,397 @@
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">
                             Dokumen
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Surat Pengantar -->
                             <div
-                                class="border border-gray-200 rounded-lg p-4 text-center"
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <svg
-                                    class="w-8 h-8 text-red-500 mx-auto mb-2"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                <p class="text-sm font-medium text-gray-900">
-                                    CV
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg
+                                        class="w-6 h-6 text-blue-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                    Surat Pengantar
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 mb-3">
                                     {{
-                                        application.cv_file
-                                            ? "Tersedia"
-                                            : "Belum upload"
+                                        application.user.surat_pengantar_path
+                                            ? "Terupload"
+                                            : "Belum ada"
                                     }}
                                 </p>
-                                <button
-                                    v-if="application.cv_file"
-                                    class="mt-2 text-blue-600 hover:text-blue-700 text-xs"
-                                >
-                                    Download
-                                </button>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.surat_pengantar_path"
+                                        :href="`/storage/${application.user.surat_pengantar_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.surat_pengantar_path"
+                                        :href="`/storage/${application.user.surat_pengantar_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
                             </div>
+
+                            <!-- CV -->
                             <div
-                                class="border border-gray-200 rounded-lg p-4 text-center"
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <svg
-                                    class="w-8 h-8 text-blue-500 mx-auto mb-2"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                <p class="text-sm font-medium text-gray-900">
+                                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg
+                                        class="w-6 h-6 text-red-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                    Curriculum Vitae (CV)
+                                </p>
+                                <p class="text-xs text-gray-500 mb-3">
+                                    {{
+                                        application.user.cv_path
+                                            ? "Terupload"
+                                            : "Belum ada"
+                                    }}
+                                </p>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.cv_path"
+                                        :href="`/storage/${application.user.cv_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.cv_path"
+                                        :href="`/storage/${application.user.cv_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Motivation Letter -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
+                            >
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg
+                                        class="w-6 h-6 text-purple-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                    Motivation Letter
+                                </p>
+                                <p class="text-xs text-gray-500 mb-3">
+                                    {{
+                                        application.user.motivation_letter_path
+                                            ? "Terupload"
+                                            : "Belum ada"
+                                    }}
+                                </p>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.motivation_letter_path"
+                                        :href="`/storage/${application.user.motivation_letter_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.motivation_letter_path"
+                                        :href="`/storage/${application.user.motivation_letter_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Transkrip Nilai -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
+                            >
+                                <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg
+                                        class="w-6 h-6 text-yellow-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                    Transkrip Nilai
+                                </p>
+                                <p class="text-xs text-gray-500 mb-3">
+                                    {{
+                                        application.user.transkrip_path
+                                            ? "Terupload"
+                                            : "Belum ada"
+                                    }}
+                                </p>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.transkrip_path"
+                                        :href="`/storage/${application.user.transkrip_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.transkrip_path"
+                                        :href="`/storage/${application.user.transkrip_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- KTP -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
+                            >
+                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg
+                                        class="w-6 h-6 text-indigo-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-medium text-gray-900 mb-1">
                                     KTP
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 mb-3">
                                     {{
-                                        application.ktp_file
-                                            ? "Tersedia"
-                                            : "Belum upload"
+                                        application.user.ktp_path
+                                            ? "Terupload"
+                                            : "Belum ada"
                                     }}
                                 </p>
-                                <button
-                                    v-if="application.ktp_file"
-                                    class="mt-2 text-blue-600 hover:text-blue-700 text-xs"
-                                >
-                                    Download
-                                </button>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.ktp_path"
+                                        :href="`/storage/${application.user.ktp_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.ktp_path"
+                                        :href="`/storage/${application.user.ktp_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
                             </div>
+
+                            <!-- NPWP -->
                             <div
-                                class="border border-gray-200 rounded-lg p-4 text-center"
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <svg
-                                    class="w-8 h-8 text-green-500 mx-auto mb-2"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                <p class="text-sm font-medium text-gray-900">
-                                    Surat Lamaran
+                                <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg
+                                        class="w-6 h-6 text-orange-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                    NPWP
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 mb-3">
                                     {{
-                                        application.application_letter_file
-                                            ? "Tersedia"
-                                            : "Belum upload"
+                                        application.user.npwp_path
+                                            ? "Terupload"
+                                            : "Belum ada"
                                     }}
                                 </p>
-                                <button
-                                    v-if="application.application_letter_file"
-                                    class="mt-2 text-blue-600 hover:text-blue-700 text-xs"
-                                >
-                                    Download
-                                </button>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.npwp_path"
+                                        :href="`/storage/${application.user.npwp_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.npwp_path"
+                                        :href="`/storage/${application.user.npwp_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Buku Rekening -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
+                            >
+                                <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg
+                                        class="w-6 h-6 text-teal-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                    Buku Rekening
+                                </p>
+                                <p class="text-xs text-gray-500 mb-3">
+                                    {{
+                                        application.user.buku_rekening_path
+                                            ? "Terupload"
+                                            : "Belum ada"
+                                    }}
+                                </p>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.buku_rekening_path"
+                                        :href="`/storage/${application.user.buku_rekening_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.buku_rekening_path"
+                                        :href="`/storage/${application.user.buku_rekening_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Pas Foto -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
+                            >
+                                <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <svg
+                                        class="w-6 h-6 text-pink-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                    Pas Foto
+                                </p>
+                                <p class="text-xs text-gray-500 mb-3">
+                                    {{
+                                        application.user.pas_foto_path
+                                            ? "Terupload"
+                                            : "Belum ada"
+                                    }}
+                                </p>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.pas_foto_path"
+                                        :href="`/storage/${application.user.pas_foto_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.pas_foto_path"
+                                        :href="`/storage/${application.user.pas_foto_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
