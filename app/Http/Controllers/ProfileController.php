@@ -24,7 +24,7 @@ class ProfileController extends Controller
         $user = $request->user();
         
         // Get user's applications with division info
-        $applications = Application::where('email', $user->email)
+        $applications = Application::where('user_id', $user->id)
             ->with('division')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -54,13 +54,22 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $user->fill($request->validated());
+        $validatedData = $request->validated();
+        
+        // Debug logging
+        \Log::info('Profile update request data:', $validatedData);
+        \Log::info('User before update:', $user->toArray());
+        
+        $user->fill($validatedData);
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
         $user->save();
+        
+        // Debug logging after save
+        \Log::info('User after update:', $user->fresh()->toArray());
 
         return Redirect::route('profile.edit')->with('success', 'Profil berhasil diperbarui!');
     }
@@ -143,7 +152,7 @@ class ProfileController extends Controller
     /**
      * Create new application
      */
-    public function createApplication(Request $request): RedirectResponse
+    public function createApplication(Request $request)
     {
         $request->validate([
             'division_id' => 'required|exists:divisions,id',
@@ -153,7 +162,7 @@ class ProfileController extends Controller
         $user = $request->user();
 
         // Check if user already has an active application for this division
-        $existingApplication = Application::where('email', $user->email)
+        $existingApplication = Application::where('user_id', $user->id)
             ->where('division_id', $request->division_id)
             ->whereIn('status', ['menunggu', 'dalam_review', 'wawancara'])
             ->exists();
@@ -168,28 +177,61 @@ class ProfileController extends Controller
             return Redirect::route('profile.edit')->with('error', 'Anda sudah memiliki lamaran aktif untuk divisi ini!');
         }
 
-        Application::create([
-            'name' => $user->name,
-            'email' => $user->email,
-            'phone' => $user->phone,
-            'address' => $user->address,
-            'division_id' => $request->division_id,
-            'motivation' => $request->motivation,
-            'status' => 'menunggu',
-            'cv_path' => $user->cv_path,
-            'surat_lamaran_path' => $user->motivation_letter_path, // Use motivation letter instead
-            'transkrip_path' => $user->transkrip_path,
-            'ktp_path' => $user->ktp_path,
-        ]);
+        try {
+            \Log::info('=== CREATING APPLICATION ===');
+            \Log::info('User data:', $user->toArray());
+            \Log::info('Request data:', $request->all());
+            
+            $applicationData = [
+                'user_id' => $user->id,
+                'name' => $user->name ?: 'No Name',
+                'email' => $user->email,
+                'phone' => $user->phone ?: 'No Phone',
+                'address' => $user->address ?: 'No Address',
+                'university' => $user->university ?: 'No University',
+                'major' => $user->major ?: 'No Major',
+                'semester' => $user->semester ?: 1,
+                'gpa' => min($user->gpa ?? 0.00, 4.00), // Ensure max 4.00 for decimal(3,2)
+                'start_date' => now()->addMonths(1)->format('Y-m-d'), // Default start date
+                'end_date' => now()->addMonths(7)->format('Y-m-d'), // Default 6 months internship
+                'birth_date' => $user->birth_date,
+                'gender' => $user->gender,
+                'portfolio_url' => $user->portfolio_url,
+                'division_id' => $request->division_id,
+                'motivation' => $request->motivation,
+                'status' => 'menunggu',
+                'cv_path' => $user->cv_path,
+                'surat_lamaran_path' => $user->motivation_letter_path,
+                'transkrip_path' => $user->transkrip_path,
+                'ktp_path' => $user->ktp_path,
+            ];
+            
+            \Log::info('Application data to be created:', $applicationData);
+            
+            $application = Application::create($applicationData);
+            
+            \Log::info('Application created successfully:', $application->toArray());
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Lamaran berhasil dikirim!'
-            ]);
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Lamaran berhasil dikirim!'
+                ]);
+            }
+
+            return Redirect::route('profile.edit')->with('success', 'Lamaran berhasil dikirim!');
+        } catch (\Exception $e) {
+            \Log::error('Application creation failed: ' . $e->getMessage());
+            
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat mengirim lamaran. Silakan coba lagi.'
+                ], 500);
+            }
+            
+            return Redirect::route('profile.edit')->with('error', 'Terjadi kesalahan saat mengirim lamaran. Silakan coba lagi.');
         }
-
-        return Redirect::route('profile.edit')->with('success', 'Lamaran berhasil dikirim!');
     }
 
     /**

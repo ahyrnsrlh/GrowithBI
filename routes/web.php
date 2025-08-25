@@ -36,6 +36,23 @@ Route::post('/cek-status', [PublicController::class, 'searchStatus'])->name('pub
 // Quick register route (requires authentication)
 Route::post('/quick-register', [PublicController::class, 'quickRegister'])->name('public.quick.register')->middleware('auth');
 
+// Web-based authentication check routes (for better session handling)
+Route::middleware('auth')->group(function () {
+    Route::get('/auth/check', function () {
+        return response()->json([
+            'authenticated' => true,
+            'user' => Auth::user()
+        ]);
+    })->name('auth.check');
+    
+    Route::get('/auth/user', function () {
+        return response()->json(Auth::user());
+    })->name('auth.user');
+    
+    Route::get('/applications/check/{division}', [App\Http\Controllers\Api\ApplicationController::class, 'checkExisting'])->name('applications.check');
+    Route::get('/applications/{application}/status', [App\Http\Controllers\Api\ApplicationController::class, 'getStatus'])->name('applications.status');
+});
+
 // Authentication routes
 require __DIR__.'/auth.php';
 

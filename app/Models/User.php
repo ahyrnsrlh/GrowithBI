@@ -27,6 +27,10 @@ class User extends Authenticatable
         'university',
         'major',
         'semester',
+        'gpa',
+        'birth_date',
+        'gender',
+        'portfolio_url',
         'surat_pengantar_path',
         'cv_path',
         'motivation_letter_path',
@@ -57,6 +61,17 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'birth_date' => 'date',
+            'gpa' => 'decimal:2',
+            'semester' => 'integer',
         ];
+    }
+
+    /**
+     * Get the applications for the user.
+     */
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
     }
 }

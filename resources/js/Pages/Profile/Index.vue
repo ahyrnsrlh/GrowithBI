@@ -154,9 +154,7 @@
 
                             <!-- Quick Links -->
                             <div class="mt-8 pt-6 border-t border-blue-500">
-                                <h3
-                                    class="text-sm font-medium text-white mb-3"
-                                >
+                                <h3 class="text-sm font-medium text-white mb-3">
                                     Navigasi Cepat
                                 </h3>
                                 <div class="space-y-2">
@@ -402,7 +400,7 @@
                                 Dokumen Persyaratan
                             </h2>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                 <!-- Surat Pengantar -->
                                 <DocumentUpload
                                     title="Surat Pengantar"
@@ -573,11 +571,24 @@ const showToast = (type, message) => {
 
 const updateProfile = () => {
     profileForm.patch(route("profile.update"), {
-        onSuccess: () => {
+        onSuccess: (page) => {
             editMode.value = false;
+            // Update reactive user data with the latest data from server
+            Object.assign(user, page.props.user);
+            // Update form data as well
+            profileForm.data = {
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                address: user.address,
+                university: user.university,
+                major: user.major,
+                semester: user.semester,
+            };
             showToast("success", "Profil berhasil diperbarui!");
         },
-        onError: () => {
+        onError: (errors) => {
+            console.error('Profile update errors:', errors);
             showToast("error", "Gagal memperbarui profil!");
         },
     });
@@ -633,10 +644,76 @@ const uploadDocument = (type, file) => {
         });
 };
 
-// Check for flash messages
+// Helper function to get status text
+const getStatusText = (status) => {
+    const statusMap = {
+        'menunggu': 'Menunggu Review',
+        'dalam_review': 'Sedang Direview', 
+        'wawancara': 'Tahap Wawancara',
+        'diterima': 'Diterima',
+        'ditolak': 'Ditolak'
+    };
+    return statusMap[status] || status;
+};
+
+// Check for flash messages and handle navigation
 onMounted(() => {
     if (props.status) {
         showToast("success", props.status);
+    }
+
+    // Check for missing fields from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const missingFields = urlParams.get('missing_fields');
+    if (missingFields) {
+        const fieldNames = missingFields.split(',');
+        const fieldLabels = {
+            'phone': 'Nomor Telepon',
+            'address': 'Alamat',
+            'university': 'Universitas',
+            'major': 'Jurusan',
+            'semester': 'Semester'
+        };
+        const missingLabels = fieldNames.map(field => fieldLabels[field] || field).join(', ');
+        showToast("error", `Harap lengkapi: ${missingLabels}`);
+        
+        // Auto switch to profile tab and enable edit mode
+        activeTab.value = 'profile';
+        editMode.value = true;
+    }
+
+    // Check if user came from successful application submission
+    if (
+        urlParams.get("from") === "application" ||
+        urlParams.get("success") === "application"
+    ) {
+        // Switch to applications tab automatically
+        activeTab.value = "applications";
+        showToast(
+            "success",
+            "Selamat! Lamaran Anda telah berhasil dikirim. Anda dapat memantau statusnya di sini."
+        );
+    }
+
+    // Check if there are new applications to highlight
+    if (props.applications && props.applications.length > 0) {
+        const latestApplication = props.applications[0];
+        const applicationTime = new Date(latestApplication.created_at);
+        const currentTime = new Date();
+        const timeDiff = (currentTime - applicationTime) / (1000 * 60); // minutes
+
+        // If application was submitted in the last 5 minutes, highlight it
+        if (timeDiff < 5) {
+            setTimeout(() => {
+                activeTab.value = "applications";
+                showToast(
+                    "info",
+                    `Status lamaran terbaru: ${getStatusText(
+                        latestApplication.status
+                    )}`
+                );
+            }, 1000);
+        }
     }
 });
 </script>

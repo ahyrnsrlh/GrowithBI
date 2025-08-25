@@ -17,6 +17,12 @@ defineProps({
 
 const mobileMenuOpen = ref(false);
 const divisions = ref([]);
+const openFaq = ref(null);
+
+// FAQ toggle function
+const toggleFaq = (faqId) => {
+    openFaq.value = openFaq.value === faqId ? null : faqId;
+};
 
 onMounted(async () => {
     try {
@@ -89,8 +95,9 @@ onMounted(async () => {
                     <div class="hidden md:flex items-center space-x-8">
                         <a href="#features" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">Kriteria</a>
                         <a href="#about" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">Benefit</a>
-                        <a href="#divisions" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">Persyaratan</a>
-                        <a href="#contact" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">FAQ</a>
+                        <a href="#divisions" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">Program</a>
+                        <a href="#faq" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">FAQ</a>
+                        <a href="#contact" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">Kontak</a>
                         
                         <!-- Authenticated User Menu -->
                         <div v-if="auth?.user" class="flex items-center space-x-4">
@@ -148,22 +155,27 @@ onMounted(async () => {
                         <a
                             href="#features"
                             class="text-gray-600 hover:text-blue-600"
-                            >Features</a
+                            >Kriteria</a
                         >
                         <a
                             href="#about"
                             class="text-gray-600 hover:text-blue-600"
-                            >About</a
+                            >Benefit</a
                         >
                         <a
                             href="#divisions"
                             class="text-gray-600 hover:text-blue-600"
-                            >Divisions</a
+                            >Program</a
+                        >
+                        <a
+                            href="#faq"
+                            class="text-gray-600 hover:text-blue-600"
+                            >FAQ</a
                         >
                         <a
                             href="#contact"
                             class="text-gray-600 hover:text-blue-600"
-                            >Contact</a
+                            >Kontak</a
                         >
                         
                         <!-- Authenticated User Mobile Menu -->
@@ -594,6 +606,302 @@ onMounted(async () => {
                     >
                         📋 Lihat Program
                     </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-20 bg-white relative overflow-hidden">
+            <!-- Background Pattern -->
+            <div class="absolute inset-0 opacity-5">
+                <div class="absolute inset-0" style="background-image: 
+                    linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+                    background-size: 60px 60px;">
+                </div>
+            </div>
+            
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <!-- Section Header -->
+                <div class="text-center mb-16">
+                    <div class="inline-flex items-center px-4 py-2 bg-blue-50 border border-blue-200 rounded-full mb-6">
+                        <i class="fas fa-question-circle text-blue-600 mr-2"></i>
+                        <span class="text-blue-600 font-semibold text-sm">FAQ</span>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        Pertanyaan yang Sering Diajukan
+                    </h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Temukan jawaban untuk pertanyaan-pertanyaan umum seputar program magang Bank Indonesia
+                    </p>
+                </div>
+
+                <!-- FAQ Accordion -->
+                <div class="space-y-4">
+                    <!-- FAQ Item 1 -->
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <button 
+                            @click="toggleFaq(1)"
+                            class="w-full px-6 py-5 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-xl"
+                        >
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold text-gray-900 pr-4">
+                                    Bagaimana cara mendaftar program magang di Bank Indonesia?
+                                </h3>
+                                <div class="flex-shrink-0">
+                                    <i :class="[
+                                        'fas transition-transform duration-300',
+                                        openFaq === 1 ? 'fa-minus text-blue-600 transform rotate-0' : 'fa-plus text-gray-400'
+                                    ]"></i>
+                                </div>
+                            </div>
+                        </button>
+                        <div 
+                            :class="[
+                                'overflow-hidden transition-all duration-300 ease-in-out',
+                                openFaq === 1 ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                            ]"
+                        >
+                            <div class="px-6 pb-5 text-gray-600 leading-relaxed">
+                                <p class="mb-3">Untuk mendaftar program magang di Bank Indonesia, Anda dapat mengikuti langkah-langkah berikut:</p>
+                                <ol class="list-decimal list-inside space-y-2 ml-4">
+                                    <li>Kunjungi website resmi GrowithBI</li>
+                                    <li>Pilih divisi yang sesuai dengan minat dan bidang studi Anda</li>
+                                    <li>Klik tombol "Daftar Sekarang" pada program yang diminati</li>
+                                    <li>Lengkapi formulir pendaftaran dengan data yang akurat</li>
+                                    <li>Upload dokumen persyaratan yang diperlukan</li>
+                                    <li>Submit aplikasi dan tunggu konfirmasi dari tim kami</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 2 -->
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <button 
+                            @click="toggleFaq(2)"
+                            class="w-full px-6 py-5 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-xl"
+                        >
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold text-gray-900 pr-4">
+                                    Apa saja dokumen yang perlu dipersiapkan?
+                                </h3>
+                                <div class="flex-shrink-0">
+                                    <i :class="[
+                                        'fas transition-transform duration-300',
+                                        openFaq === 2 ? 'fa-minus text-blue-600 transform rotate-0' : 'fa-plus text-gray-400'
+                                    ]"></i>
+                                </div>
+                            </div>
+                        </button>
+                        <div 
+                            :class="[
+                                'overflow-hidden transition-all duration-300 ease-in-out',
+                                openFaq === 2 ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                            ]"
+                        >
+                            <div class="px-6 pb-5 text-gray-600 leading-relaxed">
+                                <p class="mb-3">Dokumen yang wajib disiapkan untuk mendaftar program magang:</p>
+                                <ul class="list-disc list-inside space-y-2 ml-4">
+                                    <li><strong>Surat Pengantar</strong> dari universitas/institut</li>
+                                    <li><strong>Curriculum Vitae (CV)</strong> terbaru dan lengkap</li>
+                                    <li><strong>Motivation Letter</strong> yang menjelaskan alasan dan tujuan magang</li>
+                                    <li><strong>Transkrip Nilai</strong> resmi dari universitas</li>
+                                    <li><strong>Kartu Tanda Penduduk (KTP)</strong></li>
+                                </ul>
+                                <p class="mt-3 text-sm text-blue-600">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Semua dokumen harus dalam format PDF, JPG, atau PNG dengan ukuran maksimal 5MB per file.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 3 -->
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <button 
+                            @click="toggleFaq(3)"
+                            class="w-full px-6 py-5 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-xl"
+                        >
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold text-gray-900 pr-4">
+                                    Berapa lama durasi program magang?
+                                </h3>
+                                <div class="flex-shrink-0">
+                                    <i :class="[
+                                        'fas transition-transform duration-300',
+                                        openFaq === 3 ? 'fa-minus text-blue-600 transform rotate-0' : 'fa-plus text-gray-400'
+                                    ]"></i>
+                                </div>
+                            </div>
+                        </button>
+                        <div 
+                            :class="[
+                                'overflow-hidden transition-all duration-300 ease-in-out',
+                                openFaq === 3 ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                            ]"
+                        >
+                            <div class="px-6 pb-5 text-gray-600 leading-relaxed">
+                                <p class="mb-3">Program magang Bank Indonesia memiliki beberapa pilihan durasi:</p>
+                                <div class="space-y-3">
+                                    <div class="flex items-start">
+                                        <div class="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                        <div>
+                                            <strong>Program Reguler:</strong> 3-6 bulan (sesuai dengan kebutuhan akademik)
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                        <div>
+                                            <strong>Program Khusus:</strong> 1-2 bulan (untuk project tertentu)
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                        <div>
+                                            <strong>Program Penelitian:</strong> Dapat diperpanjang hingga 12 bulan
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 text-sm text-gray-500">
+                                    Durasi dapat disesuaikan dengan kebutuhan akademik dan kesepakatan dengan supervisor.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 4 -->
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <button 
+                            @click="toggleFaq(4)"
+                            class="w-full px-6 py-5 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-xl"
+                        >
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold text-gray-900 pr-4">
+                                    Apakah peserta magang mendapatkan benefit/insentif?
+                                </h3>
+                                <div class="flex-shrink-0">
+                                    <i :class="[
+                                        'fas transition-transform duration-300',
+                                        openFaq === 4 ? 'fa-minus text-blue-600 transform rotate-0' : 'fa-plus text-gray-400'
+                                    ]"></i>
+                                </div>
+                            </div>
+                        </button>
+                        <div 
+                            :class="[
+                                'overflow-hidden transition-all duration-300 ease-in-out',
+                                openFaq === 4 ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                            ]"
+                        >
+                            <div class="px-6 pb-5 text-gray-600 leading-relaxed">
+                                <p class="mb-4">Ya, peserta magang akan mendapatkan berbagai benefit menarik:</p>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="space-y-3">
+                                        <h4 class="font-semibold text-gray-900">Benefit Finansial:</h4>
+                                        <ul class="space-y-1 text-sm">
+                                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Uang saku bulanan</li>
+                                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Transportasi</li>
+                                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Makan siang</li>
+                                        </ul>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <h4 class="font-semibold text-gray-900">Benefit Non-Finansial:</h4>
+                                        <ul class="space-y-1 text-sm">
+                                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Sertifikat magang resmi</li>
+                                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Mentoring dari expert</li>
+                                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Networking profesional</li>
+                                            <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Pengalaman industri</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 5 -->
+                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <button 
+                            @click="toggleFaq(5)"
+                            class="w-full px-6 py-5 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-xl"
+                        >
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold text-gray-900 pr-4">
+                                    Bagaimana cara melihat status lamaran saya?
+                                </h3>
+                                <div class="flex-shrink-0">
+                                    <i :class="[
+                                        'fas transition-transform duration-300',
+                                        openFaq === 5 ? 'fa-minus text-blue-600 transform rotate-0' : 'fa-plus text-gray-400'
+                                    ]"></i>
+                                </div>
+                            </div>
+                        </button>
+                        <div 
+                            :class="[
+                                'overflow-hidden transition-all duration-300 ease-in-out',
+                                openFaq === 5 ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                            ]"
+                        >
+                            <div class="px-6 pb-5 text-gray-600 leading-relaxed">
+                                <p class="mb-4">Anda dapat memantau status lamaran dengan beberapa cara:</p>
+                                <div class="space-y-4">
+                                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                        <h4 class="font-semibold text-blue-900 mb-2">
+                                            <i class="fas fa-user-circle mr-2"></i>Dashboard Pribadi
+                                        </h4>
+                                        <p class="text-sm text-blue-700">
+                                            Login ke akun Anda dan akses menu "Status Lamaran" untuk melihat progress terkini.
+                                        </p>
+                                    </div>
+                                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                        <h4 class="font-semibold text-green-900 mb-2">
+                                            <i class="fas fa-search mr-2"></i>Cek Status Online
+                                        </h4>
+                                        <p class="text-sm text-green-700">
+                                            Gunakan fitur "Cek Status" dengan memasukkan NIK dan email yang terdaftar.
+                                        </p>
+                                    </div>
+                                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                        <h4 class="font-semibold text-yellow-900 mb-2">
+                                            <i class="fas fa-envelope mr-2"></i>Notifikasi Email
+                                        </h4>
+                                        <p class="text-sm text-yellow-700">
+                                            Kami akan mengirimkan update status melalui email yang Anda daftarkan.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact CTA -->
+                <div class="mt-16 text-center">
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-8">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">
+                            Masih ada pertanyaan lain?
+                        </h3>
+                        <p class="text-gray-600 mb-6">
+                            Tim kami siap membantu Anda. Jangan ragu untuk menghubungi kami.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a 
+                                href="mailto:growithbi@bi.go.id"
+                                class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                                <i class="fas fa-envelope mr-2"></i>
+                                Email Kami
+                            </a>
+                            <a 
+                                href="tel:(0721)1234567"
+                                class="inline-flex items-center px-6 py-3 border border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-600 hover:text-white transition-colors"
+                            >
+                                <i class="fas fa-phone mr-2"></i>
+                                Hubungi Kami
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
