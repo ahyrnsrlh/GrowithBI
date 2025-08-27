@@ -11,7 +11,7 @@ class LogbookComment extends Model
         'logbook_id',
         'user_id',
         'comment',
-        'type',
+        'comment_type',
         'is_internal'
     ];
 
@@ -43,7 +43,7 @@ class LogbookComment extends Model
 
     public function scopeByType($query, $type)
     {
-        return $query->where('type', $type);
+        return $query->where('comment_type', $type);
     }
 
     // Accessors
