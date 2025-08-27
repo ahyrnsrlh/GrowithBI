@@ -281,7 +281,7 @@
                                         <span
                                             class="text-white font-medium text-sm"
                                             >{{
-                                                application.user.name.charAt(0)
+                                                application.user?.name?.charAt(0) || 'N'
                                             }}</span
                                         >
                                     </div>
@@ -289,10 +289,10 @@
                                         <div
                                             class="text-sm font-medium text-gray-900"
                                         >
-                                            {{ application.user.name }}
+                                            {{ application.user?.name || 'N/A' }}
                                         </div>
                                         <div class="text-sm text-gray-500">
-                                            {{ application.user.email }}
+                                            {{ application.user?.email || 'N/A' }}
                                         </div>
                                     </div>
                                 </div>

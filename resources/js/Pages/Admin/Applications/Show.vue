@@ -1,7 +1,7 @@
 <template>
     <AdminLayout
         title="Detail Pendaftaran"
-        :subtitle="`Pendaftaran ${application.user.name} - ${application.division.name}`"
+        :subtitle="`Pendaftaran ${application.user?.name || 'N/A'} - ${application.division?.name || 'N/A'}`"
     >
         <div class="max-w-4xl mx-auto">
             <!-- Header with Actions -->
@@ -30,10 +30,10 @@
                         </Link>
                         <div>
                             <h1 class="text-2xl font-bold text-gray-900">
-                                {{ application.user.name }}
+                                {{ application.user?.name || 'N/A' }}
                             </h1>
                             <p class="text-gray-600">
-                                {{ application.user.email }}
+                                {{ application.user?.email || 'N/A' }}
                             </p>
                         </div>
                     </div>
@@ -77,7 +77,7 @@
                                     >Nama Lengkap</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ application.user.name }}
+                                    {{ application.user?.name || '-' }}
                                 </p>
                             </div>
                             <div>
@@ -86,7 +86,7 @@
                                     >Email</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ application.user.email }}
+                                    {{ application.user?.email || '-' }}
                                 </p>
                             </div>
                             <div>
@@ -95,16 +95,43 @@
                                     >No. Telepon</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ application.user.phone || "-" }}
+                                    {{ application.user?.phone || "-" }}
                                 </p>
                             </div>
                             <div>
                                 <label
                                     class="block text-sm font-medium text-gray-500"
+                                    >Universitas</label
+                                >
+                                <p class="mt-1 text-sm text-gray-900">
+                                    {{ application.user?.university || "-" }}
+                                </p>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-500"
+                                    >Jurusan</label
+                                >
+                                <p class="mt-1 text-sm text-gray-900">
+                                    {{ application.user?.major || "-" }}
+                                </p>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-500"
+                                    >Semester</label
+                                >
+                                <p class="mt-1 text-sm text-gray-900">
+                                    {{ application.user?.semester ? `Semester ${application.user.semester}` : "-" }}
+                                </p>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label
+                                    class="block text-sm font-medium text-gray-500"
                                     >Alamat</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ application.user.address || "-" }}
+                                    {{ application.user?.address || "-" }}
                                 </p>
                             </div>
                         </div>

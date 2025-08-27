@@ -56,7 +56,7 @@ const page = usePage();
                                     Aplikasi
                                 </NavLink>
                                 <NavLink
-                                    href="#"
+                                    :href="route('peserta.logbooks.index')"
                                     :active="
                                         route().current('peserta.logbooks.*')
                                     "
@@ -183,7 +183,7 @@ const page = usePage();
                             Aplikasi
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
-                            href="#"
+                            :href="route('peserta.logbooks.index')"
                             :active="route().current('peserta.logbooks.*')"
                         >
                             Logbook

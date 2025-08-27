@@ -424,11 +424,22 @@ const logout = () => {
         {},
         {
             onSuccess: () => {
-                window.location.href = route("login");
+                // Redirect ke halaman login setelah logout berhasil
+                window.location.href = '/login';
             },
             onError: (errors) => {
                 console.error("Logout error:", errors);
+                // Jika ada error, tetap redirect ke login
+                window.location.href = '/login';
             },
+            onFinish: () => {
+                // Pastikan redirect ke login dalam semua kasus
+                setTimeout(() => {
+                    if (window.location.pathname !== '/login') {
+                        window.location.href = '/login';
+                    }
+                }, 100);
+            }
         }
     );
 };

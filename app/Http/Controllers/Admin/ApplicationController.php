@@ -15,7 +15,7 @@ class ApplicationController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Application::with(['division']);
+        $query = Application::with(['division', 'user']);
 
         // Filter by status
         if ($request->filled('status')) {
@@ -27,9 +27,9 @@ class ApplicationController extends Controller
             $query->where('division_id', $request->division);
         }
 
-        // Search by name or email in applications table directly
+        // Search by name or email - now search in user table via relationship
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
+            $query->whereHas('user', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')
                   ->orWhere('email', 'like', '%' . $request->search . '%');
             });
@@ -73,10 +73,10 @@ class ApplicationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Application $application)
+    public function show($id)
     {
-        $application->load(['division', 'user:id,name,email,phone,address,surat_pengantar_path,cv_path,motivation_letter_path,transkrip_path,ktp_path,npwp_path,buku_rekening_path,pas_foto_path']);
-
+        $application = Application::with(['division', 'user'])->findOrFail($id);
+        
         return Inertia::render('Admin/Applications/Show', [
             'application' => $application
         ]);

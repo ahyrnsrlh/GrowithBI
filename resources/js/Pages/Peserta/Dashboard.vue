@@ -399,7 +399,7 @@
                                             stroke-linecap="round"
                                             stroke-linejoin="round"
                                             stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                                         />
                                     </svg>
                                 </div>
@@ -417,23 +417,78 @@
                                                 logbook.date ||
                                                     logbook.created_at
                                             )
-                                        }}
+                                        }} · {{ logbook.duration || 0 }} jam
                                     </p>
                                 </div>
                             </div>
-                            <div class="text-right">
+                            <div class="flex items-center space-x-3">
                                 <span
-                                    :class="[
-                                        'inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold',
-                                        logbook.status === 'approved'
-                                            ? 'bg-green-100 text-green-800'
-                                            : logbook.status === 'rejected'
-                                            ? 'bg-red-100 text-red-800'
-                                            : 'bg-yellow-100 text-yellow-800',
-                                    ]"
+                                    :class="getLogbookStatusClass(logbook.status)"
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
                                 >
-                                    {{ logbook.status || "pending" }}
+                                    {{ getLogbookStatusText(logbook.status) }}
                                 </span>
+                                <Link
+                                    :href="route('peserta.logbooks.show', logbook.id)"
+                                    class="text-blue-600 hover:text-blue-700"
+                                >
+                                    <svg
+                                        class="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M9 5l7 7-7 7"
+                                        />
+                                    </svg>
+                                </Link>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-6">
+                            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                                <Link
+                                    :href="route('peserta.logbooks.index')"
+                                    class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                                >
+                                    <svg
+                                        class="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M4 6h16M4 12h16M4 18h7"
+                                        />
+                                    </svg>
+                                    Lihat Semua Logbook
+                                </Link>
+                                <Link
+                                    :href="route('peserta.logbooks.create')"
+                                    class="inline-flex items-center px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors"
+                                >
+                                    <svg
+                                        class="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                        />
+                                    </svg>
+                                    Tambah Logbook Baru
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -451,14 +506,15 @@
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                     stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                                 />
                             </svg>
                         </div>
                         <p class="text-gray-500 mb-4">
                             Belum ada logbook yang dibuat
                         </p>
-                        <button
+                        <Link
+                            :href="route('peserta.logbooks.create')"
                             class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-200"
                         >
                             <svg
@@ -475,7 +531,7 @@
                                 />
                             </svg>
                             Buat Logbook Hari Ini
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -536,6 +592,7 @@
 <script setup>
 import PesertaLayout from "@/Layouts/PesertaLayout.vue";
 import { router } from "@inertiajs/vue3";
+import { Link } from "@inertiajs/vue3";
 
 defineProps({
     stats: {
@@ -582,17 +639,50 @@ const formatDate = (dateString) => {
     }
 };
 
+const getLogbookStatusClass = (status) => {
+    const classes = {
+        'draft': 'bg-gray-100 text-gray-800',
+        'submitted': 'bg-yellow-100 text-yellow-800',
+        'approved': 'bg-green-100 text-green-800',
+        'revision': 'bg-red-100 text-red-800',
+        'rejected': 'bg-red-100 text-red-800'
+    };
+    return classes[status] || 'bg-gray-100 text-gray-800';
+};
+
+const getLogbookStatusText = (status) => {
+    const texts = {
+        'draft': 'Draft',
+        'submitted': 'Menunggu Review',
+        'approved': 'Disetujui',
+        'revision': 'Perlu Revisi',
+        'rejected': 'Ditolak'
+    };
+    return texts[status] || 'Unknown';
+};
+
 const logout = () => {
     router.post(
         route("logout"),
         {},
         {
             onSuccess: () => {
-                window.location.href = route("login");
+                // Redirect ke halaman login setelah logout berhasil
+                window.location.href = '/login';
             },
             onError: (errors) => {
                 console.error("Logout error:", errors);
+                // Jika ada error, tetap redirect ke login
+                window.location.href = '/login';
             },
+            onFinish: () => {
+                // Pastikan redirect ke login dalam semua kasus
+                setTimeout(() => {
+                    if (window.location.pathname !== '/login') {
+                        window.location.href = '/login';
+                    }
+                }, 100);
+            }
         }
     );
 };
