@@ -94,10 +94,10 @@
                         :class="[
                             'w-3 h-3 rounded-full mr-3',
                             [
-                                'under_review',
-                                'interview',
-                                'accepted',
-                                'rejected',
+                                'dalam_review',
+                                'wawancara',
+                                'diterima',
+                                'ditolak',
                             ].includes(application.status)
                                 ? 'bg-yellow-500'
                                 : 'bg-gray-300',
@@ -119,7 +119,7 @@
                 <!-- Interview (if applicable) -->
                 <div
                     v-if="
-                        ['interview', 'accepted', 'rejected'].includes(
+                        ['wawancara', 'diterima', 'ditolak'].includes(
                             application.status
                         )
                     "
@@ -128,7 +128,7 @@
                     <div
                         :class="[
                             'w-3 h-3 rounded-full mr-3',
-                            ['interview', 'accepted', 'rejected'].includes(
+                            ['wawancara', 'diterima', 'ditolak'].includes(
                                 application.status
                             )
                                 ? 'bg-purple-500'
@@ -150,13 +150,13 @@
 
                 <!-- Final Decision -->
                 <div
-                    v-if="['accepted', 'rejected'].includes(application.status)"
+                    v-if="['diterima', 'ditolak'].includes(application.status)"
                     class="flex items-center"
                 >
                     <div
                         :class="[
                             'w-3 h-3 rounded-full mr-3',
-                            application.status === 'accepted'
+                            application.status === 'diterima'
                                 ? 'bg-green-500'
                                 : 'bg-red-500',
                         ]"
@@ -164,7 +164,7 @@
                     <div class="flex-1">
                         <span class="text-sm font-medium text-gray-900">
                             {{
-                                application.status === "accepted"
+                                application.status === "diterima"
                                     ? "Diterima"
                                     : "Ditolak"
                             }}
@@ -221,7 +221,7 @@
             </button>
 
             <button
-                v-if="application.status === 'pending'"
+                v-if="application.status === 'menunggu'"
                 @click="cancelApplication"
                 class="px-4 py-2 text-sm text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors"
             >
@@ -230,13 +230,22 @@
             </button>
 
             <button
-                v-if="application.status === 'accepted'"
+                v-if="application.status === 'diterima'"
                 @click="downloadOffer"
                 class="px-4 py-2 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
             >
                 <i class="fas fa-download mr-2"></i>
                 Unduh Surat
             </button>
+
+            <Link
+                v-if="application.status === 'diterima'"
+                :href="route('peserta.logbooks.index')"
+                class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center"
+            >
+                <i class="fas fa-book mr-2"></i>
+                Akses Logbook
+            </Link>
         </div>
 
         <!-- Modal for Details -->
@@ -315,7 +324,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { router } from "@inertiajs/vue3";
+import { router, Link } from "@inertiajs/vue3";
 
 const props = defineProps({
     application: Object,
@@ -338,13 +347,15 @@ const refreshStatus = async () => {
     refreshing.value = true;
     try {
         // Fetch updated application status using web route
-        const response = await window.axios.get(`/applications/${props.application.id}/status`);
+        const response = await window.axios.get(
+            `/applications/${props.application.id}/status`
+        );
         if (response.data.status !== props.application.status) {
             // Status has changed, reload the page to update the UI
             window.location.reload();
         }
     } catch (error) {
-        console.error('Error refreshing status:', error);
+        console.error("Error refreshing status:", error);
     } finally {
         refreshing.value = false;
     }
@@ -353,19 +364,21 @@ const refreshStatus = async () => {
 const getStatusClass = (status) => {
     const classes = {
         menunggu: "bg-yellow-100 text-yellow-800 border border-yellow-200",
-        dalam_review: "bg-blue-100 text-blue-800 border border-blue-200", 
+        dalam_review: "bg-blue-100 text-blue-800 border border-blue-200",
         wawancara: "bg-purple-100 text-purple-800 border border-purple-200",
         diterima: "bg-green-100 text-green-800 border border-green-200",
         ditolak: "bg-red-100 text-red-800 border border-red-200",
     };
-    return classes[status] || "bg-gray-100 text-gray-800 border border-gray-200";
+    return (
+        classes[status] || "bg-gray-100 text-gray-800 border border-gray-200"
+    );
 };
 
 const getStatusText = (status) => {
     const texts = {
         menunggu: "Menunggu Review",
         dalam_review: "Sedang Direview",
-        wawancara: "Tahap Wawancara", 
+        wawancara: "Tahap Wawancara",
         diterima: "Diterima",
         ditolak: "Ditolak",
     };

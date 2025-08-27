@@ -1,6 +1,6 @@
 <template>
     <Head title="Form Pendaftaran Magang" />
-    
+
     <GuestLayout variant="public">
         <div class="min-h-screen bg-gray-50 py-12">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -10,7 +10,8 @@
                         Form Pendaftaran Magang
                     </h1>
                     <p class="text-lg text-gray-600">
-                        Lengkapi formulir di bawah ini untuk mendaftar program magang di PT GrowithBI
+                        Lengkapi formulir di bawah ini untuk mendaftar program
+                        magang di PT GrowithBI
                     </p>
                 </div>
 
@@ -19,10 +20,15 @@
                     <form @submit.prevent="submit" class="space-y-6">
                         <!-- Personal Information -->
                         <div class="border-b border-gray-200 pb-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Informasi Pribadi</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">
+                                Informasi Pribadi
+                            </h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <label
+                                        for="name"
+                                        class="block text-sm font-medium text-gray-700 mb-2"
+                                    >
                                         Nama Lengkap *
                                     </label>
                                     <input
@@ -35,7 +41,10 @@
                                     />
                                 </div>
                                 <div>
-                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <label
+                                        for="email"
+                                        class="block text-sm font-medium text-gray-700 mb-2"
+                                    >
                                         Email *
                                     </label>
                                     <input
@@ -48,7 +57,10 @@
                                     />
                                 </div>
                                 <div>
-                                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <label
+                                        for="phone"
+                                        class="block text-sm font-medium text-gray-700 mb-2"
+                                    >
                                         Nomor Telepon *
                                     </label>
                                     <input
@@ -61,7 +73,10 @@
                                     />
                                 </div>
                                 <div>
-                                    <label for="division_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <label
+                                        for="division_id"
+                                        class="block text-sm font-medium text-gray-700 mb-2"
+                                    >
                                         Pilih Divisi *
                                     </label>
                                     <select
@@ -71,7 +86,11 @@
                                         class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                                     >
                                         <option value="">Pilih divisi</option>
-                                        <option v-for="division in divisions" :key="division.id" :value="division.id">
+                                        <option
+                                            v-for="division in divisions"
+                                            :key="division.id"
+                                            :value="division.id"
+                                        >
                                             {{ division.name }}
                                         </option>
                                     </select>
@@ -81,9 +100,14 @@
 
                         <!-- Address -->
                         <div class="border-b border-gray-200 pb-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Alamat</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">
+                                Alamat
+                            </h3>
                             <div>
-                                <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label
+                                    for="address"
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                >
                                     Alamat Lengkap *
                                 </label>
                                 <textarea
@@ -99,10 +123,16 @@
 
                         <!-- Motivation -->
                         <div class="pb-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Motivasi</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">
+                                Motivasi
+                            </h3>
                             <div>
-                                <label for="motivation" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Ceritakan motivasi Anda untuk magang di divisi ini *
+                                <label
+                                    for="motivation"
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Ceritakan motivasi Anda untuk magang di
+                                    divisi ini *
                                 </label>
                                 <textarea
                                     id="motivation"
@@ -113,7 +143,8 @@
                                     placeholder="Minimal 50 karakter..."
                                 ></textarea>
                                 <p class="text-sm text-gray-500 mt-1">
-                                    {{ form.motivation?.length || 0 }} karakter (minimal 50)
+                                    {{ form.motivation?.length || 0 }} karakter
+                                    (minimal 50)
                                 </p>
                             </div>
                         </div>
@@ -131,7 +162,9 @@
                                 :disabled="processing"
                                 class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors"
                             >
-                                {{ processing ? 'Mengirim...' : 'Kirim Lamaran' }}
+                                {{
+                                    processing ? "Mengirim..." : "Kirim Lamaran"
+                                }}
                             </button>
                         </div>
                     </form>
@@ -142,33 +175,33 @@
 </template>
 
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3'
-import GuestLayout from '@/Layouts/GuestLayout.vue'
+import { Head, Link, useForm } from "@inertiajs/vue3";
+import GuestLayout from "@/Layouts/GuestLayout.vue";
 
 // Props
 const props = defineProps({
     divisions: {
         type: Array,
-        default: () => []
-    }
-})
+        default: () => [],
+    },
+});
 
 // Form
 const form = useForm({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    division_id: '',
-    motivation: ''
-})
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    division_id: "",
+    motivation: "",
+});
 
 // Submit function
 const submit = () => {
-    form.post(route('application.submit'), {
+    form.post(route("application.submit"), {
         onSuccess: () => {
-            form.reset()
-        }
-    })
-}
+            form.reset();
+        },
+    });
+};
 </script>

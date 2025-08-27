@@ -1,7 +1,9 @@
 <template>
     <AdminLayout
         title="Detail Pendaftaran"
-        :subtitle="`Pendaftaran ${application.user?.name || 'N/A'} - ${application.division?.name || 'N/A'}`"
+        :subtitle="`Pendaftaran ${application.user?.name || 'N/A'} - ${
+            application.division?.name || 'N/A'
+        }`"
     >
         <div class="max-w-4xl mx-auto">
             <!-- Header with Actions -->
@@ -30,10 +32,10 @@
                         </Link>
                         <div>
                             <h1 class="text-2xl font-bold text-gray-900">
-                                {{ application.user?.name || 'N/A' }}
+                                {{ application.user?.name || "N/A" }}
                             </h1>
                             <p class="text-gray-600">
-                                {{ application.user?.email || 'N/A' }}
+                                {{ application.user?.email || "N/A" }}
                             </p>
                         </div>
                     </div>
@@ -77,7 +79,7 @@
                                     >Nama Lengkap</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ application.user?.name || '-' }}
+                                    {{ application.user?.name || "-" }}
                                 </p>
                             </div>
                             <div>
@@ -86,7 +88,7 @@
                                     >Email</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ application.user?.email || '-' }}
+                                    {{ application.user?.email || "-" }}
                                 </p>
                             </div>
                             <div>
@@ -122,7 +124,11 @@
                                     >Semester</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ application.user?.semester ? `Semester ${application.user.semester}` : "-" }}
+                                    {{
+                                        application.user?.semester
+                                            ? `Semester ${application.user.semester}`
+                                            : "-"
+                                    }}
                                 </p>
                             </div>
                             <div class="md:col-span-2">
@@ -230,12 +236,16 @@
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">
                             Dokumen
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                        >
                             <!-- Surat Pengantar -->
                             <div
                                 class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <div
+                                    class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
                                     <svg
                                         class="w-6 h-6 text-blue-600"
                                         fill="currentColor"
@@ -248,7 +258,9 @@
                                         />
                                     </svg>
                                 </div>
-                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
                                     Surat Pengantar
                                 </p>
                                 <p class="text-xs text-gray-500 mb-3">
@@ -260,7 +272,10 @@
                                 </p>
                                 <div class="flex space-x-2 justify-center">
                                     <a
-                                        v-if="application.user.surat_pengantar_path"
+                                        v-if="
+                                            application.user
+                                                .surat_pengantar_path
+                                        "
                                         :href="`/storage/${application.user.surat_pengantar_path}`"
                                         target="_blank"
                                         class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
@@ -269,7 +284,10 @@
                                         Lihat
                                     </a>
                                     <a
-                                        v-if="application.user.surat_pengantar_path"
+                                        v-if="
+                                            application.user
+                                                .surat_pengantar_path
+                                        "
                                         :href="`/storage/${application.user.surat_pengantar_path}`"
                                         download
                                         class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
@@ -284,7 +302,9 @@
                             <div
                                 class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <div
+                                    class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
                                     <svg
                                         class="w-6 h-6 text-red-600"
                                         fill="currentColor"
@@ -297,7 +317,9 @@
                                         />
                                     </svg>
                                 </div>
-                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
                                     Curriculum Vitae (CV)
                                 </p>
                                 <p class="text-xs text-gray-500 mb-3">
@@ -333,7 +355,9 @@
                             <div
                                 class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <div
+                                    class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
                                     <svg
                                         class="w-6 h-6 text-purple-600"
                                         fill="currentColor"
@@ -346,7 +370,9 @@
                                         />
                                     </svg>
                                 </div>
-                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
                                     Motivation Letter
                                 </p>
                                 <p class="text-xs text-gray-500 mb-3">
@@ -358,7 +384,10 @@
                                 </p>
                                 <div class="flex space-x-2 justify-center">
                                     <a
-                                        v-if="application.user.motivation_letter_path"
+                                        v-if="
+                                            application.user
+                                                .motivation_letter_path
+                                        "
                                         :href="`/storage/${application.user.motivation_letter_path}`"
                                         target="_blank"
                                         class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
@@ -367,7 +396,10 @@
                                         Lihat
                                     </a>
                                     <a
-                                        v-if="application.user.motivation_letter_path"
+                                        v-if="
+                                            application.user
+                                                .motivation_letter_path
+                                        "
                                         :href="`/storage/${application.user.motivation_letter_path}`"
                                         download
                                         class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
@@ -382,7 +414,9 @@
                             <div
                                 class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <div
+                                    class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
                                     <svg
                                         class="w-6 h-6 text-yellow-600"
                                         fill="currentColor"
@@ -395,7 +429,9 @@
                                         />
                                     </svg>
                                 </div>
-                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
                                     Transkrip Nilai
                                 </p>
                                 <p class="text-xs text-gray-500 mb-3">
@@ -431,7 +467,9 @@
                             <div
                                 class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <div
+                                    class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
                                     <svg
                                         class="w-6 h-6 text-indigo-600"
                                         fill="currentColor"
@@ -444,7 +482,9 @@
                                         />
                                     </svg>
                                 </div>
-                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
                                     KTP
                                 </p>
                                 <p class="text-xs text-gray-500 mb-3">
@@ -480,7 +520,9 @@
                             <div
                                 class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <div
+                                    class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
                                     <svg
                                         class="w-6 h-6 text-orange-600"
                                         fill="currentColor"
@@ -493,7 +535,9 @@
                                         />
                                     </svg>
                                 </div>
-                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
                                     NPWP
                                 </p>
                                 <p class="text-xs text-gray-500 mb-3">
@@ -529,7 +573,9 @@
                             <div
                                 class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <div
+                                    class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
                                     <svg
                                         class="w-6 h-6 text-teal-600"
                                         fill="currentColor"
@@ -542,7 +588,9 @@
                                         />
                                     </svg>
                                 </div>
-                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
                                     Buku Rekening
                                 </p>
                                 <p class="text-xs text-gray-500 mb-3">
@@ -554,7 +602,9 @@
                                 </p>
                                 <div class="flex space-x-2 justify-center">
                                     <a
-                                        v-if="application.user.buku_rekening_path"
+                                        v-if="
+                                            application.user.buku_rekening_path
+                                        "
                                         :href="`/storage/${application.user.buku_rekening_path}`"
                                         target="_blank"
                                         class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
@@ -563,7 +613,9 @@
                                         Lihat
                                     </a>
                                     <a
-                                        v-if="application.user.buku_rekening_path"
+                                        v-if="
+                                            application.user.buku_rekening_path
+                                        "
                                         :href="`/storage/${application.user.buku_rekening_path}`"
                                         download
                                         class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
@@ -578,7 +630,9 @@
                             <div
                                 class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <div
+                                    class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
                                     <svg
                                         class="w-6 h-6 text-pink-600"
                                         fill="currentColor"
@@ -591,7 +645,9 @@
                                         />
                                     </svg>
                                 </div>
-                                <p class="text-sm font-medium text-gray-900 mb-1">
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
                                     Pas Foto
                                 </p>
                                 <p class="text-xs text-gray-500 mb-3">

@@ -83,19 +83,18 @@ class LogbookController extends Controller
     {
         $user = Auth::user();
         
+        // Check if user has accepted application
         $acceptedApplication = Application::where('user_id', $user->id)
             ->where('status', 'diterima')
             ->with('division')
             ->first();
             
         if (!$acceptedApplication) {
-            return redirect()->route('peserta.logbooks.index')
-                ->with('error', 'Anda belum memiliki status magang yang diterima.');
+            return redirect()->route('profile.edit')
+                ->with('error', 'Anda belum memiliki status magang yang diterima untuk mengakses logbook.');
         }
 
-        return Inertia::render('Peserta/Logbooks/Create', [
-            'division' => $acceptedApplication->division
-        ]);
+        return Inertia::render('Peserta/Logbooks/Create');
     }
 
     /**
@@ -105,31 +104,34 @@ class LogbookController extends Controller
     {
         $user = Auth::user();
         
+        // Check if user has accepted application
         $acceptedApplication = Application::where('user_id', $user->id)
             ->where('status', 'diterima')
+            ->with('division')
             ->first();
             
         if (!$acceptedApplication) {
-            return back()->withErrors(['error' => 'Anda belum memiliki status magang yang diterima.']);
+            return redirect()->route('profile.edit')
+                ->with('error', 'Anda belum memiliki status magang yang diterima untuk mengakses logbook.');
         }
 
         $request->validate([
-            'date' => 'required|date|before_or_equal:today',
             'title' => 'required|string|max:255',
-            'activities' => 'required|string|min:10',
-            'duration' => 'required|numeric|min:0|max:24',
+            'date' => 'required|date|before_or_equal:today',
+            'activities' => 'required|string',
             'learning_points' => 'nullable|string',
             'challenges' => 'nullable|string',
+            'duration' => 'required|numeric|min:0.5|max:12',
             'status' => 'required|in:draft,submitted',
-            'attachments.*' => 'nullable|file|max:5120|mimes:pdf,doc,docx,jpg,jpeg,png,gif'
+            'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120' // 5MB
         ]);
 
-        // Check if logbook for this date already exists
-        $existingLogbook = Logbook::where('user_id', $user->id)
+        // Check if logbook entry already exists for this date
+        $existingEntry = Logbook::where('user_id', $user->id)
             ->where('date', $request->date)
             ->first();
             
-        if ($existingLogbook) {
+        if ($existingEntry) {
             return back()->withErrors(['date' => 'Logbook untuk tanggal ini sudah ada.']);
         }
 
@@ -137,12 +139,12 @@ class LogbookController extends Controller
         $attachments = [];
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
-                $path = $file->store('logbooks', 'public');
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('logbooks', $filename, 'public');
                 $attachments[] = [
                     'name' => $file->getClientOriginalName(),
                     'path' => $path,
-                    'size' => $file->getSize(),
-                    'type' => $file->getMimeType()
+                    'size' => $file->getSize()
                 ];
             }
         }
@@ -369,29 +371,5 @@ class LogbookController extends Controller
         ]);
 
         return back()->with('success', 'Komentar berhasil ditambahkan.');
-    }
-
-    /**
-     * Calculate required days for internship
-     */
-    private function calculateRequiredDays(Application $application): int
-    {
-        // Get division duration or default to 60 days
-        $startDate = $application->division->start_date ?? now();
-        $endDate = $application->division->end_date ?? now()->addDays(60);
-        
-        // Calculate working days (excluding weekends)
-        $workingDays = 0;
-        $current = Carbon::parse($startDate);
-        $end = Carbon::parse($endDate);
-        
-        while ($current->lte($end)) {
-            if ($current->isWeekday()) {
-                $workingDays++;
-            }
-            $current->addDay();
-        }
-        
-        return $workingDays;
     }
 }

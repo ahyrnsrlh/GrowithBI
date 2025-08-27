@@ -417,19 +417,27 @@
                                                 logbook.date ||
                                                     logbook.created_at
                                             )
-                                        }} · {{ logbook.duration || 0 }} jam
+                                        }}
+                                        · {{ logbook.duration || 0 }} jam
                                     </p>
                                 </div>
                             </div>
                             <div class="flex items-center space-x-3">
                                 <span
-                                    :class="getLogbookStatusClass(logbook.status)"
+                                    :class="
+                                        getLogbookStatusClass(logbook.status)
+                                    "
                                     class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
                                 >
                                     {{ getLogbookStatusText(logbook.status) }}
                                 </span>
                                 <Link
-                                    :href="route('peserta.logbooks.show', logbook.id)"
+                                    :href="
+                                        route(
+                                            'peserta.logbooks.show',
+                                            logbook.id
+                                        )
+                                    "
                                     class="text-blue-600 hover:text-blue-700"
                                 >
                                     <svg
@@ -448,9 +456,11 @@
                                 </Link>
                             </div>
                         </div>
-                        
+
                         <div class="text-center mt-6">
-                            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                            <div
+                                class="flex flex-col sm:flex-row gap-3 justify-center"
+                            >
                                 <Link
                                     :href="route('peserta.logbooks.index')"
                                     class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"
@@ -641,24 +651,24 @@ const formatDate = (dateString) => {
 
 const getLogbookStatusClass = (status) => {
     const classes = {
-        'draft': 'bg-gray-100 text-gray-800',
-        'submitted': 'bg-yellow-100 text-yellow-800',
-        'approved': 'bg-green-100 text-green-800',
-        'revision': 'bg-red-100 text-red-800',
-        'rejected': 'bg-red-100 text-red-800'
+        draft: "bg-gray-100 text-gray-800",
+        submitted: "bg-yellow-100 text-yellow-800",
+        approved: "bg-green-100 text-green-800",
+        revision: "bg-red-100 text-red-800",
+        rejected: "bg-red-100 text-red-800",
     };
-    return classes[status] || 'bg-gray-100 text-gray-800';
+    return classes[status] || "bg-gray-100 text-gray-800";
 };
 
 const getLogbookStatusText = (status) => {
     const texts = {
-        'draft': 'Draft',
-        'submitted': 'Menunggu Review',
-        'approved': 'Disetujui',
-        'revision': 'Perlu Revisi',
-        'rejected': 'Ditolak'
+        draft: "Draft",
+        submitted: "Menunggu Review",
+        approved: "Disetujui",
+        revision: "Perlu Revisi",
+        rejected: "Ditolak",
     };
-    return texts[status] || 'Unknown';
+    return texts[status] || "Unknown";
 };
 
 const logout = () => {
@@ -668,21 +678,21 @@ const logout = () => {
         {
             onSuccess: () => {
                 // Redirect ke halaman login setelah logout berhasil
-                window.location.href = '/login';
+                window.location.href = "/login";
             },
             onError: (errors) => {
                 console.error("Logout error:", errors);
                 // Jika ada error, tetap redirect ke login
-                window.location.href = '/login';
+                window.location.href = "/login";
             },
             onFinish: () => {
                 // Pastikan redirect ke login dalam semua kasus
                 setTimeout(() => {
-                    if (window.location.pathname !== '/login') {
-                        window.location.href = '/login';
+                    if (window.location.pathname !== "/login") {
+                        window.location.href = "/login";
                     }
                 }, 100);
-            }
+            },
         }
     );
 };

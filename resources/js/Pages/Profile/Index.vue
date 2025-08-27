@@ -588,7 +588,7 @@ const updateProfile = () => {
             showToast("success", "Profil berhasil diperbarui!");
         },
         onError: (errors) => {
-            console.error('Profile update errors:', errors);
+            console.error("Profile update errors:", errors);
             showToast("error", "Gagal memperbarui profil!");
         },
     });
@@ -647,11 +647,11 @@ const uploadDocument = (type, file) => {
 // Helper function to get status text
 const getStatusText = (status) => {
     const statusMap = {
-        'menunggu': 'Menunggu Review',
-        'dalam_review': 'Sedang Direview', 
-        'wawancara': 'Tahap Wawancara',
-        'diterima': 'Diterima',
-        'ditolak': 'Ditolak'
+        menunggu: "Menunggu Review",
+        dalam_review: "Sedang Direview",
+        wawancara: "Tahap Wawancara",
+        diterima: "Diterima",
+        ditolak: "Ditolak",
     };
     return statusMap[status] || status;
 };
@@ -664,21 +664,23 @@ onMounted(() => {
 
     // Check for missing fields from URL parameters
     const urlParams = new URLSearchParams(window.location.search);
-    const missingFields = urlParams.get('missing_fields');
+    const missingFields = urlParams.get("missing_fields");
     if (missingFields) {
-        const fieldNames = missingFields.split(',');
+        const fieldNames = missingFields.split(",");
         const fieldLabels = {
-            'phone': 'Nomor Telepon',
-            'address': 'Alamat',
-            'university': 'Universitas',
-            'major': 'Jurusan',
-            'semester': 'Semester'
+            phone: "Nomor Telepon",
+            address: "Alamat",
+            university: "Universitas",
+            major: "Jurusan",
+            semester: "Semester",
         };
-        const missingLabels = fieldNames.map(field => fieldLabels[field] || field).join(', ');
+        const missingLabels = fieldNames
+            .map((field) => fieldLabels[field] || field)
+            .join(", ");
         showToast("error", `Harap lengkapi: ${missingLabels}`);
-        
+
         // Auto switch to profile tab and enable edit mode
-        activeTab.value = 'profile';
+        activeTab.value = "profile";
         editMode.value = true;
     }
 
