@@ -139,6 +139,45 @@ class ReportController extends Controller
     }
 
     /**
+     * Export applications data to Excel
+     */
+    public function exportApplications(Request $request)
+    {
+        $applications = \App\Models\Application::with(['user', 'division'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $csvData = [];
+        $csvData[] = ['No', 'Nama', 'Email', 'Divisi', 'Status', 'Tanggal Daftar'];
+
+        foreach ($applications as $index => $application) {
+            $csvData[] = [
+                $index + 1,
+                $application->user->name,
+                $application->user->email,
+                $application->division ? $application->division->name : '-',
+                ucfirst($application->status),
+                $application->created_at->format('Y-m-d H:i:s')
+            ];
+        }
+
+        $filename = 'laporan_aplikasi_' . date('Y-m-d_H-i-s') . '.csv';
+        
+        $callback = function() use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
+    /**
      * Export logbooks to Excel format
      */
     public function exportLogbooks(Request $request)

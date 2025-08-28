@@ -198,28 +198,4 @@ class User extends Authenticatable
         
         return $workingDays;
     }
-
-    /**
-     * Check if user is admin
-     */
-    public function isAdmin()
-    {
-        return $this->hasRole('admin');
-    }
-
-    /**
-     * Check if user is mentor
-     */
-    public function isMentor()
-    {
-        return $this->hasRole('mentor');
-    }
-
-    /**
-     * Check if user is participant
-     */
-    public function isParticipant()
-    {
-        return $this->hasRole('participant');
-    }
 }

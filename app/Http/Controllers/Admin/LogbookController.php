@@ -254,38 +254,8 @@ class LogbookController extends Controller
 
         if ($logbook->approve($user, 'Disetujui melalui quick approve')) {
             return back()->with('success', 'Logbook berhasil disetujui.');
-    }
-}
         }
 
         return back()->withErrors(['error' => 'Gagal menyetujui logbook.']);
-    }
-
-    /**
-     * Add comment to logbook
-     */
-    public function addComment(Request $request, Logbook $logbook)
-    {
-        $user = Auth::user();
-        
-        if (!$logbook->canBeReviewedBy($user)) {
-            abort(403);
-        }
-
-        $request->validate([
-            'comment' => 'required|string|min:5',
-            'type' => 'sometimes|in:comment,feedback,revision_request',
-            'is_internal' => 'sometimes|boolean'
-        ]);
-
-        $comment = LogbookComment::create([
-            'logbook_id' => $logbook->id,
-            'user_id' => $user->id,
-            'comment' => $request->comment,
-            'type' => $request->type ?? 'comment',
-            'is_internal' => $request->is_internal ?? false
-        ]);
-
-        return back()->with('success', 'Komentar berhasil ditambahkan.');
     }
 }
