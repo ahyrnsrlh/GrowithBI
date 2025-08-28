@@ -29,6 +29,10 @@ class ProfileController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
             
+        // Check if user has a pending or accepted application
+        $activeApplication = $applications->whereIn('status', ['menunggu', 'dalam_review', 'wawancara', 'diterima'])->first();
+        $canCreateNewApplication = !$activeApplication;
+            
         // Calculate profile completion percentage
         $profileCompletion = $this->calculateProfileCompletion($user);
         
@@ -40,6 +44,8 @@ class ProfileController extends Controller
         return Inertia::render('Profile/Index', [
             'user' => $user,
             'applications' => $applications,
+            'activeApplication' => $activeApplication,
+            'canCreateNewApplication' => $canCreateNewApplication,
             'divisions' => $divisions,
             'profileCompletion' => $profileCompletion,
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
@@ -155,27 +161,11 @@ class ProfileController extends Controller
     public function createApplication(Request $request)
     {
         $request->validate([
-            'division_id' => 'required|exists:divisions,id',
+            'division_id' => ['required', 'exists:divisions,id', new \App\Rules\UniqueActiveApplication(null, $user->id)],
             'motivation' => 'required|string|min:100|max:1000',
         ]);
 
         $user = $request->user();
-
-        // Check if user already has an active application for this division
-        $existingApplication = Application::where('user_id', $user->id)
-            ->where('division_id', $request->division_id)
-            ->whereIn('status', ['menunggu', 'dalam_review', 'wawancara'])
-            ->exists();
-
-        if ($existingApplication) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Anda sudah memiliki lamaran aktif untuk divisi ini!'
-                ], 422);
-            }
-            return Redirect::route('profile.edit')->with('error', 'Anda sudah memiliki lamaran aktif untuk divisi ini!');
-        }
 
         try {
             \Log::info('=== CREATING APPLICATION ===');

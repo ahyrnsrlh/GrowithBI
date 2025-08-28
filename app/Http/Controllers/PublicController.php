@@ -46,8 +46,20 @@ class PublicController extends Controller
             ->with(['supervisor'])
             ->get();
 
+        // Check if user already has a pending or accepted application
+        $existingApplication = null;
+        if (Auth::check()) {
+            $existingApplication = Application::where('email', Auth::user()->email)
+                ->whereIn('status', ['menunggu', 'diterima'])
+                ->with('division')
+                ->first();
+        }
+
         return Inertia::render('Public/ApplicationForm', [
-            'divisions' => $divisions
+            'divisions' => $divisions,
+            'existingApplication' => $existingApplication
+        ]);
+    }
         ]);
     }
 
@@ -55,7 +67,7 @@ class PublicController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => ['required', 'email', 'max:255', new \App\Rules\UniqueActiveApplication($request->email)],
             'phone' => 'required|string|max:20',
             'address' => 'required|string',
             'division_id' => 'required|exists:divisions,id',
@@ -83,8 +95,18 @@ class PublicController extends Controller
 
     public function divisionDetail(Division $division)
     {
+        // Check if user already has a pending or accepted application
+        $existingApplication = null;
+        if (Auth::check()) {
+            $existingApplication = Application::where('email', Auth::user()->email)
+                ->whereIn('status', ['menunggu', 'diterima'])
+                ->with('division')
+                ->first();
+        }
+
         return Inertia::render('Public/DivisionDetail', [
             'division' => $division->load('supervisor'),
+            'existingApplication' => $existingApplication,
             'auth' => [
                 'user' => Auth::user()
             ]
@@ -125,15 +147,20 @@ class PublicController extends Controller
 
         $user = $request->user();
         
-        // Check if user already has application for this division
+        // Check if user already has a pending or accepted application
         $existingApplication = Application::where('email', $user->email)
-            ->where('division_id', $request->division_id)
+            ->whereIn('status', ['menunggu', 'diterima'])
+            ->with('division')
             ->first();
 
         if ($existingApplication) {
+            $message = $existingApplication->status === 'diterima' 
+                ? 'Anda sudah diterima di divisi ' . $existingApplication->division->name . '. Anda tidak bisa mendaftar ke divisi lain.'
+                : 'Anda sudah memiliki pendaftaran yang sedang diproses di divisi ' . $existingApplication->division->name . '. Tunggu hasil proses tersebut sebelum mendaftar ke divisi lain.';
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Anda sudah mendaftar untuk divisi ini'
+                'message' => $message
             ]);
         }
 
