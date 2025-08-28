@@ -149,15 +149,14 @@ class LogbookController extends Controller
 
         $logbook = Logbook::create([
             'user_id' => $user->id,
+            'application_id' => $acceptedApplication->id,
             'division_id' => $acceptedApplication->division_id,
             'date' => $request->date,
             'title' => $request->title,
-            'activities' => $request->activities,
-            'learning_points' => $request->learning_points,
-            'challenges' => $request->challenges,
+            'activity' => $request->activities,
+            'learning_outcome' => $request->learning_points,
             'duration' => $request->duration,
             'status' => $request->status,
-            'attachments' => !empty($attachments) ? json_encode($attachments) : null,
         ]);
 
         $message = $request->status === 'draft' ? 'Logbook berhasil disimpan sebagai draft.' : 'Logbook berhasil dikirim untuk review.';
@@ -299,12 +298,10 @@ class LogbookController extends Controller
         $logbook->update([
             'title' => $request->title,
             'date' => $request->date,
-            'activities' => $request->activities,
-            'learning_points' => $request->learning_points,
-            'challenges' => $request->challenges,
+            'activity' => $request->activities,
+            'learning_outcome' => $request->learning_points,
             'duration' => $request->duration,
             'status' => $request->status,
-            'attachments' => !empty($allAttachments) ? json_encode($allAttachments) : null,
         ]);
 
         $message = $request->status === 'draft' ? 'Logbook berhasil diperbarui sebagai draft.' : 'Logbook berhasil diperbarui dan dikirim untuk review.';

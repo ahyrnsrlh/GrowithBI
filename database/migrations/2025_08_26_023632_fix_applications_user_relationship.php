@@ -22,11 +22,18 @@ return new class extends Migration
         
         // Pastikan foreign key constraint ada
         Schema::table('applications', function (Blueprint $table) {
-            // Drop existing foreign key jika ada
-            try {
-                $table->dropForeign(['user_id']);
-            } catch (Exception $e) {
-                // Ignore if constraint doesn't exist
+            // Check if foreign key exists and drop if it does
+            $foreignKeys = DB::select("
+                SELECT CONSTRAINT_NAME 
+                FROM information_schema.KEY_COLUMN_USAGE 
+                WHERE TABLE_SCHEMA = DATABASE() 
+                AND TABLE_NAME = 'applications' 
+                AND COLUMN_NAME = 'user_id' 
+                AND CONSTRAINT_NAME != 'PRIMARY'
+            ");
+            
+            foreach ($foreignKeys as $fk) {
+                $table->dropForeign($fk->CONSTRAINT_NAME);
             }
             
             // Add foreign key constraint
@@ -40,7 +47,19 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('applications', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
+            // Check if foreign key exists before dropping
+            $foreignKeys = DB::select("
+                SELECT CONSTRAINT_NAME 
+                FROM information_schema.KEY_COLUMN_USAGE 
+                WHERE TABLE_SCHEMA = DATABASE() 
+                AND TABLE_NAME = 'applications' 
+                AND COLUMN_NAME = 'user_id' 
+                AND CONSTRAINT_NAME != 'PRIMARY'
+            ");
+            
+            foreach ($foreignKeys as $fk) {
+                $table->dropForeign($fk->CONSTRAINT_NAME);
+            }
         });
     }
 };

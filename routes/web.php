@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ApplicationController;
-use App\Http\Controllers\Admin\SupervisorController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Peserta\DashboardController as PesertaDashboardController;
@@ -109,22 +108,25 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Divisions Management
     Route::resource('divisions', App\Http\Controllers\Admin\DivisionController::class);
     
-    // Supervisors Management (now part of admin)
-    Route::resource('supervisors', SupervisorController::class);
-    
     // Participants Management (now part of admin)
     Route::get('/participants', [ParticipantController::class, 'index'])->name('participants.index');
     Route::get('/participants/{participant}', [ParticipantController::class, 'show'])->name('participants.show');
     Route::put('/participants/{participant}/status', [ParticipantController::class, 'updateStatus'])->name('participants.update-status');
     
+    // Supervisors Management (using AdminController)
+    Route::get('/supervisors', [\App\Http\Controllers\Admin\AdminController::class, 'manageSupervisors'])->name('supervisors.index');
+    Route::post('/supervisors', [\App\Http\Controllers\Admin\AdminController::class, 'createSupervisor'])->name('supervisors.store');
+    Route::get('/supervisors/{supervisor}', [\App\Http\Controllers\Admin\AdminController::class, 'showSupervisor'])->name('supervisors.show');
+    Route::put('/supervisors/{supervisor}', [\App\Http\Controllers\Admin\AdminController::class, 'updateSupervisor'])->name('supervisors.update');
+    
     // Logbooks Management (enhanced with review capabilities)
-    Route::get('/logbooks', [\App\Http\Controllers\Admin\LogbookController::class, 'index'])->name('logbooks.index');
-    Route::get('/logbooks/{logbook}', [\App\Http\Controllers\Admin\LogbookController::class, 'show'])->name('logbooks.show');
-    Route::put('/logbooks/{logbook}/status', [\App\Http\Controllers\Admin\LogbookController::class, 'updateStatus'])->name('logbooks.update-status');
-    Route::post('/logbooks/{logbook}/comments', [\App\Http\Controllers\Admin\LogbookController::class, 'addComment'])->name('logbooks.comments.store');
-    Route::post('/logbooks/bulk-update', [\App\Http\Controllers\Admin\LogbookController::class, 'bulkUpdate'])->name('logbooks.bulk-update');
-    Route::put('/logbooks/{logbook}/approve', [\App\Http\Controllers\Admin\LogbookController::class, 'approve'])->name('logbooks.approve');
-    Route::get('/logbooks/stats/dashboard', [\App\Http\Controllers\Admin\LogbookController::class, 'getStats'])->name('logbooks.stats');
+    Route::get('/logbooks', [\App\Http\Controllers\Admin\LogbookController::class, 'index'])->name('admin.logbooks.index');
+    Route::get('/logbooks/{logbook}', [\App\Http\Controllers\Admin\LogbookController::class, 'show'])->name('admin.logbooks.show');
+    Route::put('/logbooks/{logbook}/status', [\App\Http\Controllers\Admin\LogbookController::class, 'updateStatus'])->name('admin.logbooks.update-status');
+    Route::post('/logbooks/{logbook}/comments', [\App\Http\Controllers\Admin\LogbookController::class, 'addComment'])->name('admin.logbooks.comments.store');
+    Route::post('/logbooks/bulk-update', [\App\Http\Controllers\Admin\LogbookController::class, 'bulkUpdate'])->name('admin.logbooks.bulk-update');
+    Route::put('/logbooks/{logbook}/approve', [\App\Http\Controllers\Admin\LogbookController::class, 'approve'])->name('admin.logbooks.approve');
+    Route::get('/logbooks/stats/dashboard', [\App\Http\Controllers\Admin\LogbookController::class, 'getStats'])->name('admin.logbooks.stats');
     
     // Reports & Analytics (enhanced export capabilities)
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');

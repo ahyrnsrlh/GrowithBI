@@ -11,36 +11,22 @@ class Logbook extends Model
 {
     protected $fillable = [
         'user_id',
+        'application_id',
         'division_id',
+        'title',
         'date',
-        'time_in',
-        'time_out',
-        'activities',
-        'duration_hours',
-        'duration_minutes',
-        'notes',
-        'attachment_path',
+        'duration',
+        'activity',
+        'learning_outcome',
         'status',
-        'supervisor_notes',
-        'mentor_feedback',
-        'submitted_at',
-        'approved_at',
-        'reviewed_at',
         'approved_by',
-        'reviewed_by',
-        'completion_percentage'
+        'notes',
+        'attachment_path'
     ];
 
     protected $casts = [
         'date' => 'date',
-        'time_in' => 'datetime:H:i',
-        'time_out' => 'datetime:H:i',
-        'submitted_at' => 'datetime',
-        'approved_at' => 'datetime',
-        'reviewed_at' => 'datetime',
-        'completion_percentage' => 'decimal:2',
-        'duration_hours' => 'integer',
-        'duration_minutes' => 'integer'
+        'duration' => 'decimal:1'
     ];
 
     // Relationships
@@ -101,15 +87,30 @@ class Logbook extends Model
     }
 
     // Accessors & Mutators
-    public function getTotalDurationAttribute()
+    public function getActivitiesAttribute()
     {
-        return ($this->duration_hours * 60) + $this->duration_minutes;
+        return $this->activity;
     }
 
-    public function getTotalDurationFormattedAttribute()
+    public function setActivitiesAttribute($value)
     {
-        $hours = $this->duration_hours ?? 0;
-        $minutes = $this->duration_minutes ?? 0;
+        $this->attributes['activity'] = $value;
+    }
+
+    public function getLearningPointsAttribute()
+    {
+        return $this->learning_outcome;
+    }
+
+    public function setLearningPointsAttribute($value)
+    {
+        $this->attributes['learning_outcome'] = $value;
+    }
+
+    public function getDurationFormattedAttribute()
+    {
+        $hours = floor($this->duration);
+        $minutes = ($this->duration - $hours) * 60;
         
         if ($hours > 0 && $minutes > 0) {
             return "{$hours} jam {$minutes} menit";

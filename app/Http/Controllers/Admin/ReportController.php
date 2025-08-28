@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Division;
 use App\Models\User;
+use App\Models\Logbook;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class ReportController extends Controller
 {
@@ -134,5 +136,90 @@ class ReportController extends Controller
             'message' => 'Export functionality will be implemented soon',
             'type' => $type
         ]);
+    }
+
+    /**
+     * Export logbooks to Excel format
+     */
+    public function exportLogbooks(Request $request)
+    {
+        $user = auth()->user();
+        
+        $query = Logbook::with(['user.division', 'division', 'reviewer'])
+            ->orderBy('created_at', 'desc');
+
+        // If user is mentor, only show logbooks from their division
+        if ($user->role === 'mentor') {
+            $query->where('division_id', $user->division_id);
+        }
+
+        // Apply filters if provided
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('division') && $user->role === 'admin') {
+            $query->where('division_id', $request->division);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('date', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('date', '<=', $request->date_to);
+        }
+
+        $logbooks = $query->get();
+
+        // Create CSV content
+        $csvContent = "No,Nama Peserta,Email,Divisi,Tanggal,Judul,Aktivitas,Durasi,Status,Dibuat Pada,Diperbarui Pada\n";
+        
+        foreach ($logbooks as $index => $logbook) {
+            $csvContent .= sprintf(
+                "%d,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
+                $index + 1,
+                $logbook->user->name ?? '',
+                $logbook->user->email ?? '',
+                $logbook->user->division->name ?? '',
+                $logbook->date ?? '',
+                str_replace('"', '""', $logbook->title ?? ''),
+                str_replace('"', '""', $logbook->activities ?? ''),
+                $logbook->duration ? $logbook->duration . ' jam' : '',
+                $this->getStatusLabel($logbook->status),
+                $logbook->created_at ? $logbook->created_at->format('Y-m-d H:i:s') : '',
+                $logbook->updated_at ? $logbook->updated_at->format('Y-m-d H:i:s') : ''
+            );
+        }
+
+        $filename = 'laporan_logbook_' . date('Y-m-d_H-i-s') . '.csv';
+
+        return Response::make($csvContent, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Pragma' => 'public'
+        ]);
+    }
+
+    /**
+     * Get status label in Indonesian
+     */
+    private function getStatusLabel($status)
+    {
+        switch ($status) {
+            case 'draft':
+                return 'Draft';
+            case 'submitted':
+                return 'Diajukan';
+            case 'approved':
+                return 'Disetujui';
+            case 'rejected':
+                return 'Ditolak';
+            case 'revision':
+                return 'Perlu Revisi';
+            default:
+                return 'Tidak Diketahui';
+        }
     }
 }
