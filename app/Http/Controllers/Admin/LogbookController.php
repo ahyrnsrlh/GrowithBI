@@ -137,7 +137,20 @@ class LogbookController extends Controller
     {
         $user = Auth::user();
         
+        \Log::info('UpdateStatus called', [
+            'user_id' => $user->id,
+            'logbook_id' => $logbook->id,
+            'request_data' => $request->all()
+        ]);
+        
         if (!$logbook->canBeReviewedBy($user)) {
+            \Log::warning('User cannot review logbook', [
+                'user_id' => $user->id,
+                'user_role' => $user->role,
+                'logbook_id' => $logbook->id,
+                'logbook_division_id' => $logbook->division_id,
+                'user_division_id' => $user->division_id
+            ]);
             abort(403);
         }
 
@@ -163,6 +176,12 @@ class LogbookController extends Controller
                 $message = 'Permintaan revisi telah dikirim.';
                 break;
         }
+
+        \Log::info('Update status result', [
+            'success' => $success,
+            'message' => $message,
+            'logbook_status' => $logbook->fresh()->status
+        ]);
 
         if ($success) {
             return back()->with('success', $message);

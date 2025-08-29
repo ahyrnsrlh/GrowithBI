@@ -160,12 +160,12 @@ class ProfileController extends Controller
      */
     public function createApplication(Request $request)
     {
+        $user = $request->user();
+        
         $request->validate([
             'division_id' => ['required', 'exists:divisions,id', new \App\Rules\UniqueActiveApplication(null, $user->id)],
             'motivation' => 'required|string|min:100|max:1000',
         ]);
-
-        $user = $request->user();
 
         try {
             \Log::info('=== CREATING APPLICATION ===');

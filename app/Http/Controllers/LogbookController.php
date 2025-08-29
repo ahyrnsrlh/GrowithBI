@@ -176,7 +176,7 @@ class LogbookController extends Controller
             abort(403, 'Unauthorized access to this logbook.');
         }
 
-        $logbook->load(['division', 'comments.user', 'reviewer']);
+        $logbook->load(['division', 'comments.user', 'reviewer', 'reviewedBy']);
 
         return Inertia::render('Peserta/Logbooks/Show', [
             'logbook' => [
@@ -188,6 +188,9 @@ class LogbookController extends Controller
                 'challenges' => $logbook->challenges,
                 'duration' => $logbook->duration,
                 'status' => $logbook->status,
+                'mentor_feedback' => $logbook->mentor_feedback,
+                'reviewed_at' => $logbook->reviewed_at,
+                'reviewed_by' => $logbook->reviewed_by,
                 'attachments' => $logbook->attachments ? json_decode($logbook->attachments, true) : [],
                 'created_at' => $logbook->created_at,
                 'updated_at' => $logbook->updated_at,

@@ -50,6 +50,11 @@ class Logbook extends Model
         return $this->belongsTo(User::class, 'reviewed_by');
     }
 
+    public function reviewedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
     public function comments(): HasMany
     {
         return $this->hasMany(LogbookComment::class);
@@ -154,8 +159,7 @@ class Logbook extends Model
     {
         if ($this->status === 'draft') {
             $this->update([
-                'status' => 'submitted',
-                'submitted_at' => now()
+                'status' => 'submitted'
             ]);
             return true;
         }
@@ -164,45 +168,97 @@ class Logbook extends Model
 
     public function approve(User $approver, string $feedback = null): bool
     {
-        if ($this->status === 'submitted') {
+        \Log::info('Attempting to approve logbook', [
+            'logbook_id' => $this->id,
+            'current_status' => $this->status,
+            'approver_id' => $approver->id
+        ]);
+        
+        if (in_array($this->status, ['submitted', 'revision', 'rejected'])) {
             $this->update([
                 'status' => 'approved',
-                'approved_at' => now(),
-                'approved_by' => $approver->id,
                 'reviewed_at' => now(),
                 'reviewed_by' => $approver->id,
                 'mentor_feedback' => $feedback
             ]);
+            
+            \Log::info('Logbook approved successfully', [
+                'logbook_id' => $this->id,
+                'new_status' => $this->fresh()->status
+            ]);
+            
             return true;
         }
+        
+        \Log::warning('Cannot approve logbook - invalid status', [
+            'logbook_id' => $this->id,
+            'current_status' => $this->status
+        ]);
+        
         return false;
     }
 
     public function reject(User $reviewer, string $feedback): bool
     {
-        if ($this->status === 'submitted') {
+        \Log::info('Attempting to reject logbook', [
+            'logbook_id' => $this->id,
+            'current_status' => $this->status,
+            'reviewer_id' => $reviewer->id
+        ]);
+        
+        if (in_array($this->status, ['submitted', 'revision', 'approved'])) {
             $this->update([
                 'status' => 'rejected',
                 'reviewed_at' => now(),
                 'reviewed_by' => $reviewer->id,
                 'mentor_feedback' => $feedback
             ]);
+            
+            \Log::info('Logbook rejected successfully', [
+                'logbook_id' => $this->id,
+                'new_status' => $this->fresh()->status
+            ]);
+            
             return true;
         }
+        
+        \Log::warning('Cannot reject logbook - invalid status', [
+            'logbook_id' => $this->id,
+            'current_status' => $this->status
+        ]);
+        
         return false;
     }
 
     public function requestRevision(User $reviewer, string $feedback): bool
     {
-        if ($this->status === 'submitted') {
+        \Log::info('Attempting to request revision for logbook', [
+            'logbook_id' => $this->id,
+            'current_status' => $this->status,
+            'reviewer_id' => $reviewer->id
+        ]);
+        
+        if (in_array($this->status, ['submitted', 'revision', 'approved', 'rejected'])) {
             $this->update([
                 'status' => 'revision',
                 'reviewed_at' => now(),
                 'reviewed_by' => $reviewer->id,
                 'mentor_feedback' => $feedback
             ]);
+            
+            \Log::info('Revision requested successfully', [
+                'logbook_id' => $this->id,
+                'new_status' => $this->fresh()->status
+            ]);
+            
             return true;
         }
+        
+        \Log::warning('Cannot request revision - invalid status', [
+            'logbook_id' => $this->id,
+            'current_status' => $this->status
+        ]);
+        
         return false;
     }
 }

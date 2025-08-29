@@ -1,10 +1,10 @@
 <template>
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen bg-white">
         <!-- Sidebar -->
-        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg">
+        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-blue-900 shadow-lg">
             <!-- Logo -->
             <div
-                class="flex h-16 items-center justify-center border-b border-gray-200"
+                class="flex h-16 items-center justify-center border-b border-blue-800"
             >
                 <div class="flex items-center space-x-2">
                     <img
@@ -12,7 +12,7 @@
                         alt="GrowithBI Logo"
                         class="h-8 w-8 object-contain"
                     />
-                    <span class="text-xl font-bold text-blue-900"
+                    <span class="text-xl font-bold text-white"
                         >GrowithBI</span
                     >
                 </div>
@@ -27,8 +27,8 @@
                         :class="[
                             'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                             $page.url === '/admin/dashboard'
-                                ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
                         ]"
                     >
                         <svg
@@ -59,8 +59,8 @@
                         :class="[
                             'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                             $page.url.startsWith('/admin/applications')
-                                ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
                         ]"
                     >
                         <svg
@@ -91,8 +91,8 @@
                         :class="[
                             'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                             $page.url.startsWith('/admin/divisions')
-                                ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
                         ]"
                     >
                         <svg
@@ -117,8 +117,8 @@
                         :class="[
                             'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                             $page.url.startsWith('/admin/supervisors')
-                                ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
                         ]"
                     >
                         <svg
@@ -143,8 +143,8 @@
                         :class="[
                             'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                             $page.url.startsWith('/admin/participants')
-                                ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
                         ]"
                     >
                         <svg
@@ -169,8 +169,8 @@
                         :class="[
                             'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                             $page.url.startsWith('/admin/logbooks')
-                                ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
                         ]"
                     >
                         <svg
@@ -195,8 +195,8 @@
                         :class="[
                             'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                             $page.url.startsWith('/admin/reports')
-                                ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
                         ]"
                     >
                         <svg
@@ -385,7 +385,7 @@
             </header>
 
             <!-- Page Content -->
-            <main class="p-6">
+            <main class="p-6 bg-white">
                 <slot />
             </main>
         </div>

@@ -1234,7 +1234,8 @@ const handleApply = async () => {
                 `Silakan lengkapi data profil berikut: ${missingProfileNames}. Anda akan diarahkan ke halaman profil dalam 3 detik.`
             );
             setTimeout(() => {
-                window.location.href = `/profile?division_id=${
+                // Use Inertia.js navigation instead of window.location
+                window.location.href = `/profile/edit?division_id=${
                     props.division.id
                 }&missing_fields=${missingProfile
                     .map((f) => f.field)

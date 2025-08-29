@@ -9,7 +9,7 @@
                 <div>
                     <div class="flex items-center space-x-4 mb-2">
                         <Link
-                            :href="route('admin.logbooks.index')"
+                            :href="route('admin.admin.logbooks.index')"
                             class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
                         >
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,8 +133,8 @@
                             
                             <div class="flex flex-wrap gap-3">
                                 <button
-                                    type="submit"
-                                    @click="reviewForm.status = 'approved'"
+                                    type="button"
+                                    @click="reviewForm.status = 'approved'; submitReview()"
                                     :disabled="processing"
                                     class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 transition-all"
                                 >
@@ -145,8 +145,8 @@
                                 </button>
                                 
                                 <button
-                                    type="submit"
-                                    @click="reviewForm.status = 'revision'"
+                                    type="button"
+                                    @click="reviewForm.status = 'revision'; submitReview()"
                                     :disabled="processing"
                                     class="inline-flex items-center px-4 py-2 bg-yellow-600 text-white font-medium rounded-lg hover:bg-yellow-700 disabled:opacity-50 transition-all"
                                 >
@@ -157,8 +157,8 @@
                                 </button>
                                 
                                 <button
-                                    type="submit"
-                                    @click="reviewForm.status = 'rejected'"
+                                    type="button"
+                                    @click="reviewForm.status = 'rejected'; submitReview()"
                                     :disabled="processing"
                                     class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 disabled:opacity-50 transition-all"
                                 >
@@ -253,6 +253,8 @@ const reviewForm = reactive({
 })
 
 const submitReview = () => {
+    console.log('Submit review called:', reviewForm.status, reviewForm.feedback);
+    
     if (!reviewForm.status || !reviewForm.feedback.trim()) {
         alert('Silakan pilih status dan berikan feedback')
         return
@@ -263,10 +265,30 @@ const submitReview = () => {
     useForm({
         status: reviewForm.status,
         feedback: reviewForm.feedback
-    }).put(route('admin.logbooks.update-status', props.logbook.id), {
-        onSuccess: () => {
+    }).put(route('admin.admin.logbooks.update-status', props.logbook.id), {
+        onSuccess: (page) => {
+            console.log('Success response:', page);
             reviewForm.feedback = ''
             reviewForm.status = ''
+            
+            // Show success message
+            alert('Status logbook berhasil diperbarui!');
+        },
+        onError: (errors) => {
+            console.error('Validation errors:', errors);
+            
+            let errorMessage = 'Terjadi kesalahan: ';
+            if (errors.error) {
+                errorMessage += errors.error;
+            } else if (errors.status) {
+                errorMessage += errors.status[0];
+            } else if (errors.feedback) {
+                errorMessage += errors.feedback[0];
+            } else {
+                errorMessage += Object.values(errors).join(', ');
+            }
+            
+            alert(errorMessage);
         },
         onFinish: () => {
             processing.value = false
