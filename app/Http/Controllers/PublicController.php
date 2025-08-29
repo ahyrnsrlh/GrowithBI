@@ -60,8 +60,6 @@ class PublicController extends Controller
             'existingApplication' => $existingApplication
         ]);
     }
-        ]);
-    }
 
     public function storeApplication(Request $request)
     {

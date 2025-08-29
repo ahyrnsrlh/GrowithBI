@@ -319,6 +319,59 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal for Cancel Confirmation -->
+        <div
+            v-if="showCancelModal"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            @click.self="closeCancelModal"
+        >
+            <div class="bg-white rounded-lg max-w-md w-full mx-4">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Pembatalan</h3>
+                            <p class="text-sm text-gray-600">Tindakan ini tidak dapat dibatalkan</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <p class="text-gray-700">
+                            Apakah Anda yakin ingin membatalkan pendaftaran untuk divisi 
+                            <strong>{{ application.division.name }}</strong>?
+                        </p>
+                        <div class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                            <p class="text-sm text-yellow-800">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Dengan membatalkan pendaftaran, semua data dan dokumen yang telah diunggah akan dihapus secara permanen.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button
+                            @click="closeCancelModal"
+                            :disabled="cancelling"
+                            class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+                        >
+                            Batal
+                        </button>
+                        <button
+                            @click="confirmCancel"
+                            :disabled="cancelling"
+                            class="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                        >
+                            <i v-if="cancelling" class="fas fa-spinner fa-spin mr-2"></i>
+                            <i v-else class="fas fa-trash mr-2"></i>
+                            {{ cancelling ? 'Membatalkan...' : 'Ya, Batalkan' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -331,7 +384,9 @@ const props = defineProps({
 });
 
 const showModal = ref(false);
+const showCancelModal = ref(false);
 const refreshing = ref(false);
+const cancelling = ref(false);
 
 // Check if application is new (created in last 30 minutes)
 const isNewApplication = computed(() => {
@@ -404,9 +459,24 @@ const closeModal = () => {
 };
 
 const cancelApplication = () => {
-    if (confirm("Apakah Anda yakin ingin membatalkan lamaran ini?")) {
-        router.delete(route("applications.destroy", props.application.id));
-    }
+    showCancelModal.value = true;
+};
+
+const confirmCancel = () => {
+    cancelling.value = true;
+    router.delete(route("applications.cancel", props.application.id), {
+        onSuccess: () => {
+            showCancelModal.value = false;
+            cancelling.value = false;
+        },
+        onError: () => {
+            cancelling.value = false;
+        }
+    });
+};
+
+const closeCancelModal = () => {
+    showCancelModal.value = false;
 };
 
 const downloadOffer = () => {

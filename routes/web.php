@@ -50,6 +50,9 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/applications/check/{division}', [App\Http\Controllers\Api\ApplicationController::class, 'checkExisting'])->name('applications.check');
     Route::get('/applications/{application}/status', [App\Http\Controllers\Api\ApplicationController::class, 'getStatus'])->name('applications.status');
+    
+    // Application cancellation (available for logged in users)
+    Route::delete('/applications/{application}', [App\Http\Controllers\ProfileController::class, 'cancelApplication'])->name('applications.destroy');
 });
 
 // Authentication routes
@@ -80,6 +83,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/upload-document', [ProfileController::class, 'uploadDocument'])->name('profile.upload-document');
     Route::post('/profile/create-application', [ProfileController::class, 'createApplication'])->name('profile.create-application');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Cancel application (global route for applications management)
+    Route::delete('/applications/{application}', [ProfileController::class, 'cancelApplication'])->name('applications.cancel');
 });
 
 // Peserta Routes (require peserta role)
@@ -87,6 +93,9 @@ Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'verified'])->gr
     Route::get('/dashboard', [PesertaDashboardController::class, 'index'])->name('dashboard');
     Route::resource('logbooks', App\Http\Controllers\LogbookController::class);
     Route::post('/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbooks.comments.store');
+    
+    // Application management for participants
+    Route::delete('/applications/{application}', [App\Http\Controllers\ProfileController::class, 'cancelApplication'])->name('applications.cancel');
 });
 
 // Logbook routes (accessible by accepted participants only) - Legacy support
@@ -103,6 +112,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
     Route::put('/applications/{application}', [ApplicationController::class, 'update'])->name('applications.update');
+    Route::delete('/applications/{application}', [ApplicationController::class, 'destroy'])->name('applications.destroy');
     Route::post('/applications/bulk-update', [ApplicationController::class, 'bulkUpdate'])->name('applications.bulk-update');
     
     // Divisions Management

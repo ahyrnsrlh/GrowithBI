@@ -16,8 +16,9 @@
                         </p>
                     </div>
                     <div class="flex space-x-3">
-                        <Link
-                            :href="route('peserta.logbooks.show', logbook.id)"
+                        <button
+                            type="button"
+                            @click="handleCancel"
                             class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"
                         >
                             <svg
@@ -33,8 +34,8 @@
                                     d="M10 19l-7-7m0 0l7-7m-7 7h18"
                                 />
                             </svg>
-                            Batal
-                        </Link>
+                            Batalkan
+                        </button>
                     </div>
                 </div>
             </div>
@@ -787,6 +788,27 @@ const validateForm = () => {
     }
 
     return errors;
+};
+
+const handleCancel = () => {
+    // Check if form has been modified
+    const hasChanges = 
+        form.title !== (props.logbook.title || "") ||
+        form.date !== (props.logbook.date || "") ||
+        form.duration !== (props.logbook.duration || "") ||
+        form.activities !== (props.logbook.activities || "") ||
+        form.learning_points !== (props.logbook.learning_points || "") ||
+        form.challenges !== (props.logbook.challenges || "") ||
+        newFiles.value.length > 0 ||
+        form.removed_files.length > 0;
+
+    if (hasChanges) {
+        if (confirm("Anda memiliki perubahan yang belum disimpan. Yakin ingin membatalkan?")) {
+            router.visit(route("peserta.logbooks.index"));
+        }
+    } else {
+        router.visit(route("peserta.logbooks.index"));
+    }
 };
 
 const submitForm = () => {

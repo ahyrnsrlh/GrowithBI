@@ -224,6 +224,43 @@ class ProfileController extends Controller
         }
     }
 
+        /**
+     * Cancel user application - delete the application record
+     */
+    public function cancelApplication(Request $request, $id)
+    {
+        $application = Application::findOrFail($id);
+        
+        // Ensure user can only cancel their own application
+        if ($application->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized');
+        }
+        
+        // Only allow canceling pending applications
+        if (!in_array($application->status, ['menunggu', 'dalam_review'])) {
+            return back()->withErrors(['error' => 'Aplikasi tidak dapat dibatalkan karena sudah diproses lebih lanjut.']);
+        }
+        
+        // Delete uploaded files if they exist
+        $filePaths = [
+            $application->cv_path,
+            $application->surat_lamaran_path,
+            $application->transkrip_path,
+            $application->ktp_path
+        ];
+        
+        foreach ($filePaths as $filePath) {
+            if ($filePath && Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+        }
+        
+        // Delete the application record
+        $application->delete();
+        
+        return redirect()->route('profile.edit')->with('success', 'Pendaftaran berhasil dibatalkan dan dihapus dari riwayat.');
+    }
+
     /**
      * Delete the user's account.
      */

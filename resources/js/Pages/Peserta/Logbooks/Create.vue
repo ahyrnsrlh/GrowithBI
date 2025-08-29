@@ -332,6 +332,27 @@
                     >
                         <button
                             type="button"
+                            @click="handleCancel"
+                            class="inline-flex justify-center items-center px-6 py-3 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                            <svg
+                                class="w-4 h-4 mr-2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                                />
+                            </svg>
+                            Batalkan
+                        </button>
+                        
+                        <button
+                            type="button"
                             @click="saveAsDraft"
                             :disabled="form.processing"
                             class="flex-1 inline-flex justify-center items-center px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -423,7 +444,7 @@
 
 <script setup>
 import PesertaLayout from "@/Layouts/PesertaLayout.vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import { Link, useForm, router } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
 
 const props = defineProps({
@@ -482,6 +503,26 @@ const formatFileSize = (bytes) => {
     const sizes = ["Bytes", "KB", "MB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+};
+
+const handleCancel = () => {
+    // Check if form has any data
+    const hasData = 
+        form.title.trim() !== "" ||
+        form.activities.trim() !== "" ||
+        form.learning_points.trim() !== "" ||
+        form.challenges.trim() !== "" ||
+        form.duration !== "" ||
+        form.date !== new Date().toISOString().split("T")[0] ||
+        selectedFiles.value.length > 0;
+
+    if (hasData) {
+        if (confirm("Anda memiliki data yang belum disimpan. Yakin ingin membatalkan?")) {
+            router.visit(route("peserta.logbooks.index"));
+        }
+    } else {
+        router.visit(route("peserta.logbooks.index"));
+    }
 };
 
 const submit = () => {
