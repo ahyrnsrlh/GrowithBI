@@ -84,6 +84,31 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/create-application', [ProfileController::class, 'createApplication'])->name('profile.create-application');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
+    // Logbook routes for accepted participants
+    Route::get('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'index'])->name('profile.logbooks.index');
+    Route::get('/profile/logbooks/create', [App\Http\Controllers\LogbookController::class, 'create'])->name('profile.logbooks.create');
+    Route::post('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'store'])->name('profile.logbooks.store');
+    Route::get('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'show'])->name('profile.logbooks.show');
+    Route::get('/profile/logbooks/{logbook}/edit', [App\Http\Controllers\LogbookController::class, 'edit'])->name('profile.logbooks.edit');
+    Route::patch('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'update'])->name('profile.logbooks.update');
+    Route::delete('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'destroy'])->name('profile.logbooks.destroy');
+    Route::post('/profile/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('profile.logbooks.comments.store');
+    
+    // Reports routes for accepted participants
+    Route::get('/profile/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'index'])->name('profile.reports.index');
+    Route::get('/profile/reports/create', [App\Http\Controllers\Peserta\PesertaReportController::class, 'create'])->name('profile.reports.create');
+    Route::post('/profile/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'store'])->name('profile.reports.store');
+    Route::get('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'show'])->name('profile.reports.show');
+    Route::get('/profile/reports/{report}/download', [App\Http\Controllers\Peserta\PesertaReportController::class, 'download'])->name('profile.reports.download');
+    Route::get('/profile/reports/{report}/edit', [App\Http\Controllers\Peserta\PesertaReportController::class, 'edit'])->name('profile.reports.edit');
+    Route::put('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'update'])->name('profile.reports.update');
+    Route::delete('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'destroy'])->name('profile.reports.destroy');
+    
+    // Acceptance Letter routes
+    Route::post('/applications/{application}/acceptance-letter/upload', [App\Http\Controllers\AcceptanceLetterController::class, 'upload'])->name('acceptance-letter.upload');
+    Route::get('/applications/{application}/acceptance-letter/download', [App\Http\Controllers\AcceptanceLetterController::class, 'download'])->name('acceptance-letter.download');
+    Route::get('/applications/{application}/acceptance-letter/check', [App\Http\Controllers\AcceptanceLetterController::class, 'check'])->name('acceptance-letter.check');
+    
     // Cancel application (global route for applications management)
     Route::delete('/applications/{application}', [ProfileController::class, 'cancelApplication'])->name('applications.cancel');
 });
@@ -93,6 +118,9 @@ Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'verified'])->gr
     Route::get('/dashboard', [PesertaDashboardController::class, 'index'])->name('dashboard');
     Route::resource('logbooks', App\Http\Controllers\LogbookController::class);
     Route::post('/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbooks.comments.store');
+    
+    // Reports management for participants
+    Route::resource('reports', App\Http\Controllers\Peserta\PesertaReportController::class);
     
     // Application management for participants
     Route::delete('/applications/{application}', [App\Http\Controllers\ProfileController::class, 'cancelApplication'])->name('applications.cancel');
@@ -115,6 +143,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::delete('/applications/{application}', [ApplicationController::class, 'destroy'])->name('applications.destroy');
     Route::post('/applications/bulk-update', [ApplicationController::class, 'bulkUpdate'])->name('applications.bulk-update');
     
+    // Acceptance Letter routes for admin
+    Route::post('/applications/{application}/upload-acceptance-letter', [App\Http\Controllers\AcceptanceLetterController::class, 'upload'])->name('applications.upload-acceptance-letter');
+    
     // Divisions Management
     Route::resource('divisions', App\Http\Controllers\Admin\DivisionController::class);
     
@@ -122,12 +153,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('/participants', [ParticipantController::class, 'index'])->name('participants.index');
     Route::get('/participants/{participant}', [ParticipantController::class, 'show'])->name('participants.show');
     Route::put('/participants/{participant}/status', [ParticipantController::class, 'updateStatus'])->name('participants.update-status');
-    
-    // Supervisors Management (using AdminController)
-    Route::get('/supervisors', [\App\Http\Controllers\Admin\AdminController::class, 'manageSupervisors'])->name('supervisors.index');
-    Route::post('/supervisors', [\App\Http\Controllers\Admin\AdminController::class, 'createSupervisor'])->name('supervisors.store');
-    Route::get('/supervisors/{supervisor}', [\App\Http\Controllers\Admin\AdminController::class, 'showSupervisor'])->name('supervisors.show');
-    Route::put('/supervisors/{supervisor}', [\App\Http\Controllers\Admin\AdminController::class, 'updateSupervisor'])->name('supervisors.update');
     
     // Logbooks Management (enhanced with review capabilities)
     Route::get('/logbooks', [\App\Http\Controllers\Admin\LogbookController::class, 'index'])->name('admin.logbooks.index');

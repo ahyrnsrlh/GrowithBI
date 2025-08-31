@@ -24,7 +24,6 @@ class ReportController extends Controller
             'rejected_applications' => Application::where('status', 'ditolak')->count(),
             'total_divisions' => Division::count(),
             'active_divisions' => Division::where('is_active', true)->count(),
-            'total_supervisors' => User::where('role', 'pembimbing')->count(),
             'total_participants' => User::where('role', 'peserta')->count(),
         ];
 
@@ -53,8 +52,7 @@ class ReportController extends Controller
         });
 
         // Division performance
-        $divisionPerformance = Division::with('supervisor')
-            ->withCount([
+        $divisionPerformance = Division::withCount([
                 'applications',
                 'applications as accepted_count' => function ($query) {
                     $query->where('status', 'diterima');
@@ -72,40 +70,12 @@ class ReportController extends Controller
                 return [
                     'id' => $division->id,
                     'name' => $division->name,
-                    'supervisor' => $division->supervisor ? $division->supervisor->name : 'Belum ditentukan',
                     'quota' => $division->quota,
                     'applications_count' => $division->applications_count,
                     'accepted_count' => $division->accepted_count,
                     'rejected_count' => $division->rejected_count,
                     'acceptance_rate' => $acceptance_rate,
                     'quota_filled' => $quota_filled,
-                ];
-            });
-
-        // Top performers (supervisors)
-        $topSupervisors = User::where('role', 'pembimbing')
-            ->withCount([
-                'supervisedDivisions',
-                'supervisedApplications',
-                'supervisedApplications as accepted_applications_count' => function ($query) {
-                    $query->where('status', 'diterima');
-                }
-            ])
-            ->having('supervised_applications_count', '>', 0)
-            ->orderBy('accepted_applications_count', 'desc')
-            ->take(5)
-            ->get()
-            ->map(function ($supervisor) {
-                $total = $supervisor->supervised_applications_count;
-                $acceptance_rate = $total > 0 ? round(($supervisor->accepted_applications_count / $total) * 100, 1) : 0;
-                
-                return [
-                    'id' => $supervisor->id,
-                    'name' => $supervisor->name,
-                    'divisions_count' => $supervisor->supervised_divisions_count,
-                    'applications_count' => $supervisor->supervised_applications_count,
-                    'accepted_count' => $supervisor->accepted_applications_count,
-                    'acceptance_rate' => $acceptance_rate,
                 ];
             });
 
@@ -120,7 +90,6 @@ class ReportController extends Controller
             'stats' => $stats,
             'applicationTrends' => $applicationTrends,
             'divisionPerformance' => $divisionPerformance,
-            'topSupervisors' => $topSupervisors,
             'statusDistribution' => $statusDistribution
         ]);
     }

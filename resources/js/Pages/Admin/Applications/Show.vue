@@ -166,10 +166,7 @@
                                     >Pembimbing</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{
-                                        application.division.supervisor?.name ||
-                                        "Belum ditentukan"
-                                    }}
+                                    GrowithBI Admin
                                 </p>
                             </div>
                             <div>
@@ -837,6 +834,81 @@
                         </div>
                     </div>
 
+                    <!-- Acceptance Letter Upload -->
+                    <div
+                        v-if="application.status === 'diterima'"
+                        class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                    >
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                            Surat Penerimaan
+                        </h3>
+                        
+                        <div v-if="application.acceptance_letter_path" class="mb-4">
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-green-800">
+                                                Surat penerimaan telah diupload
+                                            </p>
+                                            <p class="text-xs text-green-600">
+                                                {{ formatDateTime(application.acceptance_letter_uploaded_at) }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <a
+                                            :href="`/storage/${application.acceptance_letter_path}`"
+                                            target="_blank"
+                                            class="text-green-600 hover:text-green-700 text-sm font-medium"
+                                        >
+                                            Lihat
+                                        </a>
+                                        <button
+                                            @click="showLetterUpload = true"
+                                            class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                                        >
+                                            Ganti
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-else class="mb-4">
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-yellow-800">
+                                            Surat penerimaan belum diupload
+                                        </p>
+                                        <p class="text-xs text-yellow-600">
+                                            Upload surat penerimaan untuk peserta ini
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button
+                            v-if="!application.acceptance_letter_path"
+                            @click="showLetterUpload = true"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                        >
+                            Upload Surat Penerimaan
+                        </button>
+                    </div>
+
                     <!-- Admin Notes -->
                     <div
                         v-if="application.admin_notes"
@@ -913,6 +985,84 @@
                 </div>
             </div>
         </div>
+
+        <!-- Acceptance Letter Upload Modal -->
+        <div
+            v-if="showLetterUpload"
+            class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+        >
+            <div
+                class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+            >
+                <div class="mt-3">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">
+                        Upload Surat Penerimaan
+                    </h3>
+                    <form @submit.prevent="uploadAcceptanceLetter">
+                        <div class="mb-4">
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                                >File Surat Penerimaan</label
+                            >
+                            <input
+                                type="file"
+                                ref="fileInput"
+                                @change="handleFileChange"
+                                accept=".pdf,.doc,.docx"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2"
+                                required
+                            />
+                            <p class="text-xs text-gray-500 mt-1">
+                                Format yang didukung: PDF, DOC, DOCX (Maks. 5MB)
+                            </p>
+                        </div>
+                        
+                        <div v-if="uploadError" class="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                            <p class="text-sm text-red-600">{{ uploadError }}</p>
+                        </div>
+
+                        <div class="flex justify-end space-x-2">
+                            <button
+                                type="button"
+                                @click="closeLetterUpload"
+                                class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+                                :disabled="isUploading"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="submit"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center"
+                                :disabled="isUploading || !selectedFile"
+                            >
+                                <svg
+                                    v-if="isUploading"
+                                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        class="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        stroke-width="4"
+                                    ></circle>
+                                    <path
+                                        class="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
+                                </svg>
+                                {{ isUploading ? 'Mengupload...' : 'Upload' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </AdminLayout>
 </template>
 
@@ -926,6 +1076,11 @@ const props = defineProps({
 });
 
 const showStatusModal = ref(false);
+const showLetterUpload = ref(false);
+const selectedFile = ref(null);
+const isUploading = ref(false);
+const uploadError = ref('');
+const fileInput = ref(null);
 
 const statusForm = reactive({
     status: props.application.status,
@@ -966,5 +1121,69 @@ const updateStatus = () => {
             showStatusModal.value = false;
         },
     });
+};
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    uploadError.value = '';
+    
+    if (file) {
+        // Validate file type
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (!allowedTypes.includes(file.type)) {
+            uploadError.value = 'Format file tidak didukung. Gunakan PDF, DOC, atau DOCX.';
+            return;
+        }
+        
+        // Validate file size (5MB max)
+        if (file.size > 5 * 1024 * 1024) {
+            uploadError.value = 'Ukuran file terlalu besar. Maksimal 5MB.';
+            return;
+        }
+        
+        selectedFile.value = file;
+    }
+};
+
+const uploadAcceptanceLetter = () => {
+    if (!selectedFile.value) {
+        uploadError.value = 'Pilih file terlebih dahulu.';
+        return;
+    }
+    
+    isUploading.value = true;
+    uploadError.value = '';
+    
+    const formData = new FormData();
+    formData.append('acceptance_letter', selectedFile.value);
+    
+    router.post(`/admin/applications/${props.application.id}/upload-acceptance-letter`, formData, {
+        onSuccess: () => {
+            showLetterUpload.value = false;
+            selectedFile.value = null;
+            if (fileInput.value) {
+                fileInput.value.value = '';
+            }
+        },
+        onError: (errors) => {
+            if (errors.acceptance_letter) {
+                uploadError.value = errors.acceptance_letter;
+            } else {
+                uploadError.value = 'Terjadi kesalahan saat mengupload file.';
+            }
+        },
+        onFinish: () => {
+            isUploading.value = false;
+        }
+    });
+};
+
+const closeLetterUpload = () => {
+    showLetterUpload.value = false;
+    selectedFile.value = null;
+    uploadError.value = '';
+    if (fileInput.value) {
+        fileInput.value.value = '';
+    }
 };
 </script>

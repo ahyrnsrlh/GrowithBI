@@ -237,15 +237,6 @@
                 <i class="fas fa-download mr-2"></i>
                 Unduh Surat
             </button>
-
-            <Link
-                v-if="application.status === 'diterima'"
-                :href="route('peserta.logbooks.index')"
-                class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center"
-            >
-                <i class="fas fa-book mr-2"></i>
-                Akses Logbook
-            </Link>
         </div>
 
         <!-- Modal for Details -->
@@ -479,10 +470,25 @@ const closeCancelModal = () => {
     showCancelModal.value = false;
 };
 
-const downloadOffer = () => {
-    window.open(
-        route("applications.download-offer", props.application.id),
-        "_blank"
-    );
+const downloadOffer = async () => {
+    try {
+        // First check if acceptance letter exists
+        const checkResponse = await fetch(route('acceptance-letter.check', props.application.id));
+        const checkResult = await checkResponse.json();
+        
+        if (!checkResult.success || !checkResult.has_letter) {
+            alert('Surat penerimaan belum tersedia. Hubungi pembimbing Anda.');
+            return;
+        }
+        
+        // Download the letter
+        window.open(
+            route("acceptance-letter.download", props.application.id),
+            "_blank"
+        );
+    } catch (error) {
+        console.error('Error downloading acceptance letter:', error);
+        alert('Terjadi kesalahan saat mengunduh surat penerimaan.');
+    }
 };
 </script>

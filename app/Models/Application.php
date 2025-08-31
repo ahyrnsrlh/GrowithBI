@@ -17,8 +17,6 @@ class Application extends Model
         'major',
         'semester',
         'gpa',
-        'start_date',
-        'end_date',
         'birth_date',
         'gender',
         'portfolio_url',
@@ -31,15 +29,17 @@ class Application extends Model
         'ktp_path',
         'interview_date',
         'interview_location',
-        'notes'
+        'notes',
+        'acceptance_letter_path',
+        'acceptance_letter_uploaded_at',
+        'uploaded_by'
     ];
 
     protected $casts = [
         'interview_date' => 'datetime',
+        'acceptance_letter_uploaded_at' => 'datetime',
         'semester' => 'integer',
         'gpa' => 'decimal:2',
-        'start_date' => 'date',
-        'end_date' => 'date',
         'birth_date' => 'date',
     ];
 
@@ -56,6 +56,11 @@ class Application extends Model
     public function reviewer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
+    public function letterUploader(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'uploaded_by');
     }
 
     public function scopeActive($query)

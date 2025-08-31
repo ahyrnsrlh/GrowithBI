@@ -125,7 +125,7 @@
                                     >
                                         {{
                                             division.supervisor ||
-                                            "Supervisor: Belum ditentukan"
+                                            "GrowithBI Admin"
                                         }}
                                     </p>
                                 </div>

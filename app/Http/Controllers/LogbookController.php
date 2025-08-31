@@ -57,7 +57,7 @@ class LogbookController extends Controller
             'revision_logbooks' => $logbooks->where('status', 'revision')->count()
         ];
 
-        return Inertia::render('Peserta/Logbooks/Index', [
+        return Inertia::render('Profile/Logbooks/Index', [
             'logbooks' => $logbooks->map(function ($logbook) {
                 return [
                     'id' => $logbook->id,
@@ -93,7 +93,7 @@ class LogbookController extends Controller
                 ->with('error', 'Anda belum memiliki status magang yang diterima.');
         }
 
-        return Inertia::render('Peserta/Logbooks/Create', [
+        return Inertia::render('Profile/Logbooks/Create', [
             'division' => $acceptedApplication->division
         ]);
     }
@@ -178,7 +178,7 @@ class LogbookController extends Controller
 
         $logbook->load(['division', 'comments.user', 'reviewer', 'reviewedBy']);
 
-        return Inertia::render('Peserta/Logbooks/Show', [
+        return Inertia::render('Profile/Logbooks/Show', [
             'logbook' => [
                 'id' => $logbook->id,
                 'title' => $logbook->title,
@@ -236,7 +236,7 @@ class LogbookController extends Controller
                 ->with('error', 'Logbook yang sudah disubmit atau disetujui tidak dapat diedit.');
         }
 
-        return Inertia::render('Peserta/Logbooks/Edit', [
+        return Inertia::render('Profile/Logbooks/Edit', [
             'logbook' => [
                 'id' => $logbook->id,
                 'title' => $logbook->title,

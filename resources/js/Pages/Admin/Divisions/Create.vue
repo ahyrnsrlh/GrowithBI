@@ -107,35 +107,6 @@
                                 {{ errors.quota }}
                             </p>
                         </div>
-
-                        <div>
-                            <label
-                                for="supervisor_id"
-                                class="block text-sm font-medium text-gray-700 mb-2"
-                            >
-                                Pembimbing
-                            </label>
-                            <select
-                                id="supervisor_id"
-                                v-model="form.supervisor_id"
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                                <option value="">Pilih Pembimbing</option>
-                                <option
-                                    v-for="supervisor in supervisors"
-                                    :key="supervisor.id"
-                                    :value="supervisor.id"
-                                >
-                                    {{ supervisor.name }}
-                                </option>
-                            </select>
-                            <p
-                                v-if="errors.supervisor_id"
-                                class="mt-1 text-sm text-red-600"
-                            >
-                                {{ errors.supervisor_id }}
-                            </p>
-                        </div>
                     </div>
 
                     <!-- Period -->
@@ -273,7 +244,6 @@ import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Link, useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
-    supervisors: Array,
     errors: Object,
 });
 
@@ -281,7 +251,6 @@ const form = useForm({
     name: "",
     description: "",
     quota: 10,
-    supervisor_id: "",
     start_date: "",
     end_date: "",
     is_active: true,

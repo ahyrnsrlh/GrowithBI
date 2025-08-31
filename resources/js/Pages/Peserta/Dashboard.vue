@@ -571,28 +571,11 @@
                 </div>
                 <div>
                     <h3 class="text-lg font-bold text-gray-900 mb-2">
-                        Informasi Pembimbing
+                        Informasi Penting
                     </h3>
-                    <div v-if="user.supervisor">
-                        <p class="text-gray-700">
-                            <span class="font-medium">Nama:</span>
-                            {{ user.supervisor.name }}
-                        </p>
-                        <p class="text-gray-700">
-                            <span class="font-medium">Email:</span>
-                            {{ user.supervisor.email }}
-                        </p>
-                        <p class="text-gray-700" v-if="user.supervisor.phone">
-                            <span class="font-medium">Telepon:</span>
-                            {{ user.supervisor.phone }}
-                        </p>
-                    </div>
-                    <div v-else>
-                        <p class="text-gray-500">
-                            Pembimbing belum ditentukan. Silakan hubungi admin
-                            untuk informasi lebih lanjut.
-                        </p>
-                    </div>
+                    <p class="text-gray-700">
+                        Untuk pertanyaan atau bantuan mengenai magang, silakan hubungi admin melalui email atau kontak yang tersedia.
+                    </p>
                 </div>
             </div>
         </div>

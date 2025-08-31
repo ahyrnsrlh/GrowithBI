@@ -16,17 +16,28 @@ class Logbook extends Model
         'title',
         'date',
         'duration',
-        'activity',
-        'learning_outcome',
-        'status',
-        'approved_by',
+        'time_in',
+        'time_out',
+        'activities',
         'notes',
-        'attachment_path'
+        'status',
+        'supervisor_notes',
+        'submitted_at',
+        'approved_at',
+        'approved_by',
+        'attachment_path',
+        'challenges',
+        'attachments',
+        'mentor_feedback',
+        'reviewed_at'
     ];
 
     protected $casts = [
         'date' => 'date',
-        'duration' => 'decimal:1'
+        'duration' => 'decimal:1',
+        'submitted_at' => 'datetime',
+        'approved_at' => 'datetime',
+        'reviewed_at' => 'datetime'
     ];
 
     // Relationships
@@ -94,12 +105,12 @@ class Logbook extends Model
     // Accessors & Mutators
     public function getActivitiesAttribute()
     {
-        return $this->activity;
+        return $this->attributes['activities'] ?? null;
     }
 
     public function setActivitiesAttribute($value)
     {
-        $this->attributes['activity'] = $value;
+        $this->attributes['activities'] = $value;
     }
 
     public function getLearningPointsAttribute()

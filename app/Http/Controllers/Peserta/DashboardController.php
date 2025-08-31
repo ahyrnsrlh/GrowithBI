@@ -41,7 +41,7 @@ class DashboardController extends Controller
             'total_logbooks' => $recentLogbooks->count(),
             'current_division' => $acceptedApplication ? $acceptedApplication->division : null,
             'supervisor_name' => $acceptedApplication && $acceptedApplication->division 
-                ? $acceptedApplication->division->supervisor_name 
+                ? 'GrowithBI Admin'
                 : null,
         ];
 
@@ -83,7 +83,8 @@ class DashboardController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->role
+                'role' => $user->role,
+                'has_accepted_application' => $acceptedApplication !== null
             ]
         ]);
     }

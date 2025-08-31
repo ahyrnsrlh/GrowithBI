@@ -1,26 +1,48 @@
 <template>
-    <div class="min-h-screen bg-white">
-        <!-- Sidebar -->
-        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-blue-900 shadow-lg">
-            <!-- Logo -->
-            <div
-                class="flex h-16 items-center justify-center border-b border-blue-800"
+    <div class="min-h-screen bg-gray-50">
+        <!-- Mobile menu button -->
+        <div class="lg:hidden fixed top-4 left-4 z-50">
+            <button
+                @click="sidebarOpen = !sidebarOpen"
+                class="p-2 rounded-md bg-blue-900 text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path v-if="!sidebarOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile overlay -->
+        <div
+            v-if="sidebarOpen"
+            @click="sidebarOpen = false"
+            class="lg:hidden fixed inset-0 z-40 bg-black bg-opacity-50"
+        ></div>
+
+        <!-- Sidebar -->
+        <div 
+            :class="[
+                'sidebar fixed inset-y-0 left-0 z-50 w-64 bg-blue-900 shadow-lg transform transition-transform duration-300 ease-in-out',
+                sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+            ]"
+        >
+            <!-- Logo -->
+            <div class="flex h-16 items-center justify-center border-b border-blue-800 flex-shrink-0">
                 <div class="flex items-center space-x-2">
                     <img
                         src="/logo.png"
                         alt="GrowithBI Logo"
                         class="h-8 w-8 object-contain"
                     />
-                    <span class="text-xl font-bold text-white"
-                        >GrowithBI</span
-                    >
+                    <span class="text-xl font-bold text-white">GrowithBI</span>
                 </div>
             </div>
 
             <!-- Navigation -->
-            <nav class="mt-6 px-4">
-                <div class="space-y-1">
+            <div class="flex flex-col h-full">
+                <nav class="flex-1 px-4 py-6 overflow-y-auto">
+                    <div class="space-y-1">
                     <!-- Dashboard -->
                     <Link
                         href="/admin/dashboard"
@@ -111,32 +133,6 @@
                         Divisi
                     </Link>
 
-                    <!-- Pembimbing -->
-                    <Link
-                        href="/admin/supervisors"
-                        :class="[
-                            'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
-                            $page.url.startsWith('/admin/supervisors')
-                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
-                        ]"
-                    >
-                        <svg
-                            class="mr-3 h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                            />
-                        </svg>
-                        Manajemen Pembimbing
-                    </Link>
-
                     <!-- Peserta -->
                     <Link
                         href="/admin/participants"
@@ -214,17 +210,21 @@
                         </svg>
                         Laporan
                     </Link>
-                </div>
-            </nav>
+                    </div>
+                </nav>
+            </div>
         </div>
 
         <!-- Main Content -->
-        <div class="pl-64">
+        <div class="main-content lg:ml-64 min-h-screen">
             <!-- Top Header -->
-            <header class="bg-white shadow-sm border-b border-gray-200">
-                <div class="flex h-16 items-center justify-between px-6">
+            <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
+                <div class="flex h-16 items-center justify-between px-6 lg:px-6">
+                    <!-- Mobile menu space -->
+                    <div class="lg:hidden w-10"></div>
+                    
                     <!-- Page Title -->
-                    <div>
+                    <div class="flex-1 lg:flex-none">
                         <h1 class="text-xl font-semibold text-gray-900">
                             {{ title }}
                         </h1>
@@ -385,7 +385,7 @@
             </header>
 
             <!-- Page Content -->
-            <main class="p-6 bg-white">
+            <main class="p-4 lg:p-6 bg-white min-h-screen">
                 <slot />
             </main>
         </div>
@@ -395,7 +395,7 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
 const props = defineProps({
     title: {
@@ -417,6 +417,30 @@ const props = defineProps({
 });
 
 const showProfileMenu = ref(false);
+const sidebarOpen = ref(false);
+
+// Close sidebar when clicking outside on mobile
+const handleClickOutside = (event) => {
+    if (sidebarOpen.value && !event.target.closest('.sidebar') && !event.target.closest('.mobile-menu-button')) {
+        sidebarOpen.value = false;
+    }
+};
+
+// Close sidebar on route change (mobile)
+const handleRouteChange = () => {
+    sidebarOpen.value = false;
+};
+
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside);
+    // Listen for Inertia navigation
+    document.addEventListener('inertia:navigate', handleRouteChange);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside);
+    document.removeEventListener('inertia:navigate', handleRouteChange);
+});
 
 const logout = () => {
     router.post(
@@ -444,3 +468,49 @@ const logout = () => {
     );
 };
 </script>
+
+<style scoped>
+/* Ensure the sidebar stays fixed and handles overflow properly */
+.sidebar {
+    position: fixed !important;
+    height: 100vh !important;
+    overflow-y: auto;
+}
+
+/* Smooth transitions for mobile sidebar */
+@media (max-width: 1023px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+}
+
+/* Ensure main content doesn't overlap sidebar on desktop */
+@media (min-width: 1024px) {
+    .main-content {
+        margin-left: 16rem; /* 64 * 0.25rem = 16rem */
+    }
+}
+
+/* Hide scrollbar for sidebar navigation while keeping functionality */
+.sidebar nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar nav::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+.sidebar nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+</style>

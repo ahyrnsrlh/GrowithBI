@@ -13,7 +13,6 @@ class PublicController extends Controller
     public function divisions()
     {
         $divisions = Division::where('is_active', true)
-            ->with(['supervisor'])
             ->withCount([
                 'applications',
                 'applications as accepted_count' => function ($query) {
@@ -30,8 +29,8 @@ class PublicController extends Controller
                     'quota' => $division->quota,
                     'current_interns' => $division->accepted_count,
                     'available_slots' => $division->quota - $division->accepted_count,
-                    'supervisor' => $division->supervisor ? $division->supervisor->name : 'Belum ditentukan',
-                    'supervisor_email' => $division->supervisor ? $division->supervisor->email : null,
+                    'supervisor' => 'GrowithBI Admin',
+                    'supervisor_email' => 'admin@growithbi.com',
                 ];
             });
 
@@ -43,7 +42,6 @@ class PublicController extends Controller
     public function applicationForm()
     {
         $divisions = Division::where('is_active', true)
-            ->with(['supervisor'])
             ->get();
 
         // Check if user already has a pending or accepted application
@@ -103,7 +101,7 @@ class PublicController extends Controller
         }
 
         return Inertia::render('Public/DivisionDetail', [
-            'division' => $division->load('supervisor'),
+            'division' => $division,
             'existingApplication' => $existingApplication,
             'auth' => [
                 'user' => Auth::user()

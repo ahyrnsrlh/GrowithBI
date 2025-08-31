@@ -262,11 +262,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-sm text-gray-500">Pembimbing:</span>
                         <span class="text-sm font-medium text-gray-900">
-                            {{
-                                division.supervisor
-                                    ? division.supervisor.name
-                                    : "Belum ditentukan"
-                            }}
+                            GrowithBI Admin
                         </span>
                     </div>
 

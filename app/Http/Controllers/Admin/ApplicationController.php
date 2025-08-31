@@ -75,7 +75,7 @@ class ApplicationController extends Controller
      */
     public function show($id)
     {
-        $application = Application::with(['division', 'user'])->findOrFail($id);
+        $application = Application::with(['division', 'user', 'letterUploader'])->findOrFail($id);
         
         return Inertia::render('Admin/Applications/Show', [
             'application' => $application

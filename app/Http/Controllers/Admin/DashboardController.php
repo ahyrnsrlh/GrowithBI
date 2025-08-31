@@ -45,8 +45,7 @@ class DashboardController extends Controller
                 ];
             });
 
-        $divisionsData = Division::with(['supervisor'])
-            ->withCount([
+        $divisionsData = Division::withCount([
                 'applications',
                 'applications as accepted_count' => function ($query) {
                     $query->where('status', 'diterima');
@@ -60,7 +59,7 @@ class DashboardController extends Controller
                     'quota' => $division->quota,
                     'applications' => $division->applications_count,
                     'accepted' => $division->accepted_count,
-                    'supervisor' => $division->supervisor ? $division->supervisor->name : 'Belum ditentukan'
+                    'supervisor' => 'GrowithBI Admin'
                 ];
             });
 

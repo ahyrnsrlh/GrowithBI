@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::table('logbooks', function (Blueprint $table) {
             // Add new fields for enhanced logbook system
-            $table->text('challenges')->nullable()->after('learning_outcome');
-            $table->text('attachments')->nullable()->after('challenges');
-            $table->string('attachment_path')->nullable()->after('attachments');
-            $table->text('mentor_feedback')->nullable()->after('attachment_path');
-            $table->timestamp('reviewed_at')->nullable()->after('mentor_feedback');
+            $table->text('challenges')->nullable();
+            $table->text('attachments')->nullable();
+            $table->string('attachment_path')->nullable();
+            $table->text('mentor_feedback')->nullable();
+            $table->timestamp('reviewed_at')->nullable();
             $table->foreignId('reviewed_by')->nullable()->constrained('users')->onDelete('set null')->after('reviewed_at');
             
             // Add indexes for performance

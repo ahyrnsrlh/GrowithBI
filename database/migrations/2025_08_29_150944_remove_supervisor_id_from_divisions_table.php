@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logbook_comments', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('divisions', function (Blueprint $table) {
+            $table->dropForeign(['supervisor_id']);
+            $table->dropColumn('supervisor_id');
         });
     }
 
@@ -22,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('logbook_comments');
+        Schema::table('divisions', function (Blueprint $table) {
+            $table->foreignId('supervisor_id')->nullable()->constrained('users')->onDelete('set null');
+        });
     }
 };

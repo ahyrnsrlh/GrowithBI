@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
@@ -14,6 +14,11 @@ defineProps({
 
 const showingNavigationDropdown = ref(false);
 const page = usePage();
+
+// Check if user has accepted application for showing logbook/reports menu
+const hasAcceptedApplication = computed(() => {
+    return page.props.auth?.user?.has_accepted_application || false;
+});
 </script>
 
 <template>
@@ -55,6 +60,25 @@ const page = usePage();
                                 >
                                     Aplikasi
                                 </NavLink>
+                                <!-- Logbook & Reports Section (only for accepted participants) -->
+                                <template v-if="hasAcceptedApplication">
+                                    <NavLink
+                                        :href="route('peserta.logbooks.index')"
+                                        :active="
+                                            route().current('peserta.logbooks.*')
+                                        "
+                                    >
+                                        Logbook
+                                    </NavLink>
+                                    <NavLink
+                                        :href="route('peserta.reports.index')"
+                                        :active="
+                                            route().current('peserta.reports.*')
+                                        "
+                                    >
+                                        Laporan
+                                    </NavLink>
+                                </template>
                                 <NavLink
                                     :href="route('profile.edit')"
                                     :active="route().current('profile.*')"
@@ -174,6 +198,21 @@ const page = usePage();
                         >
                             Aplikasi
                         </ResponsiveNavLink>
+                        <!-- Logbook & Reports Section (only for accepted participants) -->
+                        <template v-if="hasAcceptedApplication">
+                            <ResponsiveNavLink
+                                :href="route('peserta.logbooks.index')"
+                                :active="route().current('peserta.logbooks.*')"
+                            >
+                                Logbook
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('peserta.reports.index')"
+                                :active="route().current('peserta.reports.*')"
+                            >
+                                Laporan
+                            </ResponsiveNavLink>
+                        </template>
                         <ResponsiveNavLink
                             :href="route('profile.edit')"
                             :active="route().current('profile.*')"

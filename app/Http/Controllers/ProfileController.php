@@ -13,6 +13,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Application;
 use App\Models\Division;
+use App\Models\Logbook;
 
 class ProfileController extends Controller
 {
@@ -38,8 +39,45 @@ class ProfileController extends Controller
         
         // Get available divisions for new applications
         $divisions = Division::where('is_active', true)
-            ->select('id', 'name', 'quota')
-            ->get();
+            ->select('id', 'name', 'max_interns')
+            ->get()
+            ->map(function ($division) {
+                return [
+                    'id' => $division->id,
+                    'name' => $division->name,
+                    'quota' => $division->max_interns
+                ];
+            });
+            
+        // Get logbook data for accepted participants
+        $logbooks = collect();
+        $logbookStats = [
+            'total_logbooks' => 0,
+            'pending_logbooks' => 0,
+            'approved_logbooks' => 0,
+            'revision_logbooks' => 0,
+            'total_hours' => 0,
+            'average_hours' => 0
+        ];
+        
+        $acceptedApplication = $applications->where('status', 'diterima')->first();
+        if ($acceptedApplication) {
+            $logbooks = Logbook::where('user_id', $user->id)
+                ->with(['division', 'comments.user'])
+                ->orderBy('date', 'desc')
+                ->limit(5)
+                ->get();
+                
+            $allLogbooks = Logbook::where('user_id', $user->id)->get();
+            $logbookStats = [
+                'total_logbooks' => $allLogbooks->count(),
+                'pending_logbooks' => $allLogbooks->where('status', 'submitted')->count(),
+                'approved_logbooks' => $allLogbooks->where('status', 'approved')->count(),
+                'revision_logbooks' => $allLogbooks->where('status', 'revision')->count(),
+                'total_hours' => $allLogbooks->sum('hours'),
+                'average_hours' => $allLogbooks->count() > 0 ? round($allLogbooks->avg('hours'), 1) : 0
+            ];
+        }
 
         return Inertia::render('Profile/Index', [
             'user' => $user,
@@ -47,6 +85,8 @@ class ProfileController extends Controller
             'activeApplication' => $activeApplication,
             'canCreateNewApplication' => $canCreateNewApplication,
             'divisions' => $divisions,
+            'logbooks' => $logbooks,
+            'logbookStats' => $logbookStats,
             'profileCompletion' => $profileCompletion,
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
@@ -182,8 +222,6 @@ class ProfileController extends Controller
                 'major' => $user->major ?: 'No Major',
                 'semester' => $user->semester ?: 1,
                 'gpa' => min($user->gpa ?? 0.00, 4.00), // Ensure max 4.00 for decimal(3,2)
-                'start_date' => now()->addMonths(1)->format('Y-m-d'), // Default start date
-                'end_date' => now()->addMonths(7)->format('Y-m-d'), // Default 6 months internship
                 'birth_date' => $user->birth_date,
                 'gender' => $user->gender,
                 'portfolio_url' => $user->portfolio_url,

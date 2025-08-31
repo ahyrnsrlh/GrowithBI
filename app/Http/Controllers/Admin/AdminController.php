@@ -16,16 +16,81 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
+        // Basic statistics
         $stats = [
             'total_applications' => Application::count(),
             'pending_applications' => Application::where('status', 'pending')->count(),
-            'active_interns' => User::where('role', 'peserta')->where('is_active', true)->count(),
-            'supervisors' => User::where('role', 'pembimbing')->count(),
-            'recent_logbooks' => Logbook::with('user')->latest()->take(5)->get(),
+            'accepted_applications' => Application::where('status', 'approved')->count(),
+            'rejected_applications' => Application::where('status', 'rejected')->count(),
+            'active_divisions' => Division::where('is_active', true)->count(),
+            'total_participants' => User::where('role', 'peserta')->where('is_active', true)->count(),
         ];
 
+        // Application status distribution for pie chart
+        $statusDistribution = [
+            ['name' => 'Menunggu', 'value' => $stats['pending_applications'], 'color' => '#F59E0B'],
+            ['name' => 'Diterima', 'value' => $stats['accepted_applications'], 'color' => '#10B981'],
+            ['name' => 'Ditolak', 'value' => $stats['rejected_applications'], 'color' => '#EF4444'],
+        ];
+
+        // Application trends over last 6 months
+        $applicationTrends = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $count = Application::whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->count();
+            
+            $applicationTrends[] = [
+                'month' => $date->format('M Y'),
+                'applications' => $count
+            ];
+        }
+
+        // Division capacity and fulfillment
+        $divisionData = Division::where('is_active', true)
+            ->withCount([
+                'applications',
+                'applications as pending_count' => function ($query) {
+                    $query->where('status', 'pending');
+                },
+                'applications as accepted_count' => function ($query) {
+                    $query->where('status', 'approved');
+                }
+            ])
+            ->get()
+            ->map(function ($division) {
+                return [
+                    'name' => $division->name,
+                    'quota' => $division->quota,
+                    'pending' => $division->pending_count,
+                    'accepted' => $division->accepted_count,
+                    'available' => max(0, $division->quota - $division->accepted_count)
+                ];
+            });
+
+        // Recent applications for table
+        $recentApplications = Application::with(['user', 'division'])
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($application) {
+                return [
+                    'id' => $application->id,
+                    'name' => $application->user->name ?? $application->name,
+                    'email' => $application->user->email ?? $application->email,
+                    'division' => $application->division->name ?? 'N/A',
+                    'status' => $application->status,
+                    'created_at' => $application->created_at->format('d M Y'),
+                ];
+            });
+
         return Inertia::render('Admin/Dashboard', [
-            'stats' => $stats
+            'stats' => $stats,
+            'statusDistribution' => $statusDistribution,
+            'applicationTrends' => $applicationTrends,
+            'divisionData' => $divisionData,
+            'recentApplications' => $recentApplications,
         ]);
     }
 
@@ -152,7 +217,7 @@ class AdminController extends Controller
 
     public function manageDivisions(Request $request)
     {
-        $query = Division::with('supervisor');
+        $query = Division::query();
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -168,11 +233,7 @@ class AdminController extends Controller
 
     public function createDivision()
     {
-        $supervisors = User::where('role', 'pembimbing')->get();
-        
-        return Inertia::render('Admin/Divisions/Create', [
-            'supervisors' => $supervisors
-        ]);
+        return Inertia::render('Admin/Divisions/Create');
     }
 
     public function storeDivision(Request $request)
@@ -181,8 +242,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'requirements' => 'nullable|string',
-            'quota' => 'required|integer|min:1',
-            'supervisor_id' => 'nullable|exists:users,id',
+            'max_interns' => 'required|integer|min:1',
         ]);
 
         Division::create($request->all());
@@ -194,11 +254,9 @@ class AdminController extends Controller
     public function editDivision($id)
     {
         $division = Division::findOrFail($id);
-        $supervisors = User::where('role', 'pembimbing')->get();
         
         return Inertia::render('Admin/Divisions/Edit', [
             'division' => $division,
-            'supervisors' => $supervisors
         ]);
     }
 
@@ -210,8 +268,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'requirements' => 'nullable|string',
-            'quota' => 'required|integer|min:1',
-            'supervisor_id' => 'nullable|exists:users,id',
+            'max_interns' => 'required|integer|min:1',
         ]);
 
         $division->update($request->all());
@@ -230,16 +287,16 @@ class AdminController extends Controller
 
     public function showDivision($id)
     {
-        $division = Division::with(['supervisor', 'applications'])->findOrFail($id);
+        $division = Division::with(['applications'])->findOrFail($id);
         
         return Inertia::render('Admin/Divisions/Show', [
             'division' => $division
         ]);
     }
 
-    public function manageSupervisors(Request $request)
+    public function manageParticipants(Request $request)
     {
-        $query = User::where('role', 'pembimbing');
+        $query = User::where('role', 'peserta');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -249,19 +306,21 @@ class AdminController extends Controller
             });
         }
 
-        $supervisors = $query->latest()->paginate(10)->withQueryString();
+        $participants = $query->latest()->paginate(10)->withQueryString();
+        $supervisors = User::where('role', 'pembimbing')->get();
         
-        return Inertia::render('Admin/Supervisors', [
+        return Inertia::render('Admin/Participants', [
+            'participants' => $participants,
             'supervisors' => $supervisors
         ]);
     }
 
-    public function createSupervisor()
+    public function createParticipant()
     {
-        return Inertia::render('Admin/Supervisors/Create');
+        return Inertia::render('Admin/Participants/Create');
     }
 
-    public function storeSupervisor(Request $request)
+    public function storeParticipant(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -275,29 +334,29 @@ class AdminController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'pembimbing',
+            'role' => 'peserta',
             'phone' => $request->phone,
             'address' => $request->address,
             'is_active' => true,
             'email_verified_at' => now(),
         ]);
 
-        return redirect()->route('admin.supervisors.index')
-            ->with('message', 'Supervisor created successfully.');
+        return redirect()->route('admin.participants.index')
+            ->with('message', 'Participant created successfully.');
     }
 
-    public function editSupervisor($id)
+    public function editParticipant($id)
     {
-        $supervisor = User::where('role', 'pembimbing')->findOrFail($id);
+        $participant = User::where('role', 'peserta')->findOrFail($id);
         
-        return Inertia::render('Admin/Supervisors/Edit', [
-            'supervisor' => $supervisor
+        return Inertia::render('Admin/Participants/Edit', [
+            'participant' => $participant,
         ]);
     }
 
-    public function updateSupervisor(Request $request, $id)
+    public function updateParticipant(Request $request, $id)
     {
-        $supervisor = User::where('role', 'pembimbing')->findOrFail($id);
+        $participant = User::where('role', 'peserta')->findOrFail($id);
         
         $request->validate([
             'name' => 'required|string|max:255',
@@ -313,114 +372,6 @@ class AdminController extends Controller
             $updateData['password'] = Hash::make($request->password);
         }
 
-        $supervisor->update($updateData);
-
-        return redirect()->route('admin.supervisors.index')
-            ->with('message', 'Supervisor updated successfully.');
-    }
-
-    public function showSupervisor($id)
-    {
-        $supervisor = User::where('role', 'pembimbing')
-            ->with(['supervisedInterns'])
-            ->findOrFail($id);
-        
-        return Inertia::render('Admin/Supervisors/Show', [
-            'supervisor' => $supervisor
-        ]);
-    }
-
-    public function manageParticipants(Request $request)
-    {
-        $query = User::where('role', 'peserta')->with(['supervisor']);
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
-            });
-        }
-
-        if ($request->filled('supervisor_id')) {
-            $query->where('supervisor_id', $request->supervisor_id);
-        }
-
-        $participants = $query->latest()->paginate(10)->withQueryString();
-        $supervisors = User::where('role', 'pembimbing')->get();
-        
-        return Inertia::render('Admin/Participants', [
-            'participants' => $participants,
-            'supervisors' => $supervisors
-        ]);
-    }
-
-    public function createParticipant()
-    {
-        $supervisors = User::where('role', 'pembimbing')->get();
-        
-        return Inertia::render('Admin/Participants/Create', [
-            'supervisors' => $supervisors
-        ]);
-    }
-
-    public function storeParticipant(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'supervisor_id' => 'nullable|exists:users,id',
-        ]);
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'peserta',
-            'supervisor_id' => $request->supervisor_id,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'is_active' => true,
-            'email_verified_at' => now(),
-        ]);
-
-        return redirect()->route('admin.participants.index')
-            ->with('message', 'Participant created successfully.');
-    }
-
-    public function editParticipant($id)
-    {
-        $participant = User::where('role', 'peserta')->findOrFail($id);
-        $supervisors = User::where('role', 'pembimbing')->get();
-        
-        return Inertia::render('Admin/Participants/Edit', [
-            'participant' => $participant,
-            'supervisors' => $supervisors
-        ]);
-    }
-
-    public function updateParticipant(Request $request, $id)
-    {
-        $participant = User::where('role', 'peserta')->findOrFail($id);
-        
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'supervisor_id' => 'nullable|exists:users,id',
-        ]);
-
-        $updateData = $request->only(['name', 'email', 'phone', 'address', 'supervisor_id']);
-        
-        if ($request->filled('password')) {
-            $request->validate(['password' => 'string|min:8']);
-            $updateData['password'] = Hash::make($request->password);
-        }
-
         $participant->update($updateData);
 
         return redirect()->route('admin.participants.index')
@@ -430,7 +381,7 @@ class AdminController extends Controller
     public function showParticipant($id)
     {
         $participant = User::where('role', 'peserta')
-            ->with(['supervisor', 'logbooks'])
+            ->with(['logbooks'])
             ->findOrFail($id);
         
         return Inertia::render('Admin/Participants/Show', [
@@ -472,7 +423,6 @@ class AdminController extends Controller
     public function participantsReport()
     {
         $participants = User::where('role', 'peserta')
-            ->with(['supervisor'])
             ->get();
         
         return Inertia::render('Admin/Reports/Participants', [
