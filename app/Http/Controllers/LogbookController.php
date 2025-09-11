@@ -57,7 +57,7 @@ class LogbookController extends Controller
             'revision_logbooks' => $logbooks->where('status', 'revision')->count()
         ];
 
-        return Inertia::render('Profile/Logbooks/Index', [
+        return Inertia::render('Peserta/Logbooks/Index', [
             'logbooks' => $logbooks->map(function ($logbook) {
                 return [
                     'id' => $logbook->id,
@@ -93,7 +93,7 @@ class LogbookController extends Controller
                 ->with('error', 'Anda belum memiliki status magang yang diterima.');
         }
 
-        return Inertia::render('Profile/Logbooks/Create', [
+        return Inertia::render('Peserta/Logbooks/Create', [
             'division' => $acceptedApplication->division
         ]);
     }
@@ -153,10 +153,12 @@ class LogbookController extends Controller
             'division_id' => $acceptedApplication->division_id,
             'date' => $request->date,
             'title' => $request->title,
-            'activity' => $request->activities,
-            'learning_outcome' => $request->learning_points,
+            'activities' => $request->activities,
+            'learning_points' => $request->learning_points,
+            'challenges' => $request->challenges,
             'duration' => $request->duration,
             'status' => $request->status,
+            'attachments' => !empty($attachments) ? json_encode($attachments) : null,
         ]);
 
         $message = $request->status === 'draft' ? 'Logbook berhasil disimpan sebagai draft.' : 'Logbook berhasil dikirim untuk review.';

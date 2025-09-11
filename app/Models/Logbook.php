@@ -13,12 +13,14 @@ class Logbook extends Model
         'user_id',
         'application_id',
         'division_id',
+        'reviewer_id',
         'title',
         'date',
         'duration',
         'time_in',
         'time_out',
         'activities',
+        'learning_points',
         'notes',
         'status',
         'supervisor_notes',
@@ -29,7 +31,8 @@ class Logbook extends Model
         'challenges',
         'attachments',
         'mentor_feedback',
-        'reviewed_at'
+        'reviewed_at',
+        'reviewed_by'
     ];
 
     protected $casts = [
