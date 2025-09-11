@@ -214,27 +214,23 @@ onUnmounted(() => {
                 :class="[
                     'flex items-center justify-between rounded-2xl transition-all duration-300 ease-in-out backdrop-blur-md',
                     isScrolled
-                        ? 'bg-white/95 shadow-lg shadow-black/10 border border-white/20 px-6 py-3'
-                        : 'bg-white/80 shadow-md shadow-black/5 border border-white/30 px-8 py-4',
+                        ? 'bg-gradient-to-r from-blue-800 via-blue-700 to-indigo-800 shadow-lg shadow-black/10 border border-blue-600/20 px-6 py-3'
+                        : 'bg-gradient-to-r from-blue-800 via-blue-700 to-indigo-800 shadow-md shadow-black/5 border border-blue-600/30 px-8 py-4',
                 ]"
             >
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    <div
-                        class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm"
-                    >
-                        <img
-                            src="/logo.png"
-                            alt="Logo"
-                            class="w-7 h-7 object-contain"
-                        />
-                    </div>
+                    <img
+                        src="/logo.png"
+                        alt="Logo"
+                        class="w-8 h-8 object-contain"
+                    />
                     <div class="flex flex-col">
                         <span
-                            class="font-bold text-lg leading-none text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600"
+                            class="font-bold text-lg leading-none text-white"
                             >GrowithBI</span
                         >
-                        <span class="text-xs text-gray-500 leading-none"
+                        <span class="text-xs text-blue-100 leading-none"
                             >Bank Indonesia Lampung</span
                         >
                     </div>
@@ -244,27 +240,27 @@ onUnmounted(() => {
                 <div class="hidden md:flex items-center space-x-8">
                     <a
                         href="#features"
-                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                        class="text-white hover:text-blue-200 font-medium transition-colors duration-200"
                         >Program</a
                     >
                     <a
                         href="#testimonials"
-                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                        class="text-white hover:text-blue-200 font-medium transition-colors duration-200"
                         >Testimoni</a
                     >
                     <a
                         href="#divisions"
-                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                        class="text-white hover:text-blue-200 font-medium transition-colors duration-200"
                         >Divisi</a
                     >
                     <a
                         href="#faq"
-                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                        class="text-white hover:text-blue-200 font-medium transition-colors duration-200"
                         >FAQ</a
                     >
                     <a
                         href="#contact"
-                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                        class="text-white hover:text-blue-200 font-medium transition-colors duration-200"
                         >Kontak</a
                     >
                 </div>
@@ -274,19 +270,19 @@ onUnmounted(() => {
                     <Link
                         v-if="canLogin && !auth?.user"
                         :href="route('login')"
-                        class="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200"
+                        class="text-white hover:text-blue-200 font-semibold transition-colors duration-200"
                     >
                         Masuk
                     </Link>
                     <Link
                         v-if="canRegister && !auth?.user"
                         :href="route('register')"
-                        class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 transform hover:scale-105"
+                        class="px-6 py-2.5 bg-white hover:bg-gray-100 text-blue-800 font-semibold rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105"
                     >
                         Daftar
                     </Link>
                     <div v-if="auth?.user" class="flex items-center space-x-3">
-                        <span class="text-gray-700 font-medium">{{
+                        <span class="text-white font-medium">{{
                             auth.user.name
                         }}</span>
                         <Link
@@ -301,7 +297,7 @@ onUnmounted(() => {
                 <!-- Mobile Menu Button -->
                 <button
                     @click="mobileMenuOpen = !mobileMenuOpen"
-                    class="md:hidden p-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
+                    class="md:hidden p-2 rounded-lg text-white hover:text-blue-200 hover:bg-blue-700/50 transition-all duration-200"
                 >
                     <svg
                         class="w-6 h-6"
@@ -399,9 +395,9 @@ onUnmounted(() => {
         </div>
     </nav>
 
-    <div class="bg-gray-50">
+    <div class="bg-gray-50 relative" style="background-image: radial-gradient(circle at 1px 1px, rgba(99, 102, 241, 0.1) 1px, transparent 0); background-size: 20px 20px;">
         <section
-            class="relative overflow-hidden pt-32 pb-16 bg-gradient-to-br from-blue-50 via-white to-indigo-50"
+            class="relative overflow-hidden pt-32 pb-16 bg-gradient-to-br from-blue-50/90 via-white/90 to-indigo-50/90"
         >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid lg:grid-cols-2 gap-10 items-center">
@@ -655,7 +651,7 @@ onUnmounted(() => {
                         <div class="p-6">
                             <div class="flex items-center justify-center mb-4">
                                 <div
-                                    class="w-20 h-20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                                    class="w-32 h-32 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
                                 >
                                     <img
                                         src="/storage/BI_Logo.png"
@@ -768,7 +764,7 @@ onUnmounted(() => {
                         program.
                     </p>
                 </div>
-                
+
                 <!-- Carousel Container -->
                 <div class="relative">
                     <!-- Left Arrow -->
@@ -776,24 +772,44 @@ onUnmounted(() => {
                         @click="prevSlide"
                         class="absolute left-0 top-1/3 -translate-y-1/2 -translate-x-8 z-10 w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-full shadow-lg border border-blue-200 flex items-center justify-center text-white transition-all duration-200 hover:scale-110"
                     >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        <svg
+                            class="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 19l-7-7 7-7"
+                            ></path>
                         </svg>
                     </button>
-                    
+
                     <!-- Right Arrow -->
                     <button
                         @click="nextSlide"
                         class="absolute right-0 top-1/3 -translate-y-1/2 translate-x-8 z-10 w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-full shadow-lg border border-blue-200 flex items-center justify-center text-white transition-all duration-200 hover:scale-110"
                     >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        <svg
+                            class="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5l7 7-7 7"
+                            ></path>
                         </svg>
                     </button>
-                    
+
                     <!-- Testimonials Grid -->
                     <div class="overflow-hidden px-12">
-                        <div 
+                        <div
                             class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 transition-transform duration-500 ease-in-out mb-12"
                         >
                             <div
@@ -801,69 +817,75 @@ onUnmounted(() => {
                                 :key="t.id"
                                 class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col"
                             >
-                        <div class="flex items-center mb-6">
-                            <div
-                                :class="[
-                                    'w-14 h-14 rounded-full flex items-center justify-center mr-4 font-bold text-white shadow-md',
-                                    t.tagColor === 'blue'
-                                        ? 'bg-gradient-to-br from-blue-500 to-indigo-600'
-                                        : t.tagColor === 'pink'
-                                        ? 'bg-gradient-to-br from-pink-500 to-rose-500'
-                                        : t.tagColor === 'green'
-                                        ? 'bg-gradient-to-br from-green-500 to-emerald-600'
-                                        : 'bg-gray-500',
-                                ]"
-                            >
-                                {{ t.initials }}
-                            </div>
-                            <div class="flex-1">
-                                <h4
-                                    class="font-semibold text-gray-900 leading-tight"
-                                >
-                                    {{ t.name }}
-                                </h4>
-                                <p class="text-xs text-gray-600 font-medium">
-                                    {{ t.company }}
-                                </p>
+                                <div class="flex items-center mb-6">
+                                    <div
+                                        :class="[
+                                            'w-14 h-14 rounded-full flex items-center justify-center mr-4 font-bold text-white shadow-md',
+                                            t.tagColor === 'blue'
+                                                ? 'bg-gradient-to-br from-blue-500 to-indigo-600'
+                                                : t.tagColor === 'pink'
+                                                ? 'bg-gradient-to-br from-pink-500 to-rose-500'
+                                                : t.tagColor === 'green'
+                                                ? 'bg-gradient-to-br from-green-500 to-emerald-600'
+                                                : 'bg-gray-500',
+                                        ]"
+                                    >
+                                        {{ t.initials }}
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4
+                                            class="font-semibold text-gray-900 leading-tight"
+                                        >
+                                            {{ t.name }}
+                                        </h4>
+                                        <p
+                                            class="text-xs text-gray-600 font-medium"
+                                        >
+                                            {{ t.company }}
+                                        </p>
+                                        <p
+                                            :class="[
+                                                'mt-1 text-[11px] inline-block px-2 py-1 rounded-full font-medium',
+                                                t.tagColor === 'blue'
+                                                    ? 'bg-blue-50 text-blue-600'
+                                                    : t.tagColor === 'pink'
+                                                    ? 'bg-pink-50 text-pink-600'
+                                                    : t.tagColor === 'green'
+                                                    ? 'bg-green-50 text-green-600'
+                                                    : 'bg-gray-100 text-gray-600',
+                                            ]"
+                                        >
+                                            {{ t.tag }}
+                                        </p>
+                                        <p
+                                            class="text-[11px] text-gray-400 mt-1"
+                                        >
+                                            {{ t.date }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mb-5 flex text-yellow-400">
+                                    <svg
+                                        v-for="n in 5"
+                                        :key="n"
+                                        class="w-4 h-4"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                                        />
+                                    </svg>
+                                </div>
                                 <p
-                                    :class="[
-                                        'mt-1 text-[11px] inline-block px-2 py-1 rounded-full font-medium',
-                                        t.tagColor === 'blue'
-                                            ? 'bg-blue-50 text-blue-600'
-                                            : t.tagColor === 'pink'
-                                            ? 'bg-pink-50 text-pink-600'
-                                            : t.tagColor === 'green'
-                                            ? 'bg-green-50 text-green-600'
-                                            : 'bg-gray-100 text-gray-600',
-                                    ]"
+                                    class="text-gray-700 leading-relaxed text-sm flex-1"
                                 >
-                                    {{ t.tag }}
-                                </p>
-                                <p class="text-[11px] text-gray-400 mt-1">
-                                    {{ t.date }}
+                                    "{{ t.quote }}"
                                 </p>
                             </div>
                         </div>
-                        <div class="mb-5 flex text-yellow-400">
-                            <svg
-                                v-for="n in 5"
-                                :key="n"
-                                class="w-4 h-4"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                            >
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                                />
-                            </svg>
-                        </div>
-                        <p class="text-gray-700 leading-relaxed text-sm flex-1">
-                            "{{ t.quote }}"
-                        </p>
                     </div>
-                        </div>
-                    </div>
-                    
+
                     <!-- Carousel Dots -->
                     <div class="flex justify-center mt-8 space-x-2">
                         <button
@@ -874,7 +896,7 @@ onUnmounted(() => {
                                 'w-3 h-3 rounded-full transition-all duration-200',
                                 currentSlide === index
                                     ? 'bg-blue-600 scale-110'
-                                    : 'bg-gray-300 hover:bg-blue-300'
+                                    : 'bg-gray-300 hover:bg-blue-300',
                             ]"
                         ></button>
                     </div>
@@ -985,7 +1007,8 @@ onUnmounted(() => {
                             class="w-full px-6 py-5 text-left flex justify-between items-center"
                         >
                             <span class="font-semibold text-gray-900"
-                                >Apakah ada kompensasi atau gaji selama magang?</span
+                                >Apakah ada kompensasi atau gaji selama
+                                magang?</span
                             >
                             <i
                                 :class="[
@@ -1000,7 +1023,9 @@ onUnmounted(() => {
                             v-show="openFaq === 4"
                             class="px-6 pb-5 text-gray-600 text-sm leading-relaxed"
                         >
-                            Ya, peserta magang akan mendapatkan uang saku/transportasi sesuai dengan ketentuan yang berlaku di Bank Indonesia.
+                            Ya, peserta magang akan mendapatkan uang
+                            saku/transportasi sesuai dengan ketentuan yang
+                            berlaku di Bank Indonesia.
                         </div>
                     </div>
                     <div
@@ -1011,7 +1036,8 @@ onUnmounted(() => {
                             class="w-full px-6 py-5 text-left flex justify-between items-center"
                         >
                             <span class="font-semibold text-gray-900"
-                                >Bagaimana proses seleksi dan kapan pengumumannya?</span
+                                >Bagaimana proses seleksi dan kapan
+                                pengumumannya?</span
                             >
                             <i
                                 :class="[
@@ -1026,7 +1052,10 @@ onUnmounted(() => {
                             v-show="openFaq === 5"
                             class="px-6 pb-5 text-gray-600 text-sm leading-relaxed"
                         >
-                            Seleksi melalui tahap administratif, wawancara, dan tes kemampuan. Pengumuman hasil seleksi akan diinformasikan melalui email dan website resmi dalam 2-3 minggu setelah pendaftaran ditutup.
+                            Seleksi melalui tahap administratif, wawancara, dan
+                            tes kemampuan. Pengumuman hasil seleksi akan
+                            diinformasikan melalui email dan website resmi dalam
+                            2-3 minggu setelah pendaftaran ditutup.
                         </div>
                     </div>
                 </div>
