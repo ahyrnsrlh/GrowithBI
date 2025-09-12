@@ -1,20 +1,35 @@
 <template>
     <AuthenticatedLayout>
         <Head title="Upload Laporan" />
-        
+
         <div class="max-w-4xl mx-auto">
             <!-- Header -->
             <div class="flex items-center justify-between mb-8">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Upload Laporan Akhir</h1>
-                    <p class="text-gray-600 mt-2">Upload file laporan akhir magang Anda dalam format Word, Excel, atau PDF</p>
+                    <h1 class="text-3xl font-bold text-gray-900">
+                        Upload Laporan Akhir
+                    </h1>
+                    <p class="text-gray-600 mt-2">
+                        Upload file laporan akhir magang Anda dalam format Word,
+                        Excel, atau PDF
+                    </p>
                 </div>
                 <Link
                     :href="route('profile.reports.index')"
                     class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"
                 >
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    <svg
+                        class="w-4 h-4 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 19l-7-7 7-7"
+                        />
                     </svg>
                     Kembali
                 </Link>
@@ -23,14 +38,21 @@
             <!-- Form -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-xl font-semibold text-gray-900">Informasi Laporan</h2>
-                    <p class="text-sm text-gray-600 mt-1">Isi detail laporan dan upload file Anda</p>
+                    <h2 class="text-xl font-semibold text-gray-900">
+                        Informasi Laporan
+                    </h2>
+                    <p class="text-sm text-gray-600 mt-1">
+                        Isi detail laporan dan upload file Anda
+                    </p>
                 </div>
 
                 <form @submit.prevent="submit" class="p-6 space-y-6">
                     <!-- Title -->
                     <div>
-                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label
+                            for="title"
+                            class="block text-sm font-medium text-gray-700 mb-2"
+                        >
                             Judul Laporan <span class="text-red-500">*</span>
                         </label>
                         <input
@@ -42,28 +64,46 @@
                             placeholder="Contoh: Laporan Akhir Magang Divisi IT"
                             required
                         />
-                        <p v-if="form.errors.title" class="mt-1 text-sm text-red-600">{{ form.errors.title }}</p>
+                        <p
+                            v-if="form.errors.title"
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{ form.errors.title }}
+                        </p>
                     </div>
 
                     <!-- Description -->
                     <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                            Deskripsi <span class="text-gray-500">(Opsional)</span>
+                        <label
+                            for="description"
+                            class="block text-sm font-medium text-gray-700 mb-2"
+                        >
+                            Deskripsi
+                            <span class="text-gray-500">(Opsional)</span>
                         </label>
                         <textarea
                             id="description"
                             v-model="form.description"
                             rows="4"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            :class="{ 'border-red-500': form.errors.description }"
+                            :class="{
+                                'border-red-500': form.errors.description,
+                            }"
                             placeholder="Deskripsi singkat tentang isi laporan..."
                         ></textarea>
-                        <p v-if="form.errors.description" class="mt-1 text-sm text-red-600">{{ form.errors.description }}</p>
+                        <p
+                            v-if="form.errors.description"
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{ form.errors.description }}
+                        </p>
                     </div>
 
                     <!-- File Upload -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-2"
+                        >
                             File Laporan <span class="text-red-500">*</span>
                         </label>
                         <div
@@ -71,35 +111,88 @@
                             @dragover.prevent
                             @dragenter.prevent
                             class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors"
-                            :class="{ 'border-red-500': form.errors.report_file, 'border-blue-400 bg-blue-50': isDragging }"
+                            :class="{
+                                'border-red-500': form.errors.report_file,
+                                'border-blue-400 bg-blue-50': isDragging,
+                            }"
                         >
                             <div v-if="!selectedFile">
-                                <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                <svg
+                                    class="w-12 h-12 text-gray-400 mx-auto mb-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                    />
                                 </svg>
-                                <p class="text-lg font-medium text-gray-900 mb-2">Upload file laporan</p>
-                                <p class="text-sm text-gray-500 mb-4">Drag dan drop file atau klik untuk browse</p>
+                                <p
+                                    class="text-lg font-medium text-gray-900 mb-2"
+                                >
+                                    Upload file laporan
+                                </p>
+                                <p class="text-sm text-gray-500 mb-4">
+                                    Drag dan drop file atau klik untuk browse
+                                </p>
                                 <button
                                     type="button"
                                     @click="$refs.fileInput.click()"
                                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
                                 >
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    <svg
+                                        class="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                        />
                                     </svg>
                                     Pilih File
                                 </button>
                             </div>
                             <div v-else class="space-y-4">
-                                <div class="flex items-center justify-center space-x-3">
-                                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                <div
+                                    class="flex items-center justify-center space-x-3"
+                                >
+                                    <div
+                                        class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center"
+                                    >
+                                        <svg
+                                            class="w-6 h-6 text-blue-600"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                            />
                                         </svg>
                                     </div>
                                     <div class="text-left">
-                                        <p class="text-sm font-medium text-gray-900">{{ selectedFile.name }}</p>
-                                        <p class="text-xs text-gray-500">{{ formatFileSize(selectedFile.size) }}</p>
+                                        <p
+                                            class="text-sm font-medium text-gray-900"
+                                        >
+                                            {{ selectedFile.name }}
+                                        </p>
+                                        <p class="text-xs text-gray-500">
+                                            {{
+                                                formatFileSize(
+                                                    selectedFile.size
+                                                )
+                                            }}
+                                        </p>
                                     </div>
                                 </div>
                                 <button
@@ -119,13 +212,21 @@
                             class="hidden"
                         />
                         <p class="mt-2 text-xs text-gray-500">
-                            Format yang didukung: PDF, Word (.doc, .docx), Excel (.xls, .xlsx). Maksimal 10MB.
+                            Format yang didukung: PDF, Word (.doc, .docx), Excel
+                            (.xls, .xlsx). Maksimal 10MB.
                         </p>
-                        <p v-if="form.errors.report_file" class="mt-1 text-sm text-red-600">{{ form.errors.report_file }}</p>
+                        <p
+                            v-if="form.errors.report_file"
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{ form.errors.report_file }}
+                        </p>
                     </div>
 
                     <!-- Submit Button -->
-                    <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+                    <div
+                        class="flex justify-end space-x-4 pt-6 border-t border-gray-200"
+                    >
                         <Link
                             :href="route('profile.reports.index')"
                             class="px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"
@@ -158,7 +259,11 @@
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                 ></path>
                             </svg>
-                            {{ form.processing ? 'Mengupload...' : 'Upload Laporan' }}
+                            {{
+                                form.processing
+                                    ? "Mengupload..."
+                                    : "Upload Laporan"
+                            }}
                         </button>
                     </div>
                 </form>
@@ -168,66 +273,66 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { Head, Link, useForm } from '@inertiajs/vue3'
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import { ref } from "vue";
+import { Head, Link, useForm } from "@inertiajs/vue3";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 const props = defineProps({
     application: Object,
-    division: Object
-})
+    division: Object,
+});
 
-const selectedFile = ref(null)
-const isDragging = ref(false)
+const selectedFile = ref(null);
+const isDragging = ref(false);
 
 const form = useForm({
-    title: '',
-    description: '',
-    report_file: null
-})
+    title: "",
+    description: "",
+    report_file: null,
+});
 
 const handleFileSelect = (event) => {
-    const file = event.target.files[0]
+    const file = event.target.files[0];
     if (file) {
-        selectedFile.value = file
-        form.report_file = file
+        selectedFile.value = file;
+        form.report_file = file;
     }
-}
+};
 
 const handleDrop = (event) => {
-    event.preventDefault()
-    isDragging.value = false
-    const file = event.dataTransfer.files[0]
+    event.preventDefault();
+    isDragging.value = false;
+    const file = event.dataTransfer.files[0];
     if (file) {
-        selectedFile.value = file
-        form.report_file = file
+        selectedFile.value = file;
+        form.report_file = file;
     }
-}
+};
 
 const removeFile = () => {
-    selectedFile.value = null
-    form.report_file = null
+    selectedFile.value = null;
+    form.report_file = null;
     // Reset the file input
-    const fileInput = document.querySelector('input[type="file"]')
+    const fileInput = document.querySelector('input[type="file"]');
     if (fileInput) {
-        fileInput.value = ''
+        fileInput.value = "";
     }
-}
+};
 
 const formatFileSize = (bytes) => {
-    if (bytes === 0) return '0 Bytes'
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-}
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+};
 
 const submit = () => {
-    form.post(route('profile.reports.store'), {
+    form.post(route("profile.reports.store"), {
         forceFormData: true,
         onSuccess: () => {
             // Redirect handled by controller
-        }
-    })
-}
+        },
+    });
+};
 </script>

@@ -792,7 +792,7 @@ const validateForm = () => {
 
 const handleCancel = () => {
     // Check if form has been modified
-    const hasChanges = 
+    const hasChanges =
         form.title !== (props.logbook.title || "") ||
         form.date !== (props.logbook.date || "") ||
         form.duration !== (props.logbook.duration || "") ||
@@ -803,7 +803,11 @@ const handleCancel = () => {
         form.removed_files.length > 0;
 
     if (hasChanges) {
-        if (confirm("Anda memiliki perubahan yang belum disimpan. Yakin ingin membatalkan?")) {
+        if (
+            confirm(
+                "Anda memiliki perubahan yang belum disimpan. Yakin ingin membatalkan?"
+            )
+        ) {
             router.visit(route("peserta.logbooks.index"));
         }
     } else {

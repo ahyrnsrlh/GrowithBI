@@ -350,7 +350,7 @@
                             </svg>
                             Batalkan
                         </button>
-                        
+
                         <button
                             type="button"
                             @click="saveAsDraft"
@@ -507,7 +507,7 @@ const formatFileSize = (bytes) => {
 
 const handleCancel = () => {
     // Check if form has any data
-    const hasData = 
+    const hasData =
         form.title.trim() !== "" ||
         form.activities.trim() !== "" ||
         form.learning_points.trim() !== "" ||
@@ -517,7 +517,11 @@ const handleCancel = () => {
         selectedFiles.value.length > 0;
 
     if (hasData) {
-        if (confirm("Anda memiliki data yang belum disimpan. Yakin ingin membatalkan?")) {
+        if (
+            confirm(
+                "Anda memiliki data yang belum disimpan. Yakin ingin membatalkan?"
+            )
+        ) {
             router.visit(route("peserta.logbooks.index"));
         }
     } else {

@@ -320,24 +320,38 @@
             <div class="bg-white rounded-lg max-w-md w-full mx-4">
                 <div class="p-6">
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
-                            <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                        <div
+                            class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4"
+                        >
+                            <i
+                                class="fas fa-exclamation-triangle text-red-600 text-xl"
+                            ></i>
                         </div>
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Pembatalan</h3>
-                            <p class="text-sm text-gray-600">Tindakan ini tidak dapat dibatalkan</p>
+                            <h3 class="text-lg font-semibold text-gray-900">
+                                Konfirmasi Pembatalan
+                            </h3>
+                            <p class="text-sm text-gray-600">
+                                Tindakan ini tidak dapat dibatalkan
+                            </p>
                         </div>
                     </div>
 
                     <div class="mb-6">
                         <p class="text-gray-700">
-                            Apakah Anda yakin ingin membatalkan pendaftaran untuk divisi 
-                            <strong>{{ application.division.name }}</strong>?
+                            Apakah Anda yakin ingin membatalkan pendaftaran
+                            untuk divisi
+                            <strong>{{ application.division.name }}</strong
+                            >?
                         </p>
-                        <div class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <div
+                            class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg"
+                        >
                             <p class="text-sm text-yellow-800">
                                 <i class="fas fa-info-circle mr-2"></i>
-                                Dengan membatalkan pendaftaran, semua data dan dokumen yang telah diunggah akan dihapus secara permanen.
+                                Dengan membatalkan pendaftaran, semua data dan
+                                dokumen yang telah diunggah akan dihapus secara
+                                permanen.
                             </p>
                         </div>
                     </div>
@@ -355,9 +369,12 @@
                             :disabled="cancelling"
                             class="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                         >
-                            <i v-if="cancelling" class="fas fa-spinner fa-spin mr-2"></i>
+                            <i
+                                v-if="cancelling"
+                                class="fas fa-spinner fa-spin mr-2"
+                            ></i>
                             <i v-else class="fas fa-trash mr-2"></i>
-                            {{ cancelling ? 'Membatalkan...' : 'Ya, Batalkan' }}
+                            {{ cancelling ? "Membatalkan..." : "Ya, Batalkan" }}
                         </button>
                     </div>
                 </div>
@@ -462,7 +479,7 @@ const confirmCancel = () => {
         },
         onError: () => {
             cancelling.value = false;
-        }
+        },
     });
 };
 
@@ -473,22 +490,24 @@ const closeCancelModal = () => {
 const downloadOffer = async () => {
     try {
         // First check if acceptance letter exists
-        const checkResponse = await fetch(route('acceptance-letter.check', props.application.id));
+        const checkResponse = await fetch(
+            route("acceptance-letter.check", props.application.id)
+        );
         const checkResult = await checkResponse.json();
-        
+
         if (!checkResult.success || !checkResult.has_letter) {
-            alert('Surat penerimaan belum tersedia. Hubungi pembimbing Anda.');
+            alert("Surat penerimaan belum tersedia. Hubungi pembimbing Anda.");
             return;
         }
-        
+
         // Download the letter
         window.open(
             route("acceptance-letter.download", props.application.id),
             "_blank"
         );
     } catch (error) {
-        console.error('Error downloading acceptance letter:', error);
-        alert('Terjadi kesalahan saat mengunduh surat penerimaan.');
+        console.error("Error downloading acceptance letter:", error);
+        alert("Terjadi kesalahan saat mengunduh surat penerimaan.");
     }
 };
 </script>

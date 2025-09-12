@@ -65,7 +65,9 @@ const hasAcceptedApplication = computed(() => {
                                     <NavLink
                                         :href="route('peserta.logbooks.index')"
                                         :active="
-                                            route().current('peserta.logbooks.*')
+                                            route().current(
+                                                'peserta.logbooks.*'
+                                            )
                                         "
                                     >
                                         Logbook

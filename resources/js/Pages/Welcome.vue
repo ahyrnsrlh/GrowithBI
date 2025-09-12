@@ -226,8 +226,7 @@ onUnmounted(() => {
                         class="w-8 h-8 object-contain"
                     />
                     <div class="flex flex-col">
-                        <span
-                            class="font-bold text-lg leading-none text-white"
+                        <span class="font-bold text-lg leading-none text-white"
                             >GrowithBI</span
                         >
                         <span class="text-xs text-blue-100 leading-none"
@@ -395,7 +394,17 @@ onUnmounted(() => {
         </div>
     </nav>
 
-    <div class="bg-gray-50 relative" style="background-image: radial-gradient(circle at 1px 1px, rgba(99, 102, 241, 0.1) 1px, transparent 0); background-size: 20px 20px;">
+    <div
+        class="bg-gray-50 relative"
+        style="
+            background-image: radial-gradient(
+                circle at 1px 1px,
+                rgba(99, 102, 241, 0.1) 1px,
+                transparent 0
+            );
+            background-size: 20px 20px;
+        "
+    >
         <section
             class="relative overflow-hidden pt-32 pb-16 bg-gradient-to-br from-blue-50/90 via-white/90 to-indigo-50/90"
         >
@@ -1070,9 +1079,9 @@ onUnmounted(() => {
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <div class="lg:col-span-2">
                         <div class="flex items-center mb-6">
-                            <img 
-                                src="/logo.png" 
-                                alt="GrowithBI Logo" 
+                            <img
+                                src="/logo.png"
+                                alt="GrowithBI Logo"
                                 class="w-12 h-12 mr-3"
                             />
                             <h3 class="text-2xl font-bold text-white">

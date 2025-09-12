@@ -13,8 +13,8 @@ import {
     BarController,
     LineController,
     DoughnutController,
-    PieController
-} from 'chart.js'
+    PieController,
+} from "chart.js";
 
 // Register all Chart.js components and controllers
 ChartJS.register(
@@ -32,6 +32,6 @@ ChartJS.register(
     LineController,
     DoughnutController,
     PieController
-)
+);
 
-export { ChartJS }
+export { ChartJS };

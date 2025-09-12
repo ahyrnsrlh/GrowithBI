@@ -32,9 +32,9 @@ const submit = () => {
             <!-- Logo and Header -->
             <div class="text-center mb-8">
                 <Link href="/" class="inline-flex items-center mb-6">
-                    <img 
-                        src="/logo.png" 
-                        alt="GrowithBI Logo" 
+                    <img
+                        src="/logo.png"
+                        alt="GrowithBI Logo"
                         class="w-12 h-12 mr-3"
                     />
                     <h1

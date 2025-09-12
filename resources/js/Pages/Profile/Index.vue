@@ -626,7 +626,10 @@
                                                 <p
                                                     class="text-lg font-semibold text-gray-900"
                                                 >
-                                                    {{ logbookStats?.total_logbooks || 0 }}
+                                                    {{
+                                                        logbookStats?.total_logbooks ||
+                                                        0
+                                                    }}
                                                 </p>
                                             </div>
                                         </div>
@@ -659,7 +662,10 @@
                                                 <p
                                                     class="text-lg font-semibold text-gray-900"
                                                 >
-                                                    {{ logbookStats?.pending_logbooks || 0 }}
+                                                    {{
+                                                        logbookStats?.pending_logbooks ||
+                                                        0
+                                                    }}
                                                 </p>
                                             </div>
                                         </div>
@@ -725,7 +731,10 @@
                                                 <p
                                                     class="text-lg font-semibold text-gray-900"
                                                 >
-                                                    {{ logbookStats?.revision_logbooks || 0 }}
+                                                    {{
+                                                        logbookStats?.revision_logbooks ||
+                                                        0
+                                                    }}
                                                 </p>
                                             </div>
                                         </div>
@@ -920,7 +929,10 @@
                                                 <p
                                                     class="text-lg font-semibold text-gray-900"
                                                 >
-                                                    {{ logbookStats?.total_logbooks || 0 }}
+                                                    {{
+                                                        logbookStats?.total_logbooks ||
+                                                        0
+                                                    }}
                                                 </p>
                                             </div>
                                         </div>
@@ -986,7 +998,10 @@
                                                 <p
                                                     class="text-lg font-semibold text-gray-900"
                                                 >
-                                                    {{ logbookStats?.total_hours || 0 }}
+                                                    {{
+                                                        logbookStats?.total_hours ||
+                                                        0
+                                                    }}
                                                 </p>
                                             </div>
                                         </div>
@@ -1019,7 +1034,10 @@
                                                 <p
                                                     class="text-lg font-semibold text-gray-900"
                                                 >
-                                                    {{ logbookStats?.average_hours || 0 }}
+                                                    {{
+                                                        logbookStats?.average_hours ||
+                                                        0
+                                                    }}
                                                 </p>
                                             </div>
                                         </div>
@@ -1121,12 +1139,12 @@ const acceptedApplication = computed(() => {
 
 // Format date helper
 const formatDate = (date) => {
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+    const options = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
     };
-    return new Date(date).toLocaleDateString('id-ID', options);
+    return new Date(date).toLocaleDateString("id-ID", options);
 };
 
 // Forms

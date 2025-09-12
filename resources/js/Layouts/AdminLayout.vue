@@ -6,9 +6,26 @@
                 @click="sidebarOpen = !sidebarOpen"
                 class="p-2 rounded-md bg-blue-900 text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path v-if="!sidebarOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                    class="h-6 w-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        v-if="!sidebarOpen"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"
+                    />
+                    <path
+                        v-else
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                    />
                 </svg>
             </button>
         </div>
@@ -21,14 +38,18 @@
         ></div>
 
         <!-- Sidebar -->
-        <div 
+        <div
             :class="[
                 'sidebar fixed inset-y-0 left-0 z-50 w-64 bg-blue-900 shadow-lg transform transition-transform duration-300 ease-in-out',
-                sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+                sidebarOpen
+                    ? 'translate-x-0'
+                    : '-translate-x-full lg:translate-x-0',
             ]"
         >
             <!-- Logo -->
-            <div class="flex h-16 items-center justify-center border-b border-blue-800 flex-shrink-0">
+            <div
+                class="flex h-16 items-center justify-center border-b border-blue-800 flex-shrink-0"
+            >
                 <div class="flex items-center space-x-2">
                     <img
                         src="/logo.png"
@@ -43,173 +64,173 @@
             <div class="flex flex-col h-full">
                 <nav class="flex-1 px-4 py-6 overflow-y-auto">
                     <div class="space-y-1">
-                    <!-- Dashboard -->
-                    <Link
-                        href="/admin/dashboard"
-                        :class="[
-                            'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
-                            $page.url === '/admin/dashboard'
-                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
-                        ]"
-                    >
-                        <svg
-                            class="mr-3 h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                        <!-- Dashboard -->
+                        <Link
+                            href="/admin/dashboard"
+                            :class="[
+                                'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                $page.url === '/admin/dashboard'
+                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                            ]"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
-                            />
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"
-                            />
-                        </svg>
-                        Dashboard
-                    </Link>
+                            <svg
+                                class="mr-3 h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                                />
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"
+                                />
+                            </svg>
+                            Dashboard
+                        </Link>
 
-                    <!-- Pendaftaran -->
-                    <Link
-                        href="/admin/applications"
-                        :class="[
-                            'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
-                            $page.url.startsWith('/admin/applications')
-                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
-                        ]"
-                    >
-                        <svg
-                            class="mr-3 h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                        <!-- Pendaftaran -->
+                        <Link
+                            href="/admin/applications"
+                            :class="[
+                                'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                $page.url.startsWith('/admin/applications')
+                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                            ]"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                            />
-                        </svg>
-                        Pendaftaran
-                        <span
-                            v-if="pendingCount > 0"
-                            class="ml-auto bg-red-100 text-red-600 text-xs font-medium px-2.5 py-0.5 rounded-full"
-                        >
-                            {{ pendingCount }}
-                        </span>
-                    </Link>
+                            <svg
+                                class="mr-3 h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                />
+                            </svg>
+                            Pendaftaran
+                            <span
+                                v-if="pendingCount > 0"
+                                class="ml-auto bg-red-100 text-red-600 text-xs font-medium px-2.5 py-0.5 rounded-full"
+                            >
+                                {{ pendingCount }}
+                            </span>
+                        </Link>
 
-                    <!-- Divisi -->
-                    <Link
-                        href="/admin/divisions"
-                        :class="[
-                            'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
-                            $page.url.startsWith('/admin/divisions')
-                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
-                        ]"
-                    >
-                        <svg
-                            class="mr-3 h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                        <!-- Divisi -->
+                        <Link
+                            href="/admin/divisions"
+                            :class="[
+                                'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                $page.url.startsWith('/admin/divisions')
+                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                            ]"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                            />
-                        </svg>
-                        Divisi
-                    </Link>
+                            <svg
+                                class="mr-3 h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                />
+                            </svg>
+                            Divisi
+                        </Link>
 
-                    <!-- Peserta -->
-                    <Link
-                        href="/admin/participants"
-                        :class="[
-                            'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
-                            $page.url.startsWith('/admin/participants')
-                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
-                        ]"
-                    >
-                        <svg
-                            class="mr-3 h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                        <!-- Peserta -->
+                        <Link
+                            href="/admin/participants"
+                            :class="[
+                                'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                $page.url.startsWith('/admin/participants')
+                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                            ]"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-                            />
-                        </svg>
-                        Manajemen Peserta
-                    </Link>
+                            <svg
+                                class="mr-3 h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                                />
+                            </svg>
+                            Manajemen Peserta
+                        </Link>
 
-                    <!-- Logbook/Laporan Harian -->
-                    <Link
-                        href="/admin/logbooks"
-                        :class="[
-                            'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
-                            $page.url.startsWith('/admin/logbooks')
-                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
-                        ]"
-                    >
-                        <svg
-                            class="mr-3 h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                        <!-- Logbook/Laporan Harian -->
+                        <Link
+                            href="/admin/logbooks"
+                            :class="[
+                                'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                $page.url.startsWith('/admin/logbooks')
+                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                            ]"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                            />
-                        </svg>
-                        Laporan Harian
-                    </Link>
+                            <svg
+                                class="mr-3 h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                                />
+                            </svg>
+                            Laporan Harian
+                        </Link>
 
-                    <!-- Laporan -->
-                    <Link
-                        href="/admin/reports"
-                        :class="[
-                            'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
-                            $page.url.startsWith('/admin/reports')
-                                ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                : 'text-blue-100 hover:bg-blue-800 hover:text-white',
-                        ]"
-                    >
-                        <svg
-                            class="mr-3 h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                        <!-- Laporan -->
+                        <Link
+                            href="/admin/reports"
+                            :class="[
+                                'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                $page.url.startsWith('/admin/reports')
+                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                            ]"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                            />
-                        </svg>
-                        Laporan
-                    </Link>
+                            <svg
+                                class="mr-3 h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                />
+                            </svg>
+                            Laporan Akhir
+                        </Link>
                     </div>
                 </nav>
             </div>
@@ -218,11 +239,15 @@
         <!-- Main Content -->
         <div class="main-content lg:ml-64 min-h-screen">
             <!-- Top Header -->
-            <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
-                <div class="flex h-16 items-center justify-between px-6 lg:px-6">
+            <header
+                class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30"
+            >
+                <div
+                    class="flex h-16 items-center justify-between px-6 lg:px-6"
+                >
                     <!-- Mobile menu space -->
                     <div class="lg:hidden w-10"></div>
-                    
+
                     <!-- Page Title -->
                     <div class="flex-1 lg:flex-none">
                         <h1 class="text-xl font-semibold text-gray-900">
@@ -421,7 +446,11 @@ const sidebarOpen = ref(false);
 
 // Close sidebar when clicking outside on mobile
 const handleClickOutside = (event) => {
-    if (sidebarOpen.value && !event.target.closest('.sidebar') && !event.target.closest('.mobile-menu-button')) {
+    if (
+        sidebarOpen.value &&
+        !event.target.closest(".sidebar") &&
+        !event.target.closest(".mobile-menu-button")
+    ) {
         sidebarOpen.value = false;
     }
 };
@@ -432,14 +461,14 @@ const handleRouteChange = () => {
 };
 
 onMounted(() => {
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     // Listen for Inertia navigation
-    document.addEventListener('inertia:navigate', handleRouteChange);
+    document.addEventListener("inertia:navigate", handleRouteChange);
 });
 
 onUnmounted(() => {
-    document.removeEventListener('click', handleClickOutside);
-    document.removeEventListener('inertia:navigate', handleRouteChange);
+    document.removeEventListener("click", handleClickOutside);
+    document.removeEventListener("inertia:navigate", handleRouteChange);
 });
 
 const logout = () => {
@@ -483,7 +512,7 @@ const logout = () => {
         transform: translateX(-100%);
         transition: transform 0.3s ease-in-out;
     }
-    
+
     .sidebar.open {
         transform: translateX(0);
     }

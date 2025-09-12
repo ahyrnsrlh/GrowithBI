@@ -574,7 +574,8 @@
                         Informasi Penting
                     </h3>
                     <p class="text-gray-700">
-                        Untuk pertanyaan atau bantuan mengenai magang, silakan hubungi admin melalui email atau kontak yang tersedia.
+                        Untuk pertanyaan atau bantuan mengenai magang, silakan
+                        hubungi admin melalui email atau kontak yang tersedia.
                     </p>
                 </div>
             </div>

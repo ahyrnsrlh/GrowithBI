@@ -211,37 +211,63 @@
 
                     <!-- Mentor Feedback Section -->
                     <div
-                        v-if="logbook.mentor_feedback && logbook.status !== 'draft' && logbook.status !== 'submitted'"
+                        v-if="
+                            logbook.mentor_feedback &&
+                            logbook.status !== 'draft' &&
+                            logbook.status !== 'submitted'
+                        "
                         class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-6 mb-8"
                     >
                         <div class="flex items-start space-x-4">
-                            <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            <div
+                                class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                    />
                                 </svg>
                             </div>
                             <div class="flex-1">
                                 <div class="flex items-center space-x-3 mb-2">
-                                    <h3 class="text-lg font-semibold text-blue-900">
+                                    <h3
+                                        class="text-lg font-semibold text-blue-900"
+                                    >
                                         Feedback dari Pembimbing
                                     </h3>
-                                    <span 
+                                    <span
                                         :class="getStatusClass(logbook.status)"
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                                     >
                                         {{ getStatusText(logbook.status) }}
                                     </span>
                                 </div>
-                                <div class="text-sm text-blue-700 mb-3 flex items-center space-x-2">
+                                <div
+                                    class="text-sm text-blue-700 mb-3 flex items-center space-x-2"
+                                >
                                     <span v-if="logbook.reviewer">
-                                        <strong>{{ logbook.reviewer.name }}</strong>
+                                        <strong>{{
+                                            logbook.reviewer.name
+                                        }}</strong>
                                     </span>
                                     <span v-if="logbook.reviewed_at">
                                         • {{ formatDate(logbook.reviewed_at) }}
                                     </span>
                                 </div>
-                                <div class="bg-white rounded-lg border border-blue-200 p-4">
-                                    <p class="text-gray-800 whitespace-pre-line leading-relaxed">
+                                <div
+                                    class="bg-white rounded-lg border border-blue-200 p-4"
+                                >
+                                    <p
+                                        class="text-gray-800 whitespace-pre-line leading-relaxed"
+                                    >
                                         {{ logbook.mentor_feedback }}
                                     </p>
                                 </div>
@@ -255,9 +281,7 @@
                     >
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="text-lg font-semibold text-gray-900">
-                                Komentar & Feedback ({{
-                                    allComments.length
-                                }})
+                                Komentar & Feedback ({{ allComments.length }})
                             </h3>
                         </div>
 
@@ -271,26 +295,26 @@
                                 :key="comment.id"
                                 :class="[
                                     'border rounded-lg p-4',
-                                    comment.is_mentor_feedback 
-                                        ? 'border-blue-300 bg-blue-50' 
-                                        : 'border-gray-200'
+                                    comment.is_mentor_feedback
+                                        ? 'border-blue-300 bg-blue-50'
+                                        : 'border-gray-200',
                                 ]"
                             >
                                 <div class="flex items-start space-x-3">
                                     <div
                                         :class="[
                                             'w-8 h-8 rounded-full flex items-center justify-center',
-                                            comment.is_mentor_feedback 
-                                                ? 'bg-blue-500' 
-                                                : 'bg-blue-100'
+                                            comment.is_mentor_feedback
+                                                ? 'bg-blue-500'
+                                                : 'bg-blue-100',
                                         ]"
                                     >
                                         <span
                                             :class="[
                                                 'text-sm font-semibold',
-                                                comment.is_mentor_feedback 
-                                                    ? 'text-white' 
-                                                    : 'text-blue-600'
+                                                comment.is_mentor_feedback
+                                                    ? 'text-white'
+                                                    : 'text-blue-600',
                                             ]"
                                         >
                                             {{
@@ -310,16 +334,33 @@
                                                 {{ comment.user.name }}
                                             </h4>
                                             <span
-                                                v-if="comment.is_mentor_feedback"
+                                                v-if="
+                                                    comment.is_mentor_feedback
+                                                "
                                                 class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-500 text-white"
                                             >
-                                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                <svg
+                                                    class="w-3 h-3 mr-1"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                    />
                                                 </svg>
                                                 Feedback Resmi
                                             </span>
                                             <span
-                                                v-else-if="comment.user.role === 'mentor' || comment.user.role === 'admin'"
+                                                v-else-if="
+                                                    comment.user.role ===
+                                                        'mentor' ||
+                                                    comment.user.role ===
+                                                        'admin'
+                                                "
                                                 class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800"
                                             >
                                                 Pembimbing
@@ -534,26 +575,32 @@ const canEdit = computed(() => {
 
 const allComments = computed(() => {
     let comments = [...(props.logbook.comments || [])];
-    
+
     // Add mentor feedback as a special comment if it exists
-    if (props.logbook.mentor_feedback && props.logbook.status !== 'draft' && props.logbook.status !== 'submitted') {
+    if (
+        props.logbook.mentor_feedback &&
+        props.logbook.status !== "draft" &&
+        props.logbook.status !== "submitted"
+    ) {
         const mentorComment = {
-            id: 'mentor-feedback',
+            id: "mentor-feedback",
             comment: props.logbook.mentor_feedback,
             created_at: props.logbook.reviewed_at || props.logbook.updated_at,
             is_mentor_feedback: true,
             user: props.logbook.reviewer || {
-                id: 'mentor',
-                name: 'Pembimbing',
-                role: 'mentor'
-            }
+                id: "mentor",
+                name: "Pembimbing",
+                role: "mentor",
+            },
         };
-        
+
         // Insert mentor feedback at the beginning
         comments.unshift(mentorComment);
     }
-    
-    return comments.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    return comments.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
 });
 
 const formatDate = (dateString) => {

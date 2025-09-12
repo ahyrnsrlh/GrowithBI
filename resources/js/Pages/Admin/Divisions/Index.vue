@@ -249,8 +249,7 @@
                             <div
                                 class="bg-blue-600 h-2 rounded-full"
                                 :style="`width: ${Math.min(
-                                    (division.accepted_count /
-                                        division.quota) *
+                                    (division.accepted_count / division.quota) *
                                         100,
                                     100
                                 )}%`"

@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue'
+import { ref, onMounted, watch, nextTick } from "vue";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -13,8 +13,8 @@ import {
     BarElement,
     Title,
     Tooltip,
-    Legend
-} from 'chart.js/auto'
+    Legend,
+} from "chart.js/auto";
 
 // Register Chart.js components - using auto import for all controllers
 ChartJS.register(
@@ -24,21 +24,21 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend
-)
+);
 
 const props = defineProps({
     data: {
         type: Object,
-        required: true
+        required: true,
     },
     options: {
         type: Object,
-        default: () => ({})
-    }
-})
+        default: () => ({}),
+    },
+});
 
-const chartCanvas = ref(null)
-let chartInstance = null
+const chartCanvas = ref(null);
+let chartInstance = null;
 
 const defaultOptions = {
     responsive: true,
@@ -50,83 +50,88 @@ const defaultOptions = {
         x: {
             display: true,
             grid: {
-                display: false
+                display: false,
             },
             ticks: {
                 font: {
-                    size: 11
+                    size: 11,
                 },
                 maxRotation: 45,
-                minRotation: 0
-            }
+                minRotation: 0,
+            },
         },
         y: {
             display: true,
             grid: {
-                color: 'rgba(0, 0, 0, 0.1)'
+                color: "rgba(0, 0, 0, 0.1)",
             },
             ticks: {
                 font: {
-                    size: 12
+                    size: 12,
                 },
-                beginAtZero: true
-            }
-        }
+                beginAtZero: true,
+            },
+        },
     },
     plugins: {
         legend: {
-            position: 'top',
+            position: "top",
             labels: {
                 padding: 15,
                 usePointStyle: true,
                 font: {
-                    size: 12
-                }
-            }
+                    size: 12,
+                },
+            },
         },
         tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            titleColor: 'white',
-            bodyColor: 'white',
-            borderColor: 'rgba(255, 255, 255, 0.1)',
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            titleColor: "white",
+            bodyColor: "white",
+            borderColor: "rgba(255, 255, 255, 0.1)",
             borderWidth: 1,
             cornerRadius: 8,
-            displayColors: true
-        }
-    }
-}
+            displayColors: true,
+        },
+    },
+};
 
 const createChart = () => {
-    if (!chartCanvas.value || !props.data.labels || !props.data.datasets) return
+    if (!chartCanvas.value || !props.data.labels || !props.data.datasets)
+        return;
 
-    const ctx = chartCanvas.value.getContext('2d')
-    
+    const ctx = chartCanvas.value.getContext("2d");
+
     // Destroy existing chart
     if (chartInstance) {
-        chartInstance.destroy()
+        chartInstance.destroy();
     }
 
     const mergedOptions = {
         ...defaultOptions,
-        ...props.options
-    }
+        ...props.options,
+    };
 
     chartInstance = new ChartJS(ctx, {
-        type: 'bar',
+        type: "bar",
         data: props.data,
-        options: mergedOptions
-    })
-}
+        options: mergedOptions,
+    });
+};
 
 onMounted(() => {
     nextTick(() => {
-        createChart()
-    })
-})
+        createChart();
+    });
+});
 
-watch(() => props.data, () => {
-    createChart()
-}, { deep: true })
+watch(
+    () => props.data,
+    () => {
+        createChart();
+    },
+    { deep: true }
+);
 </script>
 
 <style scoped>
