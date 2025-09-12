@@ -443,7 +443,7 @@
                                     <Link
                                         :href="
                                             route(
-                                                'admin.admin.logbooks.show',
+                                                'admin.logbooks.show',
                                                 logbook.id
                                             )
                                         "
@@ -649,7 +649,7 @@ const getStatusText = (status) => {
 
 const quickApprove = (logbookId) => {
     router.put(
-        route("admin.admin.logbooks.approve", logbookId),
+        route("admin.logbooks.approve", logbookId),
         {},
         {
             preserveScroll: true,
@@ -667,7 +667,7 @@ const bulkAction = (action) => {
     if (selectedLogbooks.value.length === 0) return;
 
     router.post(
-        route("admin.admin.logbooks.bulk-update"),
+        route("admin.logbooks.bulk-update"),
         {
             logbook_ids: selectedLogbooks.value,
             action: action,

@@ -11,7 +11,7 @@
                 <div>
                     <div class="flex items-center space-x-4 mb-2">
                         <Link
-                            :href="route('admin.admin.logbooks.index')"
+                            :href="route('admin.logbooks.index')"
                             class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
                         >
                             <svg
@@ -468,7 +468,7 @@ const submitReview = () => {
     useForm({
         status: reviewForm.status,
         feedback: reviewForm.feedback,
-    }).put(route("admin.admin.logbooks.update-status", props.logbook.id), {
+    }).put(route("admin.logbooks.update-status", props.logbook.id), {
         onSuccess: (page) => {
             console.log("Success response:", page);
             reviewForm.feedback = "";

@@ -146,7 +146,7 @@
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Link
-                        :href="route('admin.final-reports.index')"
+                        :href="route('admin.reports.index')"
                         class="flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
                     >
                         <svg
@@ -192,7 +192,7 @@
                     </button>
 
                     <Link
-                        :href="route('admin.internship.statistics')"
+                        :href="route('admin.dashboard')"
                         class="flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200"
                     >
                         <svg
@@ -347,7 +347,7 @@
                                     <Link
                                         :href="
                                             route(
-                                                'admin.final-reports.division',
+                                                'admin.divisions.show',
                                                 division.id
                                             )
                                         "
@@ -375,7 +375,7 @@
                             </p>
                         </div>
                         <Link
-                            :href="route('admin.final-reports.index')"
+                            :href="route('admin.reports.index')"
                             class="text-sm text-blue-600 hover:text-blue-900 font-medium"
                         >
                             Lihat Semua →
@@ -442,10 +442,7 @@
                                 </span>
                                 <Link
                                     :href="
-                                        route(
-                                            'admin.final-reports.show',
-                                            report.id
-                                        )
+                                        route('profile.reports.show', report.id)
                                     "
                                     class="text-blue-600 hover:text-blue-900 text-sm font-medium"
                                 >
@@ -502,7 +499,7 @@ defineProps({
 });
 
 const exportFinalReports = () => {
-    window.location.href = route("admin.reports.final-reports.export");
+    window.location.href = route("admin.reports.export");
 };
 
 const formatDate = (dateString) => {

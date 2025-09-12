@@ -155,13 +155,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::put('/participants/{participant}/status', [ParticipantController::class, 'updateStatus'])->name('participants.update-status');
     
     // Logbooks Management (enhanced with review capabilities)
-    Route::get('/logbooks', [\App\Http\Controllers\Admin\LogbookController::class, 'index'])->name('admin.logbooks.index');
-    Route::get('/logbooks/{logbook}', [\App\Http\Controllers\Admin\LogbookController::class, 'show'])->name('admin.logbooks.show');
-    Route::put('/logbooks/{logbook}/status', [\App\Http\Controllers\Admin\LogbookController::class, 'updateStatus'])->name('admin.logbooks.update-status');
-    Route::post('/logbooks/{logbook}/comments', [\App\Http\Controllers\Admin\LogbookController::class, 'addComment'])->name('admin.logbooks.comments.store');
-    Route::post('/logbooks/bulk-update', [\App\Http\Controllers\Admin\LogbookController::class, 'bulkUpdate'])->name('admin.logbooks.bulk-update');
-    Route::put('/logbooks/{logbook}/approve', [\App\Http\Controllers\Admin\LogbookController::class, 'approve'])->name('admin.logbooks.approve');
-    Route::get('/logbooks/stats/dashboard', [\App\Http\Controllers\Admin\LogbookController::class, 'getStats'])->name('admin.logbooks.stats');
+    Route::get('/logbooks', [\App\Http\Controllers\Admin\LogbookController::class, 'index'])->name('logbooks.index');
+    Route::get('/logbooks/{logbook}', [\App\Http\Controllers\Admin\LogbookController::class, 'show'])->name('logbooks.show');
+    Route::put('/logbooks/{logbook}/status', [\App\Http\Controllers\Admin\LogbookController::class, 'updateStatus'])->name('logbooks.update-status');
+    Route::post('/logbooks/{logbook}/comments', [\App\Http\Controllers\Admin\LogbookController::class, 'addComment'])->name('logbooks.comments.store');
+    Route::post('/logbooks/bulk-update', [\App\Http\Controllers\Admin\LogbookController::class, 'bulkUpdate'])->name('logbooks.bulk-update');
+    Route::put('/logbooks/{logbook}/approve', [\App\Http\Controllers\Admin\LogbookController::class, 'approve'])->name('logbooks.approve');
+    Route::get('/logbooks/stats/dashboard', [\App\Http\Controllers\Admin\LogbookController::class, 'getStats'])->name('logbooks.stats');
     
     // Reports & Analytics (enhanced export capabilities)
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
