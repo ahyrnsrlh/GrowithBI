@@ -1070,20 +1070,12 @@ onUnmounted(() => {
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <div class="lg:col-span-2">
                         <div class="flex items-center mb-6">
-                            <div
-                                class="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-lg shadow-lg"
-                            >
-                                <svg
-                                    class="w-8 h-8 text-white"
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                                    />
-                                </svg>
-                            </div>
-                            <h3 class="ml-3 text-2xl font-bold text-white">
+                            <img 
+                                src="/logo.png" 
+                                alt="GrowithBI Logo" 
+                                class="w-12 h-12 mr-3"
+                            />
+                            <h3 class="text-2xl font-bold text-white">
                                 GrowithBI
                             </h3>
                         </div>
