@@ -66,8 +66,7 @@ class AdminSeeder extends Seeder
             [
                 'name' => 'IT Development',
                 'description' => 'Divisi pengembangan aplikasi web dan mobile. Peserta akan belajar teknologi seperti Laravel, Vue.js, React, dan mobile development.',
-                'quota' => 10,
-                'supervisor_id' => 2, // Dr. Andi Wijaya
+                'max_interns' => 10,
                 'start_date' => '2025-07-01',
                 'end_date' => '2025-09-30',
                 'is_active' => true,
@@ -75,8 +74,7 @@ class AdminSeeder extends Seeder
             [
                 'name' => 'UI/UX Design',
                 'description' => 'Divisi desain antarmuka dan pengalaman pengguna. Peserta akan belajar Figma, Adobe XD, dan prinsip-prinsip design thinking.',
-                'quota' => 8,
-                'supervisor_id' => 3, // Sarah Novita
+                'max_interns' => 8,
                 'start_date' => '2025-07-01',
                 'end_date' => '2025-09-30',
                 'is_active' => true,
@@ -84,8 +82,7 @@ class AdminSeeder extends Seeder
             [
                 'name' => 'Digital Marketing',
                 'description' => 'Divisi pemasaran digital dan strategi konten. Peserta akan belajar SEO, SEM, social media marketing, dan content creation.',
-                'quota' => 6,
-                'supervisor_id' => 4, // Dimas Yoga
+                'max_interns' => 6,
                 'start_date' => '2025-07-15',
                 'end_date' => '2025-10-15',
                 'is_active' => true,
@@ -93,8 +90,7 @@ class AdminSeeder extends Seeder
             [
                 'name' => 'Data Analytics',
                 'description' => 'Divisi analisis data dan business intelligence. Peserta akan belajar Python, SQL, Power BI, dan data visualization.',
-                'quota' => 5,
-                'supervisor_id' => 5, // Lia Kurniawan
+                'max_interns' => 5,
                 'start_date' => '2025-08-01',
                 'end_date' => '2025-11-30',
                 'is_active' => true,
@@ -102,8 +98,7 @@ class AdminSeeder extends Seeder
             [
                 'name' => 'Content Writing',
                 'description' => 'Divisi penulisan konten dan copywriting. Peserta akan belajar SEO writing, technical writing, dan content strategy.',
-                'quota' => 4,
-                'supervisor_id' => 3, // Sarah Novita
+                'max_interns' => 4,
                 'start_date' => '2025-07-01',
                 'end_date' => '2025-09-30',
                 'is_active' => true,
@@ -111,8 +106,7 @@ class AdminSeeder extends Seeder
             [
                 'name' => 'Quality Assurance',
                 'description' => 'Divisi pengujian perangkat lunak dan quality control. Peserta akan belajar manual testing, automation testing, dan bug tracking.',
-                'quota' => 6,
-                'supervisor_id' => 2, // Dr. Andi Wijaya
+                'max_interns' => 6,
                 'start_date' => '2025-08-01',
                 'end_date' => '2025-11-30',
                 'is_active' => true,

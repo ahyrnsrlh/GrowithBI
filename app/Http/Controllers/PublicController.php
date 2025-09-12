@@ -13,7 +13,6 @@ class PublicController extends Controller
     public function divisions()
     {
         $divisions = Division::where('is_active', true)
-            ->with(['supervisor'])
             ->withCount([
                 'applications',
                 'applications as accepted_count' => function ($query) {
@@ -30,8 +29,8 @@ class PublicController extends Controller
                     'quota' => $division->quota,
                     'current_interns' => $division->accepted_count,
                     'available_slots' => $division->quota - $division->accepted_count,
-                    'supervisor' => $division->supervisor ? $division->supervisor->name : 'Belum ditentukan',
-                    'supervisor_email' => $division->supervisor ? $division->supervisor->email : null,
+                    'supervisor' => 'GrowithBI Admin',
+                    'supervisor_email' => 'admin@growithbi.com',
                 ];
             });
 
@@ -43,11 +42,20 @@ class PublicController extends Controller
     public function applicationForm()
     {
         $divisions = Division::where('is_active', true)
-            ->with(['supervisor'])
             ->get();
 
+        // Check if user already has a pending or accepted application
+        $existingApplication = null;
+        if (Auth::check()) {
+            $existingApplication = Application::where('email', Auth::user()->email)
+                ->whereIn('status', ['menunggu', 'diterima'])
+                ->with('division')
+                ->first();
+        }
+
         return Inertia::render('Public/ApplicationForm', [
-            'divisions' => $divisions
+            'divisions' => $divisions,
+            'existingApplication' => $existingApplication
         ]);
     }
 
@@ -55,7 +63,7 @@ class PublicController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => ['required', 'email', 'max:255', new \App\Rules\UniqueActiveApplication($request->email)],
             'phone' => 'required|string|max:20',
             'address' => 'required|string',
             'division_id' => 'required|exists:divisions,id',
@@ -83,8 +91,18 @@ class PublicController extends Controller
 
     public function divisionDetail(Division $division)
     {
+        // Check if user already has a pending or accepted application
+        $existingApplication = null;
+        if (Auth::check()) {
+            $existingApplication = Application::where('email', Auth::user()->email)
+                ->whereIn('status', ['menunggu', 'diterima'])
+                ->with('division')
+                ->first();
+        }
+
         return Inertia::render('Public/DivisionDetail', [
-            'division' => $division->load('supervisor'),
+            'division' => $division,
+            'existingApplication' => $existingApplication,
             'auth' => [
                 'user' => Auth::user()
             ]
@@ -125,15 +143,20 @@ class PublicController extends Controller
 
         $user = $request->user();
         
-        // Check if user already has application for this division
+        // Check if user already has a pending or accepted application
         $existingApplication = Application::where('email', $user->email)
-            ->where('division_id', $request->division_id)
+            ->whereIn('status', ['menunggu', 'diterima'])
+            ->with('division')
             ->first();
 
         if ($existingApplication) {
+            $message = $existingApplication->status === 'diterima' 
+                ? 'Anda sudah diterima di divisi ' . $existingApplication->division->name . '. Anda tidak bisa mendaftar ke divisi lain.'
+                : 'Anda sudah memiliki pendaftaran yang sedang diproses di divisi ' . $existingApplication->division->name . '. Tunggu hasil proses tersebut sebelum mendaftar ke divisi lain.';
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Anda sudah mendaftar untuk divisi ini'
+                'message' => $message
             ]);
         }
 

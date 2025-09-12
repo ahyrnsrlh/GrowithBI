@@ -13,8 +13,7 @@ class Division extends Model
         'name',
         'description',
         'requirements',
-        'quota',
-        'supervisor_id',
+        'max_interns',
         'start_date',
         'end_date',
         'is_active',
@@ -30,11 +29,6 @@ class Division extends Model
     }
 
     // Relationships
-    public function supervisor()
-    {
-        return $this->belongsTo(User::class, 'supervisor_id');
-    }
-
     public function applications()
     {
         return $this->hasMany(Application::class);
@@ -46,6 +40,16 @@ class Division extends Model
     }
 
     // Helper methods
+    public function getQuotaAttribute()
+    {
+        return $this->max_interns;
+    }
+
+    public function setQuotaAttribute($value)
+    {
+        $this->attributes['max_interns'] = $value;
+    }
+
     public function getAvailableQuotaAttribute()
     {
         return $this->quota - $this->applications()->where('status', 'diterima')->count();

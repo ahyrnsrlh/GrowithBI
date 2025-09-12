@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('profile_photo_path')->nullable();
-            $table->string('phone')->nullable();
-            $table->text('address')->nullable();
             $table->string('university')->nullable();
             $table->string('major')->nullable();
             $table->integer('semester')->nullable();
@@ -37,8 +35,6 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn([
                 'profile_photo_path',
-                'phone',
-                'address',
                 'university',
                 'major',
                 'semester',

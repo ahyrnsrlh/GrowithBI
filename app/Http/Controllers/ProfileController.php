@@ -13,6 +13,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Application;
 use App\Models\Division;
+use App\Models\Logbook;
 
 class ProfileController extends Controller
 {
@@ -24,23 +25,68 @@ class ProfileController extends Controller
         $user = $request->user();
         
         // Get user's applications with division info
-        $applications = Application::where('email', $user->email)
+        $applications = Application::where('user_id', $user->id)
             ->with('division')
             ->orderBy('created_at', 'desc')
             ->get();
+            
+        // Check if user has a pending or accepted application
+        $activeApplication = $applications->whereIn('status', ['menunggu', 'dalam_review', 'wawancara', 'diterima'])->first();
+        $canCreateNewApplication = !$activeApplication;
             
         // Calculate profile completion percentage
         $profileCompletion = $this->calculateProfileCompletion($user);
         
         // Get available divisions for new applications
         $divisions = Division::where('is_active', true)
-            ->select('id', 'name', 'quota')
-            ->get();
+            ->select('id', 'name', 'max_interns')
+            ->get()
+            ->map(function ($division) {
+                return [
+                    'id' => $division->id,
+                    'name' => $division->name,
+                    'quota' => $division->max_interns
+                ];
+            });
+            
+        // Get logbook data for accepted participants
+        $logbooks = collect();
+        $logbookStats = [
+            'total_logbooks' => 0,
+            'pending_logbooks' => 0,
+            'approved_logbooks' => 0,
+            'revision_logbooks' => 0,
+            'total_hours' => 0,
+            'average_hours' => 0
+        ];
+        
+        $acceptedApplication = $applications->where('status', 'diterima')->first();
+        if ($acceptedApplication) {
+            $logbooks = Logbook::where('user_id', $user->id)
+                ->with(['division', 'comments.user'])
+                ->orderBy('date', 'desc')
+                ->limit(5)
+                ->get();
+                
+            $allLogbooks = Logbook::where('user_id', $user->id)->get();
+            $logbookStats = [
+                'total_logbooks' => $allLogbooks->count(),
+                'pending_logbooks' => $allLogbooks->where('status', 'submitted')->count(),
+                'approved_logbooks' => $allLogbooks->where('status', 'approved')->count(),
+                'revision_logbooks' => $allLogbooks->where('status', 'revision')->count(),
+                'total_hours' => $allLogbooks->sum('hours'),
+                'average_hours' => $allLogbooks->count() > 0 ? round($allLogbooks->avg('hours'), 1) : 0
+            ];
+        }
 
         return Inertia::render('Profile/Index', [
             'user' => $user,
             'applications' => $applications,
+            'activeApplication' => $activeApplication,
+            'canCreateNewApplication' => $canCreateNewApplication,
             'divisions' => $divisions,
+            'logbooks' => $logbooks,
+            'logbookStats' => $logbookStats,
             'profileCompletion' => $profileCompletion,
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
@@ -54,13 +100,22 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $user->fill($request->validated());
+        $validatedData = $request->validated();
+        
+        // Debug logging
+        \Log::info('Profile update request data:', $validatedData);
+        \Log::info('User before update:', $user->toArray());
+        
+        $user->fill($validatedData);
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
         $user->save();
+        
+        // Debug logging after save
+        \Log::info('User after update:', $user->fresh()->toArray());
 
         return Redirect::route('profile.edit')->with('success', 'Profil berhasil diperbarui!');
     }
@@ -143,53 +198,105 @@ class ProfileController extends Controller
     /**
      * Create new application
      */
-    public function createApplication(Request $request): RedirectResponse
+    public function createApplication(Request $request)
     {
+        $user = $request->user();
+        
         $request->validate([
-            'division_id' => 'required|exists:divisions,id',
+            'division_id' => ['required', 'exists:divisions,id', new \App\Rules\UniqueActiveApplication(null, $user->id)],
             'motivation' => 'required|string|min:100|max:1000',
         ]);
 
-        $user = $request->user();
+        try {
+            \Log::info('=== CREATING APPLICATION ===');
+            \Log::info('User data:', $user->toArray());
+            \Log::info('Request data:', $request->all());
+            
+            $applicationData = [
+                'user_id' => $user->id,
+                'name' => $user->name ?: 'No Name',
+                'email' => $user->email,
+                'phone' => $user->phone ?: 'No Phone',
+                'address' => $user->address ?: 'No Address',
+                'university' => $user->university ?: 'No University',
+                'major' => $user->major ?: 'No Major',
+                'semester' => $user->semester ?: 1,
+                'gpa' => min($user->gpa ?? 0.00, 4.00), // Ensure max 4.00 for decimal(3,2)
+                'birth_date' => $user->birth_date,
+                'gender' => $user->gender,
+                'portfolio_url' => $user->portfolio_url,
+                'division_id' => $request->division_id,
+                'motivation' => $request->motivation,
+                'status' => 'menunggu',
+                'cv_path' => $user->cv_path,
+                'surat_lamaran_path' => $user->motivation_letter_path,
+                'transkrip_path' => $user->transkrip_path,
+                'ktp_path' => $user->ktp_path,
+            ];
+            
+            \Log::info('Application data to be created:', $applicationData);
+            
+            $application = Application::create($applicationData);
+            
+            \Log::info('Application created successfully:', $application->toArray());
 
-        // Check if user already has an active application for this division
-        $existingApplication = Application::where('email', $user->email)
-            ->where('division_id', $request->division_id)
-            ->whereIn('status', ['menunggu', 'dalam_review', 'wawancara'])
-            ->exists();
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Lamaran berhasil dikirim!'
+                ]);
+            }
 
-        if ($existingApplication) {
+            return Redirect::route('profile.edit')->with('success', 'Lamaran berhasil dikirim!');
+        } catch (\Exception $e) {
+            \Log::error('Application creation failed: ' . $e->getMessage());
+            
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Anda sudah memiliki lamaran aktif untuk divisi ini!'
-                ], 422);
+                    'message' => 'Terjadi kesalahan saat mengirim lamaran. Silakan coba lagi.'
+                ], 500);
             }
-            return Redirect::route('profile.edit')->with('error', 'Anda sudah memiliki lamaran aktif untuk divisi ini!');
+            
+            return Redirect::route('profile.edit')->with('error', 'Terjadi kesalahan saat mengirim lamaran. Silakan coba lagi.');
         }
+    }
 
-        Application::create([
-            'name' => $user->name,
-            'email' => $user->email,
-            'phone' => $user->phone,
-            'address' => $user->address,
-            'division_id' => $request->division_id,
-            'motivation' => $request->motivation,
-            'status' => 'menunggu',
-            'cv_path' => $user->cv_path,
-            'surat_lamaran_path' => $user->motivation_letter_path, // Use motivation letter instead
-            'transkrip_path' => $user->transkrip_path,
-            'ktp_path' => $user->ktp_path,
-        ]);
-
-        if ($request->wantsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Lamaran berhasil dikirim!'
-            ]);
+        /**
+     * Cancel user application - delete the application record
+     */
+    public function cancelApplication(Request $request, $id)
+    {
+        $application = Application::findOrFail($id);
+        
+        // Ensure user can only cancel their own application
+        if ($application->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized');
         }
-
-        return Redirect::route('profile.edit')->with('success', 'Lamaran berhasil dikirim!');
+        
+        // Only allow canceling pending applications
+        if (!in_array($application->status, ['menunggu', 'dalam_review'])) {
+            return back()->withErrors(['error' => 'Aplikasi tidak dapat dibatalkan karena sudah diproses lebih lanjut.']);
+        }
+        
+        // Delete uploaded files if they exist
+        $filePaths = [
+            $application->cv_path,
+            $application->surat_lamaran_path,
+            $application->transkrip_path,
+            $application->ktp_path
+        ];
+        
+        foreach ($filePaths as $filePath) {
+            if ($filePath && Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+        }
+        
+        // Delete the application record
+        $application->delete();
+        
+        return redirect()->route('profile.edit')->with('success', 'Pendaftaran berhasil dibatalkan dan dihapus dari riwayat.');
     }
 
     /**

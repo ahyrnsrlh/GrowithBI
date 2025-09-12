@@ -82,7 +82,9 @@ class LogbookSeeder extends Seeder
                 Logbook::create([
                     'user_id' => $peserta->id,
                     'division_id' => $division->id,
+                    'title' => 'Daily Activities - ' . $date->format('Y-m-d'),
                     'date' => $date->toDateString(),
+                    'duration' => 8.0, // 8 hours
                     'time_in' => '08:00:00',
                     'time_out' => '17:00:00',
                     'activities' => fake()->randomElement($activities),

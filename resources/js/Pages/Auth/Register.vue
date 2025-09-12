@@ -32,21 +32,13 @@ const submit = () => {
             <!-- Logo and Header -->
             <div class="text-center mb-8">
                 <Link href="/" class="inline-flex items-center mb-6">
-                    <div
-                        class="bg-gradient-to-r from-blue-600 to-indigo-600 p-3 rounded-xl"
-                    >
-                        <svg
-                            class="w-8 h-8 text-white"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                            />
-                        </svg>
-                    </div>
+                    <img
+                        src="/logo.png"
+                        alt="GrowithBI Logo"
+                        class="w-12 h-12 mr-3"
+                    />
                     <h1
-                        class="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
+                        class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
                     >
                         GrowithBI
                     </h1>

@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Division;
 use App\Models\User;
+use App\Models\Logbook;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class ReportController extends Controller
 {
@@ -22,7 +24,6 @@ class ReportController extends Controller
             'rejected_applications' => Application::where('status', 'ditolak')->count(),
             'total_divisions' => Division::count(),
             'active_divisions' => Division::where('is_active', true)->count(),
-            'total_supervisors' => User::where('role', 'pembimbing')->count(),
             'total_participants' => User::where('role', 'peserta')->count(),
         ];
 
@@ -51,8 +52,7 @@ class ReportController extends Controller
         });
 
         // Division performance
-        $divisionPerformance = Division::with('supervisor')
-            ->withCount([
+        $divisionPerformance = Division::withCount([
                 'applications',
                 'applications as accepted_count' => function ($query) {
                     $query->where('status', 'diterima');
@@ -70,40 +70,12 @@ class ReportController extends Controller
                 return [
                     'id' => $division->id,
                     'name' => $division->name,
-                    'supervisor' => $division->supervisor ? $division->supervisor->name : 'Belum ditentukan',
                     'quota' => $division->quota,
                     'applications_count' => $division->applications_count,
                     'accepted_count' => $division->accepted_count,
                     'rejected_count' => $division->rejected_count,
                     'acceptance_rate' => $acceptance_rate,
                     'quota_filled' => $quota_filled,
-                ];
-            });
-
-        // Top performers (supervisors)
-        $topSupervisors = User::where('role', 'pembimbing')
-            ->withCount([
-                'supervisedDivisions',
-                'supervisedApplications',
-                'supervisedApplications as accepted_applications_count' => function ($query) {
-                    $query->where('status', 'diterima');
-                }
-            ])
-            ->having('supervised_applications_count', '>', 0)
-            ->orderBy('accepted_applications_count', 'desc')
-            ->take(5)
-            ->get()
-            ->map(function ($supervisor) {
-                $total = $supervisor->supervised_applications_count;
-                $acceptance_rate = $total > 0 ? round(($supervisor->accepted_applications_count / $total) * 100, 1) : 0;
-                
-                return [
-                    'id' => $supervisor->id,
-                    'name' => $supervisor->name,
-                    'divisions_count' => $supervisor->supervised_divisions_count,
-                    'applications_count' => $supervisor->supervised_applications_count,
-                    'accepted_count' => $supervisor->accepted_applications_count,
-                    'acceptance_rate' => $acceptance_rate,
                 ];
             });
 
@@ -118,7 +90,6 @@ class ReportController extends Controller
             'stats' => $stats,
             'applicationTrends' => $applicationTrends,
             'divisionPerformance' => $divisionPerformance,
-            'topSupervisors' => $topSupervisors,
             'statusDistribution' => $statusDistribution
         ]);
     }
@@ -134,5 +105,129 @@ class ReportController extends Controller
             'message' => 'Export functionality will be implemented soon',
             'type' => $type
         ]);
+    }
+
+    /**
+     * Export applications data to Excel
+     */
+    public function exportApplications(Request $request)
+    {
+        $applications = \App\Models\Application::with(['user', 'division'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $csvData = [];
+        $csvData[] = ['No', 'Nama', 'Email', 'Divisi', 'Status', 'Tanggal Daftar'];
+
+        foreach ($applications as $index => $application) {
+            $csvData[] = [
+                $index + 1,
+                $application->user->name,
+                $application->user->email,
+                $application->division ? $application->division->name : '-',
+                ucfirst($application->status),
+                $application->created_at->format('Y-m-d H:i:s')
+            ];
+        }
+
+        $filename = 'laporan_aplikasi_' . date('Y-m-d_H-i-s') . '.csv';
+        
+        $callback = function() use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
+    /**
+     * Export logbooks to Excel format
+     */
+    public function exportLogbooks(Request $request)
+    {
+        $user = auth()->user();
+        
+        $query = Logbook::with(['user.division', 'division', 'reviewer'])
+            ->orderBy('created_at', 'desc');
+
+        // If user is mentor, only show logbooks from their division
+        if ($user->role === 'mentor') {
+            $query->where('division_id', $user->division_id);
+        }
+
+        // Apply filters if provided
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('division') && $user->role === 'admin') {
+            $query->where('division_id', $request->division);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('date', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('date', '<=', $request->date_to);
+        }
+
+        $logbooks = $query->get();
+
+        // Create CSV content
+        $csvContent = "No,Nama Peserta,Email,Divisi,Tanggal,Judul,Aktivitas,Durasi,Status,Dibuat Pada,Diperbarui Pada\n";
+        
+        foreach ($logbooks as $index => $logbook) {
+            $csvContent .= sprintf(
+                "%d,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n",
+                $index + 1,
+                $logbook->user->name ?? '',
+                $logbook->user->email ?? '',
+                $logbook->user->division->name ?? '',
+                $logbook->date ?? '',
+                str_replace('"', '""', $logbook->title ?? ''),
+                str_replace('"', '""', $logbook->activities ?? ''),
+                $logbook->duration ? $logbook->duration . ' jam' : '',
+                $this->getStatusLabel($logbook->status),
+                $logbook->created_at ? $logbook->created_at->format('Y-m-d H:i:s') : '',
+                $logbook->updated_at ? $logbook->updated_at->format('Y-m-d H:i:s') : ''
+            );
+        }
+
+        $filename = 'laporan_logbook_' . date('Y-m-d_H-i-s') . '.csv';
+
+        return Response::make($csvContent, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Pragma' => 'public'
+        ]);
+    }
+
+    /**
+     * Get status label in Indonesian
+     */
+    private function getStatusLabel($status)
+    {
+        switch ($status) {
+            case 'draft':
+                return 'Draft';
+            case 'submitted':
+                return 'Diajukan';
+            case 'approved':
+                return 'Disetujui';
+            case 'rejected':
+                return 'Ditolak';
+            case 'revision':
+                return 'Perlu Revisi';
+            default:
+                return 'Tidak Diketahui';
+        }
     }
 }

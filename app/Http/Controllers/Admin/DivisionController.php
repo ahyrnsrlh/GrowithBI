@@ -15,8 +15,7 @@ class DivisionController extends Controller
      */
     public function index()
     {
-        $divisions = Division::with(['supervisor'])
-            ->withCount([
+        $divisions = Division::withCount([
                 'applications',
                 'applications as accepted_count' => function ($query) {
                     $query->where('status', 'diterima');
@@ -28,7 +27,7 @@ class DivisionController extends Controller
         $stats = [
             'total_divisions' => Division::count(),
             'active_divisions' => Division::where('is_active', true)->count(),
-            'total_quota' => Division::sum('quota'),
+            'total_quota' => Division::sum('max_interns'),
             'total_applications' => Division::withCount('applications')->get()->sum('applications_count'),
         ];
 
@@ -59,7 +58,6 @@ class DivisionController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'quota' => 'required|integer|min:1|max:100',
-            'supervisor_id' => 'nullable|exists:users,id',
             'requirements' => 'nullable|string',
             'is_active' => 'boolean'
         ]);
@@ -75,7 +73,7 @@ class DivisionController extends Controller
      */
     public function show(Division $division)
     {
-        $division->load(['supervisor', 'applications.user']);
+        $division->load(['applications.user']);
         $division->loadCount('applications');
 
         $applications = $division->applications()->with('user')->latest()->get();
@@ -108,7 +106,6 @@ class DivisionController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'quota' => 'required|integer|min:1|max:100',
-            'supervisor_id' => 'nullable|exists:users,id',
             'requirements' => 'nullable|string',
             'is_active' => 'boolean'
         ]);

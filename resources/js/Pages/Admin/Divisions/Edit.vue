@@ -78,36 +78,6 @@
                         </div>
                     </div>
 
-                    <!-- Pembimbing -->
-                    <div>
-                        <label
-                            for="supervisor_id"
-                            class="block text-sm font-medium text-gray-700 mb-2"
-                        >
-                            Pembimbing
-                        </label>
-                        <select
-                            id="supervisor_id"
-                            v-model="form.supervisor_id"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        >
-                            <option value="">Pilih Pembimbing</option>
-                            <option
-                                v-for="supervisor in supervisors"
-                                :key="supervisor.id"
-                                :value="supervisor.id"
-                            >
-                                {{ supervisor.name }}
-                            </option>
-                        </select>
-                        <div
-                            v-if="form.errors.supervisor_id"
-                            class="mt-1 text-sm text-red-600"
-                        >
-                            {{ form.errors.supervisor_id }}
-                        </div>
-                    </div>
-
                     <!-- Kuota -->
                     <div>
                         <label
@@ -294,13 +264,11 @@ const route = window.route;
 
 const props = defineProps({
     division: Object,
-    supervisors: Array,
 });
 
 const form = useForm({
     name: props.division.name,
     description: props.division.description,
-    supervisor_id: props.division.supervisor_id,
     quota: props.division.quota,
     requirements: props.division.requirements,
     is_active: props.division.is_active,

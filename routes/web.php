@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ApplicationController;
-use App\Http\Controllers\Admin\SupervisorController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Peserta\DashboardController as PesertaDashboardController;
@@ -36,6 +35,26 @@ Route::post('/cek-status', [PublicController::class, 'searchStatus'])->name('pub
 // Quick register route (requires authentication)
 Route::post('/quick-register', [PublicController::class, 'quickRegister'])->name('public.quick.register')->middleware('auth');
 
+// Web-based authentication check routes (for better session handling)
+Route::middleware('auth')->group(function () {
+    Route::get('/auth/check', function () {
+        return response()->json([
+            'authenticated' => true,
+            'user' => Auth::user()
+        ]);
+    })->name('auth.check');
+    
+    Route::get('/auth/user', function () {
+        return response()->json(Auth::user());
+    })->name('auth.user');
+    
+    Route::get('/applications/check/{division}', [App\Http\Controllers\Api\ApplicationController::class, 'checkExisting'])->name('applications.check');
+    Route::get('/applications/{application}/status', [App\Http\Controllers\Api\ApplicationController::class, 'getStatus'])->name('applications.status');
+    
+    // Application cancellation (available for logged in users)
+    Route::delete('/applications/{application}', [App\Http\Controllers\ProfileController::class, 'cancelApplication'])->name('applications.destroy');
+});
+
 // Authentication routes
 require __DIR__.'/auth.php';
 
@@ -64,6 +83,53 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/upload-document', [ProfileController::class, 'uploadDocument'])->name('profile.upload-document');
     Route::post('/profile/create-application', [ProfileController::class, 'createApplication'])->name('profile.create-application');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Logbook routes for accepted participants
+    Route::get('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'index'])->name('profile.logbooks.index');
+    Route::get('/profile/logbooks/create', [App\Http\Controllers\LogbookController::class, 'create'])->name('profile.logbooks.create');
+    Route::post('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'store'])->name('profile.logbooks.store');
+    Route::get('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'show'])->name('profile.logbooks.show');
+    Route::get('/profile/logbooks/{logbook}/edit', [App\Http\Controllers\LogbookController::class, 'edit'])->name('profile.logbooks.edit');
+    Route::patch('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'update'])->name('profile.logbooks.update');
+    Route::delete('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'destroy'])->name('profile.logbooks.destroy');
+    Route::post('/profile/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('profile.logbooks.comments.store');
+    
+    // Reports routes for accepted participants
+    Route::get('/profile/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'index'])->name('profile.reports.index');
+    Route::get('/profile/reports/create', [App\Http\Controllers\Peserta\PesertaReportController::class, 'create'])->name('profile.reports.create');
+    Route::post('/profile/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'store'])->name('profile.reports.store');
+    Route::get('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'show'])->name('profile.reports.show');
+    Route::get('/profile/reports/{report}/download', [App\Http\Controllers\Peserta\PesertaReportController::class, 'download'])->name('profile.reports.download');
+    Route::get('/profile/reports/{report}/edit', [App\Http\Controllers\Peserta\PesertaReportController::class, 'edit'])->name('profile.reports.edit');
+    Route::put('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'update'])->name('profile.reports.update');
+    Route::delete('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'destroy'])->name('profile.reports.destroy');
+    
+    // Acceptance Letter routes
+    Route::post('/applications/{application}/acceptance-letter/upload', [App\Http\Controllers\AcceptanceLetterController::class, 'upload'])->name('acceptance-letter.upload');
+    Route::get('/applications/{application}/acceptance-letter/download', [App\Http\Controllers\AcceptanceLetterController::class, 'download'])->name('acceptance-letter.download');
+    Route::get('/applications/{application}/acceptance-letter/check', [App\Http\Controllers\AcceptanceLetterController::class, 'check'])->name('acceptance-letter.check');
+    
+    // Cancel application (global route for applications management)
+    Route::delete('/applications/{application}', [ProfileController::class, 'cancelApplication'])->name('applications.cancel');
+});
+
+// Peserta Routes (require peserta role)
+Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [PesertaDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('logbooks', App\Http\Controllers\LogbookController::class);
+    Route::post('/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbooks.comments.store');
+    
+    // Reports management for participants
+    Route::resource('reports', App\Http\Controllers\Peserta\PesertaReportController::class);
+    
+    // Application management for participants
+    Route::delete('/applications/{application}', [App\Http\Controllers\ProfileController::class, 'cancelApplication'])->name('applications.cancel');
+});
+
+// Logbook routes (accessible by accepted participants only) - Legacy support
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('logbook', App\Http\Controllers\LogbookController::class);
+    Route::post('/logbook/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbook.comments.store');
 });
 
 // Admin Routes (require admin role)
@@ -74,25 +140,34 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
     Route::put('/applications/{application}', [ApplicationController::class, 'update'])->name('applications.update');
+    Route::delete('/applications/{application}', [ApplicationController::class, 'destroy'])->name('applications.destroy');
     Route::post('/applications/bulk-update', [ApplicationController::class, 'bulkUpdate'])->name('applications.bulk-update');
+    
+    // Acceptance Letter routes for admin
+    Route::post('/applications/{application}/upload-acceptance-letter', [App\Http\Controllers\AcceptanceLetterController::class, 'upload'])->name('applications.upload-acceptance-letter');
     
     // Divisions Management
     Route::resource('divisions', App\Http\Controllers\Admin\DivisionController::class);
-    
-    // Supervisors Management (now part of admin)
-    Route::resource('supervisors', SupervisorController::class);
     
     // Participants Management (now part of admin)
     Route::get('/participants', [ParticipantController::class, 'index'])->name('participants.index');
     Route::get('/participants/{participant}', [ParticipantController::class, 'show'])->name('participants.show');
     Route::put('/participants/{participant}/status', [ParticipantController::class, 'updateStatus'])->name('participants.update-status');
     
-    // Logbooks Management (merged from pembimbing)
+    // Logbooks Management (enhanced with review capabilities)
     Route::get('/logbooks', [\App\Http\Controllers\Admin\LogbookController::class, 'index'])->name('logbooks.index');
     Route::get('/logbooks/{logbook}', [\App\Http\Controllers\Admin\LogbookController::class, 'show'])->name('logbooks.show');
+    Route::put('/logbooks/{logbook}/status', [\App\Http\Controllers\Admin\LogbookController::class, 'updateStatus'])->name('logbooks.update-status');
+    Route::post('/logbooks/{logbook}/comments', [\App\Http\Controllers\Admin\LogbookController::class, 'addComment'])->name('logbooks.comments.store');
+    Route::post('/logbooks/bulk-update', [\App\Http\Controllers\Admin\LogbookController::class, 'bulkUpdate'])->name('logbooks.bulk-update');
     Route::put('/logbooks/{logbook}/approve', [\App\Http\Controllers\Admin\LogbookController::class, 'approve'])->name('logbooks.approve');
+    Route::get('/logbooks/stats/dashboard', [\App\Http\Controllers\Admin\LogbookController::class, 'getStats'])->name('logbooks.stats');
     
-    // Reports & Analytics
+    // Reports & Analytics (enhanced export capabilities)
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/applications/export', [ReportController::class, 'exportApplications'])->name('reports.applications.export');
+    Route::get('/reports/logbooks/export', [ReportController::class, 'exportLogbooks'])->name('reports.logbooks.export');
+    Route::get('/reports/participant/{participant}/progress', [ReportController::class, 'exportParticipantProgress'])->name('reports.participant.progress');
+    Route::get('/reports/weekly', [ReportController::class, 'generateWeeklyReport'])->name('reports.weekly');
     Route::post('/reports/export', [ReportController::class, 'export'])->name('reports.export');
 });

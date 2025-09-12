@@ -1,7 +1,9 @@
 <template>
     <AdminLayout
         title="Detail Pendaftaran"
-        :subtitle="`Pendaftaran ${application.user.name} - ${application.division.name}`"
+        :subtitle="`Pendaftaran ${application.user?.name || 'N/A'} - ${
+            application.division?.name || 'N/A'
+        }`"
     >
         <div class="max-w-4xl mx-auto">
             <!-- Header with Actions -->
@@ -30,10 +32,10 @@
                         </Link>
                         <div>
                             <h1 class="text-2xl font-bold text-gray-900">
-                                {{ application.user.name }}
+                                {{ application.user?.name || "N/A" }}
                             </h1>
                             <p class="text-gray-600">
-                                {{ application.user.email }}
+                                {{ application.user?.email || "N/A" }}
                             </p>
                         </div>
                     </div>
@@ -77,7 +79,7 @@
                                     >Nama Lengkap</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ application.user.name }}
+                                    {{ application.user?.name || "-" }}
                                 </p>
                             </div>
                             <div>
@@ -86,7 +88,7 @@
                                     >Email</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ application.user.email }}
+                                    {{ application.user?.email || "-" }}
                                 </p>
                             </div>
                             <div>
@@ -95,16 +97,47 @@
                                     >No. Telepon</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ application.user.phone || "-" }}
+                                    {{ application.user?.phone || "-" }}
                                 </p>
                             </div>
                             <div>
                                 <label
                                     class="block text-sm font-medium text-gray-500"
+                                    >Universitas</label
+                                >
+                                <p class="mt-1 text-sm text-gray-900">
+                                    {{ application.user?.university || "-" }}
+                                </p>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-500"
+                                    >Jurusan</label
+                                >
+                                <p class="mt-1 text-sm text-gray-900">
+                                    {{ application.user?.major || "-" }}
+                                </p>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-500"
+                                    >Semester</label
+                                >
+                                <p class="mt-1 text-sm text-gray-900">
+                                    {{
+                                        application.user?.semester
+                                            ? `Semester ${application.user.semester}`
+                                            : "-"
+                                    }}
+                                </p>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label
+                                    class="block text-sm font-medium text-gray-500"
                                     >Alamat</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ application.user.address || "-" }}
+                                    {{ application.user?.address || "-" }}
                                 </p>
                             </div>
                         </div>
@@ -133,10 +166,7 @@
                                     >Pembimbing</label
                                 >
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{
-                                        application.division.supervisor?.name ||
-                                        "Belum ditentukan"
-                                    }}
+                                    GrowithBI Admin
                                 </p>
                             </div>
                             <div>
@@ -203,99 +233,447 @@
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">
                             Dokumen
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                        >
+                            <!-- Surat Pengantar -->
                             <div
-                                class="border border-gray-200 rounded-lg p-4 text-center"
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <svg
-                                    class="w-8 h-8 text-red-500 mx-auto mb-2"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
+                                <div
+                                    class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3"
                                 >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                <p class="text-sm font-medium text-gray-900">
-                                    CV
+                                    <svg
+                                        class="w-6 h-6 text-blue-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
+                                    Surat Pengantar
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 mb-3">
                                     {{
-                                        application.cv_file
-                                            ? "Tersedia"
-                                            : "Belum upload"
+                                        application.user.surat_pengantar_path
+                                            ? "Terupload"
+                                            : "Belum ada"
                                     }}
                                 </p>
-                                <button
-                                    v-if="application.cv_file"
-                                    class="mt-2 text-blue-600 hover:text-blue-700 text-xs"
-                                >
-                                    Download
-                                </button>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="
+                                            application.user
+                                                .surat_pengantar_path
+                                        "
+                                        :href="`/storage/${application.user.surat_pengantar_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="
+                                            application.user
+                                                .surat_pengantar_path
+                                        "
+                                        :href="`/storage/${application.user.surat_pengantar_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
                             </div>
+
+                            <!-- CV -->
                             <div
-                                class="border border-gray-200 rounded-lg p-4 text-center"
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <svg
-                                    class="w-8 h-8 text-blue-500 mx-auto mb-2"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
+                                <div
+                                    class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3"
                                 >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                <p class="text-sm font-medium text-gray-900">
+                                    <svg
+                                        class="w-6 h-6 text-red-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
+                                    Curriculum Vitae (CV)
+                                </p>
+                                <p class="text-xs text-gray-500 mb-3">
+                                    {{
+                                        application.user.cv_path
+                                            ? "Terupload"
+                                            : "Belum ada"
+                                    }}
+                                </p>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.cv_path"
+                                        :href="`/storage/${application.user.cv_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.cv_path"
+                                        :href="`/storage/${application.user.cv_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Motivation Letter -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
+                            >
+                                <div
+                                    class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
+                                    <svg
+                                        class="w-6 h-6 text-purple-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
+                                    Motivation Letter
+                                </p>
+                                <p class="text-xs text-gray-500 mb-3">
+                                    {{
+                                        application.user.motivation_letter_path
+                                            ? "Terupload"
+                                            : "Belum ada"
+                                    }}
+                                </p>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="
+                                            application.user
+                                                .motivation_letter_path
+                                        "
+                                        :href="`/storage/${application.user.motivation_letter_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="
+                                            application.user
+                                                .motivation_letter_path
+                                        "
+                                        :href="`/storage/${application.user.motivation_letter_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Transkrip Nilai -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
+                            >
+                                <div
+                                    class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
+                                    <svg
+                                        class="w-6 h-6 text-yellow-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
+                                    Transkrip Nilai
+                                </p>
+                                <p class="text-xs text-gray-500 mb-3">
+                                    {{
+                                        application.user.transkrip_path
+                                            ? "Terupload"
+                                            : "Belum ada"
+                                    }}
+                                </p>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.transkrip_path"
+                                        :href="`/storage/${application.user.transkrip_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.transkrip_path"
+                                        :href="`/storage/${application.user.transkrip_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- KTP -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
+                            >
+                                <div
+                                    class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
+                                    <svg
+                                        class="w-6 h-6 text-indigo-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
                                     KTP
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 mb-3">
                                     {{
-                                        application.ktp_file
-                                            ? "Tersedia"
-                                            : "Belum upload"
+                                        application.user.ktp_path
+                                            ? "Terupload"
+                                            : "Belum ada"
                                     }}
                                 </p>
-                                <button
-                                    v-if="application.ktp_file"
-                                    class="mt-2 text-blue-600 hover:text-blue-700 text-xs"
-                                >
-                                    Download
-                                </button>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.ktp_path"
+                                        :href="`/storage/${application.user.ktp_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.ktp_path"
+                                        :href="`/storage/${application.user.ktp_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
                             </div>
+
+                            <!-- NPWP -->
                             <div
-                                class="border border-gray-200 rounded-lg p-4 text-center"
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
                             >
-                                <svg
-                                    class="w-8 h-8 text-green-500 mx-auto mb-2"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
+                                <div
+                                    class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3"
                                 >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                <p class="text-sm font-medium text-gray-900">
-                                    Surat Lamaran
+                                    <svg
+                                        class="w-6 h-6 text-orange-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
+                                    NPWP
                                 </p>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 mb-3">
                                     {{
-                                        application.application_letter_file
-                                            ? "Tersedia"
-                                            : "Belum upload"
+                                        application.user.npwp_path
+                                            ? "Terupload"
+                                            : "Belum ada"
                                     }}
                                 </p>
-                                <button
-                                    v-if="application.application_letter_file"
-                                    class="mt-2 text-blue-600 hover:text-blue-700 text-xs"
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.npwp_path"
+                                        :href="`/storage/${application.user.npwp_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.npwp_path"
+                                        :href="`/storage/${application.user.npwp_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Buku Rekening -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
+                            >
+                                <div
+                                    class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3"
                                 >
-                                    Download
-                                </button>
+                                    <svg
+                                        class="w-6 h-6 text-teal-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
+                                    Buku Rekening
+                                </p>
+                                <p class="text-xs text-gray-500 mb-3">
+                                    {{
+                                        application.user.buku_rekening_path
+                                            ? "Terupload"
+                                            : "Belum ada"
+                                    }}
+                                </p>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="
+                                            application.user.buku_rekening_path
+                                        "
+                                        :href="`/storage/${application.user.buku_rekening_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="
+                                            application.user.buku_rekening_path
+                                        "
+                                        :href="`/storage/${application.user.buku_rekening_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Pas Foto -->
+                            <div
+                                class="border border-gray-200 rounded-lg p-4 text-center hover:border-blue-300 transition-colors"
+                            >
+                                <div
+                                    class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3"
+                                >
+                                    <svg
+                                        class="w-6 h-6 text-pink-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <p
+                                    class="text-sm font-medium text-gray-900 mb-1"
+                                >
+                                    Pas Foto
+                                </p>
+                                <p class="text-xs text-gray-500 mb-3">
+                                    {{
+                                        application.user.pas_foto_path
+                                            ? "Terupload"
+                                            : "Belum ada"
+                                    }}
+                                </p>
+                                <div class="flex space-x-2 justify-center">
+                                    <a
+                                        v-if="application.user.pas_foto_path"
+                                        :href="`/storage/${application.user.pas_foto_path}`"
+                                        target="_blank"
+                                        class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        <i class="fas fa-eye mr-1"></i>
+                                        Lihat
+                                    </a>
+                                    <a
+                                        v-if="application.user.pas_foto_path"
+                                        :href="`/storage/${application.user.pas_foto_path}`"
+                                        download
+                                        class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                                    >
+                                        <i class="fas fa-download mr-1"></i>
+                                        Unduh
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -456,6 +834,117 @@
                         </div>
                     </div>
 
+                    <!-- Acceptance Letter Upload -->
+                    <div
+                        v-if="application.status === 'diterima'"
+                        class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                    >
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                            Surat Penerimaan
+                        </h3>
+
+                        <div
+                            v-if="application.acceptance_letter_path"
+                            class="mb-4"
+                        >
+                            <div
+                                class="bg-green-50 border border-green-200 rounded-lg p-4"
+                            >
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div
+                                            class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center"
+                                        >
+                                            <svg
+                                                class="w-4 h-4 text-green-600"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path
+                                                    fill-rule="evenodd"
+                                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                    clip-rule="evenodd"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p
+                                                class="text-sm font-medium text-green-800"
+                                            >
+                                                Surat penerimaan telah diupload
+                                            </p>
+                                            <p class="text-xs text-green-600">
+                                                {{
+                                                    formatDateTime(
+                                                        application.acceptance_letter_uploaded_at
+                                                    )
+                                                }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <a
+                                            :href="`/storage/${application.acceptance_letter_path}`"
+                                            target="_blank"
+                                            class="text-green-600 hover:text-green-700 text-sm font-medium"
+                                        >
+                                            Lihat
+                                        </a>
+                                        <button
+                                            @click="showLetterUpload = true"
+                                            class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                                        >
+                                            Ganti
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-else class="mb-4">
+                            <div
+                                class="bg-yellow-50 border border-yellow-200 rounded-lg p-4"
+                            >
+                                <div class="flex items-center space-x-3">
+                                    <div
+                                        class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center"
+                                    >
+                                        <svg
+                                            class="w-4 h-4 text-yellow-600"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                                clip-rule="evenodd"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p
+                                            class="text-sm font-medium text-yellow-800"
+                                        >
+                                            Surat penerimaan belum diupload
+                                        </p>
+                                        <p class="text-xs text-yellow-600">
+                                            Upload surat penerimaan untuk
+                                            peserta ini
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button
+                            v-if="!application.acceptance_letter_path"
+                            @click="showLetterUpload = true"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                        >
+                            Upload Surat Penerimaan
+                        </button>
+                    </div>
+
                     <!-- Admin Notes -->
                     <div
                         v-if="application.admin_notes"
@@ -532,6 +1021,89 @@
                 </div>
             </div>
         </div>
+
+        <!-- Acceptance Letter Upload Modal -->
+        <div
+            v-if="showLetterUpload"
+            class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+        >
+            <div
+                class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+            >
+                <div class="mt-3">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">
+                        Upload Surat Penerimaan
+                    </h3>
+                    <form @submit.prevent="uploadAcceptanceLetter">
+                        <div class="mb-4">
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                                >File Surat Penerimaan</label
+                            >
+                            <input
+                                type="file"
+                                ref="fileInput"
+                                @change="handleFileChange"
+                                accept=".pdf,.doc,.docx"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2"
+                                required
+                            />
+                            <p class="text-xs text-gray-500 mt-1">
+                                Format yang didukung: PDF, DOC, DOCX (Maks. 5MB)
+                            </p>
+                        </div>
+
+                        <div
+                            v-if="uploadError"
+                            class="mb-4 p-3 bg-red-50 border border-red-200 rounded-md"
+                        >
+                            <p class="text-sm text-red-600">
+                                {{ uploadError }}
+                            </p>
+                        </div>
+
+                        <div class="flex justify-end space-x-2">
+                            <button
+                                type="button"
+                                @click="closeLetterUpload"
+                                class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+                                :disabled="isUploading"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="submit"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center"
+                                :disabled="isUploading || !selectedFile"
+                            >
+                                <svg
+                                    v-if="isUploading"
+                                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        class="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        stroke-width="4"
+                                    ></circle>
+                                    <path
+                                        class="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
+                                </svg>
+                                {{ isUploading ? "Mengupload..." : "Upload" }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </AdminLayout>
 </template>
 
@@ -545,6 +1117,11 @@ const props = defineProps({
 });
 
 const showStatusModal = ref(false);
+const showLetterUpload = ref(false);
+const selectedFile = ref(null);
+const isUploading = ref(false);
+const uploadError = ref("");
+const fileInput = ref(null);
 
 const statusForm = reactive({
     status: props.application.status,
@@ -585,5 +1162,79 @@ const updateStatus = () => {
             showStatusModal.value = false;
         },
     });
+};
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    uploadError.value = "";
+
+    if (file) {
+        // Validate file type
+        const allowedTypes = [
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            uploadError.value =
+                "Format file tidak didukung. Gunakan PDF, DOC, atau DOCX.";
+            return;
+        }
+
+        // Validate file size (5MB max)
+        if (file.size > 5 * 1024 * 1024) {
+            uploadError.value = "Ukuran file terlalu besar. Maksimal 5MB.";
+            return;
+        }
+
+        selectedFile.value = file;
+    }
+};
+
+const uploadAcceptanceLetter = () => {
+    if (!selectedFile.value) {
+        uploadError.value = "Pilih file terlebih dahulu.";
+        return;
+    }
+
+    isUploading.value = true;
+    uploadError.value = "";
+
+    const formData = new FormData();
+    formData.append("acceptance_letter", selectedFile.value);
+
+    router.post(
+        `/admin/applications/${props.application.id}/upload-acceptance-letter`,
+        formData,
+        {
+            onSuccess: () => {
+                showLetterUpload.value = false;
+                selectedFile.value = null;
+                if (fileInput.value) {
+                    fileInput.value.value = "";
+                }
+            },
+            onError: (errors) => {
+                if (errors.acceptance_letter) {
+                    uploadError.value = errors.acceptance_letter;
+                } else {
+                    uploadError.value =
+                        "Terjadi kesalahan saat mengupload file.";
+                }
+            },
+            onFinish: () => {
+                isUploading.value = false;
+            },
+        }
+    );
+};
+
+const closeLetterUpload = () => {
+    showLetterUpload.value = false;
+    selectedFile.value = null;
+    uploadError.value = "";
+    if (fileInput.value) {
+        fileInput.value.value = "";
+    }
 };
 </script>

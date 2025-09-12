@@ -249,8 +249,7 @@
                             <div
                                 class="bg-blue-600 h-2 rounded-full"
                                 :style="`width: ${Math.min(
-                                    (division.accepted_count /
-                                        division.quota) *
+                                    (division.accepted_count / division.quota) *
                                         100,
                                     100
                                 )}%`"
@@ -262,11 +261,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-sm text-gray-500">Pembimbing:</span>
                         <span class="text-sm font-medium text-gray-900">
-                            {{
-                                division.supervisor
-                                    ? division.supervisor.name
-                                    : "Belum ditentukan"
-                            }}
+                            GrowithBI Admin
                         </span>
                     </div>
 
