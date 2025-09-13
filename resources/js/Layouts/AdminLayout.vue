@@ -4,7 +4,7 @@
         <div class="lg:hidden fixed top-4 left-4 z-50">
             <button
                 @click="sidebarOpen = !sidebarOpen"
-                class="p-2 rounded-md bg-blue-900 text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="p-2 rounded-md bg-gradient-to-r from-blue-800 to-indigo-900 text-white hover:from-blue-900 hover:to-indigo-950 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
                 <svg
                     class="h-6 w-6"
@@ -40,7 +40,7 @@
         <!-- Sidebar -->
         <div
             :class="[
-                'sidebar fixed inset-y-0 left-0 z-50 w-64 bg-blue-900 shadow-lg transform transition-transform duration-300 ease-in-out',
+                'sidebar fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-blue-800 to-indigo-900 shadow-lg transform transition-transform duration-300 ease-in-out',
                 sidebarOpen
                     ? 'translate-x-0'
                     : '-translate-x-full lg:translate-x-0',
@@ -48,7 +48,7 @@
         >
             <!-- Logo -->
             <div
-                class="flex h-16 items-center justify-center border-b border-blue-800 flex-shrink-0"
+                class="flex h-16 items-center justify-center border-b border-blue-700 border-opacity-40 flex-shrink-0"
             >
                 <div class="flex items-center space-x-2">
                     <img
@@ -70,8 +70,8 @@
                             :class="[
                                 'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                 $page.url === '/admin/dashboard'
-                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                                    ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                             ]"
                         >
                             <svg
@@ -102,8 +102,8 @@
                             :class="[
                                 'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                 $page.url.startsWith('/admin/applications')
-                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                                    ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                             ]"
                         >
                             <svg
@@ -134,8 +134,8 @@
                             :class="[
                                 'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                 $page.url.startsWith('/admin/divisions')
-                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                                    ? 'bg-blue-500 bg-opacity-30 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-500 hover:bg-opacity-30 hover:text-white',
                             ]"
                         >
                             <svg
@@ -160,8 +160,8 @@
                             :class="[
                                 'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                 $page.url.startsWith('/admin/participants')
-                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                                    ? 'bg-blue-500 bg-opacity-30 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-500 hover:bg-opacity-30 hover:text-white',
                             ]"
                         >
                             <svg
@@ -186,8 +186,8 @@
                             :class="[
                                 'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                 $page.url.startsWith('/admin/logbooks')
-                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                                    ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                             ]"
                         >
                             <svg
@@ -206,14 +206,14 @@
                             Laporan Harian
                         </Link>
 
-                        <!-- Laporan -->
+                        <!-- Final Reports -->
                         <Link
-                            href="/admin/reports"
+                            href="/admin/final-reports"
                             :class="[
                                 'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
-                                $page.url.startsWith('/admin/reports')
-                                    ? 'bg-blue-800 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-800 hover:text-white',
+                                $page.url.startsWith('/admin/final-reports')
+                                    ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                             ]"
                         >
                             <svg
@@ -226,7 +226,7 @@
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                     stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                 />
                             </svg>
                             Laporan Akhir

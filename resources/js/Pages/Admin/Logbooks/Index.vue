@@ -36,7 +36,7 @@
                 </button>
 
                 <Link
-                    :href="route('admin.reports.logbooks.export')"
+                    :href="route('admin.logbooks.export')"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all duration-200"
                 >
                     <svg
@@ -90,18 +90,18 @@
             </div>
 
             <div
-                class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl shadow-lg p-6 text-white"
             >
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-yellow-100 text-sm font-medium">
+                        <p class="text-orange-100 text-sm font-medium">
                             Perlu Review
                         </p>
                         <p class="text-3xl font-bold">
                             {{ stats.pending_logbooks || 0 }}
                         </p>
                     </div>
-                    <div class="bg-yellow-400 bg-opacity-30 rounded-full p-3">
+                    <div class="bg-orange-400 bg-opacity-30 rounded-full p-3">
                         <svg
                             class="w-8 h-8"
                             fill="none"
@@ -120,7 +120,7 @@
             </div>
 
             <div
-                class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
             >
                 <div class="flex items-center justify-between">
                     <div>
@@ -150,7 +150,7 @@
             </div>
 
             <div
-                class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl shadow-lg p-6 text-white"
             >
                 <div class="flex items-center justify-between">
                     <div>

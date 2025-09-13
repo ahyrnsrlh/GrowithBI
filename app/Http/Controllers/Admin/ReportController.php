@@ -7,10 +7,12 @@ use App\Models\Application;
 use App\Models\Division;
 use App\Models\User;
 use App\Models\Logbook;
+use App\Models\Report;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -25,6 +27,12 @@ class ReportController extends Controller
             'total_divisions' => Division::count(),
             'active_divisions' => Division::where('is_active', true)->count(),
             'total_participants' => User::where('role', 'peserta')->count(),
+            // Final Reports Statistics
+            'total_final_reports' => Report::count(),
+            'submitted_reports' => Report::where('status', 'submitted')->count(),
+            'approved_reports' => Report::where('status', 'approved')->count(),
+            'pending_review' => Report::where('status', 'submitted')->count(),
+            'revision_reports' => Report::where('status', 'revision')->count(),
         ];
 
         // Application trends by month (last 6 months)
@@ -86,11 +94,50 @@ class ReportController extends Controller
             'rejected' => $stats['rejected_applications']
         ];
 
+        // Final Reports Status by Division
+        $finalReportsStatus = Division::with(['applications.user.reports'])
+            ->get()
+            ->map(function ($division) {
+                $reports = collect();
+                foreach ($division->applications as $application) {
+                    if ($application->user && $application->user->reports) {
+                        $reports = $reports->merge($application->user->reports);
+                    }
+                }
+                
+                return [
+                    'division' => $division->name,
+                    'total' => $reports->count(),
+                    'submitted' => $reports->where('status', 'submitted')->count(),
+                    'approved' => $reports->where('status', 'approved')->count(),
+                    'revision' => $reports->where('status', 'revision')->count(),
+                ];
+            });
+
+        // Recent Final Report Submissions
+        $recentReports = Report::with(['user', 'application.division'])
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get()
+            ->map(function ($report) {
+                return [
+                    'id' => $report->id,
+                    'title' => $report->title,
+                    'participant' => $report->user->name,
+                    'division' => $report->application->division->name ?? 'N/A',
+                    'status' => $report->status,
+                    'submitted_at' => $report->created_at,
+                    'file_name' => $report->file_name,
+                ];
+            });
+
         return Inertia::render('Admin/Reports/Index', [
             'stats' => $stats,
             'applicationTrends' => $applicationTrends,
             'divisionPerformance' => $divisionPerformance,
-            'statusDistribution' => $statusDistribution
+            'statusDistribution' => $statusDistribution,
+            'finalReportsStatus' => $finalReportsStatus,
+            'recentReports' => $recentReports
         ]);
     }
 
@@ -151,7 +198,7 @@ class ReportController extends Controller
      */
     public function exportLogbooks(Request $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         
         $query = Logbook::with(['user.division', 'division', 'reviewer'])
             ->orderBy('created_at', 'desc');

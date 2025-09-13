@@ -103,6 +103,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the reports for the user.
+     */
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
+
+    /**
      * Check if user has a specific role
      */
     public function hasRole($role)

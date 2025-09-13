@@ -136,4 +136,54 @@ class ApplicationController extends Controller
     {
         //
     }
+
+    /**
+     * Export applications data to CSV
+     */
+    public function exportApplications(Request $request)
+    {
+        $query = Application::with(['user', 'division'])
+            ->orderBy('created_at', 'desc');
+
+        // Apply filters if provided
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('division')) {
+            $query->where('division_id', $request->division);
+        }
+
+        $applications = $query->get();
+
+        $csvData = [];
+        $csvData[] = ['No', 'Nama', 'Email', 'Divisi', 'Status', 'Tanggal Daftar', 'Catatan Admin'];
+
+        foreach ($applications as $index => $application) {
+            $csvData[] = [
+                $index + 1,
+                $application->user->name,
+                $application->user->email,
+                $application->division ? $application->division->name : '-',
+                ucfirst($application->status),
+                $application->created_at->format('Y-m-d H:i:s'),
+                $application->admin_notes ?? ''
+            ];
+        }
+
+        $filename = 'laporan_aplikasi_' . date('Y-m-d_H-i-s') . '.csv';
+        
+        $callback = function() use ($csvData) {
+            $file = fopen('php://output', 'w');
+            foreach ($csvData as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
 }

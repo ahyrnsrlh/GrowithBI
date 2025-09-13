@@ -8,11 +8,12 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h1 class="text-4xl font-bold mb-3">
-                            Dashboard Analytics
+                            Panel Administrasi GrowithBI
                         </h1>
                         <p class="text-blue-100 text-lg">
-                            Selamat datang di dashboard analitik. Lihat
-                            ringkasan data dan statistik terbaru.
+                            Kelola program internship dengan mudah. Monitor
+                            pendaftaran, divisi, dan laporan peserta secara
+                            real-time.
                         </p>
                         <div class="mt-4 flex items-center space-x-6">
                             <div class="flex items-center">

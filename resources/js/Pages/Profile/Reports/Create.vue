@@ -235,11 +235,16 @@
                         </Link>
                         <button
                             type="submit"
-                            :disabled="form.processing || !selectedFile"
+                            :disabled="
+                                uploading ||
+                                form.processing ||
+                                !selectedFile ||
+                                !form.title
+                            "
                             class="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center"
                         >
                             <svg
-                                v-if="form.processing"
+                                v-if="uploading || form.processing"
                                 class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -260,7 +265,7 @@
                                 ></path>
                             </svg>
                             {{
-                                form.processing
+                                uploading || form.processing
                                     ? "Mengupload..."
                                     : "Upload Laporan"
                             }}
@@ -273,7 +278,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
@@ -284,6 +289,7 @@ const props = defineProps({
 
 const selectedFile = ref(null);
 const isDragging = ref(false);
+const uploading = ref(false);
 
 const form = useForm({
     title: "",
@@ -291,9 +297,43 @@ const form = useForm({
     report_file: null,
 });
 
+// Refresh CSRF token on mount to ensure it's fresh
+onMounted(() => {
+    // Get fresh CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    if (csrfToken) {
+        window.axios.defaults.headers.common["X-CSRF-TOKEN"] =
+            csrfToken.getAttribute("content");
+    }
+});
+
 const handleFileSelect = (event) => {
     const file = event.target.files[0];
     if (file) {
+        // Validate file type
+        const allowedTypes = [
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            alert(
+                "File type tidak didukung. Silakan pilih file PDF, Word (.doc/.docx), atau Excel (.xls/.xlsx)"
+            );
+            event.target.value = "";
+            return;
+        }
+
+        // Validate file size (10MB max)
+        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        if (file.size > maxSize) {
+            alert("Ukuran file terlalu besar. Maksimal 10MB.");
+            event.target.value = "";
+            return;
+        }
+
         selectedFile.value = file;
         form.report_file = file;
     }
@@ -304,6 +344,28 @@ const handleDrop = (event) => {
     isDragging.value = false;
     const file = event.dataTransfer.files[0];
     if (file) {
+        // Validate file type
+        const allowedTypes = [
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            alert(
+                "File type tidak didukung. Silakan pilih file PDF, Word (.doc/.docx), atau Excel (.xls/.xlsx)"
+            );
+            return;
+        }
+
+        // Validate file size (10MB max)
+        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        if (file.size > maxSize) {
+            alert("Ukuran file terlalu besar. Maksimal 10MB.");
+            return;
+        }
+
         selectedFile.value = file;
         form.report_file = file;
     }
@@ -328,10 +390,61 @@ const formatFileSize = (bytes) => {
 };
 
 const submit = () => {
+    if (uploading.value) return;
+
+    uploading.value = true;
+
     form.post(route("profile.reports.store"), {
         forceFormData: true,
+        preserveScroll: true,
         onSuccess: () => {
+            uploading.value = false;
             // Redirect handled by controller
+        },
+        onError: (errors) => {
+            uploading.value = false;
+            console.error("Upload error:", errors);
+
+            // Handle CSRF token mismatch (419 error)
+            if (
+                errors.message &&
+                (errors.message.includes("419") ||
+                    errors.message.includes("CSRF"))
+            ) {
+                alert(
+                    "Session telah expired. Halaman akan di-refresh untuk memperbarui session."
+                );
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+                return;
+            }
+
+            // Handle other errors
+            if (errors.report_file) {
+                alert("Error file upload: " + errors.report_file);
+            } else if (errors.message) {
+                alert("Error: " + errors.message);
+            } else {
+                alert("Terjadi kesalahan saat upload. Silakan coba lagi.");
+            }
+        },
+        onBefore: () => {
+            // Validate before submit
+            if (!form.title) {
+                alert("Judul laporan harus diisi");
+                return false;
+            }
+            if (!form.report_file) {
+                alert("File laporan harus dipilih");
+                return false;
+            }
+            // Reset any previous errors
+            form.clearErrors();
+            return true;
+        },
+        onFinish: () => {
+            uploading.value = false;
         },
     });
 };
