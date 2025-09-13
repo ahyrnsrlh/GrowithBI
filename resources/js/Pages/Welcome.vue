@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
 import { ref, onMounted, onUnmounted, computed } from "vue";
+import AOS from 'aos';
 
 defineProps({ canLogin: Boolean, canRegister: Boolean, auth: Object });
 
@@ -176,6 +177,9 @@ const goToSlide = (index) => {
 };
 
 onMounted(async () => {
+    // Initialize AOS
+    AOS.refresh();
+    
     // Add scroll event listener for navbar
     window.addEventListener("scroll", handleScroll);
 
@@ -410,7 +414,7 @@ onUnmounted(() => {
         >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid lg:grid-cols-2 gap-10 items-center">
-                    <div>
+                    <div data-aos="fade-right" data-aos-duration="1000">
                         <h1
                             class="text-4xl md:text-5xl font-extrabold leading-tight text-gray-900 mb-6"
                         >
@@ -440,7 +444,7 @@ onUnmounted(() => {
                             >
                         </div>
                     </div>
-                    <div class="relative">
+                    <div class="relative" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
                         <div
                             class="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl"
                         >
@@ -457,7 +461,7 @@ onUnmounted(() => {
 
         <section id="features" class="py-20 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
+                <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="800">
                     <div
                         class="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6"
                     >
@@ -482,6 +486,7 @@ onUnmounted(() => {
                     <!-- Benefit 1 -->
                     <div
                         class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        data-aos="fade-up" data-aos-duration="600" data-aos-delay="100"
                     >
                         <div
                             class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
@@ -507,6 +512,7 @@ onUnmounted(() => {
                     <!-- Benefit 2 -->
                     <div
                         class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        data-aos="fade-up" data-aos-duration="600" data-aos-delay="200"
                     >
                         <div
                             class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
@@ -533,6 +539,7 @@ onUnmounted(() => {
                     <!-- Benefit 3 -->
                     <div
                         class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        data-aos="fade-up" data-aos-duration="600" data-aos-delay="300"
                     >
                         <div
                             class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
@@ -559,6 +566,7 @@ onUnmounted(() => {
                     <!-- Benefit 4 -->
                     <div
                         class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        data-aos="fade-up" data-aos-duration="600" data-aos-delay="400"
                     >
                         <div
                             class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
@@ -585,6 +593,7 @@ onUnmounted(() => {
                     <!-- Benefit 5 -->
                     <div
                         class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        data-aos="fade-up" data-aos-duration="600" data-aos-delay="500"
                     >
                         <div
                             class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
@@ -610,6 +619,7 @@ onUnmounted(() => {
                     <!-- Benefit 6 -->
                     <div
                         class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        data-aos="fade-up" data-aos-duration="600" data-aos-delay="600"
                     >
                         <div
                             class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
@@ -636,7 +646,7 @@ onUnmounted(() => {
 
         <section id="divisions" class="py-16 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
+                <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="800">
                     <h2 class="text-2xl md:text-3xl font-bold mb-3">
                         <span
                             class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600"
@@ -653,9 +663,12 @@ onUnmounted(() => {
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
                 >
                     <div
-                        v-for="division in divisions"
+                        v-for="(division, index) in divisions"
                         :key="division.id"
                         class="group bg-white rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 border border-gray-100 overflow-hidden"
+                        data-aos="zoom-in" 
+                        data-aos-duration="600" 
+                        :data-aos-delay="index * 100"
                     >
                         <div class="p-6">
                             <div class="flex items-center justify-center mb-4">
@@ -761,7 +774,7 @@ onUnmounted(() => {
 
         <section id="testimonials" class="py-20 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-14">
+                <div class="text-center mb-14" data-aos="fade-up" data-aos-duration="800">
                     <h2 class="text-3xl md:text-4xl font-bold mb-4">
                         <span
                             class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600"
@@ -775,7 +788,7 @@ onUnmounted(() => {
                 </div>
 
                 <!-- Carousel Container -->
-                <div class="relative">
+                <div class="relative" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
                     <!-- Left Arrow -->
                     <button
                         @click="prevSlide"
@@ -915,7 +928,7 @@ onUnmounted(() => {
 
         <section id="faq" class="py-20 bg-white">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
+                <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="800">
                     <h2 class="text-3xl font-bold mb-4">
                         <span
                             class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600"
@@ -929,6 +942,7 @@ onUnmounted(() => {
                 <div class="space-y-4">
                     <div
                         class="bg-white border border-gray-200 rounded-xl shadow-sm"
+                        data-aos="fade-up" data-aos-duration="600" data-aos-delay="100"
                     >
                         <button
                             @click="toggleFaq(1)"
@@ -956,6 +970,7 @@ onUnmounted(() => {
                     </div>
                     <div
                         class="bg-white border border-gray-200 rounded-xl shadow-sm"
+                        data-aos="fade-up" data-aos-duration="600" data-aos-delay="200"
                     >
                         <button
                             @click="toggleFaq(2)"
@@ -983,6 +998,7 @@ onUnmounted(() => {
                     </div>
                     <div
                         class="bg-white border border-gray-200 rounded-xl shadow-sm"
+                        data-aos="fade-up" data-aos-duration="600" data-aos-delay="300"
                     >
                         <button
                             @click="toggleFaq(3)"
@@ -1010,6 +1026,7 @@ onUnmounted(() => {
                     </div>
                     <div
                         class="bg-white border border-gray-200 rounded-xl shadow-sm"
+                        data-aos="fade-up" data-aos-duration="600" data-aos-delay="400"
                     >
                         <button
                             @click="toggleFaq(4)"
@@ -1039,6 +1056,7 @@ onUnmounted(() => {
                     </div>
                     <div
                         class="bg-white border border-gray-200 rounded-xl shadow-sm"
+                        data-aos="fade-up" data-aos-duration="600" data-aos-delay="500"
                     >
                         <button
                             @click="toggleFaq(5)"
@@ -1077,7 +1095,7 @@ onUnmounted(() => {
         >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div class="lg:col-span-2">
+                    <div class="lg:col-span-2" data-aos="fade-right" data-aos-duration="800">
                         <div class="flex items-center mb-6">
                             <img
                                 src="/logo.png"
