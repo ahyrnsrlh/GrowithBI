@@ -1,12 +1,12 @@
 <template>
     <div>
         <!-- Loading Screen - muncul saat refresh/reload -->
-        <LoadingScreen 
-            v-if="showLoadingScreen" 
-            @finished="onLoadingFinished" 
+        <LoadingScreen
+            v-if="showLoadingScreen"
+            @finished="onLoadingFinished"
             :duration="2500"
         />
-        
+
         <!-- Main App Content -->
         <div v-show="!isLoading" class="app-content">
             <slot />
@@ -15,22 +15,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import LoadingScreen from './LoadingScreen.vue';
+import { ref, onMounted } from "vue";
+import LoadingScreen from "./LoadingScreen.vue";
 
 const isLoading = ref(true);
 const showLoadingScreen = ref(true);
 
 onMounted(() => {
     // Simple approach: Always show loading screen unless it's marked as SPA navigation
-    const isSPANavigation = sessionStorage.getItem('spa-navigation');
-    
+    const isSPANavigation = sessionStorage.getItem("spa-navigation");
+
     if (isSPANavigation) {
         // This was SPA navigation, skip loading
         isLoading.value = false;
         showLoadingScreen.value = false;
         // Clear the flag
-        sessionStorage.removeItem('spa-navigation');
+        sessionStorage.removeItem("spa-navigation");
     } else {
         // This is a refresh/reload/new tab, show loading
         showLoadingScreen.value = true;

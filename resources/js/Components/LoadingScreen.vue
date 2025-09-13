@@ -8,9 +8,9 @@
         <div
             class="absolute inset-0 bg-gradient-to-br from-blue-800 via-blue-900 to-indigo-900"
         ></div>
-        
+
         <!-- Animated pattern background -->
-        <div 
+        <div
             class="absolute inset-0 opacity-10"
             style="
                 background-image: radial-gradient(
@@ -24,16 +24,22 @@
         ></div>
 
         <!-- Loading content -->
-        <div class="relative z-10 flex flex-col items-center justify-center min-h-screen">
+        <div
+            class="relative z-10 flex flex-col items-center justify-center min-h-screen"
+        >
             <!-- Logo container dengan animasi - Fixed positioning -->
-            <div class="logo-section relative flex items-center justify-center mb-8">
+            <div
+                class="logo-section relative flex items-center justify-center mb-8"
+            >
                 <!-- Pulse rings around logo - positioned relative to logo -->
-                <div class="pulse-rings absolute inset-0 flex items-center justify-center">
+                <div
+                    class="pulse-rings absolute inset-0 flex items-center justify-center"
+                >
                     <div class="pulse-ring ring-1"></div>
                     <div class="pulse-ring ring-2"></div>
                     <div class="pulse-ring ring-3"></div>
                 </div>
-                
+
                 <!-- Logo wrapper -->
                 <div class="logo-container relative z-10">
                     <div class="logo-wrapper flex items-center justify-center">
@@ -48,13 +54,15 @@
 
             <!-- Company name dengan animasi typing -->
             <div class="text-content text-center">
-                <h1 class="company-name text-white text-3xl md:text-4xl font-bold mb-4">
+                <h1
+                    class="company-name text-white text-3xl md:text-4xl font-bold mb-4"
+                >
                     GrowithBI
                 </h1>
                 <p class="tagline text-blue-200 text-lg md:text-xl font-medium">
                     Bank Indonesia Provinsi Lampung
                 </p>
-                
+
                 <!-- Loading dots -->
                 <div class="loading-dots mt-8 flex items-center justify-center">
                     <span class="dot"></span>
@@ -67,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 const isLoading = ref(true);
 const isFadingOut = ref(false);
@@ -75,16 +83,16 @@ const isFadingOut = ref(false);
 const props = defineProps({
     duration: {
         type: Number,
-        default: 3000 // 3 seconds
-    }
+        default: 3000, // 3 seconds
+    },
 });
 
-const emit = defineEmits(['finished']);
+const emit = defineEmits(["finished"]);
 
 onMounted(() => {
     // Pastikan semua asset ter-load dengan baik
-    const logoImg = document.querySelector('.logo-image');
-    
+    const logoImg = document.querySelector(".logo-image");
+
     if (logoImg && !logoImg.complete) {
         logoImg.onload = () => {
             startFinishSequence();
@@ -98,11 +106,11 @@ const startFinishSequence = () => {
     // Start fade out animation before completely hiding
     setTimeout(() => {
         isFadingOut.value = true;
-        
+
         // Hide loading screen after fade out animation
         setTimeout(() => {
             isLoading.value = false;
-            emit('finished');
+            emit("finished");
         }, 800); // Fade out duration
     }, props.duration);
 };
@@ -121,8 +129,12 @@ const startFinishSequence = () => {
 
 /* Moving pattern background */
 @keyframes movePattern {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(30px, 30px); }
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(30px, 30px);
+    }
 }
 
 /* Logo container animations */
@@ -244,7 +256,8 @@ const startFinishSequence = () => {
 }
 
 @keyframes dotPulse {
-    0%, 100% {
+    0%,
+    100% {
         transform: scale(1);
         opacity: 0.8;
     }
@@ -311,20 +324,20 @@ const startFinishSequence = () => {
         width: 180px;
         height: 180px;
     }
-    
+
     .logo-image {
         width: 100px;
         height: 100px;
     }
-    
+
     .company-name {
         font-size: 2rem;
     }
-    
+
     .tagline {
         font-size: 1.125rem;
     }
-    
+
     @keyframes pulseRing {
         0% {
             width: 100px;
