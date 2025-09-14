@@ -300,7 +300,7 @@
                                     v-if="auth.user?.profile_photo_path"
                                     class="h-8 w-8 rounded-full overflow-hidden border border-gray-200"
                                 >
-                                    <img 
+                                    <img
                                         :src="`/storage/${auth.user.profile_photo_path}`"
                                         :alt="auth.user?.name"
                                         class="w-full h-full object-cover"
@@ -310,17 +310,24 @@
                                     v-else
                                     class="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center"
                                 >
-                                    <span class="text-white font-medium text-sm">
+                                    <span
+                                        class="text-white font-medium text-sm"
+                                    >
                                         {{ getInitials(auth.user?.name) }}
                                     </span>
                                 </div>
-                                
+
                                 <div class="text-left">
-                                    <p class="text-sm font-medium text-gray-700">
-                                        {{ auth.user?.name || 'Admin' }}
+                                    <p
+                                        class="text-sm font-medium text-gray-700"
+                                    >
+                                        {{ auth.user?.name || "Admin" }}
                                     </p>
                                     <p class="text-xs text-gray-500">
-                                        {{ auth.user?.position || 'Administrator' }}
+                                        {{
+                                            auth.user?.position ||
+                                            "Administrator"
+                                        }}
                                     </p>
                                 </div>
                                 <svg
@@ -458,11 +465,11 @@ const props = defineProps({
 
 // Helper function to get user initials
 const getInitials = (name) => {
-    if (!name) return 'A';
+    if (!name) return "A";
     return name
-        .split(' ')
-        .map(word => word.charAt(0))
-        .join('')
+        .split(" ")
+        .map((word) => word.charAt(0))
+        .join("")
         .toUpperCase()
         .slice(0, 2);
 };

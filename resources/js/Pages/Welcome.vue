@@ -24,7 +24,8 @@ const fallbackDivisions = [
     {
         id: 1,
         name: "Business Intelligence",
-        description: "Program magang yang berfokus pada analisis data perbankan, dashboard BI, dan pengembangan insights untuk mendukung pengambilan keputusan strategis.",
+        description:
+            "Program magang yang berfokus pada analisis data perbankan, dashboard BI, dan pengembangan insights untuk mendukung pengambilan keputusan strategis.",
         is_active: true,
         quota: 10,
         duration: 6,
@@ -32,7 +33,8 @@ const fallbackDivisions = [
     {
         id: 2,
         name: "Data Analytics & Research",
-        description: "Program magang untuk mengembangkan kemampuan analisis data ekonomi dan keuangan, riset pasar, serta pemodelan data untuk business intelligence.",
+        description:
+            "Program magang untuk mengembangkan kemampuan analisis data ekonomi dan keuangan, riset pasar, serta pemodelan data untuk business intelligence.",
         is_active: true,
         quota: 10,
         duration: 6,
@@ -40,7 +42,8 @@ const fallbackDivisions = [
     {
         id: 3,
         name: "Financial Technology",
-        description: "Program magang yang mengelaborasi teknologi finansial terkini, payment systems, digital banking, dan inovasi teknologi perbankan.",
+        description:
+            "Program magang yang mengelaborasi teknologi finansial terkini, payment systems, digital banking, dan inovasi teknologi perbankan.",
         is_active: true,
         quota: 10,
         duration: 6,
@@ -48,7 +51,8 @@ const fallbackDivisions = [
     {
         id: 4,
         name: "General Affair",
-        description: "Program magang yang bertujuan mendukung kegiatan administrasi, pengelolaan dokumen, serta operasional kantor untuk mendukung efisiensi organisasi.",
+        description:
+            "Program magang yang bertujuan mendukung kegiatan administrasi, pengelolaan dokumen, serta operasional kantor untuk mendukung efisiensi organisasi.",
         is_active: true,
         quota: 10,
         duration: 6,
@@ -793,7 +797,9 @@ onUnmounted(() => {
                                         <path
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                                         /></svg
-                                    ><span class="font-medium text-white">{{ division.duration || 6 }}</span
+                                    ><span class="font-medium text-white">{{
+                                        division.duration || 6
+                                    }}</span
                                     >&nbsp;bulan
                                 </div>
                             </div>

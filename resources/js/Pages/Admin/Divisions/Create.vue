@@ -89,7 +89,11 @@
                             Tugas dan Tanggung Jawab
                         </label>
                         <div class="space-y-3">
-                            <div v-for="(job, index) in form.job_description" :key="index" class="flex items-center space-x-3">
+                            <div
+                                v-for="(job, index) in form.job_description"
+                                :key="index"
+                                class="flex items-center space-x-3"
+                            >
                                 <input
                                     v-model="form.job_description[index]"
                                     type="text"
@@ -102,8 +106,18 @@
                                     type="button"
                                     class="text-red-600 hover:text-red-700 p-2"
                                 >
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    <svg
+                                        class="w-5 h-5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                        />
                                     </svg>
                                 </button>
                             </div>
@@ -112,8 +126,18 @@
                                 type="button"
                                 class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center"
                             >
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                <svg
+                                    class="w-4 h-4 mr-1"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                    />
                                 </svg>
                                 Tambah Tugas
                             </button>
@@ -128,7 +152,13 @@
                             Persyaratan
                         </label>
                         <div class="space-y-3">
-                            <div v-for="(requirement, index) in form.requirements" :key="index" class="flex items-center space-x-3">
+                            <div
+                                v-for="(
+                                    requirement, index
+                                ) in form.requirements"
+                                :key="index"
+                                class="flex items-center space-x-3"
+                            >
                                 <input
                                     v-model="form.requirements[index]"
                                     type="text"
@@ -141,8 +171,18 @@
                                     type="button"
                                     class="text-red-600 hover:text-red-700 p-2"
                                 >
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    <svg
+                                        class="w-5 h-5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                        />
                                     </svg>
                                 </button>
                             </div>
@@ -151,8 +191,18 @@
                                 type="button"
                                 class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center"
                             >
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                <svg
+                                    class="w-4 h-4 mr-1"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                    />
                                 </svg>
                                 Tambah Persyaratan
                             </button>
@@ -405,9 +455,11 @@ const removeRequirement = (index) => {
 
 const submitForm = () => {
     // Filter out empty values
-    form.job_description = form.job_description.filter(job => job.trim() !== "");
-    form.requirements = form.requirements.filter(req => req.trim() !== "");
-    
+    form.job_description = form.job_description.filter(
+        (job) => job.trim() !== ""
+    );
+    form.requirements = form.requirements.filter((req) => req.trim() !== "");
+
     form.post("/admin/divisions");
 };
 </script>

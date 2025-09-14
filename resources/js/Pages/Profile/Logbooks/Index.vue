@@ -399,22 +399,44 @@
             class="fixed inset-0 z-50 overflow-y-auto"
             @click.self="showCreateModal = false"
         >
-            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center">
-                <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
+            <div
+                class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center"
+            >
+                <div
+                    class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+                ></div>
 
-                <div class="relative inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                <div
+                    class="relative inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                >
                     <!-- Modal Header -->
-                    <div class="flex items-center justify-between mb-6 pb-4 border-b">
+                    <div
+                        class="flex items-center justify-between mb-6 pb-4 border-b"
+                    >
                         <div>
-                            <h3 class="text-2xl font-bold text-gray-900">Tambah Logbook Harian</h3>
-                            <p class="text-gray-600 mt-1">Catat aktivitas dan pencapaian hari ini</p>
+                            <h3 class="text-2xl font-bold text-gray-900">
+                                Tambah Logbook Harian
+                            </h3>
+                            <p class="text-gray-600 mt-1">
+                                Catat aktivitas dan pencapaian hari ini
+                            </p>
                         </div>
                         <button
                             @click="showCreateModal = false"
                             class="text-gray-400 hover:text-gray-600 transition-colors"
                         >
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            <svg
+                                class="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
                             </svg>
                         </button>
                     </div>
@@ -424,7 +446,10 @@
                         <!-- Date and Hours Row -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="date" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label
+                                    for="date"
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                >
                                     Tanggal <span class="text-red-500">*</span>
                                 </label>
                                 <input
@@ -434,14 +459,21 @@
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     required
                                 />
-                                <div v-if="createForm.errors.date" class="mt-1 text-sm text-red-600">
+                                <div
+                                    v-if="createForm.errors.date"
+                                    class="mt-1 text-sm text-red-600"
+                                >
                                     {{ createForm.errors.date }}
                                 </div>
                             </div>
 
                             <div>
-                                <label for="duration" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Durasi (jam) <span class="text-red-500">*</span>
+                                <label
+                                    for="duration"
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Durasi (jam)
+                                    <span class="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="number"
@@ -454,7 +486,10 @@
                                     placeholder="8"
                                     required
                                 />
-                                <div v-if="createForm.errors.duration" class="mt-1 text-sm text-red-600">
+                                <div
+                                    v-if="createForm.errors.duration"
+                                    class="mt-1 text-sm text-red-600"
+                                >
                                     {{ createForm.errors.duration }}
                                 </div>
                             </div>
@@ -462,8 +497,12 @@
 
                         <!-- Activity Title -->
                         <div>
-                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
-                                Judul Aktivitas <span class="text-red-500">*</span>
+                            <label
+                                for="title"
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                            >
+                                Judul Aktivitas
+                                <span class="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
@@ -473,15 +512,22 @@
                                 placeholder="Contoh: Pengembangan Fitur Login System"
                                 required
                             />
-                            <div v-if="createForm.errors.title" class="mt-1 text-sm text-red-600">
+                            <div
+                                v-if="createForm.errors.title"
+                                class="mt-1 text-sm text-red-600"
+                            >
                                 {{ createForm.errors.title }}
                             </div>
                         </div>
 
                         <!-- Activity Description -->
                         <div>
-                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                                Deskripsi Aktivitas <span class="text-red-500">*</span>
+                            <label
+                                for="description"
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                            >
+                                Deskripsi Aktivitas
+                                <span class="text-red-500">*</span>
                             </label>
                             <textarea
                                 id="description"
@@ -491,7 +537,10 @@
                                 placeholder="Jelaskan secara detail aktivitas yang telah dilakukan hari ini, termasuk tugas yang diselesaikan, kendala yang dihadapi, dan hasil yang dicapai..."
                                 required
                             ></textarea>
-                            <div v-if="createForm.errors.description" class="mt-1 text-sm text-red-600">
+                            <div
+                                v-if="createForm.errors.description"
+                                class="mt-1 text-sm text-red-600"
+                            >
                                 {{ createForm.errors.description }}
                             </div>
                         </div>
@@ -510,7 +559,9 @@
                                 :disabled="createForm.processing"
                                 class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
                             >
-                                <span v-if="createForm.processing">Menyimpan...</span>
+                                <span v-if="createForm.processing"
+                                    >Menyimpan...</span
+                                >
                                 <span v-else>Simpan Logbook</span>
                             </button>
                         </div>
@@ -547,10 +598,10 @@ const filters = ref({
 
 // Create form for modal
 const createForm = useForm({
-    date: new Date().toISOString().split('T')[0], // Today's date
+    date: new Date().toISOString().split("T")[0], // Today's date
     duration: 8,
-    title: '',
-    description: ''
+    title: "",
+    description: "",
 });
 
 const submitLogbook = () => {
@@ -560,11 +611,11 @@ const submitLogbook = () => {
             showCreateModal.value = false;
             createForm.reset();
             // Refresh the page data
-            router.reload({ only: ['logbooks', 'stats'] });
+            router.reload({ only: ["logbooks", "stats"] });
         },
         onError: () => {
             // Form errors are handled automatically by Inertia
-        }
+        },
     });
 };
 
