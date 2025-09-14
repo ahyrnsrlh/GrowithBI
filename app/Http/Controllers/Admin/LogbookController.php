@@ -20,6 +20,7 @@ class LogbookController extends Controller
      */
     public function index(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         $query = Logbook::with(['user.division', 'division', 'reviewer'])
@@ -112,6 +113,7 @@ class LogbookController extends Controller
      */
     public function show(Logbook $logbook)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         if (!$logbook->canBeReviewedBy($user)) {
@@ -136,16 +138,17 @@ class LogbookController extends Controller
      */
     public function updateStatus(Request $request, Logbook $logbook)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
-        \Log::info('UpdateStatus called', [
+        Log::info('UpdateStatus called', [
             'user_id' => $user->id,
             'logbook_id' => $logbook->id,
             'request_data' => $request->all()
         ]);
         
         if (!$logbook->canBeReviewedBy($user)) {
-            \Log::warning('User cannot review logbook', [
+            Log::warning('User cannot review logbook', [
                 'user_id' => $user->id,
                 'user_role' => $user->role,
                 'logbook_id' => $logbook->id,
@@ -178,7 +181,7 @@ class LogbookController extends Controller
                 break;
         }
 
-        \Log::info('Update status result', [
+        Log::info('Update status result', [
             'success' => $success,
             'message' => $message,
             'logbook_status' => $logbook->fresh()->status
@@ -196,6 +199,7 @@ class LogbookController extends Controller
      */
     public function addComment(Request $request, Logbook $logbook)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         if (!$logbook->canBeReviewedBy($user)) {
@@ -224,6 +228,7 @@ class LogbookController extends Controller
      */
     public function bulkUpdate(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         $request->validate([
@@ -266,6 +271,7 @@ class LogbookController extends Controller
      */
     public function approve(Logbook $logbook)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         if (!$logbook->canBeReviewedBy($user)) {
@@ -284,6 +290,7 @@ class LogbookController extends Controller
      */
     public function exportLogbooks(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         $query = Logbook::with(['user.division', 'division', 'reviewer'])

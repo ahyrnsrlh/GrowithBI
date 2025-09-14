@@ -112,6 +112,8 @@ class User extends Authenticatable
 
     /**
      * Check if user has a specific role
+     * @param string|array $role
+     * @return bool
      */
     public function hasRole($role)
     {
@@ -123,6 +125,7 @@ class User extends Authenticatable
 
     /**
      * Get role names for compatibility
+     * @return \Illuminate\Support\Collection
      */
     public function getRoleNames()
     {
