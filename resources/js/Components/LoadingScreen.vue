@@ -25,12 +25,10 @@
 
         <!-- Loading content -->
         <div
-            class="relative z-10 flex flex-col items-center justify-center min-h-screen"
+            class="relative z-10 flex items-center justify-center min-h-screen"
         >
-            <!-- Logo container dengan animasi - Fixed positioning -->
-            <div
-                class="logo-section relative flex items-center justify-center mb-8"
-            >
+            <!-- Logo container dengan animasi - Centered -->
+            <div class="logo-section relative flex items-center justify-center">
                 <!-- Pulse rings around logo - positioned relative to logo -->
                 <div
                     class="pulse-rings absolute inset-0 flex items-center justify-center"
@@ -49,25 +47,6 @@
                             class="logo-image block mx-auto"
                         />
                     </div>
-                </div>
-            </div>
-
-            <!-- Company name dengan animasi typing -->
-            <div class="text-content text-center">
-                <h1
-                    class="company-name text-white text-3xl md:text-4xl font-bold mb-4"
-                >
-                    GrowithBI
-                </h1>
-                <p class="tagline text-blue-200 text-lg md:text-xl font-medium">
-                    Bank Indonesia Provinsi Lampung
-                </p>
-
-                <!-- Loading dots -->
-                <div class="loading-dots mt-8 flex items-center justify-center">
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
                 </div>
             </div>
         </div>

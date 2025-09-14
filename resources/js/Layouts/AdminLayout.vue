@@ -295,21 +295,32 @@
                                 @click="showProfileMenu = !showProfileMenu"
                                 class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                             >
+                                <!-- Avatar with photo or initials -->
                                 <div
+                                    v-if="auth.user?.profile_photo_path"
+                                    class="h-8 w-8 rounded-full overflow-hidden border border-gray-200"
+                                >
+                                    <img 
+                                        :src="`/storage/${auth.user.profile_photo_path}`"
+                                        :alt="auth.user?.name"
+                                        class="w-full h-full object-cover"
+                                    />
+                                </div>
+                                <div
+                                    v-else
                                     class="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center"
                                 >
-                                    <span class="text-white font-medium text-sm"
-                                        >A</span
-                                    >
+                                    <span class="text-white font-medium text-sm">
+                                        {{ getInitials(auth.user?.name) }}
+                                    </span>
                                 </div>
+                                
                                 <div class="text-left">
-                                    <p
-                                        class="text-sm font-medium text-gray-700"
-                                    >
-                                        Admin
+                                    <p class="text-sm font-medium text-gray-700">
+                                        {{ auth.user?.name || 'Admin' }}
                                     </p>
                                     <p class="text-xs text-gray-500">
-                                        Administrator
+                                        {{ auth.user?.position || 'Administrator' }}
                                     </p>
                                 </div>
                                 <svg
@@ -333,8 +344,8 @@
                                 @click.away="showProfileMenu = false"
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50"
                             >
-                                <a
-                                    href="#"
+                                <Link
+                                    href="/admin/profile"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                                 >
                                     <span class="flex items-center">
@@ -351,9 +362,9 @@
                                                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                                             />
                                         </svg>
-                                        Profil
+                                        Profile
                                     </span>
-                                </a>
+                                </Link>
                                 <a
                                     href="#"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
@@ -420,7 +431,11 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
+const auth = computed(() => page.props.auth);
 
 const props = defineProps({
     title: {
@@ -440,6 +455,17 @@ const props = defineProps({
         default: 0,
     },
 });
+
+// Helper function to get user initials
+const getInitials = (name) => {
+    if (!name) return 'A';
+    return name
+        .split(' ')
+        .map(word => word.charAt(0))
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+};
 
 const showProfileMenu = ref(false);
 const sidebarOpen = ref(false);

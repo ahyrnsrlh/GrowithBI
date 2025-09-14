@@ -12,8 +12,8 @@
                     Catat perkembangan dan kegiatan harian selama masa magang
                 </p>
             </div>
-            <Link
-                :href="route('profile.logbooks.create')"
+            <button
+                @click="showCreateModal = true"
                 class="mt-4 sm:mt-0 inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
                 <svg
@@ -30,7 +30,7 @@
                     />
                 </svg>
                 Tambah Logbook
-            </Link>
+            </button>
         </div>
 
         <!-- Statistics Cards -->
@@ -392,12 +392,138 @@
                 </div>
             </div>
         </div>
+
+        <!-- Create Logbook Modal -->
+        <div
+            v-if="showCreateModal"
+            class="fixed inset-0 z-50 overflow-y-auto"
+            @click.self="showCreateModal = false"
+        >
+            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center">
+                <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
+
+                <div class="relative inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                    <!-- Modal Header -->
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">Tambah Logbook Harian</h3>
+                            <p class="text-gray-600 mt-1">Catat aktivitas dan pencapaian hari ini</p>
+                        </div>
+                        <button
+                            @click="showCreateModal = false"
+                            class="text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Modal Form -->
+                    <form @submit.prevent="submitLogbook" class="space-y-6">
+                        <!-- Date and Hours Row -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="date" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Tanggal <span class="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="date"
+                                    id="date"
+                                    v-model="createForm.date"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    required
+                                />
+                                <div v-if="createForm.errors.date" class="mt-1 text-sm text-red-600">
+                                    {{ createForm.errors.date }}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="duration" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Durasi (jam) <span class="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="number"
+                                    id="duration"
+                                    v-model="createForm.duration"
+                                    min="1"
+                                    max="12"
+                                    step="0.5"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="8"
+                                    required
+                                />
+                                <div v-if="createForm.errors.duration" class="mt-1 text-sm text-red-600">
+                                    {{ createForm.errors.duration }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Title -->
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                                Judul Aktivitas <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="title"
+                                v-model="createForm.title"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Contoh: Pengembangan Fitur Login System"
+                                required
+                            />
+                            <div v-if="createForm.errors.title" class="mt-1 text-sm text-red-600">
+                                {{ createForm.errors.title }}
+                            </div>
+                        </div>
+
+                        <!-- Activity Description -->
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                                Deskripsi Aktivitas <span class="text-red-500">*</span>
+                            </label>
+                            <textarea
+                                id="description"
+                                v-model="createForm.description"
+                                rows="6"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Jelaskan secara detail aktivitas yang telah dilakukan hari ini, termasuk tugas yang diselesaikan, kendala yang dihadapi, dan hasil yang dicapai..."
+                                required
+                            ></textarea>
+                            <div v-if="createForm.errors.description" class="mt-1 text-sm text-red-600">
+                                {{ createForm.errors.description }}
+                            </div>
+                        </div>
+
+                        <!-- Modal Actions -->
+                        <div class="flex justify-end space-x-3 pt-4 border-t">
+                            <button
+                                type="button"
+                                @click="showCreateModal = false"
+                                class="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="submit"
+                                :disabled="createForm.processing"
+                                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                            >
+                                <span v-if="createForm.processing">Menyimpan...</span>
+                                <span v-else>Simpan Logbook</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </AuthenticatedLayout>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
-import { Head, Link, router } from "@inertiajs/vue3";
+import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 const props = defineProps({
@@ -412,10 +538,35 @@ const props = defineProps({
     },
 });
 
+const showCreateModal = ref(false);
+
 const filters = ref({
     month: props.filters.month || "",
     status: props.filters.status || "",
 });
+
+// Create form for modal
+const createForm = useForm({
+    date: new Date().toISOString().split('T')[0], // Today's date
+    duration: 8,
+    title: '',
+    description: ''
+});
+
+const submitLogbook = () => {
+    createForm.post(route("profile.logbooks.store"), {
+        preserveScroll: true,
+        onSuccess: () => {
+            showCreateModal.value = false;
+            createForm.reset();
+            // Refresh the page data
+            router.reload({ only: ['logbooks', 'stats'] });
+        },
+        onError: () => {
+            // Form errors are handled automatically by Inertia
+        }
+    });
+};
 
 const applyFilters = () => {
     router.get(route("profile.logbooks.index"), filters.value, {

@@ -16,18 +16,17 @@ return new class extends Migration
         $divisions = App\Models\Division::where('is_active', true)->get();
         
         if ($users->count() > 0 && $divisions->count() > 0) {
-            $statuses = ['pending', 'approved', 'rejected'];
+            $statuses = ['menunggu', 'diterima', 'ditolak'];
             
             for ($i = 0; $i < 20; $i++) {
                 App\Models\Application::create([
                     'user_id' => $users->random()->id,
                     'division_id' => $divisions->random()->id,
-                    'name' => 'Test Application ' . ($i + 1),
-                    'email' => 'test' . ($i + 1) . '@example.com',
-                    'phone' => '08123456789',
-                    'motivation' => 'Sample motivation for testing',
-                    'experience' => 'Sample experience for testing',
                     'status' => $statuses[array_rand($statuses)],
+                    'cv_file' => 'sample_cv_' . ($i + 1) . '.pdf',
+                    'ktp_file' => 'sample_ktp_' . ($i + 1) . '.jpg',
+                    'application_letter_file' => 'sample_letter_' . ($i + 1) . '.pdf',
+                    'motivation_letter' => 'Sample motivation for testing application ' . ($i + 1),
                     'created_at' => now()->subDays(rand(0, 30)),
                     'updated_at' => now()->subDays(rand(0, 30)),
                 ]);
@@ -40,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        App\Models\Application::where('email', 'like', 'test%@example.com')->delete();
+        App\Models\Application::where('motivation_letter', 'like', 'Sample motivation for testing%')->delete();
     }
 };

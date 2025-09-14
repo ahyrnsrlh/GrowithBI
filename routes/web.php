@@ -136,6 +136,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Profile Management
+    Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [\App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::delete('/profile/photo', [\App\Http\Controllers\Admin\ProfileController::class, 'deletePhoto'])->name('profile.delete-photo');
+    Route::get('/profile/activity-logs', [\App\Http\Controllers\Admin\ProfileController::class, 'activityLogs'])->name('profile.activity-logs');
+    Route::put('/profile/preferences', [\App\Http\Controllers\Admin\ProfileController::class, 'updatePreferences'])->name('profile.preferences');
+    
     // Applications Management
     Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');

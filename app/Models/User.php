@@ -26,6 +26,9 @@ class User extends Authenticatable
         'division_id',
         'profile_photo_path',
         'phone',
+        'position',
+        'bio',
+        'preferences',
         'address',
         'university',
         'major',
@@ -67,6 +70,7 @@ class User extends Authenticatable
             'birth_date' => 'date',
             'gpa' => 'decimal:2',
             'semester' => 'integer',
+            'preferences' => 'array',
         ];
     }
 

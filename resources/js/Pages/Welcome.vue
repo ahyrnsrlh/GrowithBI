@@ -23,31 +23,35 @@ function toggleFaq(i) {
 const fallbackDivisions = [
     {
         id: 1,
-        name: "Data Analytics",
-        description: "Analisis data perbankan dan visualisasi KPI.",
+        name: "Business Intelligence",
+        description: "Program magang yang berfokus pada analisis data perbankan, dashboard BI, dan pengembangan insights untuk mendukung pengambilan keputusan strategis.",
         is_active: true,
-        quota: 5,
+        quota: 10,
+        duration: 6,
     },
     {
         id: 2,
-        name: "Business Intelligence",
-        description: "Dashboard interaktif Power BI & Tableau.",
+        name: "Data Analytics & Research",
+        description: "Program magang untuk mengembangkan kemampuan analisis data ekonomi dan keuangan, riset pasar, serta pemodelan data untuk business intelligence.",
         is_active: true,
-        quota: 4,
+        quota: 10,
+        duration: 6,
     },
     {
         id: 3,
-        name: "Risk Management",
-        description: "Pemodelan risiko & analisis tren ekonomi.",
-        is_active: false,
-        quota: 0,
+        name: "Financial Technology",
+        description: "Program magang yang mengelaborasi teknologi finansial terkini, payment systems, digital banking, dan inovasi teknologi perbankan.",
+        is_active: true,
+        quota: 10,
+        duration: 6,
     },
     {
         id: 4,
-        name: "Regulatory Compliance",
-        description: "Data governance & kepatuhan regulasi.",
+        name: "General Affair",
+        description: "Program magang yang bertujuan mendukung kegiatan administrasi, pengelolaan dokumen, serta operasional kantor untuk mendukung efisiensi organisasi.",
         is_active: true,
-        quota: 3,
+        quota: 10,
+        duration: 6,
     },
 ];
 
@@ -216,7 +220,7 @@ onUnmounted(() => {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div
                 :class="[
-                    'flex items-center justify-between rounded-2xl transition-all duration-300 ease-in-out backdrop-blur-md',
+                    'flex items-center justify-between rounded-2xl transition-all duration-300 ease-in-out',
                     isScrolled
                         ? 'bg-gradient-to-r from-blue-800 via-blue-700 to-indigo-800 shadow-lg shadow-black/10 border border-blue-600/20 px-6 py-3'
                         : 'bg-gradient-to-r from-blue-800 via-blue-700 to-indigo-800 shadow-md shadow-black/5 border border-blue-600/30 px-8 py-4',
@@ -329,7 +333,7 @@ onUnmounted(() => {
             <!-- Mobile Menu -->
             <div
                 v-if="mobileMenuOpen"
-                class="md:hidden mt-4 p-6 bg-white/95 backdrop-blur-md rounded-2xl shadow-lg shadow-black/10 border border-white/20"
+                class="md:hidden mt-4 p-6 bg-white/95 rounded-2xl shadow-lg shadow-black/10 border border-white/20"
             >
                 <div class="flex flex-col space-y-4">
                     <a
@@ -403,61 +407,42 @@ onUnmounted(() => {
         <div class="absolute inset-0">
             <!-- Main Grid Pattern -->
             <div
-                class="absolute inset-0"
+                class="absolute inset-0 opacity-50"
                 style="
                     background-image: linear-gradient(
-                            rgba(37, 99, 235, 0.8) 2px,
-                            transparent 2px
+                            rgba(37, 99, 235, 0.6) 1px,
+                            transparent 1px
                         ),
                         linear-gradient(
                             90deg,
-                            rgba(37, 99, 235, 0.8) 2px,
-                            transparent 2px
+                            rgba(37, 99, 235, 0.6) 1px,
+                            transparent 1px
                         );
-                    background-size: 40px 40px;
+                    background-size: 50px 50px;
                 "
             ></div>
             <!-- Secondary smaller grid for more detail -->
             <div
-                class="absolute inset-0"
+                class="absolute inset-0 opacity-35"
                 style="
                     background-image: linear-gradient(
-                            rgba(67, 56, 202, 0.5) 1px,
+                            rgba(67, 56, 202, 0.4) 1px,
                             transparent 1px
                         ),
                         linear-gradient(
                             90deg,
-                            rgba(67, 56, 202, 0.5) 1px,
+                            rgba(67, 56, 202, 0.4) 1px,
                             transparent 1px
                         );
-                    background-size: 20px 20px;
+                    background-size: 25px 25px;
                 "
             ></div>
-            <!-- Background overlay -->
+            <!-- Soft Background overlay -->
             <div
-                class="absolute inset-0 bg-gradient-to-br from-slate-50/80 via-blue-50/80 to-indigo-100/80"
-            ></div>
-            <!-- Floating Orbs -->
-            <div
-                class="absolute top-20 left-20 w-32 h-32 bg-blue-300/30 rounded-full blur-xl animate-pulse"
-            ></div>
-            <div
-                class="absolute top-40 right-32 w-24 h-24 bg-indigo-300/40 rounded-full blur-lg animate-pulse delay-1000"
-            ></div>
-            <div
-                class="absolute bottom-32 left-32 w-40 h-40 bg-purple-300/30 rounded-full blur-2xl animate-pulse delay-2000"
-            ></div>
-            <!-- Additional floating elements for variety -->
-            <div
-                class="absolute top-1/3 right-1/4 w-16 h-16 bg-cyan-300/35 rounded-full blur-lg animate-pulse delay-3000"
-            ></div>
-            <div
-                class="absolute bottom-1/4 right-1/3 w-28 h-28 bg-blue-400/30 rounded-full blur-xl animate-pulse delay-4000"
+                class="absolute inset-0 bg-gradient-to-br from-slate-50/80 via-blue-50/75 to-indigo-100/80"
             ></div>
         </div>
-        <section
-            class="relative z-10 overflow-hidden pt-32 pb-16 bg-white/20 backdrop-blur-sm"
-        >
+        <section class="relative z-10 overflow-hidden pt-32 pb-16 bg-white/30">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid lg:grid-cols-2 gap-10 items-center">
                     <div data-aos="fade-right" data-aos-duration="1000">
@@ -510,10 +495,7 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section
-            id="features"
-            class="py-20 bg-white/20 backdrop-blur-sm relative z-10"
-        >
+        <section id="features" class="py-20 bg-white/30 relative z-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     class="text-center mb-16"
@@ -543,7 +525,7 @@ onUnmounted(() => {
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <!-- Benefit 1 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="100"
@@ -571,7 +553,7 @@ onUnmounted(() => {
 
                     <!-- Benefit 2 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="200"
@@ -600,7 +582,7 @@ onUnmounted(() => {
 
                     <!-- Benefit 3 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="300"
@@ -629,7 +611,7 @@ onUnmounted(() => {
 
                     <!-- Benefit 4 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="400"
@@ -658,7 +640,7 @@ onUnmounted(() => {
 
                     <!-- Benefit 5 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="500"
@@ -686,7 +668,7 @@ onUnmounted(() => {
 
                     <!-- Benefit 6 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 backdrop-blur-sm hover:-translate-y-2"
+                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="600"
@@ -714,10 +696,7 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section
-            id="divisions"
-            class="py-16 bg-white/50 backdrop-blur-sm relative z-10"
-        >
+        <section id="divisions" class="py-16 bg-white/50 relative z-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     class="text-center mb-12"
@@ -814,8 +793,7 @@ onUnmounted(() => {
                                         <path
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                                         /></svg
-                                    ><span class="font-medium text-white"
-                                        >6</span
+                                    ><span class="font-medium text-white">{{ division.duration || 6 }}</span
                                     >&nbsp;bulan
                                 </div>
                             </div>
@@ -850,10 +828,7 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section
-            id="testimonials"
-            class="py-20 bg-white/50 backdrop-blur-sm relative z-10"
-        >
+        <section id="testimonials" class="py-20 bg-white/50 relative z-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     class="text-center mb-14"
@@ -1016,10 +991,7 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section
-            id="faq"
-            class="py-20 bg-white/50 backdrop-blur-sm relative z-10"
-        >
+        <section id="faq" class="py-20 bg-white/50 relative z-10">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     class="text-center mb-12"

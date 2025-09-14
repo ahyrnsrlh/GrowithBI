@@ -57,12 +57,38 @@ class DivisionController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'job_description' => 'nullable|array',
+            'job_description.*' => 'nullable|string',
+            'requirements' => 'nullable|array',
+            'requirements.*' => 'nullable|string',
             'quota' => 'required|integer|min:1|max:100',
-            'requirements' => 'nullable|string',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'application_deadline' => 'nullable|date',
+            'selection_announcement' => 'nullable|date',
             'is_active' => 'boolean'
         ]);
 
-        Division::create($request->all());
+        $data = $request->all();
+        
+        // Convert arrays to JSON for storage - ensure we have proper arrays
+        if (isset($data['job_description']) && is_array($data['job_description'])) {
+            // Filter out empty values and ensure we have proper array structure
+            $job_descriptions = array_filter($data['job_description'], function($item) {
+                return !empty(trim($item));
+            });
+            $data['job_description'] = json_encode(array_values($job_descriptions));
+        }
+        
+        if (isset($data['requirements']) && is_array($data['requirements'])) {
+            // Filter out empty values and ensure we have proper array structure
+            $requirements = array_filter($data['requirements'], function($item) {
+                return !empty(trim($item));
+            });
+            $data['requirements'] = json_encode(array_values($requirements));
+        }
+
+        Division::create($data);
 
         return redirect()->route('admin.divisions.index')
             ->with('success', 'Divisi berhasil dibuat.');
@@ -105,12 +131,38 @@ class DivisionController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'job_description' => 'nullable|array',
+            'job_description.*' => 'nullable|string',
+            'requirements' => 'nullable|array',
+            'requirements.*' => 'nullable|string',
             'quota' => 'required|integer|min:1|max:100',
-            'requirements' => 'nullable|string',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'application_deadline' => 'nullable|date',
+            'selection_announcement' => 'nullable|date',
             'is_active' => 'boolean'
         ]);
 
-        $division->update($request->all());
+        $data = $request->all();
+        
+        // Convert arrays to JSON for storage - ensure we have proper arrays
+        if (isset($data['job_description']) && is_array($data['job_description'])) {
+            // Filter out empty values and ensure we have proper array structure
+            $job_descriptions = array_filter($data['job_description'], function($item) {
+                return !empty(trim($item));
+            });
+            $data['job_description'] = json_encode(array_values($job_descriptions));
+        }
+        
+        if (isset($data['requirements']) && is_array($data['requirements'])) {
+            // Filter out empty values and ensure we have proper array structure
+            $requirements = array_filter($data['requirements'], function($item) {
+                return !empty(trim($item));
+            });
+            $data['requirements'] = json_encode(array_values($requirements));
+        }
+
+        $division->update($data);
 
         return redirect()->route('admin.divisions.show', $division)
             ->with('success', 'Divisi berhasil diupdate.');
