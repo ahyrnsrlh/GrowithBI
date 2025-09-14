@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Division;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ApplicationController extends Controller
@@ -104,7 +105,7 @@ class ApplicationController extends Controller
             'status' => $request->status,
             'admin_notes' => $request->admin_notes,
             'reviewed_at' => now(),
-            'reviewed_by' => auth()->id() ?? 1 // For now, default to admin
+            'reviewed_by' => Auth::id() ?? 1 // For now, default to admin
         ]);
 
         return redirect()->back()->with('success', 'Status pendaftaran berhasil diupdate.');
@@ -123,7 +124,7 @@ class ApplicationController extends Controller
             'status' => $request->status,
             'admin_notes' => $request->admin_notes,
             'reviewed_at' => now(),
-            'reviewed_by' => auth()->id() ?? 1
+            'reviewed_by' => Auth::id() ?? 1
         ]);
 
         return redirect()->back()->with('success', 'Status pendaftaran berhasil diupdate secara bulk.');

@@ -139,8 +139,8 @@ const startFinishSequence = () => {
 
 /* Logo container animations */
 .logo-section {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
 }
 
 .logo-container {
@@ -161,8 +161,8 @@ const startFinishSequence = () => {
 }
 
 .logo-image {
-    width: 120px;
-    height: 120px;
+    width: 180px;
+    height: 180px;
     object-fit: contain;
     filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
     animation: logoFloat 3s ease-in-out infinite alternate;
@@ -307,13 +307,13 @@ const startFinishSequence = () => {
 
 @keyframes pulseRing {
     0% {
-        width: 120px;
-        height: 120px;
+        width: 150px;
+        height: 150px;
         opacity: 1;
     }
     100% {
-        width: 300px;
-        height: 300px;
+        width: 400px;
+        height: 400px;
         opacity: 0;
     }
 }
@@ -321,13 +321,13 @@ const startFinishSequence = () => {
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .logo-section {
-        width: 180px;
-        height: 180px;
+        width: 200px;
+        height: 200px;
     }
 
     .logo-image {
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
     }
 
     .company-name {
@@ -340,13 +340,13 @@ const startFinishSequence = () => {
 
     @keyframes pulseRing {
         0% {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             opacity: 1;
         }
         100% {
-            width: 250px;
-            height: 250px;
+            width: 320px;
+            height: 320px;
             opacity: 0;
         }
     }

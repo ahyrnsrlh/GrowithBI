@@ -398,19 +398,65 @@ onUnmounted(() => {
         </div>
     </nav>
 
-    <div
-        class="bg-gray-50 relative"
-        style="
-            background-image: radial-gradient(
-                circle at 1px 1px,
-                rgba(99, 102, 241, 0.1) 1px,
-                transparent 0
-            );
-            background-size: 20px 20px;
-        "
-    >
+    <div class="bg-white relative overflow-hidden">
+        <!-- Enhanced Background Pattern -->
+        <div class="absolute inset-0">
+            <!-- Main Grid Pattern -->
+            <div
+                class="absolute inset-0"
+                style="
+                    background-image: linear-gradient(
+                            rgba(37, 99, 235, 0.8) 2px,
+                            transparent 2px
+                        ),
+                        linear-gradient(
+                            90deg,
+                            rgba(37, 99, 235, 0.8) 2px,
+                            transparent 2px
+                        );
+                    background-size: 40px 40px;
+                "
+            ></div>
+            <!-- Secondary smaller grid for more detail -->
+            <div
+                class="absolute inset-0"
+                style="
+                    background-image: linear-gradient(
+                            rgba(67, 56, 202, 0.5) 1px,
+                            transparent 1px
+                        ),
+                        linear-gradient(
+                            90deg,
+                            rgba(67, 56, 202, 0.5) 1px,
+                            transparent 1px
+                        );
+                    background-size: 20px 20px;
+                "
+            ></div>
+            <!-- Background overlay -->
+            <div
+                class="absolute inset-0 bg-gradient-to-br from-slate-50/80 via-blue-50/80 to-indigo-100/80"
+            ></div>
+            <!-- Floating Orbs -->
+            <div
+                class="absolute top-20 left-20 w-32 h-32 bg-blue-300/30 rounded-full blur-xl animate-pulse"
+            ></div>
+            <div
+                class="absolute top-40 right-32 w-24 h-24 bg-indigo-300/40 rounded-full blur-lg animate-pulse delay-1000"
+            ></div>
+            <div
+                class="absolute bottom-32 left-32 w-40 h-40 bg-purple-300/30 rounded-full blur-2xl animate-pulse delay-2000"
+            ></div>
+            <!-- Additional floating elements for variety -->
+            <div
+                class="absolute top-1/3 right-1/4 w-16 h-16 bg-cyan-300/35 rounded-full blur-lg animate-pulse delay-3000"
+            ></div>
+            <div
+                class="absolute bottom-1/4 right-1/3 w-28 h-28 bg-blue-400/30 rounded-full blur-xl animate-pulse delay-4000"
+            ></div>
+        </div>
         <section
-            class="relative overflow-hidden pt-32 pb-16 bg-gradient-to-br from-blue-50/90 via-white/90 to-indigo-50/90"
+            class="relative z-10 overflow-hidden pt-32 pb-16 bg-white/20 backdrop-blur-sm"
         >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid lg:grid-cols-2 gap-10 items-center">
@@ -464,7 +510,10 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section id="features" class="py-20 bg-white">
+        <section
+            id="features"
+            class="py-20 bg-white/20 backdrop-blur-sm relative z-10"
+        >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     class="text-center mb-16"
@@ -665,7 +714,10 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section id="divisions" class="py-16 bg-white">
+        <section
+            id="divisions"
+            class="py-16 bg-white/50 backdrop-blur-sm relative z-10"
+        >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     class="text-center mb-12"
@@ -690,7 +742,7 @@ onUnmounted(() => {
                     <div
                         v-for="(division, index) in divisions"
                         :key="division.id"
-                        class="group bg-white rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 border border-gray-100 overflow-hidden"
+                        class="group bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2 border border-blue-500/20 overflow-hidden"
                         data-aos="zoom-in"
                         data-aos-duration="600"
                         :data-aos-delay="index * 100"
@@ -701,19 +753,19 @@ onUnmounted(() => {
                                     class="w-32 h-32 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
                                 >
                                     <img
-                                        src="/storage/BI_Logo.png"
+                                        src="/BI WHITE.png"
                                         alt="Bank Indonesia Logo"
-                                        class="w-full h-full object-contain"
+                                        class="w-full h-full object-contain filter drop-shadow-lg"
                                     />
                                 </div>
                             </div>
                             <h3
-                                class="text-lg font-bold text-gray-900 mb-2 text-center leading-tight"
+                                class="text-lg font-bold text-white mb-2 text-center leading-tight"
                             >
                                 {{ division.name }}
                             </h3>
                             <p
-                                class="text-gray-600 mb-4 text-center leading-relaxed text-sm line-clamp-3"
+                                class="text-blue-100 mb-4 text-center leading-relaxed text-sm line-clamp-3"
                             >
                                 {{ division.description }}
                             </p>
@@ -722,8 +774,8 @@ onUnmounted(() => {
                                     :class="[
                                         'px-2.5 py-1 rounded-full text-xs font-medium',
                                         division.is_active
-                                            ? 'bg-green-100 text-green-700'
-                                            : 'bg-gray-100 text-gray-600',
+                                            ? 'bg-green-500/20 text-green-200 border border-green-400/30'
+                                            : 'bg-gray-500/20 text-gray-200 border border-gray-400/30',
                                     ]"
                                     >{{
                                         division.is_active
@@ -734,10 +786,10 @@ onUnmounted(() => {
                             </div>
                         </div>
                         <div
-                            class="px-6 pb-6 border-t border-gray-50 bg-gray-50/30"
+                            class="px-6 pb-6 border-t border-blue-500/20 bg-blue-800/30"
                         >
                             <div
-                                class="flex items-center justify-center gap-4 mb-4 pt-4 text-xs text-gray-600"
+                                class="flex items-center justify-center gap-4 mb-4 pt-4 text-xs text-blue-200"
                             >
                                 <div class="flex items-center">
                                     <svg
@@ -748,7 +800,7 @@ onUnmounted(() => {
                                         <path
                                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                                         /></svg
-                                    ><span class="font-medium">{{
+                                    ><span class="font-medium text-white">{{
                                         division.quota
                                     }}</span
                                     >&nbsp;posisi
@@ -762,7 +814,8 @@ onUnmounted(() => {
                                         <path
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                                         /></svg
-                                    ><span class="font-medium">6</span
+                                    ><span class="font-medium text-white"
+                                        >6</span
                                     >&nbsp;bulan
                                 </div>
                             </div>
@@ -770,7 +823,7 @@ onUnmounted(() => {
                                 :href="
                                     route('public.division.detail', division.id)
                                 "
-                                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-lg font-medium text-center transition block text-sm hover:shadow-md"
+                                class="w-full bg-white hover:bg-blue-50 text-blue-700 py-2.5 px-4 rounded-lg font-medium text-center transition block text-sm hover:shadow-md border border-white/20"
                                 >Lihat Detail</Link
                             >
                         </div>
@@ -797,7 +850,10 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section id="testimonials" class="py-20 bg-white">
+        <section
+            id="testimonials"
+            class="py-20 bg-white/50 backdrop-blur-sm relative z-10"
+        >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     class="text-center mb-14"
@@ -960,7 +1016,10 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section id="faq" class="py-20 bg-white">
+        <section
+            id="faq"
+            class="py-20 bg-white/50 backdrop-blur-sm relative z-10"
+        >
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     class="text-center mb-12"
@@ -1139,7 +1198,7 @@ onUnmounted(() => {
 
         <footer
             id="contact"
-            class="bg-gradient-to-br from-blue-800 via-blue-900 to-indigo-900 text-white py-16"
+            class="bg-gradient-to-br from-blue-800 via-blue-900 to-indigo-900 text-white py-16 relative z-10"
         >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
