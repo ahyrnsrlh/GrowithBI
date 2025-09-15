@@ -84,25 +84,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/create-application', [ProfileController::class, 'createApplication'])->name('profile.create-application');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // Logbook routes for accepted participants
-    Route::get('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'index'])->name('profile.logbooks.index');
-    Route::get('/profile/logbooks/create', [App\Http\Controllers\LogbookController::class, 'create'])->name('profile.logbooks.create');
+    // Logbook store route (create logbook from profile page)
     Route::post('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'store'])->name('profile.logbooks.store');
-    Route::get('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'show'])->name('profile.logbooks.show');
-    Route::get('/profile/logbooks/{logbook}/edit', [App\Http\Controllers\LogbookController::class, 'edit'])->name('profile.logbooks.edit');
-    Route::patch('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'update'])->name('profile.logbooks.update');
-    Route::delete('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'destroy'])->name('profile.logbooks.destroy');
-    Route::post('/profile/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('profile.logbooks.comments.store');
     
-    // Reports routes for accepted participants
-    Route::get('/profile/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'index'])->name('profile.reports.index');
-    Route::get('/profile/reports/create', [App\Http\Controllers\Peserta\PesertaReportController::class, 'create'])->name('profile.reports.create');
+    // Reports store route (create report from profile page)
     Route::post('/profile/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'store'])->name('profile.reports.store');
-    Route::get('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'show'])->name('profile.reports.show');
-    Route::get('/profile/reports/{report}/download', [App\Http\Controllers\Peserta\PesertaReportController::class, 'download'])->name('profile.reports.download');
-    Route::get('/profile/reports/{report}/edit', [App\Http\Controllers\Peserta\PesertaReportController::class, 'edit'])->name('profile.reports.edit');
-    Route::put('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'update'])->name('profile.reports.update');
-    Route::delete('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'destroy'])->name('profile.reports.destroy');
     
     // Acceptance Letter routes
     Route::post('/applications/{application}/acceptance-letter/upload', [App\Http\Controllers\AcceptanceLetterController::class, 'upload'])->name('acceptance-letter.upload');
@@ -116,8 +102,9 @@ Route::middleware('auth')->group(function () {
 // Peserta Routes (require peserta role)
 Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [PesertaDashboardController::class, 'index'])->name('dashboard');
-    Route::resource('logbooks', App\Http\Controllers\LogbookController::class);
-    Route::post('/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbooks.comments.store');
+    // Logbook routes moved to /profile/logbooks
+    // Route::resource('logbooks', App\Http\Controllers\LogbookController::class);
+    // Route::post('/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbooks.comments.store');
     
     // Reports management for participants
     Route::resource('reports', App\Http\Controllers\Peserta\PesertaReportController::class);

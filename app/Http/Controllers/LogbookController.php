@@ -57,17 +57,23 @@ class LogbookController extends Controller
             'revision_logbooks' => $logbooks->where('status', 'revision')->count()
         ];
 
-        return Inertia::render('Peserta/Logbooks/Index', [
+        return Inertia::render('Profile/Logbooks/Index', [
             'logbooks' => $logbooks->map(function ($logbook) {
                 return [
                     'id' => $logbook->id,
                     'title' => $logbook->title,
                     'date' => $logbook->date,
+                    'description' => $logbook->activities, // Map activities to description for Vue component
                     'activities' => $logbook->activities,
+                    'learning_points' => $logbook->learning_points,
+                    'challenges' => $logbook->challenges,
                     'duration' => $logbook->duration,
+                    'hours' => $logbook->duration, // Map duration to hours for Vue component
                     'status' => $logbook->status,
                     'attachments' => $logbook->attachments ? json_decode($logbook->attachments, true) : [],
+                    'comments' => $logbook->comments, // Include full comments relation
                     'comments_count' => $logbook->comments->count(),
+                    'division' => $logbook->division, // Include division data
                     'created_at' => $logbook->created_at,
                     'updated_at' => $logbook->updated_at
                 ];
@@ -89,7 +95,7 @@ class LogbookController extends Controller
             ->first();
             
         if (!$acceptedApplication) {
-            return redirect()->route('peserta.logbooks.index')
+            return redirect()->route('profile.edit')
                 ->with('error', 'Anda belum memiliki status magang yang diterima.');
         }
 
@@ -149,9 +155,9 @@ class LogbookController extends Controller
 
         $logbook = Logbook::create([
             'user_id' => $user->id,
-            'application_id' => $acceptedApplication->id,
             'division_id' => $acceptedApplication->division_id,
             'date' => $request->date,
+            'time_in' => $request->time_in ?? '08:00:00', // Default time_in if not provided
             'title' => $request->title,
             'activities' => $request->activities,
             'learning_points' => $request->learning_points,
@@ -163,7 +169,7 @@ class LogbookController extends Controller
 
         $message = $request->status === 'draft' ? 'Logbook berhasil disimpan sebagai draft.' : 'Logbook berhasil dikirim untuk review.';
         
-        return redirect()->route('peserta.logbooks.index')->with('success', $message);
+        return redirect()->route('profile.edit')->with('success', $message);
     }
 
     /**
@@ -267,7 +273,7 @@ class LogbookController extends Controller
 
         // Check if logbook can be edited
         if (!in_array($logbook->status, ['draft', 'revision'])) {
-            return redirect()->route('peserta.logbooks.index')
+            return redirect()->route('profile.edit')
                 ->with('error', 'Logbook yang sudah disubmit atau disetujui tidak dapat diedit.');
         }
 
@@ -303,15 +309,16 @@ class LogbookController extends Controller
         $logbook->update([
             'title' => $request->title,
             'date' => $request->date,
-            'activity' => $request->activities,
-            'learning_outcome' => $request->learning_points,
+            'time_in' => $request->time_in ?? $logbook->time_in ?? '08:00:00',
+            'activities' => $request->activities,
+            'learning_points' => $request->learning_points,
             'duration' => $request->duration,
             'status' => $request->status,
         ]);
 
         $message = $request->status === 'draft' ? 'Logbook berhasil diperbarui sebagai draft.' : 'Logbook berhasil diperbarui dan dikirim untuk review.';
         
-        return redirect()->route('peserta.logbooks.index')->with('success', $message);
+        return redirect()->route('profile.edit')->with('success', $message);
     }
 
     /**
@@ -328,7 +335,7 @@ class LogbookController extends Controller
 
         // Only allow deletion of draft logbooks
         if ($logbook->status !== 'draft') {
-            return redirect()->route('peserta.logbooks.index')
+            return redirect()->route('profile.edit')
                 ->with('error', 'Hanya logbook dengan status draft yang dapat dihapus.');
         }
 
@@ -344,7 +351,7 @@ class LogbookController extends Controller
 
         $logbook->delete();
 
-        return redirect()->route('peserta.logbooks.index')
+        return redirect()->route('profile.edit')
             ->with('success', 'Logbook berhasil dihapus.');
     }
 

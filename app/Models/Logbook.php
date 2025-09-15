@@ -11,7 +11,6 @@ class Logbook extends Model
 {
     protected $fillable = [
         'user_id',
-        'application_id',
         'division_id',
         'reviewer_id',
         'title',
@@ -118,12 +117,12 @@ class Logbook extends Model
 
     public function getLearningPointsAttribute()
     {
-        return $this->learning_outcome;
+        return $this->attributes['learning_points'] ?? null;
     }
 
     public function setLearningPointsAttribute($value)
     {
-        $this->attributes['learning_outcome'] = $value;
+        $this->attributes['learning_points'] = $value;
     }
 
     public function getDurationFormattedAttribute()

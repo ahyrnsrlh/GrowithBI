@@ -577,8 +577,8 @@
                                             harian selama masa magang
                                         </p>
                                     </div>
-                                    <Link
-                                        :href="route('profile.logbooks.create')"
+                                    <button
+                                        @click="showCreateLogbookModal = true"
                                         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
                                     >
                                         <svg
@@ -595,7 +595,7 @@
                                             />
                                         </svg>
                                         Tambah Logbook
-                                    </Link>
+                                    </button>
                                 </div>
                             </div>
 
@@ -758,7 +758,10 @@
 
                             <!-- Content -->
                             <div class="p-6">
-                                <div class="text-center py-12">
+                                <div
+                                    v-if="logbooks.length === 0"
+                                    class="text-center py-12"
+                                >
                                     <svg
                                         class="mx-auto h-12 w-12 text-gray-400 mb-4"
                                         fill="none"
@@ -781,8 +784,8 @@
                                         Mulai catat kegiatan harian Anda dengan
                                         membuat logbook pertama.
                                     </p>
-                                    <Link
-                                        :href="route('profile.logbooks.create')"
+                                    <button
+                                        @click="showCreateLogbookModal = true"
                                         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                                     >
                                         <svg
@@ -799,7 +802,161 @@
                                             />
                                         </svg>
                                         Buat Logbook
-                                    </Link>
+                                    </button>
+                                </div>
+
+                                <!-- Logbooks List -->
+                                <div v-else class="space-y-4">
+                                    <div
+                                        v-for="logbook in logbooks"
+                                        :key="logbook.id"
+                                        class="bg-gray-50 rounded-lg p-6 border border-gray-200 hover:border-blue-300 transition-colors"
+                                    >
+                                        <div
+                                            class="flex items-start justify-between"
+                                        >
+                                            <div class="flex-1">
+                                                <div
+                                                    class="flex items-center space-x-3 mb-3"
+                                                >
+                                                    <h4
+                                                        class="text-lg font-semibold text-gray-900"
+                                                    >
+                                                        {{
+                                                            formatDate(
+                                                                logbook.date
+                                                            )
+                                                        }}
+                                                    </h4>
+                                                    <span
+                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                                                        :class="{
+                                                            'bg-yellow-100 text-yellow-800':
+                                                                logbook.status ===
+                                                                'submitted',
+                                                            'bg-green-100 text-green-800':
+                                                                logbook.status ===
+                                                                'approved',
+                                                            'bg-red-100 text-red-800':
+                                                                logbook.status ===
+                                                                'revision',
+                                                            'bg-gray-100 text-gray-800':
+                                                                logbook.status ===
+                                                                'draft',
+                                                        }"
+                                                    >
+                                                        {{
+                                                            logbook.status ===
+                                                            "submitted"
+                                                                ? "Pending"
+                                                                : logbook.status ===
+                                                                  "approved"
+                                                                ? "Disetujui"
+                                                                : logbook.status ===
+                                                                  "revision"
+                                                                ? "Revisi"
+                                                                : "Draft"
+                                                        }}
+                                                    </span>
+                                                </div>
+
+                                                <h5
+                                                    class="text-md font-medium text-gray-800 mb-2"
+                                                >
+                                                    {{ logbook.title }}
+                                                </h5>
+
+                                                <p
+                                                    class="text-gray-600 mb-3 line-clamp-2"
+                                                >
+                                                    {{ logbook.activities }}
+                                                </p>
+
+                                                <div
+                                                    class="flex items-center space-x-4 text-sm text-gray-500"
+                                                >
+                                                    <span
+                                                        class="flex items-center"
+                                                    >
+                                                        <svg
+                                                            class="w-4 h-4 mr-1"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                            />
+                                                        </svg>
+                                                        {{ logbook.duration }}
+                                                        jam
+                                                    </span>
+                                                    <span
+                                                        v-if="logbook.division"
+                                                        class="flex items-center"
+                                                    >
+                                                        <svg
+                                                            class="w-4 h-4 mr-1"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                                            />
+                                                        </svg>
+                                                        {{
+                                                            logbook.division
+                                                                .name
+                                                        }}
+                                                    </span>
+                                                    <span
+                                                        v-if="
+                                                            logbook.comments &&
+                                                            logbook.comments
+                                                                .length > 0
+                                                        "
+                                                        class="flex items-center"
+                                                    >
+                                                        <svg
+                                                            class="w-4 h-4 mr-1"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9.75 8A9.75 9.75 0 013 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75z"
+                                                            />
+                                                        </svg>
+                                                        {{
+                                                            logbook.comments
+                                                                .length
+                                                        }}
+                                                        komentar
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- View More Button -->
+                                    <div
+                                        v-if="logbooks.length >= 5"
+                                        class="text-center pt-4"
+                                    >
+                                        <p class="text-sm text-gray-500">
+                                            Menampilkan 5 logbook terbaru
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -823,8 +980,8 @@
                                             Anda
                                         </p>
                                     </div>
-                                    <Link
-                                        :href="route('profile.reports.create')"
+                                    <button
+                                        @click="showCreateReportModal = true"
                                         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
                                     >
                                         <svg
@@ -841,7 +998,7 @@
                                             />
                                         </svg>
                                         Buat Laporan
-                                    </Link>
+                                    </button>
                                 </div>
                             </div>
 
@@ -868,7 +1025,10 @@
                                                     Total Laporan
                                                 </p>
                                                 <p class="text-3xl font-bold">
-                                                    0
+                                                    {{
+                                                        reportStats?.total_reports ||
+                                                        0
+                                                    }}
                                                 </p>
                                             </div>
                                             <div
@@ -903,7 +1063,10 @@
                                                     Pending
                                                 </p>
                                                 <p class="text-3xl font-bold">
-                                                    0
+                                                    {{
+                                                        reportStats?.pending_reports ||
+                                                        0
+                                                    }}
                                                 </p>
                                             </div>
                                             <div
@@ -938,7 +1101,10 @@
                                                     Disetujui
                                                 </p>
                                                 <p class="text-3xl font-bold">
-                                                    0
+                                                    {{
+                                                        reportStats?.approved_reports ||
+                                                        0
+                                                    }}
                                                 </p>
                                             </div>
                                             <div
@@ -973,7 +1139,10 @@
                                                     Perlu Revisi
                                                 </p>
                                                 <p class="text-3xl font-bold">
-                                                    0
+                                                    {{
+                                                        reportStats?.revision_reports ||
+                                                        0
+                                                    }}
                                                 </p>
                                             </div>
                                             <div
@@ -1000,7 +1169,10 @@
 
                             <!-- Content -->
                             <div class="p-6">
-                                <div class="text-center py-12">
+                                <div
+                                    v-if="!reports || reports.length === 0"
+                                    class="text-center py-12"
+                                >
                                     <svg
                                         class="mx-auto h-12 w-12 text-gray-400 mb-4"
                                         fill="none"
@@ -1023,8 +1195,8 @@
                                         Upload laporan akhir berdasarkan
                                         kegiatan magang Anda.
                                     </p>
-                                    <Link
-                                        :href="route('profile.reports.create')"
+                                    <button
+                                        @click="showCreateReportModal = true"
                                         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                                     >
                                         <svg
@@ -1041,11 +1213,488 @@
                                             />
                                         </svg>
                                         Buat Laporan
-                                    </Link>
+                                    </button>
+                                </div>
+
+                                <!-- Reports List -->
+                                <div
+                                    v-else-if="reports && reports.length > 0"
+                                    class="space-y-4"
+                                >
+                                    <div
+                                        v-for="report in reports"
+                                        :key="report?.id || Math.random()"
+                                        class="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:bg-gray-100 transition-colors"
+                                        v-if="report && report.title"
+                                    >
+                                        <div
+                                            class="flex items-start justify-between"
+                                        >
+                                            <div class="flex-1">
+                                                <div
+                                                    class="flex items-center space-x-3 mb-2"
+                                                >
+                                                    <h4
+                                                        class="font-medium text-gray-900"
+                                                    >
+                                                        {{ report.title || 'Untitled' }}
+                                                    </h4>
+                                                    <span
+                                                        :class="[
+                                                            'px-2 py-1 text-xs font-medium rounded-full',
+                                                            (report?.status || 'submitted') ===
+                                                            'submitted'
+                                                                ? 'bg-yellow-100 text-yellow-800'
+                                                                : (report?.status || 'submitted') ===
+                                                                  'approved'
+                                                                ? 'bg-green-100 text-green-800'
+                                                                : 'bg-red-100 text-red-800',
+                                                        ]"
+                                                    >
+                                                        {{
+                                                            (report?.status || 'submitted') ===
+                                                            "submitted"
+                                                                ? "Pending"
+                                                                : (report?.status || 'submitted') ===
+                                                                  "approved"
+                                                                ? "Disetujui"
+                                                                : "Perlu Revisi"
+                                                        }}
+                                                    </span>
+                                                </div>
+                                                <p
+                                                    class="text-gray-600 text-sm mb-2"
+                                                >
+                                                    {{ report?.description || 'No description' }}
+                                                </p>
+                                                <div
+                                                    class="flex items-center text-sm text-gray-500"
+                                                >
+                                                    <svg
+                                                        class="w-4 h-4 mr-1"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                        ></path>
+                                                    </svg>
+                                                    Dibuat:
+                                                    {{
+                                                        report?.created_at ? formatDate(
+                                                            report.created_at
+                                                        ) : 'N/A'
+                                                    }}
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="flex items-center space-x-2"
+                                            >
+                                                <a
+                                                    v-if="report?.file_path"
+                                                    :href="`/storage/${report.file_path}`"
+                                                    target="_blank"
+                                                    class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                                >
+                                                    <svg
+                                                        class="w-4 h-4 inline mr-1"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                        ></path>
+                                                    </svg>
+                                                    Download
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Logbook Modal -->
+        <div
+            v-if="showCreateLogbookModal"
+            class="fixed inset-0 z-50 overflow-y-auto"
+            @click.self="showCreateLogbookModal = false"
+        >
+            <div
+                class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center"
+            >
+                <div
+                    class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+                ></div>
+
+                <div
+                    class="relative inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                >
+                    <!-- Modal Header -->
+                    <div
+                        class="flex items-center justify-between mb-6 pb-4 border-b"
+                    >
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">
+                                Tambah Logbook Harian
+                            </h3>
+                            <p class="text-gray-600 mt-1">
+                                Catat aktivitas dan pencapaian hari ini
+                            </p>
+                        </div>
+                        <button
+                            @click="showCreateLogbookModal = false"
+                            class="text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            <svg
+                                class="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Modal Form -->
+                    <form @submit.prevent="submitLogbook" class="space-y-6">
+                        <!-- Date and Hours Row -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label
+                                    for="date"
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Tanggal <span class="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="date"
+                                    id="date"
+                                    v-model="createLogbookForm.date"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    required
+                                />
+                                <div
+                                    v-if="createLogbookForm.errors.date"
+                                    class="mt-1 text-sm text-red-600"
+                                >
+                                    {{ createLogbookForm.errors.date }}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label
+                                    for="duration"
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Durasi (jam)
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="number"
+                                    id="duration"
+                                    v-model="createLogbookForm.duration"
+                                    min="1"
+                                    max="12"
+                                    step="0.5"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="8"
+                                    required
+                                />
+                                <div
+                                    v-if="createLogbookForm.errors.duration"
+                                    class="mt-1 text-sm text-red-600"
+                                >
+                                    {{ createLogbookForm.errors.duration }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Title -->
+                        <div>
+                            <label
+                                for="title"
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                            >
+                                Judul Aktivitas
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="title"
+                                v-model="createLogbookForm.title"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Contoh: Pengembangan Fitur Login System"
+                                required
+                            />
+                            <div
+                                v-if="createLogbookForm.errors.title"
+                                class="mt-1 text-sm text-red-600"
+                            >
+                                {{ createLogbookForm.errors.title }}
+                            </div>
+                        </div>
+
+                        <!-- Activity Description -->
+                        <div>
+                            <label
+                                for="activities"
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                            >
+                                Deskripsi Aktivitas
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <textarea
+                                id="activities"
+                                v-model="createLogbookForm.activities"
+                                rows="4"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Jelaskan secara detail aktivitas yang telah dilakukan hari ini..."
+                                required
+                            ></textarea>
+                            <div
+                                v-if="createLogbookForm.errors.activities"
+                                class="mt-1 text-sm text-red-600"
+                            >
+                                {{ createLogbookForm.errors.activities }}
+                            </div>
+                        </div>
+
+                        <!-- Learning Points -->
+                        <div>
+                            <label
+                                for="learning_points"
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                            >
+                                Pembelajaran yang Didapat
+                            </label>
+                            <textarea
+                                id="learning_points"
+                                v-model="createLogbookForm.learning_points"
+                                rows="3"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Apa yang Anda pelajari hari ini..."
+                            ></textarea>
+                            <div
+                                v-if="createLogbookForm.errors.learning_points"
+                                class="mt-1 text-sm text-red-600"
+                            >
+                                {{ createLogbookForm.errors.learning_points }}
+                            </div>
+                        </div>
+
+                        <!-- Challenges -->
+                        <div>
+                            <label
+                                for="challenges"
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                            >
+                                Kendala yang Dihadapi
+                            </label>
+                            <textarea
+                                id="challenges"
+                                v-model="createLogbookForm.challenges"
+                                rows="3"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Kendala atau kesulitan yang dihadapi..."
+                            ></textarea>
+                            <div
+                                v-if="createLogbookForm.errors.challenges"
+                                class="mt-1 text-sm text-red-600"
+                            >
+                                {{ createLogbookForm.errors.challenges }}
+                            </div>
+                        </div>
+
+                        <!-- Modal Actions -->
+                        <div class="flex justify-end space-x-3 pt-4 border-t">
+                            <button
+                                type="button"
+                                @click="showCreateLogbookModal = false"
+                                class="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="submit"
+                                :disabled="createLogbookForm.processing"
+                                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                            >
+                                <span v-if="createLogbookForm.processing"
+                                    >Menyimpan...</span
+                                >
+                                <span v-else>Simpan Logbook</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Report Modal -->
+        <div
+            v-if="showCreateReportModal"
+            class="fixed inset-0 z-50 overflow-y-auto"
+            @click.self="showCreateReportModal = false"
+        >
+            <div
+                class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center"
+            >
+                <div
+                    class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+                ></div>
+
+                <div
+                    class="relative inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                >
+                    <!-- Modal Header -->
+                    <div
+                        class="flex items-center justify-between mb-6 pb-4 border-b"
+                    >
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">
+                                Upload Laporan Akhir
+                            </h3>
+                            <p class="text-gray-600 mt-1">
+                                Upload laporan akhir berdasarkan kegiatan magang
+                                Anda
+                            </p>
+                        </div>
+                        <button
+                            @click="showCreateReportModal = false"
+                            class="text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            <svg
+                                class="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Report Form -->
+                    <form @submit.prevent="submitReport" class="space-y-6">
+                        <div>
+                            <label
+                                for="title"
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                            >
+                                Judul Laporan
+                            </label>
+                            <input
+                                v-model="reportForm.title"
+                                type="text"
+                                id="title"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Masukkan judul laporan"
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                for="description"
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                            >
+                                Deskripsi
+                            </label>
+                            <textarea
+                                v-model="reportForm.description"
+                                id="description"
+                                rows="4"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Jelaskan ringkasan laporan Anda"
+                            ></textarea>
+                        </div>
+
+                        <div>
+                            <label
+                                for="report_file"
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                            >
+                                File Laporan (PDF)
+                            </label>
+                            <input
+                                @change="handleFileChange"
+                                type="file"
+                                id="report_file"
+                                accept=".pdf"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                            <p class="text-sm text-gray-500 mt-1">
+                                File harus berformat PDF dan maksimal 10MB
+                            </p>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex justify-end gap-3 pt-4">
+                            <button
+                                type="button"
+                                @click="showCreateReportModal = false"
+                                class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="submit"
+                                :disabled="reportForm.processing"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                                <span v-if="reportForm.processing">
+                                    <svg
+                                        class="animate-spin -ml-1 mr-3 h-4 w-4 text-white inline"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            class="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            stroke-width="4"
+                                        ></circle>
+                                        <path
+                                            class="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                        ></path>
+                                    </svg>
+                                    Menyimpan...
+                                </span>
+                                <span v-else>Simpan Laporan</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1054,17 +1703,19 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from "vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import DocumentUpload from "@/Components/DocumentUpload.vue";
 import ApplicationCard from "@/Components/ApplicationCard.vue";
 
 const props = defineProps({
     user: Object,
-    applications: Array,
-    divisions: Array,
-    logbooks: Array,
-    logbookStats: Object,
+    applications: { type: Array, default: () => [] },
+    divisions: { type: Array, default: () => [] },
+    logbooks: { type: Array, default: () => [] },
+    logbookStats: { type: Object, default: () => ({}) },
+    reports: { type: Array, default: () => [] },
+    reportStats: { type: Object, default: () => ({}) },
     profileCompletion: Object,
     mustVerifyEmail: Boolean,
     status: String,
@@ -1079,6 +1730,12 @@ const editMode = ref(false);
 const showNotification = ref(false);
 const notificationType = ref("success");
 const notificationMessage = ref("");
+
+// Modal state for logbook creation
+const showCreateLogbookModal = ref(false);
+
+// Modal state for report creation
+const showCreateReportModal = ref(false);
 
 // Computed property to check if user has accepted application
 const hasAcceptedApplication = computed(() => {
@@ -1109,6 +1766,17 @@ const profileForm = useForm({
     university: user.university,
     major: user.major,
     semester: user.semester,
+});
+
+// Logbook creation form
+const createLogbookForm = useForm({
+    date: new Date().toISOString().split("T")[0], // Today's date
+    duration: 8,
+    title: "",
+    activities: "",
+    learning_points: "",
+    challenges: "",
+    status: "submitted", // Default to submitted
 });
 
 // Methods
@@ -1164,6 +1832,71 @@ const uploadPhoto = (event) => {
             .catch(() => {
                 showToast("error", "Gagal mengunggah foto!");
             });
+    }
+};
+
+const submitLogbook = () => {
+    createLogbookForm.post(route("profile.logbooks.store"), {
+        preserveScroll: true,
+        onSuccess: () => {
+            showCreateLogbookModal.value = false;
+            createLogbookForm.reset();
+            showToast("success", "Logbook berhasil ditambahkan!");
+            // Refresh the page to update logbook data
+            setTimeout(() => {
+                router.reload({ only: ["logbooks", "logbookStats"] });
+            }, 1000);
+        },
+        onError: (errors) => {
+            console.error("Logbook submission errors:", errors);
+            if (errors.error) {
+                showToast("error", errors.error);
+            } else if (errors.date) {
+                showToast("error", errors.date);
+            } else {
+                showToast(
+                    "error",
+                    "Gagal menambahkan logbook! Periksa semua field yang wajib diisi."
+                );
+            }
+        },
+    });
+};
+
+const submitReport = () => {
+    reportForm.post(route("profile.reports.store"), {
+        preserveScroll: true,
+        onSuccess: () => {
+            showCreateReportModal.value = false;
+            reportForm.reset();
+            showToast("success", "Laporan berhasil diupload!");
+            // Refresh the page to update report data
+            setTimeout(() => {
+                router.reload({ only: ["reports", "reportStats"] });
+            }, 1000);
+        },
+        onError: (errors) => {
+            console.error("Report submission errors:", errors);
+            if (errors.error) {
+                showToast("error", errors.error);
+            } else if (errors.title) {
+                showToast("error", errors.title);
+            } else if (errors.report_file) {
+                showToast("error", errors.report_file);
+            } else {
+                showToast(
+                    "error",
+                    "Gagal upload laporan! Periksa semua field yang wajib diisi."
+                );
+            }
+        },
+    });
+};
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        reportForm.report_file = file;
     }
 };
 

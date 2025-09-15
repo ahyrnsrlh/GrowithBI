@@ -14,6 +14,7 @@ use Inertia\Response;
 use App\Models\Application;
 use App\Models\Division;
 use App\Models\Logbook;
+use App\Models\Report;
 
 class ProfileController extends Controller
 {
@@ -60,6 +61,15 @@ class ProfileController extends Controller
             'average_hours' => 0
         ];
         
+        // Get reports data for accepted participants
+        $reports = collect();
+        $reportStats = [
+            'total_reports' => 0,
+            'pending_reports' => 0,
+            'approved_reports' => 0,
+            'revision_reports' => 0
+        ];
+        
         $acceptedApplication = $applications->where('status', 'diterima')->first();
         if ($acceptedApplication) {
             $logbooks = Logbook::where('user_id', $user->id)
@@ -74,8 +84,21 @@ class ProfileController extends Controller
                 'pending_logbooks' => $allLogbooks->where('status', 'submitted')->count(),
                 'approved_logbooks' => $allLogbooks->where('status', 'approved')->count(),
                 'revision_logbooks' => $allLogbooks->where('status', 'revision')->count(),
-                'total_hours' => $allLogbooks->sum('hours'),
-                'average_hours' => $allLogbooks->count() > 0 ? round($allLogbooks->avg('hours'), 1) : 0
+                'total_hours' => $allLogbooks->sum('duration'),
+                'average_hours' => $allLogbooks->count() > 0 ? round($allLogbooks->avg('duration'), 1) : 0
+            ];
+            
+            $reports = Report::where('user_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->limit(5)
+                ->get();
+                
+            $allReports = Report::where('user_id', $user->id)->get();
+            $reportStats = [
+                'total_reports' => $allReports->count(),
+                'pending_reports' => $allReports->where('status', 'submitted')->count(),
+                'approved_reports' => $allReports->where('status', 'approved')->count(),
+                'revision_reports' => $allReports->where('status', 'revision')->count()
             ];
         }
 
@@ -87,6 +110,8 @@ class ProfileController extends Controller
             'divisions' => $divisions,
             'logbooks' => $logbooks,
             'logbookStats' => $logbookStats,
+            'reports' => $reports,
+            'reportStats' => $reportStats,
             'profileCompletion' => $profileCompletion,
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),

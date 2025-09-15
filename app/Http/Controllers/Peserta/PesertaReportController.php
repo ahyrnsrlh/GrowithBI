@@ -150,7 +150,7 @@ class PesertaReportController extends Controller
                 'status' => 'submitted'
             ]);
 
-            return redirect()->route('profile.reports.index')
+            return redirect()->route('profile.edit')
                 ->with('success', 'Laporan berhasil diupload dan dikirim untuk review.');
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat mengupload laporan.')
@@ -200,7 +200,7 @@ class PesertaReportController extends Controller
         
         // Only allow editing if status is draft or revision
         if (!in_array($report->status, ['draft', 'revision'])) {
-            return redirect()->route('profile.reports.index')
+            return redirect()->route('profile.edit')
                 ->with('error', 'Laporan tidak dapat diedit karena sudah disubmit atau disetujui.');
         }
         
@@ -257,7 +257,7 @@ class PesertaReportController extends Controller
 
             $report->update($updateData);
 
-            return redirect()->route('profile.reports.index')
+            return redirect()->route('profile.edit')
                 ->with('success', 'Laporan berhasil diperbarui.');
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat memperbarui laporan.')
@@ -287,7 +287,7 @@ class PesertaReportController extends Controller
             // Delete report record
             $report->delete();
 
-            return redirect()->route('profile.reports.index')
+            return redirect()->route('profile.edit')
                 ->with('success', 'Laporan berhasil dihapus.');
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat menghapus laporan.');

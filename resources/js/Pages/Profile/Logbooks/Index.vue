@@ -231,8 +231,8 @@
                     Mulai catat kegiatan harian Anda dengan membuat logbook
                     pertama.
                 </p>
-                <Link
-                    :href="route('profile.logbooks.create')"
+                <button
+                    @click="showCreateModal = true"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                     <svg
@@ -249,7 +249,7 @@
                         />
                     </svg>
                     Buat Logbook
-                </Link>
+                </button>
             </div>
 
             <div v-else class="divide-y divide-gray-100">
@@ -523,25 +523,25 @@
                         <!-- Activity Description -->
                         <div>
                             <label
-                                for="description"
+                                for="activities"
                                 class="block text-sm font-medium text-gray-700 mb-2"
                             >
                                 Deskripsi Aktivitas
                                 <span class="text-red-500">*</span>
                             </label>
                             <textarea
-                                id="description"
-                                v-model="createForm.description"
+                                id="activities"
+                                v-model="createForm.activities"
                                 rows="6"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Jelaskan secara detail aktivitas yang telah dilakukan hari ini, termasuk tugas yang diselesaikan, kendala yang dihadapi, dan hasil yang dicapai..."
                                 required
                             ></textarea>
                             <div
-                                v-if="createForm.errors.description"
+                                v-if="createForm.errors.activities"
                                 class="mt-1 text-sm text-red-600"
                             >
-                                {{ createForm.errors.description }}
+                                {{ createForm.errors.activities }}
                             </div>
                         </div>
 
@@ -601,7 +601,10 @@ const createForm = useForm({
     date: new Date().toISOString().split("T")[0], // Today's date
     duration: 8,
     title: "",
-    description: "",
+    activities: "", // Changed from description to activities
+    learning_points: "",
+    challenges: "",
+    status: "submitted", // Default to submitted
 });
 
 const submitLogbook = () => {
