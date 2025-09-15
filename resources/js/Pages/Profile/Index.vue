@@ -1237,25 +1237,32 @@
                                                     <h4
                                                         class="font-medium text-gray-900"
                                                     >
-                                                        {{ report.title || 'Untitled' }}
+                                                        {{
+                                                            report.title ||
+                                                            "Untitled"
+                                                        }}
                                                     </h4>
                                                     <span
                                                         :class="[
                                                             'px-2 py-1 text-xs font-medium rounded-full',
-                                                            (report?.status || 'submitted') ===
+                                                            (report?.status ||
+                                                                'submitted') ===
                                                             'submitted'
                                                                 ? 'bg-yellow-100 text-yellow-800'
-                                                                : (report?.status || 'submitted') ===
+                                                                : (report?.status ||
+                                                                      'submitted') ===
                                                                   'approved'
                                                                 ? 'bg-green-100 text-green-800'
                                                                 : 'bg-red-100 text-red-800',
                                                         ]"
                                                     >
                                                         {{
-                                                            (report?.status || 'submitted') ===
+                                                            (report?.status ||
+                                                                "submitted") ===
                                                             "submitted"
                                                                 ? "Pending"
-                                                                : (report?.status || 'submitted') ===
+                                                                : (report?.status ||
+                                                                      "submitted") ===
                                                                   "approved"
                                                                 ? "Disetujui"
                                                                 : "Perlu Revisi"
@@ -1265,7 +1272,10 @@
                                                 <p
                                                     class="text-gray-600 text-sm mb-2"
                                                 >
-                                                    {{ report?.description || 'No description' }}
+                                                    {{
+                                                        report?.description ||
+                                                        "No description"
+                                                    }}
                                                 </p>
                                                 <div
                                                     class="flex items-center text-sm text-gray-500"
@@ -1285,9 +1295,11 @@
                                                     </svg>
                                                     Dibuat:
                                                     {{
-                                                        report?.created_at ? formatDate(
-                                                            report.created_at
-                                                        ) : 'N/A'
+                                                        report?.created_at
+                                                            ? formatDate(
+                                                                  report.created_at
+                                                              )
+                                                            : "N/A"
                                                     }}
                                                 </div>
                                             </div>
