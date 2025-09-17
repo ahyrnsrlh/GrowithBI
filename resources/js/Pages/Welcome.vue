@@ -499,202 +499,309 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section id="features" class="py-20 bg-white/30 relative z-10">
+        <section id="features" class="py-24 bg-white/50 relative z-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
-                    class="text-center mb-16"
+                    class="text-center mb-20"
                     data-aos="fade-up"
                     data-aos-duration="800"
                 >
                     <div
-                        class="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6"
+                        class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm border border-blue-200/50 text-blue-700 px-6 py-3 rounded-full text-sm font-semibold mb-8 shadow-lg hover:shadow-xl transition-all duration-300"
                     >
-                        ✨ Benefit Magang di Bank Indonesia
+                        <div
+                            class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                        ></div>
+                        Benefit Magang di Bank Indonesia
                     </div>
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    <h2
+                        class="text-4xl md:text-5xl font-bold mb-6 leading-tight"
+                    >
+                        <span class="text-gray-900">Apa yang </span>
                         <span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600"
-                            >Apa yang Bank Indonesia Tawarkan untuk Kamu?</span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600"
+                            >Bank Indonesia</span
                         >
+                        <br class="hidden sm:block" />
+                        <span class="text-gray-900">Tawarkan untuk Kamu?</span>
                     </h2>
                     <p
-                        class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed"
+                        class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed font-light"
                     >
                         Raih pengalaman magang terbaik dengan berbagai
-                        keuntungan eksklusif yang akan mengakselerasi karier
-                        Anda
+                        keuntungan eksklusif yang akan mengakselerasi karier dan
+                        membuka peluang masa depan yang cemerlang
                     </p>
                 </div>
 
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
                     <!-- Benefit 1 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
+                        class="group relative bg-white/70 backdrop-blur-lg rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 border border-white/40 hover:border-blue-200/50 hover:-translate-y-3 overflow-hidden"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="100"
                     >
+                        <!-- Background gradient on hover -->
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
+                            class="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        ></div>
+
+                        <div class="relative z-10">
+                            <div
+                                class="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg"
                             >
-                                <path
-                                    d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                                />
-                            </svg>
+                                <svg
+                                    class="w-7 h-7 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6"
+                                    />
+                                </svg>
+                            </div>
+                            <h3
+                                class="text-xl font-bold text-gray-900 mb-4 group-hover:text-blue-700 transition-colors duration-300"
+                            >
+                                Pengalaman Kerja Nyata
+                            </h3>
+                            <p
+                                class="text-gray-600 leading-relaxed text-sm font-medium"
+                            >
+                                Terlibat langsung dalam proyek-proyek riil Bank
+                                Indonesia dan rasakan atmosfer kerja profesional
+                                yang sesungguhnya.
+                            </p>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Pengalaman Kerja Nyata
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Belajar langsung dari dunia kerja profesional.
-                        </p>
                     </div>
 
                     <!-- Benefit 2 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
+                        class="group relative bg-white/70 backdrop-blur-lg rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 border border-white/40 hover:border-emerald-200/50 hover:-translate-y-3 overflow-hidden"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="200"
                     >
+                        <!-- Background gradient on hover -->
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
+                            class="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-green-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        ></div>
+
+                        <div class="relative z-10">
+                            <div
+                                class="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg"
                             >
-                                <path
-                                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                                />
-                            </svg>
+                                <svg
+                                    class="w-7 h-7 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                                    />
+                                </svg>
+                            </div>
+                            <h3
+                                class="text-xl font-bold text-gray-900 mb-4 group-hover:text-emerald-700 transition-colors duration-300"
+                            >
+                                Pengembangan Skill & Kompetensi
+                            </h3>
+                            <p
+                                class="text-gray-600 leading-relaxed text-sm font-medium"
+                            >
+                                Kembangkan keahlian teknis dan soft skill
+                                melalui pelatihan berkualitas dari para ekspert
+                                industri perbankan.
+                            </p>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Pengembangan Skill & Kompetensi
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Asah kemampuan teknis dan soft skill untuk masa
-                            depan.
-                        </p>
                     </div>
 
                     <!-- Benefit 3 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
+                        class="group relative bg-white/70 backdrop-blur-lg rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 border border-white/40 hover:border-purple-200/50 hover:-translate-y-3 overflow-hidden"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="300"
                     >
+                        <!-- Background gradient on hover -->
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
+                            class="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-pink-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        ></div>
+
+                        <div class="relative z-10">
+                            <div
+                                class="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg"
                             >
-                                <path
-                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                                />
-                            </svg>
+                                <svg
+                                    class="w-7 h-7 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                                    />
+                                </svg>
+                            </div>
+                            <h3
+                                class="text-xl font-bold text-gray-900 mb-4 group-hover:text-purple-700 transition-colors duration-300"
+                            >
+                                Bimbingan dari Mentor Berpengalaman
+                            </h3>
+                            <p
+                                class="text-gray-600 leading-relaxed text-sm font-medium"
+                            >
+                                Dapatkan mentoring personal dari senior banker
+                                berpengalaman untuk mengoptimalkan potensi
+                                karier Anda.
+                            </p>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Bimbingan dari Mentor Berpengalaman
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Dapatkan arahan langsung dari para ahli di
-                            bidangnya.
-                        </p>
                     </div>
 
                     <!-- Benefit 4 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
+                        class="group relative bg-white/70 backdrop-blur-lg rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 border border-white/40 hover:border-orange-200/50 hover:-translate-y-3 overflow-hidden"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="400"
                     >
+                        <!-- Background gradient on hover -->
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
+                            class="absolute inset-0 bg-gradient-to-br from-orange-50/50 to-red-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        ></div>
+
+                        <div class="relative z-10">
+                            <div
+                                class="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg"
                             >
-                                <path
-                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20a3 3 0 01-3-3v-2a3 3 0 013-3m3-3a3 3 0 110-6 3 3 0 010 6m0 3a3 3 0 110-6 3 3 0 010 6m3 3h1m-4 0h1m-4 0v-2a3 3 0 013-3m-3 3H7m3-3v3"
-                                />
-                            </svg>
+                                <svg
+                                    class="w-7 h-7 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <h3
+                                class="text-xl font-bold text-gray-900 mb-4 group-hover:text-orange-700 transition-colors duration-300"
+                            >
+                                Jaringan & Relasi Profesional
+                            </h3>
+                            <p
+                                class="text-gray-600 leading-relaxed text-sm font-medium"
+                            >
+                                Bangun networking yang kuat dengan profesional
+                                perbankan dan buka peluang karier di masa depan.
+                            </p>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Jaringan & Relasi Profesional
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Bangun koneksi berharga untuk karier yang lebih
-                            luas.
-                        </p>
                     </div>
 
                     <!-- Benefit 5 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
+                        class="group relative bg-white/70 backdrop-blur-lg rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 border border-white/40 hover:border-teal-200/50 hover:-translate-y-3 overflow-hidden"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="500"
                     >
+                        <!-- Background gradient on hover -->
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
+                            class="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-cyan-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        ></div>
+
+                        <div class="relative z-10">
+                            <div
+                                class="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg"
                             >
-                                <path
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
+                                <svg
+                                    class="w-7 h-7 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                                    />
+                                </svg>
+                            </div>
+                            <h3
+                                class="text-xl font-bold text-gray-900 mb-4 group-hover:text-teal-700 transition-colors duration-300"
+                            >
+                                Sertifikat Magang Resmi
+                            </h3>
+                            <p
+                                class="text-gray-600 leading-relaxed text-sm font-medium"
+                            >
+                                Raih sertifikat resmi sebagai bukti pengalaman
+                                magang di institusi keuangan terpercaya di
+                                Indonesia.
+                            </p>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Sertifikat Magang Resmi
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Raih sertifikat resmi sebagai bukti pengalamanmu.
-                        </p>
                     </div>
 
                     <!-- Benefit 6 -->
                     <div
-                        class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/20 hover:-translate-y-2"
+                        class="group relative bg-white/70 backdrop-blur-lg rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 border border-white/40 hover:border-indigo-200/50 hover:-translate-y-3 overflow-hidden"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="600"
                     >
+                        <!-- Background gradient on hover -->
                         <div
-                            class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
-                        >
-                            <svg
-                                class="w-8 h-8 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
+                            class="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-blue-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        ></div>
+
+                        <div class="relative z-10">
+                            <div
+                                class="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg"
                             >
-                                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
+                                <svg
+                                    class="w-7 h-7 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <h3
+                                class="text-xl font-bold text-gray-900 mb-4 group-hover:text-indigo-700 transition-colors duration-300"
+                            >
+                                Uang Saku Magang
+                            </h3>
+                            <p
+                                class="text-gray-600 leading-relaxed text-sm font-medium"
+                            >
+                                Dapatkan dukungan finansial berupa uang saku
+                                selama program magang untuk membantu kebutuhan
+                                harian Anda.
+                            </p>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Uang Saku Magang
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Mendapatkan dukungan finansial berupa uang saku
-                            selama program magang berlangsung.
-                        </p>
                     </div>
                 </div>
             </div>
@@ -997,177 +1104,480 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section id="faq" class="py-20 bg-white/50 relative z-10">
+        <section id="faq" class="py-24 bg-white/50 relative z-10">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
-                    class="text-center mb-12"
+                    class="text-center mb-16"
                     data-aos="fade-up"
                     data-aos-duration="800"
                 >
-                    <h2 class="text-3xl font-bold mb-4">
+                    <div
+                        class="inline-flex items-center gap-3 bg-blue-100/80 backdrop-blur-sm border border-blue-200/50 text-blue-700 px-6 py-3 rounded-full text-sm font-semibold mb-8 shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                        <div
+                            class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                        ></div>
+                        FAQ - Pertanyaan Umum
+                    </div>
+                    <h2
+                        class="text-4xl md:text-5xl font-bold mb-6 leading-tight"
+                    >
+                        <span class="text-gray-900">Pertanyaan yang </span>
                         <span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600"
-                            >Pertanyaan yang Sering Ditanyakan</span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600"
+                            >Sering Ditanyakan</span
                         >
                     </h2>
-                    <p class="text-lg text-gray-600">
-                        Beberapa hal yang sering ditanyakan peserta.
+                    <p
+                        class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light"
+                    >
+                        Temukan jawaban untuk pertanyaan-pertanyaan yang paling
+                        sering diajukan seputar program magang di Bank Indonesia
                     </p>
                 </div>
-                <div class="space-y-4">
+                <div class="space-y-6">
                     <div
-                        class="bg-white border border-gray-200 rounded-xl shadow-sm"
+                        class="group bg-white/80 backdrop-blur-lg border border-white/40 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="100"
                     >
                         <button
                             @click="toggleFaq(1)"
-                            class="w-full px-6 py-5 text-left flex justify-between items-center"
+                            class="w-full px-8 py-6 text-left flex justify-between items-center hover:bg-blue-50/50 transition-colors duration-300"
                         >
-                            <span class="font-semibold text-gray-900"
+                            <span
+                                class="font-semibold text-gray-900 text-lg group-hover:text-blue-700 transition-colors duration-300"
                                 >Bagaimana cara mendaftar?</span
                             >
-                            <i
-                                :class="[
-                                    'fas text-sm',
-                                    openFaq === 1
-                                        ? 'fa-minus text-blue-600'
-                                        : 'fa-plus text-gray-400',
-                                ]"
-                            ></i>
+                            <div
+                                class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 group-hover:bg-blue-200 transition-all duration-300"
+                            >
+                                <i
+                                    :class="[
+                                        'fas text-sm transition-all duration-300',
+                                        openFaq === 1
+                                            ? 'fa-minus text-blue-600 rotate-180'
+                                            : 'fa-plus text-blue-500',
+                                    ]"
+                                ></i>
+                            </div>
                         </button>
                         <div
                             v-show="openFaq === 1"
-                            class="px-6 pb-5 text-gray-600 text-sm leading-relaxed"
+                            class="px-8 pb-6 text-gray-600 leading-relaxed border-t border-gray-100 bg-gray-50/30"
                         >
-                            Daftar melalui halaman program, pilih divisi, isi
-                            formulir, unggah dokumen, dan pantau status.
+                            <div class="pt-4">
+                                <p class="mb-3">
+                                    Proses pendaftaran dapat dilakukan melalui
+                                    langkah-langkah berikut:
+                                </p>
+                                <ul class="space-y-2 text-sm">
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            >Akses halaman program magang di
+                                            website GrowithBI</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            >Pilih divisi sesuai minat dan
+                                            keahlian Anda</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            >Lengkapi formulir pendaftaran
+                                            dengan data yang akurat</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            >Upload dokumen persyaratan yang
+                                            diperlukan</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            >Pantau status pendaftaran melalui
+                                            dashboard peserta</span
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
+
                     <div
-                        class="bg-white border border-gray-200 rounded-xl shadow-sm"
+                        class="group bg-white/80 backdrop-blur-lg border border-white/40 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="200"
                     >
                         <button
                             @click="toggleFaq(2)"
-                            class="w-full px-6 py-5 text-left flex justify-between items-center"
+                            class="w-full px-8 py-6 text-left flex justify-between items-center hover:bg-blue-50/50 transition-colors duration-300"
                         >
-                            <span class="font-semibold text-gray-900"
+                            <span
+                                class="font-semibold text-gray-900 text-lg group-hover:text-blue-700 transition-colors duration-300"
                                 >Dokumen apa saja yang dibutuhkan?</span
                             >
-                            <i
-                                :class="[
-                                    'fas text-sm',
-                                    openFaq === 2
-                                        ? 'fa-minus text-blue-600'
-                                        : 'fa-plus text-gray-400',
-                                ]"
-                            ></i>
+                            <div
+                                class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 group-hover:bg-blue-200 transition-all duration-300"
+                            >
+                                <i
+                                    :class="[
+                                        'fas text-sm transition-all duration-300',
+                                        openFaq === 2
+                                            ? 'fa-minus text-blue-600 rotate-180'
+                                            : 'fa-plus text-blue-500',
+                                    ]"
+                                ></i>
+                            </div>
                         </button>
                         <div
                             v-show="openFaq === 2"
-                            class="px-6 pb-5 text-gray-600 text-sm leading-relaxed"
+                            class="px-8 pb-6 text-gray-600 leading-relaxed border-t border-gray-100 bg-gray-50/30"
                         >
-                            Surat pengantar kampus, CV, motivation letter,
-                            transkrip nilai, dan KTP.
+                            <div class="pt-4">
+                                <p class="mb-3">
+                                    Dokumen-dokumen yang harus disiapkan untuk
+                                    pendaftaran:
+                                </p>
+                                <ul class="space-y-2 text-sm">
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            ><strong
+                                                >Surat Pengantar Kampus</strong
+                                            >
+                                            - Dari jurusan atau fakultas</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            ><strong
+                                                >Curriculum Vitae (CV)</strong
+                                            >
+                                            - Format terbaru dan lengkap</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            ><strong>Motivation Letter</strong>
+                                            - Maksimal 1 halaman</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            ><strong>Transkrip Nilai</strong> -
+                                            Semester terakhir</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            ><strong
+                                                >KTP/Kartu Identitas</strong
+                                            >
+                                            - Scan yang jelas</span
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
+
                     <div
-                        class="bg-white border border-gray-200 rounded-xl shadow-sm"
+                        class="group bg-white/80 backdrop-blur-lg border border-white/40 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="300"
                     >
                         <button
                             @click="toggleFaq(3)"
-                            class="w-full px-6 py-5 text-left flex justify-between items-center"
+                            class="w-full px-8 py-6 text-left flex justify-between items-center hover:bg-blue-50/50 transition-colors duration-300"
                         >
-                            <span class="font-semibold text-gray-900"
+                            <span
+                                class="font-semibold text-gray-900 text-lg group-hover:text-blue-700 transition-colors duration-300"
                                 >Berapa lama durasi magang?</span
                             >
-                            <i
-                                :class="[
-                                    'fas text-sm',
-                                    openFaq === 3
-                                        ? 'fa-minus text-blue-600'
-                                        : 'fa-plus text-gray-400',
-                                ]"
-                            ></i>
+                            <div
+                                class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 group-hover:bg-blue-200 transition-all duration-300"
+                            >
+                                <i
+                                    :class="[
+                                        'fas text-sm transition-all duration-300',
+                                        openFaq === 3
+                                            ? 'fa-minus text-blue-600 rotate-180'
+                                            : 'fa-plus text-blue-500',
+                                    ]"
+                                ></i>
+                            </div>
                         </button>
                         <div
                             v-show="openFaq === 3"
-                            class="px-6 pb-5 text-gray-600 text-sm leading-relaxed"
+                            class="px-8 pb-6 text-gray-600 leading-relaxed border-t border-gray-100 bg-gray-50/30"
                         >
-                            Umumnya 3–6 bulan, bisa disesuaikan kebutuhan
-                            akademik/project.
+                            <div class="pt-4">
+                                <p class="mb-3">
+                                    Durasi program magang bervariasi sesuai
+                                    kebutuhan:
+                                </p>
+                                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                                    <div
+                                        class="p-4 bg-white/50 rounded-lg border border-gray-200"
+                                    >
+                                        <h4
+                                            class="font-semibold text-purple-700 mb-2"
+                                        >
+                                            Magang Reguler
+                                        </h4>
+                                        <p>
+                                            3-4 bulan untuk mahasiswa tingkat
+                                            akhir
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="p-4 bg-white/50 rounded-lg border border-gray-200"
+                                    >
+                                        <h4
+                                            class="font-semibold text-purple-700 mb-2"
+                                        >
+                                            Magang Project
+                                        </h4>
+                                        <p>
+                                            5-6 bulan untuk project khusus dan
+                                            penelitian
+                                        </p>
+                                    </div>
+                                </div>
+                                <p class="mt-3 text-sm">
+                                    Durasi dapat disesuaikan dengan kebutuhan
+                                    akademik dan project yang dikerjakan.
+                                </p>
+                            </div>
                         </div>
                     </div>
+
                     <div
-                        class="bg-white border border-gray-200 rounded-xl shadow-sm"
+                        class="group bg-white/80 backdrop-blur-lg border border-white/40 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="400"
                     >
                         <button
                             @click="toggleFaq(4)"
-                            class="w-full px-6 py-5 text-left flex justify-between items-center"
+                            class="w-full px-8 py-6 text-left flex justify-between items-center hover:bg-blue-50/50 transition-colors duration-300"
                         >
-                            <span class="font-semibold text-gray-900"
+                            <span
+                                class="font-semibold text-gray-900 text-lg group-hover:text-blue-700 transition-colors duration-300"
                                 >Apakah ada kompensasi atau gaji selama
                                 magang?</span
                             >
-                            <i
-                                :class="[
-                                    'fas text-sm',
-                                    openFaq === 4
-                                        ? 'fa-minus text-blue-600'
-                                        : 'fa-plus text-gray-400',
-                                ]"
-                            ></i>
+                            <div
+                                class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 group-hover:bg-blue-200 transition-all duration-300"
+                            >
+                                <i
+                                    :class="[
+                                        'fas text-sm transition-all duration-300',
+                                        openFaq === 4
+                                            ? 'fa-minus text-blue-600 rotate-180'
+                                            : 'fa-plus text-blue-500',
+                                    ]"
+                                ></i>
+                            </div>
                         </button>
                         <div
                             v-show="openFaq === 4"
-                            class="px-6 pb-5 text-gray-600 text-sm leading-relaxed"
+                            class="px-8 pb-6 text-gray-600 leading-relaxed border-t border-gray-100 bg-gray-50/30"
                         >
-                            Ya, peserta magang akan mendapatkan uang
-                            saku/transportasi sesuai dengan ketentuan yang
-                            berlaku di Bank Indonesia.
+                            <div class="pt-4">
+                                <div
+                                    class="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 mb-4"
+                                >
+                                    <h4
+                                        class="font-semibold text-green-700 mb-2 flex items-center gap-2"
+                                    >
+                                        <i class="fas fa-check-circle"></i>
+                                        Ya, tersedia kompensasi!
+                                    </h4>
+                                    <p class="text-sm text-green-600">
+                                        Peserta magang akan mendapatkan uang
+                                        saku dan tunjangan transportasi sesuai
+                                        dengan ketentuan yang berlaku di Bank
+                                        Indonesia.
+                                    </p>
+                                </div>
+                                <ul class="space-y-2 text-sm">
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            >Uang saku bulanan untuk kebutuhan
+                                            harian</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            >Tunjangan transportasi harian</span
+                                        >
+                                    </li>
+                                    <li class="flex items-start gap-3">
+                                        <span
+                                            class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"
+                                        ></span>
+                                        <span
+                                            >Bonus performance untuk pencapaian
+                                            luar biasa</span
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
+
                     <div
-                        class="bg-white border border-gray-200 rounded-xl shadow-sm"
+                        class="group bg-white/80 backdrop-blur-lg border border-white/40 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="500"
                     >
                         <button
                             @click="toggleFaq(5)"
-                            class="w-full px-6 py-5 text-left flex justify-between items-center"
+                            class="w-full px-8 py-6 text-left flex justify-between items-center hover:bg-blue-50/50 transition-colors duration-300"
                         >
-                            <span class="font-semibold text-gray-900"
+                            <span
+                                class="font-semibold text-gray-900 text-lg group-hover:text-blue-700 transition-colors duration-300"
                                 >Bagaimana proses seleksi dan kapan
                                 pengumumannya?</span
                             >
-                            <i
-                                :class="[
-                                    'fas text-sm',
-                                    openFaq === 5
-                                        ? 'fa-minus text-blue-600'
-                                        : 'fa-plus text-gray-400',
-                                ]"
-                            ></i>
+                            <div
+                                class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 group-hover:bg-blue-200 transition-all duration-300"
+                            >
+                                <i
+                                    :class="[
+                                        'fas text-sm transition-all duration-300',
+                                        openFaq === 5
+                                            ? 'fa-minus text-blue-600 rotate-180'
+                                            : 'fa-plus text-blue-500',
+                                    ]"
+                                ></i>
+                            </div>
                         </button>
                         <div
                             v-show="openFaq === 5"
-                            class="px-6 pb-5 text-gray-600 text-sm leading-relaxed"
+                            class="px-8 pb-6 text-gray-600 leading-relaxed border-t border-gray-100 bg-gray-50/30"
                         >
-                            Seleksi melalui tahap administratif, wawancara, dan
-                            tes kemampuan. Pengumuman hasil seleksi akan
-                            diinformasikan melalui email dan website resmi dalam
-                            2-3 minggu setelah pendaftaran ditutup.
+                            <div class="pt-4">
+                                <p class="mb-4">
+                                    Proses seleksi dilakukan dalam beberapa
+                                    tahap yang terstruktur:
+                                </p>
+                                <div class="space-y-3">
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full font-semibold text-sm"
+                                        >
+                                            1
+                                        </div>
+                                        <div>
+                                            <h4
+                                                class="font-semibold text-gray-900"
+                                            >
+                                                Seleksi Administratif
+                                            </h4>
+                                            <p class="text-sm text-gray-600">
+                                                Verifikasi kelengkapan dan
+                                                validitas dokumen
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full font-semibold text-sm"
+                                        >
+                                            2
+                                        </div>
+                                        <div>
+                                            <h4
+                                                class="font-semibold text-gray-900"
+                                            >
+                                                Tes Kemampuan
+                                            </h4>
+                                            <p class="text-sm text-gray-600">
+                                                Evaluasi knowledge dan skill
+                                                sesuai divisi
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full font-semibold text-sm"
+                                        >
+                                            3
+                                        </div>
+                                        <div>
+                                            <h4
+                                                class="font-semibold text-gray-900"
+                                            >
+                                                Wawancara
+                                            </h4>
+                                            <p class="text-sm text-gray-600">
+                                                Interview dengan manager divisi
+                                                terkait
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200"
+                                >
+                                    <h4
+                                        class="font-semibold text-orange-700 mb-2 flex items-center gap-2"
+                                    >
+                                        <i class="fas fa-clock"></i>
+                                        Timeline Pengumuman
+                                    </h4>
+                                    <p class="text-sm text-orange-600">
+                                        Hasil seleksi akan diumumkan dalam 2-3
+                                        minggu setelah pendaftaran ditutup
+                                        melalui email dan website resmi.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
