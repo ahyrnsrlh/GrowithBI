@@ -261,33 +261,147 @@
                     <!-- User Menu -->
                     <div class="flex items-center space-x-4">
                         <!-- Notifications -->
-                        <button
-                            class="relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg"
-                        >
-                            <svg
-                                class="h-6 w-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                        <div class="relative">
+                            <button
+                                @click="
+                                    showNotificationMenu = !showNotificationMenu
+                                "
+                                class="relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg"
                             >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M15 17h5l-5 5v-5zM4 17h8a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                />
-                            </svg>
-                            <span
-                                v-if="notificationCount > 0"
-                                class="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs font-medium flex items-center justify-center rounded-full"
+                                <svg
+                                    class="h-6 w-6"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15 17h5l-5 5v-5zM4 17h8a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                    />
+                                </svg>
+                                <span
+                                    v-if="notificationCount > 0"
+                                    class="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs font-medium flex items-center justify-center rounded-full"
+                                >
+                                    {{
+                                        notificationCount > 9
+                                            ? "9+"
+                                            : notificationCount
+                                    }}
+                                </span>
+                            </button>
+
+                            <!-- Notification Dropdown Menu -->
+                            <div
+                                v-show="showNotificationMenu"
+                                @click.away="showNotificationMenu = false"
+                                class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50"
                             >
-                                {{
-                                    notificationCount > 9
-                                        ? "9+"
-                                        : notificationCount
-                                }}
-                            </span>
-                        </button>
+                                <div class="px-4 py-3 border-b border-gray-200">
+                                    <h3
+                                        class="text-sm font-medium text-gray-900"
+                                    >
+                                        Notifikasi
+                                    </h3>
+                                </div>
+
+                                <!-- Notification Items -->
+                                <div class="max-h-96 overflow-y-auto">
+                                    <div
+                                        v-if="notifications.length === 0"
+                                        class="px-4 py-8 text-center"
+                                    >
+                                        <svg
+                                            class="mx-auto h-12 w-12 text-gray-400"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M15 17h5l-5 5v-5zM4 17h8a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                            />
+                                        </svg>
+                                        <p class="mt-2 text-sm text-gray-500">
+                                            Belum ada notifikasi
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        v-for="notification in notifications"
+                                        :key="notification.id"
+                                        class="px-4 py-3 hover:bg-gray-50 border-b border-gray-100 cursor-pointer"
+                                        @click="
+                                            handleNotificationClick(
+                                                notification
+                                            )
+                                        "
+                                    >
+                                        <div class="flex items-start space-x-3">
+                                            <div class="flex-shrink-0">
+                                                <div
+                                                    class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center"
+                                                >
+                                                    <svg
+                                                        class="w-4 h-4 text-white"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p
+                                                    class="text-sm font-medium text-gray-900"
+                                                >
+                                                    {{ notification.title }}
+                                                </p>
+                                                <p
+                                                    class="text-sm text-gray-500 mt-1"
+                                                >
+                                                    {{ notification.message }}
+                                                </p>
+                                                <p
+                                                    class="text-xs text-gray-400 mt-1"
+                                                >
+                                                    {{
+                                                        formatNotificationTime(
+                                                            notification.created_at
+                                                        )
+                                                    }}
+                                                </p>
+                                            </div>
+                                            <div
+                                                v-if="!notification.read_at"
+                                                class="w-2 h-2 bg-blue-500 rounded-full"
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- View All Link -->
+                                <div class="px-4 py-3 border-t border-gray-200">
+                                    <Link
+                                        href="/admin/notifications"
+                                        class="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                                        @click="showNotificationMenu = false"
+                                    >
+                                        Lihat semua notifikasi
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Profile Dropdown -->
                         <div class="relative">
@@ -475,7 +589,36 @@ const getInitials = (name) => {
 };
 
 const showProfileMenu = ref(false);
+const showNotificationMenu = ref(false);
 const sidebarOpen = ref(false);
+
+// Sample notifications data - bisa diganti dengan data dari server
+const notifications = ref([
+    {
+        id: 1,
+        title: "Aplikasi Baru",
+        message: "Ahmad Rizki Pratama telah mengirim aplikasi magang",
+        created_at: "2024-09-17T10:30:00Z",
+        read_at: null,
+        type: "application",
+    },
+    {
+        id: 2,
+        title: "Laporan Harian",
+        message: "Dewi Lestari telah mengirim laporan harian",
+        created_at: "2024-09-17T09:15:00Z",
+        read_at: null,
+        type: "logbook",
+    },
+    {
+        id: 3,
+        title: "Status Update",
+        message: "Aplikasi magang telah diperbarui",
+        created_at: "2024-09-16T16:45:00Z",
+        read_at: "2024-09-17T08:00:00Z",
+        type: "status",
+    },
+]);
 
 // Close sidebar when clicking outside on mobile
 const handleClickOutside = (event) => {
@@ -486,6 +629,63 @@ const handleClickOutside = (event) => {
     ) {
         sidebarOpen.value = false;
     }
+
+    // Close notification menu when clicking outside
+    if (showNotificationMenu.value && !event.target.closest(".relative")) {
+        showNotificationMenu.value = false;
+    }
+
+    // Close profile menu when clicking outside
+    if (showProfileMenu.value && !event.target.closest(".relative")) {
+        showProfileMenu.value = false;
+    }
+};
+
+// Handle notification click
+const handleNotificationClick = (notification) => {
+    // Mark as read if not already read
+    if (!notification.read_at) {
+        notification.read_at = new Date().toISOString();
+    }
+
+    // Navigate based on notification type
+    switch (notification.type) {
+        case "application":
+            router.visit("/admin/applications");
+            break;
+        case "logbook":
+            router.visit("/admin/logbooks");
+            break;
+        case "status":
+            router.visit("/admin/dashboard");
+            break;
+        default:
+            console.log("Notification clicked:", notification);
+    }
+
+    showNotificationMenu.value = false;
+};
+
+// Format notification time
+const formatNotificationTime = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now - date;
+
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 1) return "Baru saja";
+    if (minutes < 60) return `${minutes} menit yang lalu`;
+    if (hours < 24) return `${hours} jam yang lalu`;
+    if (days < 7) return `${days} hari yang lalu`;
+
+    return date.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+    });
 };
 
 // Close sidebar on route change (mobile)

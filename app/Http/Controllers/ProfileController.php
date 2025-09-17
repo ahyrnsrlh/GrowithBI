@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -61,13 +62,18 @@ class ProfileController extends Controller
             'average_hours' => 0
         ];
         
-        // Get reports data for accepted participants
-        $reports = collect();
+        // Get reports data for all users (not just accepted)
+        $reports = Report::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+            
+        $allReports = Report::where('user_id', $user->id)->get();
         $reportStats = [
-            'total_reports' => 0,
-            'pending_reports' => 0,
-            'approved_reports' => 0,
-            'revision_reports' => 0
+            'total_reports' => $allReports->count(),
+            'pending_reports' => $allReports->where('status', 'submitted')->count(),
+            'approved_reports' => $allReports->where('status', 'approved')->count(),
+            'revision_reports' => $allReports->where('status', 'revision')->count()
         ];
         
         $acceptedApplication = $applications->where('status', 'diterima')->first();
@@ -86,19 +92,6 @@ class ProfileController extends Controller
                 'revision_logbooks' => $allLogbooks->where('status', 'revision')->count(),
                 'total_hours' => $allLogbooks->sum('duration'),
                 'average_hours' => $allLogbooks->count() > 0 ? round($allLogbooks->avg('duration'), 1) : 0
-            ];
-            
-            $reports = Report::where('user_id', $user->id)
-                ->orderBy('created_at', 'desc')
-                ->limit(5)
-                ->get();
-                
-            $allReports = Report::where('user_id', $user->id)->get();
-            $reportStats = [
-                'total_reports' => $allReports->count(),
-                'pending_reports' => $allReports->where('status', 'submitted')->count(),
-                'approved_reports' => $allReports->where('status', 'approved')->count(),
-                'revision_reports' => $allReports->where('status', 'revision')->count()
             ];
         }
 
@@ -128,8 +121,8 @@ class ProfileController extends Controller
         $validatedData = $request->validated();
         
         // Debug logging
-        \Log::info('Profile update request data:', $validatedData);
-        \Log::info('User before update:', $user->toArray());
+        Log::info('Profile update request data:', $validatedData);
+        Log::info('User before update:', $user->toArray());
         
         $user->fill($validatedData);
 
@@ -140,7 +133,7 @@ class ProfileController extends Controller
         $user->save();
         
         // Debug logging after save
-        \Log::info('User after update:', $user->fresh()->toArray());
+        Log::info('User after update:', $user->fresh()->toArray());
 
         return Redirect::route('profile.edit')->with('success', 'Profil berhasil diperbarui!');
     }
@@ -233,9 +226,9 @@ class ProfileController extends Controller
         ]);
 
         try {
-            \Log::info('=== CREATING APPLICATION ===');
-            \Log::info('User data:', $user->toArray());
-            \Log::info('Request data:', $request->all());
+            Log::info('=== CREATING APPLICATION ===');
+            Log::info('User data:', $user->toArray());
+            Log::info('Request data:', $request->all());
             
             $applicationData = [
                 'user_id' => $user->id,
@@ -259,11 +252,11 @@ class ProfileController extends Controller
                 'ktp_path' => $user->ktp_path,
             ];
             
-            \Log::info('Application data to be created:', $applicationData);
+            Log::info('Application data to be created:', $applicationData);
             
             $application = Application::create($applicationData);
             
-            \Log::info('Application created successfully:', $application->toArray());
+            Log::info('Application created successfully:', $application->toArray());
 
             if ($request->wantsJson()) {
                 return response()->json([
@@ -274,7 +267,7 @@ class ProfileController extends Controller
 
             return Redirect::route('profile.edit')->with('success', 'Lamaran berhasil dikirim!');
         } catch (\Exception $e) {
-            \Log::error('Application creation failed: ' . $e->getMessage());
+            Log::error('Application creation failed: ' . $e->getMessage());
             
             if ($request->wantsJson()) {
                 return response()->json([
