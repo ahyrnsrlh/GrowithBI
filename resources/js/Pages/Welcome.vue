@@ -64,7 +64,7 @@ const testimonials = ref([
         id: 1,
         initials: "RD",
         name: "Reihan Denindra",
-        company: "PT Rajawali Nusantara Indonesia (Persero)",
+        company: "Universitas Lampung",
         tag: "Marketing & Product Development",
         tagColor: "blue",
         variant: "A",
@@ -75,7 +75,7 @@ const testimonials = ref([
         id: 2,
         initials: "SG",
         name: "Syarifah Geubrina Alayda",
-        company: "PT Kimia Farma Tbk",
+        company: "UIN Raden Intan Lampung",
         tag: "Service & Quality Assurance",
         tagColor: "pink",
         variant: "B",
@@ -86,7 +86,7 @@ const testimonials = ref([
         id: 3,
         initials: "MN",
         name: "M. Nailun Najib",
-        company: "PT Telekomunikasi Indonesia",
+        company: "Universitas Teknokrat Indonesia",
         tag: "Portfolio & BizDev",
         tagColor: "green",
         variant: "C",
@@ -97,7 +97,7 @@ const testimonials = ref([
         id: 4,
         initials: "AF",
         name: "Amanda Fitria",
-        company: "PT Bank Mandiri (Persero) Tbk",
+        company: "IIB Darmajaya",
         tag: "Data Analytics",
         tagColor: "blue",
         variant: "A",
@@ -108,7 +108,7 @@ const testimonials = ref([
         id: 5,
         initials: "DH",
         name: "Dika Hermawan",
-        company: "PT Astra International Tbk",
+        company: "Politeknik Negeri Lampung (Polinela)",
         tag: "Risk Management",
         tagColor: "green",
         variant: "B",
@@ -119,7 +119,7 @@ const testimonials = ref([
         id: 6,
         initials: "NP",
         name: "Nanda Pratiwi",
-        company: "PT Unilever Indonesia Tbk",
+        company: "Universitas Lampung",
         tag: "Business Intelligence",
         tagColor: "pink",
         variant: "C",
@@ -130,7 +130,7 @@ const testimonials = ref([
         id: 7,
         initials: "AR",
         name: "Alif Rahman",
-        company: "PT Pertamina (Persero)",
+        company: "UIN Raden Intan Lampung",
         tag: "Digital Transformation",
         tagColor: "blue",
         variant: "A",
@@ -141,7 +141,7 @@ const testimonials = ref([
         id: 8,
         initials: "LM",
         name: "Luna Maharani",
-        company: "PT Indofood Sukses Makmur Tbk",
+        company: "Universitas Teknokrat Indonesia",
         tag: "Regulatory Compliance",
         tagColor: "green",
         variant: "B",
@@ -453,11 +453,24 @@ onUnmounted(() => {
                         <h1
                             class="text-4xl md:text-5xl font-extrabold leading-tight text-gray-900 mb-6"
                         >
-                            <span
-                                class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600"
-                                >Be The Next Future Economic & Digital
-                                Talent</span
-                            >
+                            <span class="block overflow-hidden">
+                                <span
+                                    class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-300% animate-gradient-x animate-slide-up delay-100"
+                                    >Be The Next</span
+                                >
+                            </span>
+                            <span class="block overflow-hidden">
+                                <span
+                                    class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 bg-300% animate-gradient-x animate-slide-up delay-300"
+                                    >Future Economic</span
+                                >
+                            </span>
+                            <span class="block overflow-hidden">
+                                <span
+                                    class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 bg-300% animate-gradient-x animate-slide-up delay-500"
+                                    >& Digital Talent</span
+                                >
+                            </span>
                         </h1>
                         <p class="text-lg text-gray-600 mb-8 max-w-xl">
                             Bank Indonesia Provinsi Lampung membuka peluang bagi
@@ -956,7 +969,7 @@ onUnmounted(() => {
                     </h2>
                     <p class="text-gray-600 max-w-2xl mx-auto">
                         Cerita peserta tentang pengalaman mereka mengikuti
-                        program.
+                        program magang di bank indonesia
                     </p>
                 </div>
 
@@ -1747,7 +1760,77 @@ onUnmounted(() => {
         transform: translateY(-12px);
     }
 }
+
+@keyframes gradient-x {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes slide-up {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .animate-float {
     animation: float 6s ease-in-out infinite;
+}
+
+.animate-gradient-x {
+    background-size: 300% 300%;
+    animation: gradient-x 4s ease infinite;
+}
+
+.animate-slide-up {
+    animation: slide-up 1s ease-out forwards;
+}
+
+.animate-typing {
+    animation: typing 2s ease-out, fadeInUp 1.5s ease-out;
+}
+
+.bg-300\% {
+    background-size: 300% 300%;
+}
+
+.delay-100 {
+    animation-delay: 0.1s;
+}
+
+.delay-300 {
+    animation-delay: 0.3s;
+}
+
+.delay-500 {
+    animation-delay: 0.5s;
+}
+
+/* Initial state for slide-up animation */
+.animate-slide-up {
+    transform: translateY(100%);
+    opacity: 0;
 }
 </style>

@@ -16,11 +16,18 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
+        $status = session('status');
+        
+        // Check if user just registered
+        if ($request->has('registered')) {
+            $status = 'Pendaftaran berhasil! Silakan login dengan akun yang baru Anda buat.';
+        }
+        
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'),
+            'status' => $status,
         ]);
     }
 

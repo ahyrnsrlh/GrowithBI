@@ -168,111 +168,53 @@ const submit = () => {
                         </div>
                     </div>
 
-                    <!-- Role and Phone Row -->
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <!-- Role Field -->
-                        <div>
-                            <label
-                                for="role"
-                                class="block text-sm font-semibold text-gray-700 mb-2"
-                            >
-                                Daftar sebagai *
-                            </label>
-                            <div class="relative">
-                                <div
-                                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                                >
-                                    <svg
-                                        class="h-5 w-5 text-gray-400"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path
-                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                        />
-                                    </svg>
-                                </div>
-                                <select
-                                    id="role"
-                                    v-model="form.role"
-                                    required
-                                    class="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl leading-5 bg-white/50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                >
-                                    <option value="peserta">
-                                        🎓 Mahasiswa Peserta Magang
-                                    </option>
-                                    <option value="admin">
-                                        👨‍💼 Admin Bank Indonesia
-                                    </option>
-                                </select>
-                            </div>
+                    <!-- Phone Field -->
+                    <div>
+                        <label
+                            for="phone"
+                            class="block text-sm font-semibold text-gray-700 mb-2"
+                        >
+                            Nomor Telepon
+                        </label>
+                        <div class="relative">
                             <div
-                                v-if="form.errors.role"
-                                class="mt-2 text-sm text-red-600 flex items-center"
+                                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                             >
                                 <svg
-                                    class="w-4 h-4 mr-1"
+                                    class="h-5 w-5 text-gray-400"
                                     fill="currentColor"
                                     viewBox="0 0 20 20"
                                 >
                                     <path
-                                        fill-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                        clip-rule="evenodd"
+                                        d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
                                     />
                                 </svg>
-                                {{ form.errors.role }}
                             </div>
+                            <input
+                                id="phone"
+                                type="tel"
+                                v-model="form.phone"
+                                autocomplete="tel"
+                                class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white/50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                placeholder="081234567890"
+                            />
                         </div>
-
-                        <!-- Phone Field -->
-                        <div>
-                            <label
-                                for="phone"
-                                class="block text-sm font-semibold text-gray-700 mb-2"
+                        <div
+                            v-if="form.errors.phone"
+                            class="mt-2 text-sm text-red-600 flex items-center"
+                        >
+                            <svg
+                                class="w-4 h-4 mr-1"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
                             >
-                                Nomor Telepon
-                            </label>
-                            <div class="relative">
-                                <div
-                                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                                >
-                                    <svg
-                                        class="h-5 w-5 text-gray-400"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path
-                                            d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
-                                        />
-                                    </svg>
-                                </div>
-                                <input
-                                    id="phone"
-                                    type="tel"
-                                    v-model="form.phone"
-                                    autocomplete="tel"
-                                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white/50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                    placeholder="081234567890"
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                    clip-rule="evenodd"
                                 />
-                            </div>
-                            <div
-                                v-if="form.errors.phone"
-                                class="mt-2 text-sm text-red-600 flex items-center"
-                            >
-                                <svg
-                                    class="w-4 h-4 mr-1"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                                {{ form.errors.phone }}
-                            </div>
+                            </svg>
+                            {{ form.errors.phone }}
                         </div>
                     </div>
 
