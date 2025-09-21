@@ -30,7 +30,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): Response
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -53,10 +53,11 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        // Don't auto-login, redirect to success page instead
-        return Inertia::render('Auth/RegisterSuccess', [
-            'email' => $user->email,
-            'name' => $user->name,
+        // Redirect to register page with success data
+        return redirect()->route('register')->with([
+            'registration_success' => true,
+            'user_email' => $user->email,
+            'user_name' => $user->name,
         ]);
     }
 

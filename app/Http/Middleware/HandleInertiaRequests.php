@@ -34,6 +34,13 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'flash' => [
+                'registration_success' => session('registration_success'),
+                'user_email' => session('user_email'),
+                'user_name' => session('user_name'),
+                'success' => session('success'),
+                'error' => session('error'),
+            ],
         ];
     }
 }
