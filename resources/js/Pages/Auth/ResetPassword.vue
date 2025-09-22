@@ -36,19 +36,11 @@ const submit = () => {
             <!-- Logo and Header -->
             <div class="text-center mb-8">
                 <Link href="/" class="inline-flex items-center mb-6">
-                    <div
-                        class="bg-gradient-to-r from-blue-600 to-indigo-600 p-3 rounded-xl"
-                    >
-                        <svg
-                            class="w-8 h-8 text-white"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                            />
-                        </svg>
-                    </div>
+                    <img 
+                        src="/logo.png" 
+                        alt="Bank Indonesia Logo" 
+                        class="h-12 w-12 mr-3"
+                    />
                     <h1
                         class="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
                     >
@@ -56,7 +48,7 @@ const submit = () => {
                     </h1>
                 </Link>
                 <h2 class="text-3xl font-bold text-gray-900 mb-2">
-                    🔑 Reset Password
+                    Reset Password
                 </h2>
                 <p class="text-gray-600">
                     Masukkan password baru untuk akun Anda di platform
@@ -174,7 +166,7 @@ const submit = () => {
                     <button
                         type="submit"
                         :disabled="form.processing"
-                        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 !text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                     >
                         <svg
                             v-if="form.processing"
@@ -199,7 +191,7 @@ const submit = () => {
                         {{
                             form.processing
                                 ? "Memproses..."
-                                : "🔐 Update Password"
+                                : "Update Password"
                         }}
                     </button>
                 </form>
