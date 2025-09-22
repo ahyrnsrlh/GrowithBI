@@ -36,9 +36,9 @@ const submit = () => {
             <!-- Logo and Header -->
             <div class="text-center mb-8">
                 <Link href="/" class="inline-flex items-center mb-6">
-                    <img 
-                        src="/logo.png" 
-                        alt="Bank Indonesia Logo" 
+                    <img
+                        src="/logo.png"
+                        alt="Bank Indonesia Logo"
                         class="h-12 w-12 mr-3"
                     />
                     <h1
@@ -189,9 +189,7 @@ const submit = () => {
                             ></path>
                         </svg>
                         {{
-                            form.processing
-                                ? "Memproses..."
-                                : "Update Password"
+                            form.processing ? "Memproses..." : "Update Password"
                         }}
                     </button>
                 </form>
