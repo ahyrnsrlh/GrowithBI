@@ -101,7 +101,7 @@
                 <!-- Compact Back Navigation -->
                 <div class="mb-6">
                     <Link
-                        href="/divisions"
+                        href="/#divisi"
                         class="group inline-flex items-center text-gray-600 hover:text-blue-600 transition-all duration-200 bg-white px-3 py-2 rounded-lg shadow-sm hover:shadow-md"
                     >
                         <svg

@@ -389,6 +389,61 @@
                                         </select>
                                     </div>
 
+                                    <!-- IPK/GPA -->
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >IPK</label
+                                        >
+                                        <input
+                                            v-model="profileForm.gpa"
+                                            :disabled="!editMode"
+                                            type="number"
+                                            step="0.01"
+                                            min="0"
+                                            max="4"
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50"
+                                            placeholder="contoh: 3.75"
+                                        />
+                                    </div>
+
+                                    <!-- Tanggal Lahir -->
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >Tanggal Lahir</label
+                                        >
+                                        <input
+                                            v-model="profileForm.birth_date"
+                                            :disabled="!editMode"
+                                            type="date"
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50"
+                                        />
+                                    </div>
+
+                                    <!-- Jenis Kelamin -->
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >Jenis Kelamin</label
+                                        >
+                                        <select
+                                            v-model="profileForm.gender"
+                                            :disabled="!editMode"
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50"
+                                        >
+                                            <option value="">
+                                                Pilih jenis kelamin
+                                            </option>
+                                            <option value="male">
+                                                Laki-laki
+                                            </option>
+                                            <option value="female">
+                                                Perempuan
+                                            </option>
+                                        </select>
+                                    </div>
+
                                     <!-- Address -->
                                     <div class="md:col-span-2">
                                         <label
@@ -2004,6 +2059,9 @@ const profileForm = useForm({
     university: user.university,
     major: user.major,
     semester: user.semester,
+    gpa: user.gpa,
+    birth_date: user.birth_date,
+    gender: user.gender,
 });
 
 // Logbook creation form
@@ -2042,6 +2100,9 @@ const updateProfile = () => {
                 university: user.university,
                 major: user.major,
                 semester: user.semester,
+                gpa: user.gpa,
+                birth_date: user.birth_date,
+                gender: user.gender,
             };
             showToast("success", "Profil berhasil diperbarui!");
         },
