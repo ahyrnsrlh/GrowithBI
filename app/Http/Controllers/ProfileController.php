@@ -222,13 +222,16 @@ class ProfileController extends Controller
         
         $request->validate([
             'division_id' => ['required', 'exists:divisions,id', new \App\Rules\UniqueActiveApplication(null, $user->id)],
-            'motivation' => 'required|string|min:100|max:1000',
+            'motivation' => 'nullable|string|min:50|max:1000',
         ]);
 
         try {
             Log::info('=== CREATING APPLICATION ===');
             Log::info('User data:', $user->toArray());
             Log::info('Request data:', $request->all());
+            
+            // Use request motivation or default motivation
+            $motivation = $request->motivation ?: 'Saya tertarik untuk bergabung dalam program magang ini untuk mengembangkan kemampuan dan berkontribusi bagi perusahaan.';
             
             $applicationData = [
                 'user_id' => $user->id,
@@ -244,7 +247,7 @@ class ProfileController extends Controller
                 'gender' => $user->gender,
                 'portfolio_url' => $user->portfolio_url,
                 'division_id' => $request->division_id,
-                'motivation' => $request->motivation,
+                'motivation' => $motivation,
                 'status' => 'menunggu',
                 'cv_path' => $user->cv_path,
                 'surat_lamaran_path' => $user->motivation_letter_path,

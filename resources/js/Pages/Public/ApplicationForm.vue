@@ -176,6 +176,7 @@
 
 <script setup>
 import { Head, Link, useForm } from "@inertiajs/vue3";
+import { onMounted } from "vue";
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 
 // Props
@@ -196,9 +197,21 @@ const form = useForm({
     motivation: "",
 });
 
+// Check for URL parameter and set division_id
+onMounted(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const divisionParam = urlParams.get("division");
+    if (
+        divisionParam &&
+        props.divisions.some((div) => div.id == divisionParam)
+    ) {
+        form.division_id = divisionParam;
+    }
+});
+
 // Submit function
 const submit = () => {
-    form.post(route("application.submit"), {
+    form.post(route("public.application.store"), {
         onSuccess: () => {
             form.reset();
         },

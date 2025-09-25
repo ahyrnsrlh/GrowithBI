@@ -134,7 +134,7 @@
                     <p class="text-gray-600">
                         Belum mendaftar?
                         <Link
-                            :href="route('public.apply')"
+                            :href="route('public.application.form')"
                             class="text-blue-600 hover:text-blue-800 font-medium"
                         >
                             Daftar magang sekarang

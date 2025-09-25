@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Division;
 use App\Models\Application;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class PublicController extends Controller
@@ -39,74 +40,62 @@ class PublicController extends Controller
         ]);
     }
 
-    public function applicationForm()
-    {
-        $divisions = Division::where('is_active', true)
-            ->get();
-
-        // Check if user already has a pending or accepted application
-        $existingApplication = null;
-        if (Auth::check()) {
-            $existingApplication = Application::where('email', Auth::user()->email)
-                ->whereIn('status', ['menunggu', 'diterima'])
-                ->with('division')
-                ->first();
-        }
-
-        return Inertia::render('Public/ApplicationForm', [
-            'divisions' => $divisions,
-            'existingApplication' => $existingApplication
-        ]);
-    }
-
-    public function storeApplication(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'email', 'max:255', new \App\Rules\UniqueActiveApplication($request->email)],
-            'phone' => 'required|string|max:20',
-            'address' => 'required|string',
-            'division_id' => 'required|exists:divisions,id',
-            'cv_url' => 'nullable|url',
-            'cover_letter_url' => 'nullable|url',
-            'portfolio_url' => 'nullable|url',
-            'motivation' => 'required|string|min:50',
-        ]);
-
-        Application::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'division_id' => $request->division_id,
-            'cv_url' => $request->cv_url,
-            'cover_letter_url' => $request->cover_letter_url,
-            'portfolio_url' => $request->portfolio_url,
-            'motivation' => $request->motivation,
-            'status' => 'menunggu',
-        ]);
-
-        return redirect()->back()->with('message', 'Aplikasi berhasil dikirim! Kami akan menghubungi Anda segera.');
-    }
-
     public function divisionDetail(Division $division)
     {
-        // Check if user already has a pending or accepted application
-        $existingApplication = null;
-        if (Auth::check()) {
-            $existingApplication = Application::where('email', Auth::user()->email)
-                ->whereIn('status', ['menunggu', 'diterima'])
-                ->with('division')
-                ->first();
-        }
+        try {
+            // Log untuk debug
+            Log::info('DivisionDetail accessed', [
+                'division_id' => $division->id,
+                'division_name' => $division->name,
+                'is_active' => $division->is_active
+            ]);
 
-        return Inertia::render('Public/DivisionDetail', [
-            'division' => $division,
-            'existingApplication' => $existingApplication,
-            'auth' => [
-                'user' => Auth::user()
-            ]
-        ]);
+            // Check if division is active
+            if (!$division->is_active) {
+                abort(404, 'Division not found or inactive');
+            }
+
+            // Check if user already has a pending or accepted application
+            $existingApplication = null;
+            if (Auth::check()) {
+                $existingApplication = Application::where('email', Auth::user()->email)
+                    ->whereIn('status', ['menunggu', 'diterima'])
+                    ->with('division')
+                    ->first();
+            }
+
+            // Ensure division data is complete
+            $divisionData = [
+                'id' => $division->id,
+                'name' => $division->name,
+                'description' => $division->description,
+                'job_description' => $division->job_description,
+                'requirements' => $division->requirements,
+                'quota' => $division->quota ?? $division->max_interns,
+                'current_interns' => $division->applications()->where('status', 'diterima')->count(),
+                'available_slots' => ($division->quota ?? $division->max_interns) - $division->applications()->where('status', 'diterima')->count(),
+                'start_date' => $division->start_date,
+                'end_date' => $division->end_date,
+                'application_deadline' => $division->application_deadline,
+                'selection_announcement' => $division->selection_announcement,
+                'is_active' => $division->is_active,
+            ];
+
+            return Inertia::render('Public/DivisionDetail', [
+                'division' => $divisionData,
+                'existingApplication' => $existingApplication,
+                'auth' => [
+                    'user' => Auth::user()
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in divisionDetail', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            abort(500, 'Internal server error');
+        }
     }
 
     public function checkStatus()

@@ -13,16 +13,70 @@ class ApplicationController extends Controller
         $user = $request->user();
         
         if (!$user) {
-            return response()->json(['hasApplication' => false]);
+            return response()->json([
+                'canApply' => false,
+                'message' => 'User not authenticated'
+            ]);
         }
         
+        // Check if user already has an active application
         $hasApplication = Application::where('user_id', $user->id)
             ->where('division_id', $divisionId)
             ->whereIn('status', ['menunggu', 'dalam_review', 'wawancara'])
             ->exists();
+
+        if ($hasApplication) {
+            return response()->json([
+                'canApply' => false,
+                'message' => 'Anda sudah memiliki aplikasi yang sedang diproses untuk divisi ini.'
+            ]);
+        }
             
+        // Check profile completeness
+        $missingPersonalData = [];
+        $missingDocuments = [];
+
+        // Required personal data fields
+        $requiredPersonalData = [
+            'phone' => 'Nomor Telepon',
+            'address' => 'Alamat',
+            'university' => 'Universitas',
+            'major' => 'Jurusan',
+            'semester' => 'Semester',
+            'gpa' => 'IPK',
+            'birth_date' => 'Tanggal Lahir',
+            'gender' => 'Jenis Kelamin'
+        ];
+
+        foreach ($requiredPersonalData as $field => $label) {
+            if (empty($user->$field)) {
+                $missingPersonalData[] = $label;
+            }
+        }
+
+        // Required document fields
+        $requiredDocuments = [
+            'ktp_path' => 'KTP',
+            'cv_path' => 'CV',
+            'transkrip_path' => 'Transkrip Nilai',
+            'surat_pengantar_path' => 'Surat Pengantar',
+            'motivation_letter_path' => 'Motivation Letter',
+            'pas_foto_path' => 'Pas Foto'
+        ];
+
+        foreach ($requiredDocuments as $field => $label) {
+            if (empty($user->$field)) {
+                $missingDocuments[] = $label;
+            }
+        }
+
+        $canApply = empty($missingPersonalData) && empty($missingDocuments);
+
         return response()->json([
-            'hasApplication' => $hasApplication
+            'canApply' => $canApply,
+            'missingPersonalData' => $missingPersonalData,
+            'missingDocuments' => $missingDocuments,
+            'message' => $canApply ? 'Profile lengkap, dapat mendaftar' : 'Profile belum lengkap'
         ]);
     }
 

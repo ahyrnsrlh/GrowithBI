@@ -66,9 +66,11 @@
                                     {{ notification.title }}
                                 </h3>
                                 <div class="mt-2">
-                                    <p class="text-sm text-gray-500">
+                                    <div
+                                        class="text-sm text-gray-500 whitespace-pre-line max-h-60 overflow-y-auto"
+                                    >
                                         {{ notification.message }}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -216,18 +218,41 @@
                                             >
                                             <span
                                                 class="text-xs font-semibold text-blue-700"
-                                                >6 bulan</span
+                                                >{{
+                                                    formatDuration(
+                                                        division.start_date,
+                                                        division.end_date
+                                                    )
+                                                }}</span
                                             >
                                         </div>
                                         <div
                                             class="flex justify-between items-center"
                                         >
                                             <span class="text-xs text-gray-600"
-                                                >Mode</span
+                                                >Kuota</span
                                             >
                                             <span
                                                 class="text-xs font-semibold text-blue-700"
-                                                >Onsite</span
+                                                >{{
+                                                    division.quota
+                                                }}
+                                                orang</span
+                                            >
+                                        </div>
+                                        <div
+                                            class="flex justify-between items-center"
+                                        >
+                                            <span class="text-xs text-gray-600"
+                                                >Deadline</span
+                                            >
+                                            <span
+                                                class="text-xs font-semibold text-blue-700"
+                                                >{{
+                                                    formatDate(
+                                                        division.application_deadline
+                                                    )
+                                                }}</span
                                             >
                                         </div>
                                     </div>
@@ -352,78 +377,30 @@
                                     </svg>
                                 </Link>
                             </div>
-
-                            <!-- Compact Action Buttons -->
-                            <div class="grid grid-cols-2 gap-2">
-                                <button
-                                    class="group bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-200 text-gray-700 hover:text-blue-700 font-semibold py-2 px-3 rounded-lg transition-all duration-200 text-sm"
-                                >
-                                    <div
-                                        class="flex items-center justify-center space-x-1"
-                                    >
-                                        <svg
-                                            class="w-4 h-4 group-hover:scale-110 transition-transform duration-200"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-                                            />
-                                        </svg>
-                                        <span>Bagikan</span>
-                                    </div>
-                                </button>
-                                <button
-                                    class="group bg-gray-50 hover:bg-red-50 border border-gray-200 hover:border-red-200 text-gray-700 hover:text-red-700 font-semibold py-2 px-3 rounded-lg transition-all duration-200 text-sm"
-                                >
-                                    <div
-                                        class="flex items-center justify-center space-x-1"
-                                    >
-                                        <svg
-                                            class="w-4 h-4 group-hover:scale-110 transition-transform duration-200"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                                            />
-                                        </svg>
-                                        <span>Simpan</span>
-                                    </div>
-                                </button>
-                            </div>
                         </div>
                     </div>
 
-                    <!-- Right Content Area - Compact -->
+                    <!-- Right Content Area - Simplified -->
                     <div class="lg:col-span-3">
-                        <!-- Compact Tab Navigation -->
+                        <!-- Main Content Container -->
                         <div
-                            class="bg-white rounded-t-2xl border border-gray-100 shadow-lg overflow-hidden"
+                            class="bg-white rounded-2xl border border-gray-100 shadow-lg p-6"
                         >
-                            <div class="flex border-b border-gray-100">
-                                <button
-                                    @click="activeTab = 'description'"
-                                    :class="[
-                                        'flex-1 px-6 py-4 text-sm font-bold transition-all duration-300 relative',
-                                        activeTab === 'description'
-                                            ? 'text-blue-600 bg-blue-50'
-                                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50',
-                                    ]"
-                                >
+                            <!-- Job Description -->
+                            <div class="mb-8">
+                                <div class="flex items-center space-x-3 mb-6">
                                     <div
-                                        class="flex items-center justify-center space-x-2"
+                                        class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg"
+                                        style="
+                                            background: linear-gradient(
+                                                135deg,
+                                                #002f6c 0%,
+                                                #1e40af 100%
+                                            );
+                                        "
                                     >
                                         <svg
-                                            class="w-4 h-4"
+                                            class="w-5 h-5 text-white"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -435,27 +412,77 @@
                                                 d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                                             />
                                         </svg>
-                                        <span>Deskripsi Lowongan</span>
                                     </div>
-                                    <div
-                                        v-if="activeTab === 'description'"
-                                        class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500"
-                                    ></div>
-                                </button>
-                                <button
-                                    @click="activeTab = 'company'"
-                                    :class="[
-                                        'flex-1 px-6 py-4 text-sm font-bold transition-all duration-300 relative',
-                                        activeTab === 'company'
-                                            ? 'text-blue-600 bg-blue-50'
-                                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50',
-                                    ]"
+                                    <h3
+                                        class="text-xl font-bold text-gray-900"
+                                        style="color: #002f6c"
+                                    >
+                                        Deskripsi Program
+                                    </h3>
+                                </div>
+                                <div
+                                    class="bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-xl p-6 border border-gray-100"
                                 >
+                                    <p
+                                        class="text-gray-700 leading-relaxed mb-6 text-base"
+                                    >
+                                        {{ division.description }}
+                                    </p>
                                     <div
-                                        class="flex items-center justify-center space-x-2"
+                                        class="space-y-4"
+                                        v-if="
+                                            division.job_description &&
+                                            division.job_description.length > 0
+                                        "
+                                    >
+                                        <h4
+                                            class="text-base font-bold text-gray-800"
+                                        >
+                                            Tugas dan Tanggung Jawab:
+                                        </h4>
+                                        <div class="space-y-3">
+                                            <div
+                                                v-for="(
+                                                    desc, index
+                                                ) in division.job_description"
+                                                :key="index"
+                                                class="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300"
+                                            >
+                                                <div
+                                                    class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0"
+                                                >
+                                                    {{ index + 1 }}
+                                                </div>
+                                                <p
+                                                    class="text-gray-700 text-sm leading-relaxed flex-1"
+                                                >
+                                                    {{
+                                                        desc.replace(
+                                                            /^\d+\.\s*/,
+                                                            ""
+                                                        )
+                                                    }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Compact Requirements Section -->
+                            <div
+                                class="mb-8"
+                                v-if="
+                                    division.requirements &&
+                                    division.requirements.length > 0
+                                "
+                            >
+                                <div class="flex items-center space-x-3 mb-6">
+                                    <div
+                                        class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg"
                                     >
                                         <svg
-                                            class="w-4 h-4"
+                                            class="w-5 h-5 text-white"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -464,618 +491,139 @@
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round"
                                                 stroke-width="2"
-                                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                             />
                                         </svg>
-                                        <span>Perusahaan</span>
                                     </div>
-                                    <div
-                                        v-if="activeTab === 'company'"
-                                        class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500"
-                                    ></div>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Compact Tab Content -->
-                        <div
-                            class="bg-white rounded-b-2xl border border-gray-100 border-t-0 shadow-lg"
-                        >
-                            <!-- Description Tab -->
-                            <div v-if="activeTab === 'description'" class="p-6">
-                                <!-- Compact Job Description -->
-                                <div class="mb-8">
-                                    <div
-                                        class="flex items-center space-x-3 mb-6"
+                                    <h3
+                                        class="text-xl font-bold text-gray-900"
+                                        style="color: #002f6c"
                                     >
-                                        <div
-                                            class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg"
-                                            style="
-                                                background: linear-gradient(
-                                                    135deg,
-                                                    #002f6c 0%,
-                                                    #1e40af 100%
-                                                );
-                                            "
-                                        >
-                                            <svg
-                                                class="w-5 h-5 text-white"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <h3
-                                            class="text-xl font-bold text-gray-900"
-                                            style="color: #002f6c"
-                                        >
-                                            Deskripsi Pekerjaan
-                                        </h3>
-                                    </div>
-                                    <div
-                                        class="bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-xl p-6 border border-gray-100"
-                                    >
-                                        <p
-                                            class="text-gray-700 leading-relaxed mb-6 text-base"
-                                        >
-                                            {{ division.description }}
-                                        </p>
-                                        <div class="space-y-4">
-                                            <h4
-                                                class="text-base font-bold text-gray-800"
-                                            >
-                                                Tugas dan Tanggung Jawab:
-                                            </h4>
-                                            <div class="space-y-3">
-                                                <div
-                                                    v-for="(
-                                                        desc, index
-                                                    ) in division.job_description"
-                                                    :key="index"
-                                                    class="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300"
-                                                >
-                                                    <div
-                                                        class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0"
-                                                    >
-                                                        {{ index + 1 }}
-                                                    </div>
-                                                    <p
-                                                        class="text-gray-700 text-sm leading-relaxed flex-1"
-                                                    >
-                                                        {{
-                                                            desc.replace(
-                                                                /^\d+\.\s*/,
-                                                                ""
-                                                            )
-                                                        }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        Persyaratan
+                                    </h3>
                                 </div>
-
-                                <!-- Compact Requirements Section -->
-                                <div class="mb-8">
-                                    <div
-                                        class="flex items-center space-x-3 mb-6"
-                                    >
+                                <div
+                                    class="bg-white rounded-xl border border-gray-200 p-6"
+                                >
+                                    <div class="space-y-3">
                                         <div
-                                            class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg"
+                                            v-for="(
+                                                requirement, index
+                                            ) in division.requirements"
+                                            :key="index"
+                                            class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200"
                                         >
-                                            <svg
-                                                class="w-5 h-5 text-white"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <h3
-                                            class="text-xl font-bold text-gray-900"
-                                            style="color: #002f6c"
-                                        >
-                                            Persyaratan Dokumen
-                                        </h3>
-                                    </div>
-                                    <div
-                                        class="bg-white rounded-xl border border-gray-200 p-6"
-                                    >
-                                        <div
-                                            class="grid grid-cols-1 md:grid-cols-3 gap-8"
-                                        >
-                                            <!-- Portfolio -->
-                                            <div>
-                                                <h4
-                                                    class="text-gray-700 font-medium text-sm mb-3"
-                                                >
-                                                    Portfolio
-                                                </h4>
-                                                <ul
-                                                    class="space-y-2 text-sm text-gray-600"
-                                                >
-                                                    <li>• KTP</li>
-                                                    <li>• KTM</li>
-                                                </ul>
-                                            </div>
-
-                                            <!-- Dokumen Lainnya -->
-                                            <div>
-                                                <h4
-                                                    class="text-gray-700 font-medium text-sm mb-3"
-                                                >
-                                                    Dokumen Lainnya
-                                                </h4>
-                                                <ul
-                                                    class="space-y-2 text-sm text-gray-600"
-                                                >
-                                                    <li>• Sertifikat</li>
-                                                    <li>
-                                                        • Ijazah/Surat
-                                                        Keterangan Lulus (bagi
-                                                        Fresh Graduate)
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            <!-- CV & Transkrip -->
-                                            <div>
-                                                <h4
-                                                    class="text-gray-700 font-medium text-sm mb-3"
-                                                >
-                                                    CV
-                                                </h4>
-                                                <ul
-                                                    class="space-y-2 text-sm text-gray-600"
-                                                >
-                                                    <li>• Transkrip Nilai</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Pendidikan -->
-                                <div class="mb-8">
-                                    <div
-                                        class="flex items-center space-x-3 mb-6"
-                                    >
-                                        <div
-                                            class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg"
-                                        >
-                                            <svg
-                                                class="w-5 h-5 text-white"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M12 14l9-5-9-5-9 5 9 5z"
-                                                />
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <h3
-                                            class="text-xl font-bold text-gray-900"
-                                            style="color: #002f6c"
-                                        >
-                                            Pendidikan
-                                        </h3>
-                                    </div>
-                                    <div
-                                        class="bg-white rounded-xl border border-gray-200 p-6"
-                                    >
-                                        <div class="space-y-3">
-                                            <div>
-                                                <span
-                                                    class="text-gray-700 text-sm"
-                                                    >Jenjang pendidikan:
-                                                </span>
-                                                <span
-                                                    class="font-medium text-gray-900"
-                                                    >S1.</span
-                                                >
-                                            </div>
-                                            <div>
-                                                <span
-                                                    class="text-gray-700 text-sm"
-                                                    >Jurusan:
-                                                </span>
-                                                <span
-                                                    class="font-medium text-gray-900"
-                                                    >Sistem Informatika,
-                                                    Teknologi Informasi.</span
-                                                >
-                                            </div>
-                                            <div>
-                                                <span
-                                                    class="text-gray-700 text-sm"
-                                                    >IPK minimal:
-                                                </span>
-                                                <span
-                                                    class="font-medium text-gray-900"
-                                                    >3.1.</span
-                                                >
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Compact Important Dates -->
-                                <div class="mb-8">
-                                    <div
-                                        class="flex items-center space-x-3 mb-6"
-                                    >
-                                        <div
-                                            class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg"
-                                        >
-                                            <svg
-                                                class="w-5 h-5 text-white"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <h3
-                                            class="text-xl font-bold text-gray-900"
-                                            style="color: #002f6c"
-                                        >
-                                            Tanggal penting
-                                        </h3>
-                                    </div>
-                                    <div
-                                        class="bg-white rounded-xl border border-gray-200 p-6"
-                                    >
-                                        <div class="space-y-3">
                                             <div
-                                                class="flex justify-between items-center"
+                                                class="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0"
                                             >
-                                                <span
-                                                    class="text-gray-700 text-sm"
-                                                    >Durasi</span
-                                                >
-                                                <span
-                                                    class="font-medium text-gray-900"
-                                                    >: 6 bulan</span
-                                                >
+                                                {{ index + 1 }}
                                             </div>
-                                            <div
-                                                class="flex justify-between items-center"
+                                            <p
+                                                class="text-gray-700 text-sm leading-relaxed flex-1"
                                             >
-                                                <span
-                                                    class="text-gray-700 text-sm"
-                                                    >Penutupan lamaran</span
-                                                >
-                                                <span
-                                                    class="font-medium text-gray-900"
-                                                    >: 15 September 2025</span
-                                                >
-                                            </div>
-                                            <div
-                                                class="flex justify-between items-center"
-                                            >
-                                                <span
-                                                    class="text-gray-700 text-sm"
-                                                    >Pengumuman lolos
-                                                    seleksi</span
-                                                >
-                                                <span
-                                                    class="font-medium text-gray-900"
-                                                    >: 5 Oktober 2025</span
-                                                >
-                                            </div>
+                                                {{ requirement }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Compact Company Tab -->
-                            <div v-if="activeTab === 'company'" class="p-6">
-                                <div class="space-y-6">
-                                    <!-- Compact Company Overview -->
+                            <!-- Compact Schedule Section -->
+                            <div class="mb-8">
+                                <div class="flex items-center space-x-3 mb-6">
                                     <div
-                                        class="bg-gradient-to-br from-blue-50 to-indigo-100 border border-blue-200 rounded-2xl p-6"
+                                        class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg"
                                     >
-                                        <div
-                                            class="flex items-center space-x-3 mb-4"
+                                        <svg
+                                            class="w-5 h-5 text-white"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
                                         >
-                                            <div
-                                                class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg"
-                                                style="
-                                                    background: linear-gradient(
-                                                        135deg,
-                                                        #002f6c 0%,
-                                                        #1e40af 100%
-                                                    );
-                                                "
-                                            >
-                                                <img
-                                                    src="/logo2.png"
-                                                    alt="Bank Indonesia"
-                                                    class="w-6 h-6 object-contain"
-                                                />
-                                            </div>
-                                            <div>
-                                                <h3
-                                                    class="text-xl font-bold text-blue-900"
-                                                    style="color: #002f6c"
-                                                >
-                                                    Bank Indonesia
-                                                </h3>
-                                                <p
-                                                    class="text-blue-700 font-semibold text-xs"
-                                                >
-                                                    Bank Sentral Republik
-                                                    Indonesia
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <p
-                                            class="text-gray-700 leading-relaxed text-sm"
-                                        >
-                                            Bank Indonesia adalah bank sentral
-                                            Republik Indonesia yang berkomitmen
-                                            untuk mencapai dan memelihara
-                                            kestabilan nilai rupiah melalui
-                                            pemeliharaan kestabilan moneter dan
-                                            pengembangan stabilitas sistem
-                                            keuangan. Kami menyediakan program
-                                            magang berkualitas tinggi yang
-                                            memberikan pengalaman kerja nyata di
-                                            bidang perbankan dan ekonomi
-                                            nasional.
-                                        </p>
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                            />
+                                        </svg>
                                     </div>
-
-                                    <!-- Compact Mission & Vision Grid -->
+                                    <h3
+                                        class="text-xl font-bold text-gray-900"
+                                        style="color: #002f6c"
+                                    >
+                                        Jadwal Program
+                                    </h3>
+                                </div>
+                                <div
+                                    class="bg-white rounded-xl border border-gray-200 p-6"
+                                >
                                     <div
                                         class="grid grid-cols-1 md:grid-cols-2 gap-6"
                                     >
-                                        <!-- Vision -->
                                         <div
-                                            class="bg-gradient-to-br from-green-50 to-emerald-100 border border-green-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300"
+                                            class="flex justify-between items-center p-4 bg-blue-50 rounded-lg border border-blue-200"
                                         >
-                                            <div
-                                                class="flex items-center space-x-2 mb-4"
+                                            <span
+                                                class="text-gray-700 text-sm font-medium"
+                                                >Mulai Program</span
                                             >
-                                                <div
-                                                    class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-lg"
-                                                >
-                                                    <svg
-                                                        class="w-5 h-5 text-white"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                                        />
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                                        />
-                                                    </svg>
-                                                </div>
-                                                <h4
-                                                    class="text-xl font-bold text-green-800"
-                                                >
-                                                    Visi
-                                                </h4>
-                                            </div>
-                                            <p
-                                                class="text-gray-700 leading-relaxed font-medium text-sm"
+                                            <span
+                                                class="font-bold text-blue-700"
+                                                >{{
+                                                    formatDate(
+                                                        division.start_date
+                                                    )
+                                                }}</span
                                             >
-                                                Menjadi bank sentral yang
-                                                kredibel dan efektif dalam
-                                                mencapai dan memelihara
-                                                kestabilan nilai rupiah guna
-                                                mendukung pertumbuhan ekonomi
-                                                yang berkelanjutan.
-                                            </p>
-                                        </div>
-
-                                        <!-- Mission -->
-                                        <div
-                                            class="bg-gradient-to-br from-purple-50 to-violet-100 border border-purple-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300"
-                                        >
-                                            <div
-                                                class="flex items-center space-x-2 mb-4"
-                                            >
-                                                <div
-                                                    class="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center shadow-lg"
-                                                >
-                                                    <svg
-                                                        class="w-5 h-5 text-white"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                        />
-                                                    </svg>
-                                                </div>
-                                                <h4
-                                                    class="text-xl font-bold text-purple-800"
-                                                >
-                                                    Misi
-                                                </h4>
-                                            </div>
-                                            <ul class="space-y-2 text-gray-700">
-                                                <li
-                                                    class="flex items-start space-x-2"
-                                                >
-                                                    <div
-                                                        class="w-1.5 h-1.5 bg-purple-500 rounded-full mt-1.5 flex-shrink-0"
-                                                    ></div>
-                                                    <span
-                                                        class="font-medium text-sm"
-                                                        >Mencapai dan memelihara
-                                                        kestabilan nilai
-                                                        rupiah</span
-                                                    >
-                                                </li>
-                                                <li
-                                                    class="flex items-start space-x-2"
-                                                >
-                                                    <div
-                                                        class="w-1.5 h-1.5 bg-purple-500 rounded-full mt-1.5 flex-shrink-0"
-                                                    ></div>
-                                                    <span
-                                                        class="font-medium text-sm"
-                                                        >Mendorong kelancaran
-                                                        sistem pembayaran</span
-                                                    >
-                                                </li>
-                                                <li
-                                                    class="flex items-start space-x-2"
-                                                >
-                                                    <div
-                                                        class="w-1.5 h-1.5 bg-purple-500 rounded-full mt-1.5 flex-shrink-0"
-                                                    ></div>
-                                                    <span
-                                                        class="font-medium text-sm"
-                                                        >Mengatur dan mengawasi
-                                                        bank</span
-                                                    >
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <!-- Compact Key Highlights -->
-                                    <div
-                                        class="bg-gradient-to-br from-orange-50 to-red-100 border border-orange-200 rounded-xl p-6"
-                                    >
-                                        <div
-                                            class="flex items-center space-x-3 mb-6"
-                                        >
-                                            <div
-                                                class="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg"
-                                            >
-                                                <svg
-                                                    class="w-5 h-5 text-white"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                                                    />
-                                                </svg>
-                                            </div>
-                                            <h4
-                                                class="text-xl font-bold text-orange-800"
-                                            >
-                                                Keunggulan Program Magang
-                                            </h4>
                                         </div>
                                         <div
-                                            class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                            class="flex justify-between items-center p-4 bg-green-50 rounded-lg border border-green-200"
                                         >
-                                            <div
-                                                class="bg-white p-4 rounded-lg border border-orange-200"
+                                            <span
+                                                class="text-gray-700 text-sm font-medium"
+                                                >Selesai Program</span
                                             >
-                                                <h5
-                                                    class="font-bold text-orange-800 mb-2 text-sm"
-                                                >
-                                                    💼 Pengalaman Profesional
-                                                </h5>
-                                                <p
-                                                    class="text-gray-700 text-sm"
-                                                >
-                                                    Bekerja langsung dengan tim
-                                                    profesional di bidang
-                                                    ekonomi dan perbankan
-                                                </p>
-                                            </div>
-                                            <div
-                                                class="bg-white p-4 rounded-lg border border-orange-200"
+                                            <span
+                                                class="font-bold text-green-700"
+                                                >{{
+                                                    formatDate(
+                                                        division.end_date
+                                                    )
+                                                }}</span
                                             >
-                                                <h5
-                                                    class="font-bold text-orange-800 mb-2 text-sm"
-                                                >
-                                                    🎓 Pengembangan Skill
-                                                </h5>
-                                                <p
-                                                    class="text-gray-700 text-sm"
-                                                >
-                                                    Mengembangkan kemampuan
-                                                    analisis data dan riset
-                                                    ekonomi terkini
-                                                </p>
-                                            </div>
-                                            <div
-                                                class="bg-white p-4 rounded-lg border border-orange-200"
+                                        </div>
+                                        <div
+                                            class="flex justify-between items-center p-4 bg-orange-50 rounded-lg border border-orange-200"
+                                        >
+                                            <span
+                                                class="text-gray-700 text-sm font-medium"
+                                                >Deadline Lamaran</span
                                             >
-                                                <h5
-                                                    class="font-bold text-orange-800 mb-2 text-sm"
-                                                >
-                                                    🌟 Networking
-                                                </h5>
-                                                <p
-                                                    class="text-gray-700 text-sm"
-                                                >
-                                                    Membangun jaringan
-                                                    profesional dengan ahli
-                                                    ekonomi dan perbankan
-                                                </p>
-                                            </div>
-                                            <div
-                                                class="bg-white p-4 rounded-lg border border-orange-200"
+                                            <span
+                                                class="font-bold text-orange-700"
+                                                >{{
+                                                    formatDate(
+                                                        division.application_deadline
+                                                    )
+                                                }}</span
                                             >
-                                                <h5
-                                                    class="font-bold text-orange-800 mb-2 text-sm"
-                                                >
-                                                    📈 Karir Prospektif
-                                                </h5>
-                                                <p
-                                                    class="text-gray-700 text-sm"
-                                                >
-                                                    Peluang karir yang baik di
-                                                    sektor perbankan dan ekonomi
-                                                    nasional
-                                                </p>
-                                            </div>
+                                        </div>
+                                        <div
+                                            class="flex justify-between items-center p-4 bg-purple-50 rounded-lg border border-purple-200"
+                                        >
+                                            <span
+                                                class="text-gray-700 text-sm font-medium"
+                                                >Pengumuman Seleksi</span
+                                            >
+                                            <span
+                                                class="font-bold text-purple-700"
+                                                >{{
+                                                    formatDate(
+                                                        division.selection_announcement
+                                                    )
+                                                }}</span
+                                            >
                                         </div>
                                     </div>
                                 </div>
@@ -1089,7 +637,7 @@
 </template>
 
 <script setup>
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, router } from "@inertiajs/vue3";
 import { ref } from "vue";
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 
@@ -1125,19 +673,120 @@ const handleApply = async () => {
         return;
     }
 
+    // Check if user is logged in
+    if (!props.auth.user) {
+        showNotification(
+            "error",
+            "Login Required",
+            "Silakan login terlebih dahulu untuk mendaftar magang."
+        );
+        // Redirect to login with return URL
+        setTimeout(() => {
+            router.visit("/login", {
+                method: "get",
+                preserveState: false,
+                data: { redirect: window.location.pathname },
+            });
+        }, 2000);
+        return;
+    }
+
     isLoading.value = true;
 
     try {
-        // Simulate API call delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Check user profile completeness and documents
+        const response = await fetch(
+            `/applications/check/${props.division.id}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+            }
+        );
 
-        // For now, just redirect to application form
-        window.location.href = `/divisions/${props.division.id}/apply`;
+        const result = await response.json();
+
+        if (response.ok && result.canApply) {
+            // All data complete, proceed with application
+            const applyResponse = await fetch("/profile/create-application", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN":
+                        document
+                            .querySelector('meta[name="csrf-token"]')
+                            ?.getAttribute("content") || "",
+                },
+                body: JSON.stringify({
+                    division_id: props.division.id,
+                }),
+            });
+
+            const applyResult = await applyResponse.json();
+
+            if (applyResponse.ok) {
+                showNotification(
+                    "success",
+                    "Pendaftaran Berhasil!",
+                    `Anda telah berhasil mendaftar untuk divisi ${props.division.name}. Silakan tunggu konfirmasi dari admin.`
+                );
+
+                // Refresh page to update UI
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
+            } else {
+                showNotification(
+                    "error",
+                    "Gagal Mendaftar",
+                    applyResult.message || "Terjadi kesalahan saat mendaftar."
+                );
+            }
+        } else {
+            // Show what's missing
+            const missingItems = [];
+
+            if (
+                result.missingPersonalData &&
+                result.missingPersonalData.length > 0
+            ) {
+                missingItems.push(
+                    `Data Pribadi: ${result.missingPersonalData.join(", ")}`
+                );
+            }
+
+            if (result.missingDocuments && result.missingDocuments.length > 0) {
+                missingItems.push(
+                    `Dokumen: ${result.missingDocuments.join(", ")}`
+                );
+            }
+
+            const missingMessage =
+                missingItems.length > 0
+                    ? `Harap lengkapi terlebih dahulu:\n\n${missingItems.join(
+                          "\n\n"
+                      )}`
+                    : "Harap lengkapi profil Anda terlebih dahulu.";
+
+            showNotification("error", "Data Belum Lengkap", missingMessage);
+
+            // Redirect to profile after 3 seconds
+            setTimeout(() => {
+                router.visit("/profile", {
+                    method: "get",
+                    preserveState: false,
+                });
+            }, 4000);
+        }
     } catch (error) {
+        console.error("Application error:", error);
         showNotification(
             "error",
             "Error",
-            "Terjadi kesalahan saat memproses lamaran Anda."
+            "Terjadi kesalahan saat memproses lamaran Anda. Silakan coba lagi."
         );
     } finally {
         isLoading.value = false;
@@ -1155,5 +804,34 @@ const showNotification = (type, title, message) => {
 
 const closeNotification = () => {
     notification.value.show = false;
+};
+
+// Helper functions
+const formatDate = (date) => {
+    if (!date) return "-";
+
+    const options = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    };
+
+    return new Date(date).toLocaleDateString("id-ID", options);
+};
+
+const formatDuration = (startDate, endDate) => {
+    if (!startDate || !endDate) return "-";
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffMonths = Math.round(diffDays / 30);
+
+    if (diffMonths >= 1) {
+        return `${diffMonths} bulan`;
+    } else {
+        return `${diffDays} hari`;
+    }
 };
 </script>

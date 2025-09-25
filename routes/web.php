@@ -27,8 +27,6 @@ Route::get('/', function () {
 // Public routes (accessible without authentication)
 Route::get('/divisi', [PublicController::class, 'divisions'])->name('public.divisions');
 Route::get('/divisi/{division}', [PublicController::class, 'divisionDetail'])->name('public.division.detail');
-Route::get('/daftar', [PublicController::class, 'applicationForm'])->name('public.application.form');
-Route::post('/daftar', [PublicController::class, 'storeApplication'])->name('public.application.store');
 Route::get('/cek-status', [PublicController::class, 'checkStatus'])->name('public.check.status');
 Route::post('/cek-status', [PublicController::class, 'searchStatus'])->name('public.search.status');
 
