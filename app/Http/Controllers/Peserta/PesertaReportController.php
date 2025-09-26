@@ -61,13 +61,13 @@ class PesertaReportController extends Controller
             'revision_reports' => $reports->where('status', 'revision')->count(),
         ];
 
-        return Inertia::render('Profile/Reports/Index', [
+        return Inertia::render('Peserta/Reports/Index', [
             'stats' => $stats,
             'reports' => $reports,
             'logbooks' => $logbooks->map(function ($logbook) {
                 return [
                     'id' => $logbook->id,
-                    'title' => $logbook->title,
+                    'title' => $logbook->title ?? 'Aktivitas Harian',
                     'date' => $logbook->date,
                     'activities' => $logbook->activities,
                     'duration' => $logbook->duration,
@@ -102,9 +102,19 @@ class PesertaReportController extends Controller
             ->orderBy('date', 'asc')
             ->get();
 
-        return Inertia::render('Profile/Reports/Create', [
+        return Inertia::render('Peserta/Reports/Create', [
             'division' => $acceptedApplication->division,
-            'logbooks' => $logbooks,
+            'logbooks' => $logbooks->map(function ($logbook) {
+                return [
+                    'id' => $logbook->id,
+                    'title' => $logbook->title ?? 'Aktivitas Harian',
+                    'date' => $logbook->date,
+                    'activities' => $logbook->activities,
+                    'duration' => $logbook->duration,
+                    'status' => $logbook->status,
+                    'created_at' => $logbook->created_at
+                ];
+            }),
             'application' => $acceptedApplication
         ]);
     }
@@ -126,8 +136,16 @@ class PesertaReportController extends Controller
         }
 
         $request->validate([
+            'report_type' => 'required|string|in:weekly,monthly,final',
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
+            'period_start' => 'required|date',
+            'period_end' => 'required|date|after_or_equal:period_start',
+            'summary' => 'required|string|max:2000',
+            'achievements' => 'nullable|string|max:2000',
+            'challenges' => 'nullable|string|max:2000',
+            'next_plans' => 'nullable|string|max:2000',
+            'selected_logbooks' => 'nullable|array',
+            'selected_logbooks.*' => 'exists:logbooks,id',
             'report_file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:10240', // 10MB max
         ]);
 
@@ -137,12 +155,33 @@ class PesertaReportController extends Controller
             $filename = 'report_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = $file->storeAs('reports', $filename, 'public');
 
+            // Create description from form data
+            $description = "Jenis Laporan: " . ucfirst($request->report_type) . "\n";
+            $description .= "Periode: " . $request->period_start . " s/d " . $request->period_end . "\n\n";
+            $description .= "Ringkasan Aktivitas:\n" . $request->summary . "\n\n";
+            
+            if ($request->achievements) {
+                $description .= "Pencapaian:\n" . $request->achievements . "\n\n";
+            }
+            
+            if ($request->challenges) {
+                $description .= "Tantangan:\n" . $request->challenges . "\n\n";
+            }
+            
+            if ($request->next_plans) {
+                $description .= "Rencana Selanjutnya:\n" . $request->next_plans . "\n\n";
+            }
+            
+            if ($request->selected_logbooks && count($request->selected_logbooks) > 0) {
+                $description .= "Logbook Terpilih: " . count($request->selected_logbooks) . " entri";
+            }
+
             // Create report record
             Report::create([
                 'user_id' => $user->id,
                 'application_id' => $acceptedApplication->id,
                 'title' => $request->title,
-                'description' => $request->description,
+                'description' => $description,
                 'file_path' => $filePath,
                 'file_name' => $file->getClientOriginalName(),
                 'file_size' => $file->getSize(),
@@ -150,7 +189,7 @@ class PesertaReportController extends Controller
                 'status' => 'submitted'
             ]);
 
-            return redirect()->route('profile.edit')
+            return redirect()->route('peserta.reports.index')
                 ->with('success', 'Laporan berhasil diupload dan dikirim untuk review.');
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat mengupload laporan.')
@@ -166,7 +205,7 @@ class PesertaReportController extends Controller
         $user = Auth::user();
         $report = Report::where('user_id', $user->id)->findOrFail($id);
         
-        return Inertia::render('Profile/Reports/Show', [
+        return Inertia::render('Peserta/Reports/Show', [
             'report' => $report->load(['reviewer', 'application.division'])
         ]);
     }
@@ -200,11 +239,11 @@ class PesertaReportController extends Controller
         
         // Only allow editing if status is draft or revision
         if (!in_array($report->status, ['draft', 'revision'])) {
-            return redirect()->route('profile.edit')
+            return redirect()->route('peserta.reports.show', $report->id)
                 ->with('error', 'Laporan tidak dapat diedit karena sudah disubmit atau disetujui.');
         }
         
-        return Inertia::render('Profile/Reports/Edit', [
+        return Inertia::render('Peserta/Reports/Edit', [
             'report' => $report
         ]);
     }
@@ -257,7 +296,7 @@ class PesertaReportController extends Controller
 
             $report->update($updateData);
 
-            return redirect()->route('profile.edit')
+            return redirect()->route('peserta.reports.show', $report->id)
                 ->with('success', 'Laporan berhasil diperbarui.');
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat memperbarui laporan.')
@@ -287,7 +326,7 @@ class PesertaReportController extends Controller
             // Delete report record
             $report->delete();
 
-            return redirect()->route('profile.edit')
+            return redirect()->route('peserta.reports.index')
                 ->with('success', 'Laporan berhasil dihapus.');
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat menghapus laporan.');

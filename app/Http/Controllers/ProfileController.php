@@ -78,11 +78,26 @@ class ProfileController extends Controller
         
         $acceptedApplication = $applications->where('status', 'diterima')->first();
         if ($acceptedApplication) {
-            $logbooks = Logbook::where('user_id', $user->id)
+            $userLogbooks = Logbook::where('user_id', $user->id)
                 ->with(['division', 'comments.user'])
                 ->orderBy('date', 'desc')
-                ->limit(5)
-                ->get();
+                ->get(); // Remove limit(5) to show all logbooks
+                
+            $logbooks = $userLogbooks->map(function ($logbook) {
+                return [
+                    'id' => $logbook->id ?? 0,
+                    'title' => $logbook->title ?? 'Aktivitas Harian',
+                    'date' => $logbook->date ?? now()->format('Y-m-d'),
+                    'activities' => $logbook->activities ?? '',
+                    'duration' => $logbook->duration ?? 0,
+                    'status' => $logbook->status ?? 'draft',
+                    'created_at' => $logbook->created_at ?? now(),
+                    'comments' => $logbook->comments ?? [],
+                    'division' => $logbook->division ?? null
+                ];
+            })->filter(function($logbook) {
+                return $logbook['id'] !== 0; // Filter out any invalid entries
+            });
                 
             $allLogbooks = Logbook::where('user_id', $user->id)->get();
             $logbookStats = [

@@ -862,11 +862,11 @@
 
                                 <!-- Logbooks List -->
                                 <div v-else class="space-y-6">
-                                    <div
-                                        v-for="logbook in logbooks"
-                                        :key="logbook.id"
-                                        class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all duration-300 group"
-                                    >
+                                    <template v-for="logbook in logbooks" :key="logbook?.id || Math.random()">
+                                        <div
+                                            v-if="logbook?.id"
+                                            class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all duration-300 group"
+                                        >
                                         <!-- Header -->
                                         <div
                                             class="flex items-start justify-between mb-4"
@@ -897,7 +897,7 @@
                                                     >
                                                         {{
                                                             formatDate(
-                                                                logbook.date
+                                                                logbook?.date
                                                             )
                                                         }}
                                                     </h4>
@@ -905,7 +905,7 @@
                                                         class="text-sm text-gray-500"
                                                     >
                                                         {{
-                                                            logbook.division
+                                                            logbook?.division
                                                                 ?.name ||
                                                             "Tidak ada divisi"
                                                         }}
@@ -936,7 +936,7 @@
                                                     <span
                                                         class="text-sm font-medium text-gray-600"
                                                         >{{
-                                                            logbook.duration
+                                                            logbook?.duration || 0
                                                         }}h</span
                                                     >
                                                 </div>
@@ -946,16 +946,16 @@
                                                     class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold"
                                                     :class="{
                                                         'bg-amber-50 text-amber-700 border border-amber-200':
-                                                            logbook.status ===
+                                                            logbook?.status ===
                                                             'submitted',
                                                         'bg-emerald-50 text-emerald-700 border border-emerald-200':
-                                                            logbook.status ===
+                                                            logbook?.status ===
                                                             'approved',
                                                         'bg-red-50 text-red-700 border border-red-200':
-                                                            logbook.status ===
+                                                            logbook?.status ===
                                                             'revision',
                                                         'bg-gray-50 text-gray-700 border border-gray-200':
-                                                            logbook.status ===
+                                                            logbook?.status ===
                                                             'draft',
                                                     }"
                                                 >
@@ -963,27 +963,27 @@
                                                         class="w-2 h-2 rounded-full mr-2"
                                                         :class="{
                                                             'bg-amber-400':
-                                                                logbook.status ===
+                                                                logbook?.status ===
                                                                 'submitted',
                                                             'bg-emerald-400':
-                                                                logbook.status ===
+                                                                logbook?.status ===
                                                                 'approved',
                                                             'bg-red-400':
-                                                                logbook.status ===
+                                                                logbook?.status ===
                                                                 'revision',
                                                             'bg-gray-400':
-                                                                logbook.status ===
+                                                                logbook?.status ===
                                                                 'draft',
                                                         }"
                                                     ></div>
                                                     {{
-                                                        logbook.status ===
+                                                        logbook?.status ===
                                                         "submitted"
                                                             ? "Pending"
-                                                            : logbook.status ===
+                                                            : logbook?.status ===
                                                               "approved"
                                                             ? "Disetujui"
-                                                            : logbook.status ===
+                                                            : logbook?.status ===
                                                               "revision"
                                                             ? "Revisi"
                                                             : "Draft"
@@ -998,18 +998,21 @@
                                                 <h5
                                                     class="text-base font-semibold text-gray-800 mb-2"
                                                 >
-                                                    {{ logbook.title }}
+                                                    {{
+                                                        logbook?.title ||
+                                                            "Aktivitas Harian"
+                                                    }}
                                                 </h5>
                                                 <p
                                                     class="text-gray-600 text-sm leading-relaxed line-clamp-3"
                                                 >
-                                                    {{ logbook.activities }}
+                                                    {{ logbook?.activities || 'Tidak ada aktivitas' }}
                                                 </p>
                                             </div>
 
                                             <!-- Learning Points (if exists) -->
                                             <div
-                                                v-if="logbook.learning_points"
+                                                v-if="logbook?.learning_points"
                                                 class="bg-blue-50 rounded-lg p-3 border-l-4 border-blue-400"
                                             >
                                                 <h6
@@ -1021,14 +1024,14 @@
                                                     class="text-sm text-blue-700"
                                                 >
                                                     {{
-                                                        logbook.learning_points
+                                                        logbook?.learning_points
                                                     }}
                                                 </p>
                                             </div>
 
                                             <!-- Challenges (if exists) -->
                                             <div
-                                                v-if="logbook.challenges"
+                                                v-if="logbook?.challenges"
                                                 class="bg-orange-50 rounded-lg p-3 border-l-4 border-orange-400"
                                             >
                                                 <h6
@@ -1039,7 +1042,7 @@
                                                 <p
                                                     class="text-sm text-orange-700"
                                                 >
-                                                    {{ logbook.challenges }}
+                                                    {{ logbook?.challenges }}
                                                 </p>
                                             </div>
                                         </div>
@@ -1067,7 +1070,7 @@
                                                 Dibuat
                                                 {{
                                                     formatDate(
-                                                        logbook.created_at
+                                                        logbook?.created_at
                                                     )
                                                 }}
                                             </div>
@@ -1118,8 +1121,8 @@
                                                 </button>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                        </div>
+                                    </template>
 
                                 <!-- View More Button -->
                                 <div
@@ -1363,9 +1366,12 @@
                                     >
                                         Belum ada laporan
                                     </h3>
-                                    <p class="text-gray-500 mb-4">
+                                    <p class="text-gray-500 mb-2">
                                         Upload laporan akhir berdasarkan
                                         kegiatan magang Anda.
+                                    </p>
+                                    <p class="text-xs text-gray-400 mb-4">
+                                        Debug: Reports data = {{ JSON.stringify(reports) }}
                                     </p>
                                     <button
                                         @click="showCreateReportModal = true"
@@ -1991,6 +1997,7 @@
                 </div>
             </div>
         </div>
+        </div>
     </AuthenticatedLayout>
 </template>
 
@@ -2242,6 +2249,16 @@ const getStatusText = (status) => {
 
 // Check for flash messages and handle navigation
 onMounted(() => {
+    // Debug: Check what data we're receiving
+    console.log('Profile data received:', {
+        reports: props.reports,
+        reportCount: props.reports ? props.reports.length : 0,
+        logbooks: props.logbooks,
+        logbookCount: props.logbooks ? props.logbooks.length : 0,
+        applications: props.applications,
+        user: props.user
+    });
+
     if (props.status) {
         showToast("success", props.status);
     }

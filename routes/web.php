@@ -82,7 +82,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/create-application', [ProfileController::class, 'createApplication'])->name('profile.create-application');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // Logbook store route (create logbook from profile page)
+    // Logbook routes (accessible from profile page)
+    Route::get('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'index'])->name('profile.logbooks.index');
+    Route::get('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'show'])->name('profile.logbooks.show');
     Route::post('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'store'])->name('profile.logbooks.store');
     
     // Reports store route (create report from profile page)

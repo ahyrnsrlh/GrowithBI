@@ -210,7 +210,7 @@
                 </h2>
             </div>
 
-            <div v-if="logbooks.length === 0" class="p-12 text-center">
+            <div v-if="!logbooks || logbooks.length === 0" class="p-12 text-center">
                 <svg
                     class="mx-auto h-12 w-12 text-gray-400 mb-4"
                     fill="none"
@@ -578,8 +578,19 @@ import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 const props = defineProps({
-    logbooks: Array,
-    stats: Object,
+    logbooks: {
+        type: Array,
+        default: () => ([])
+    },
+    stats: {
+        type: Object,
+        default: () => ({
+            total_logbooks: 0,
+            pending_logbooks: 0,
+            approved_logbooks: 0,
+            revision_logbooks: 0
+        })
+    },
     filters: {
         type: Object,
         default: () => ({
@@ -613,8 +624,7 @@ const submitLogbook = () => {
         onSuccess: () => {
             showCreateModal.value = false;
             createForm.reset();
-            // Refresh the page data
-            router.reload({ only: ["logbooks", "stats"] });
+            // The controller will redirect to profile.edit which refreshes all data
         },
         onError: () => {
             // Form errors are handled automatically by Inertia
