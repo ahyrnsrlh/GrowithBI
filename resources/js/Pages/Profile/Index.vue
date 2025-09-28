@@ -2098,6 +2098,13 @@ const createLogbookForm = useForm({
     status: "submitted", // Default to submitted
 });
 
+// Report creation form
+const reportForm = useForm({
+    title: "",
+    description: "",
+    report_file: null,
+});
+
 // Methods
 const showToast = (type, message) => {
     notificationType.value = type;

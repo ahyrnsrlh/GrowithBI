@@ -139,18 +139,11 @@ class PesertaReportController extends Controller
             return back()->with('error', 'Anda belum memiliki status magang yang diterima.');
         }
 
+        // Simple validation for basic report upload
         $request->validate([
-            'report_type' => 'required|string|in:weekly,monthly,final',
             'title' => 'required|string|max:255',
-            'period_start' => 'required|date',
-            'period_end' => 'required|date|after_or_equal:period_start',
-            'summary' => 'required|string|max:2000',
-            'achievements' => 'nullable|string|max:2000',
-            'challenges' => 'nullable|string|max:2000',
-            'next_plans' => 'nullable|string|max:2000',
-            'selected_logbooks' => 'nullable|array',
-            'selected_logbooks.*' => 'exists:logbooks,id',
-            'report_file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:10240', // 10MB max
+            'description' => 'required|string|max:2000',
+            'report_file' => 'required|file|mimes:pdf,doc,docx|max:10240', // 10MB max
         ]);
 
         try {
@@ -159,33 +152,12 @@ class PesertaReportController extends Controller
             $filename = 'report_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = $file->storeAs('reports', $filename, 'public');
 
-            // Create description from form data
-            $description = "Jenis Laporan: " . ucfirst($request->report_type) . "\n";
-            $description .= "Periode: " . $request->period_start . " s/d " . $request->period_end . "\n\n";
-            $description .= "Ringkasan Aktivitas:\n" . $request->summary . "\n\n";
-            
-            if ($request->achievements) {
-                $description .= "Pencapaian:\n" . $request->achievements . "\n\n";
-            }
-            
-            if ($request->challenges) {
-                $description .= "Tantangan:\n" . $request->challenges . "\n\n";
-            }
-            
-            if ($request->next_plans) {
-                $description .= "Rencana Selanjutnya:\n" . $request->next_plans . "\n\n";
-            }
-            
-            if ($request->selected_logbooks && count($request->selected_logbooks) > 0) {
-                $description .= "Logbook Terpilih: " . count($request->selected_logbooks) . " entri";
-            }
-
             // Create report record
             Report::create([
                 'user_id' => $user->id,
                 'application_id' => $acceptedApplication->id,
                 'title' => $request->title,
-                'description' => $description,
+                'description' => $request->description,
                 'file_path' => $filePath,
                 'file_name' => $file->getClientOriginalName(),
                 'file_size' => $file->getSize(),
@@ -193,15 +165,14 @@ class PesertaReportController extends Controller
                 'status' => 'submitted'
             ]);
 
-            return redirect()->route('profile.index')
+            return redirect()->route('profile.edit')
                 ->with('success', 'Laporan berhasil diupload dan dikirim untuk review.');
         } catch (\Exception $e) {
             Log::error('Report upload error: ' . $e->getMessage());
             if ($request->wantsJson()) {
-                return response()->json(['error' => 'Terjadi kesalahan saat mengupload laporan. Silakan coba lagi.'], 500);
+                return response()->json(['error' => 'Gagal mengupload laporan. Silakan coba lagi.'], 500);
             }
-            return back()->with('error', 'Terjadi kesalahan saat mengupload laporan.')
-                        ->withInput();
+            return back()->with('error', 'Gagal mengupload laporan. Silakan coba lagi.');
         }
     }
 
