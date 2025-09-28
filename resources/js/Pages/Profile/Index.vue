@@ -2281,13 +2281,18 @@ onMounted(() => {
 
     // Check for URL parameters
     const urlParams = new URLSearchParams(window.location.search);
-    
+
     // Check for tab parameter to switch to specific tab
     const tab = urlParams.get("tab");
-    if (tab && ['profile', 'documents', 'applications', 'logbook', 'reports'].includes(tab)) {
+    if (
+        tab &&
+        ["profile", "documents", "applications", "logbook", "reports"].includes(
+            tab
+        )
+    ) {
         activeTab.value = tab;
     }
-    
+
     // Check for missing fields from URL parameters
     const missingFields = urlParams.get("missing_fields");
     if (missingFields) {
