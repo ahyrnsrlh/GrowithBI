@@ -55,11 +55,13 @@ class SampleApplicationSeeder extends Seeder
         }
         
         // Create sample applications with different statuses
-        $statuses = ['pending', 'approved', 'rejected'];
+        $statuses = ['menunggu', 'dalam_review', 'wawancara', 'diterima', 'ditolak'];
         $statusWeights = [
-            'pending' => 8,   // 40% pending
-            'approved' => 7,  // 35% approved  
-            'rejected' => 5,  // 25% rejected
+            'menunggu' => 6,      // 30%
+            'dalam_review' => 4,  // 20%
+            'wawancara' => 3,     // 15%
+            'diterima' => 4,      // 20%
+            'ditolak' => 3,       // 15%
         ];
         
         // Create weighted status array
@@ -78,7 +80,6 @@ class SampleApplicationSeeder extends Seeder
                 'email' => 'applicant' . $i . '@example.com',
                 'phone' => '081234567' . str_pad($i, 2, '0', STR_PAD_LEFT),
                 'motivation' => 'I am very motivated to join this internship program and contribute to the company growth.',
-                'experience' => 'I have experience in relevant field and eager to learn more through this internship.',
                 'status' => $weightedStatuses[array_rand($weightedStatuses)],
                 'created_at' => now()->subDays(rand(0, 60)),
                 'updated_at' => now()->subDays(rand(0, 30)),

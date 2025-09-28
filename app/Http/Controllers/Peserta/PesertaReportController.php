@@ -8,6 +8,7 @@ use App\Models\Report;
 use App\Models\Logbook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Carbon\Carbon;
@@ -132,6 +133,9 @@ class PesertaReportController extends Controller
             ->first();
             
         if (!$acceptedApplication) {
+            if ($request->wantsJson()) {
+                return response()->json(['error' => 'Anda belum memiliki status magang yang diterima.'], 400);
+            }
             return back()->with('error', 'Anda belum memiliki status magang yang diterima.');
         }
 
@@ -189,9 +193,13 @@ class PesertaReportController extends Controller
                 'status' => 'submitted'
             ]);
 
-            return redirect()->route('peserta.reports.index')
+            return redirect()->route('profile.index')
                 ->with('success', 'Laporan berhasil diupload dan dikirim untuk review.');
         } catch (\Exception $e) {
+            Log::error('Report upload error: ' . $e->getMessage());
+            if ($request->wantsJson()) {
+                return response()->json(['error' => 'Terjadi kesalahan saat mengupload laporan. Silakan coba lagi.'], 500);
+            }
             return back()->with('error', 'Terjadi kesalahan saat mengupload laporan.')
                         ->withInput();
         }
@@ -226,7 +234,7 @@ class PesertaReportController extends Controller
             return back()->with('error', 'File laporan tidak ditemukan.');
         }
 
-        return Storage::disk('public')->download($report->file_path, $report->file_name);
+        return response()->download(Storage::disk('public')->path($report->file_path), $report->file_name);
     }
 
     /**

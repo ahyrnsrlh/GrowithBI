@@ -1147,88 +1147,289 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Reports Tab -->
-                            <div
-                                v-if="activeTab === 'reports'"
-                                class="bg-white rounded-lg shadow-sm border border-gray-200"
-                            >
-                                <!-- Header -->
-                                <div class="p-6 border-b border-gray-200">
-                                    <div
-                                        class="flex items-center justify-between"
-                                    >
-                                        <div>
-                                            <h2
-                                                class="text-xl font-semibold text-gray-900"
-                                            >
-                                                Laporan Akhir
-                                            </h2>
-                                            <p class="text-gray-600 mt-1">
-                                                Kelola laporan dan statistik
-                                                magang Anda
-                                            </p>
-                                        </div>
-                                        <button
-                                            @click="
-                                                showCreateReportModal = true
-                                            "
-                                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                        <!-- Reports Tab -->
+                        <div
+                            v-if="activeTab === 'reports'"
+                            class="bg-white rounded-lg shadow-sm border border-gray-200"
+                        >
+                            <!-- Header -->
+                            <div class="p-6 border-b border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h2
+                                            class="text-xl font-semibold text-gray-900"
                                         >
-                                            <svg
-                                                class="w-4 h-4 mr-2"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                                />
-                                            </svg>
-                                            Buat Laporan
-                                        </button>
+                                            Laporan Akhir
+                                        </h2>
+                                        <p class="text-gray-600 mt-1">
+                                            Kelola laporan dan statistik magang
+                                            Anda
+                                        </p>
                                     </div>
-                                </div>
-
-                                <!-- Statistics -->
-                                <div class="p-6 border-b border-gray-200">
-                                    <h3
-                                        class="text-lg font-medium text-gray-900 mb-4"
+                                    <button
+                                        @click="showCreateReportModal = true"
+                                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
                                     >
-                                        Statistik Laporan Akhir
-                                    </h3>
+                                        <svg
+                                            class="w-4 h-4 mr-2"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                            />
+                                        </svg>
+                                        Buat Laporan
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Statistics -->
+                            <div class="p-6 border-b border-gray-200">
+                                <h3
+                                    class="text-lg font-medium text-gray-900 mb-4"
+                                >
+                                    Statistik Laporan Akhir
+                                </h3>
+                                <div
+                                    class="grid grid-cols-2 md:grid-cols-4 gap-4"
+                                >
                                     <div
-                                        class="grid grid-cols-2 md:grid-cols-4 gap-4"
+                                        class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white"
                                     >
                                         <div
-                                            class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white"
+                                            class="flex items-center justify-between"
+                                        >
+                                            <div>
+                                                <p
+                                                    class="text-blue-100 text-sm font-medium"
+                                                >
+                                                    Total Laporan
+                                                </p>
+                                                <p class="text-3xl font-bold">
+                                                    {{
+                                                        reportStats?.total_reports ||
+                                                        0
+                                                    }}
+                                                </p>
+                                            </div>
+                                            <div
+                                                class="bg-blue-400 bg-opacity-30 rounded-full p-3"
+                                            >
+                                                <svg
+                                                    class="w-8 h-8"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                    />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl shadow-lg p-6 text-white"
+                                    >
+                                        <div
+                                            class="flex items-center justify-between"
+                                        >
+                                            <div>
+                                                <p
+                                                    class="text-orange-100 text-sm font-medium"
+                                                >
+                                                    Pending
+                                                </p>
+                                                <p class="text-3xl font-bold">
+                                                    {{
+                                                        reportStats?.pending_reports ||
+                                                        0
+                                                    }}
+                                                </p>
+                                            </div>
+                                            <div
+                                                class="bg-orange-400 bg-opacity-30 rounded-full p-3"
+                                            >
+                                                <svg
+                                                    class="w-8 h-8"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                    />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
+                                    >
+                                        <div
+                                            class="flex items-center justify-between"
+                                        >
+                                            <div>
+                                                <p
+                                                    class="text-green-100 text-sm font-medium"
+                                                >
+                                                    Disetujui
+                                                </p>
+                                                <p class="text-3xl font-bold">
+                                                    {{
+                                                        reportStats?.approved_reports ||
+                                                        0
+                                                    }}
+                                                </p>
+                                            </div>
+                                            <div
+                                                class="bg-green-400 bg-opacity-30 rounded-full p-3"
+                                            >
+                                                <svg
+                                                    class="w-8 h-8"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                    />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl shadow-lg p-6 text-white"
+                                    >
+                                        <div
+                                            class="flex items-center justify-between"
+                                        >
+                                            <div>
+                                                <p
+                                                    class="text-purple-100 text-sm font-medium"
+                                                >
+                                                    Perlu Revisi
+                                                </p>
+                                                <p class="text-3xl font-bold">
+                                                    {{
+                                                        reportStats?.revision_reports ||
+                                                        0
+                                                    }}
+                                                </p>
+                                            </div>
+                                            <div
+                                                class="bg-purple-400 bg-opacity-30 rounded-full p-3"
+                                            >
+                                                <svg
+                                                    class="w-8 h-8"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.966-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                                                    />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="p-6">
+                                <div
+                                    v-if="!reports || reports.length === 0"
+                                    class="text-center py-12"
+                                >
+                                    <svg
+                                        class="mx-auto h-12 w-12 text-gray-400 mb-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                        />
+                                    </svg>
+                                    <h3
+                                        class="text-lg font-medium text-gray-900 mb-2"
+                                    >
+                                        Belum ada laporan
+                                    </h3>
+                                    <p class="text-gray-500 mb-2">
+                                        Upload laporan akhir berdasarkan
+                                        kegiatan magang Anda.
+                                    </p>
+                                    <p class="text-xs text-gray-400 mb-4">
+                                        Debug: Reports data =
+                                        {{ JSON.stringify(reports) }}
+                                    </p>
+                                    <button
+                                        @click="showCreateReportModal = true"
+                                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                    >
+                                        <svg
+                                            class="w-4 h-4 mr-2"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                            />
+                                        </svg>
+                                        Buat Laporan
+                                    </button>
+                                </div>
+
+                                <!-- Reports List -->
+                                <div
+                                    v-else-if="reports && reports.length > 0"
+                                    class="space-y-6"
+                                >
+                                    <div
+                                        v-for="report in reports"
+                                        :key="report?.id || Math.random()"
+                                        class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-emerald-200 hover:shadow-lg transition-all duration-300 group"
+                                    >
+                                        <!-- Header -->
+                                        <div
+                                            class="flex items-start justify-between mb-4"
                                         >
                                             <div
-                                                class="flex items-center justify-between"
+                                                class="flex items-center space-x-4"
                                             >
-                                                <div>
-                                                    <p
-                                                        class="text-blue-100 text-sm font-medium"
-                                                    >
-                                                        Total Laporan
-                                                    </p>
-                                                    <p
-                                                        class="text-3xl font-bold"
-                                                    >
-                                                        {{
-                                                            reportStats?.total_reports ||
-                                                            0
-                                                        }}
-                                                    </p>
-                                                </div>
                                                 <div
-                                                    class="bg-blue-400 bg-opacity-30 rounded-full p-3"
+                                                    class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg"
                                                 >
                                                     <svg
-                                                        class="w-8 h-8"
+                                                        class="w-7 h-7 text-white"
                                                         fill="none"
                                                         stroke="currentColor"
                                                         viewBox="0 0 24 24"
@@ -1241,315 +1442,132 @@
                                                         />
                                                     </svg>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl shadow-lg p-6 text-white"
-                                        >
-                                            <div
-                                                class="flex items-center justify-between"
-                                            >
                                                 <div>
-                                                    <p
-                                                        class="text-orange-100 text-sm font-medium"
-                                                    >
-                                                        Pending
-                                                    </p>
-                                                    <p
-                                                        class="text-3xl font-bold"
+                                                    <h4
+                                                        class="text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors"
                                                     >
                                                         {{
-                                                            reportStats?.pending_reports ||
-                                                            0
+                                                            report?.title ||
+                                                            "Laporan Tanpa Judul"
                                                         }}
-                                                    </p>
-                                                </div>
-                                                <div
-                                                    class="bg-orange-400 bg-opacity-30 rounded-full p-3"
-                                                >
-                                                    <svg
-                                                        class="w-8 h-8"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
+                                                    </h4>
+                                                    <p
+                                                        class="text-sm text-gray-500 mt-1"
                                                     >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                        />
-                                                    </svg>
+                                                        Laporan Akhir Magang
+                                                    </p>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div
-                                            class="bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
-                                        >
-                                            <div
-                                                class="flex items-center justify-between"
-                                            >
-                                                <div>
-                                                    <p
-                                                        class="text-green-100 text-sm font-medium"
-                                                    >
-                                                        Disetujui
-                                                    </p>
-                                                    <p
-                                                        class="text-3xl font-bold"
-                                                    >
-                                                        {{
-                                                            reportStats?.approved_reports ||
-                                                            0
-                                                        }}
-                                                    </p>
-                                                </div>
-                                                <div
-                                                    class="bg-green-400 bg-opacity-30 rounded-full p-3"
-                                                >
-                                                    <svg
-                                                        class="w-8 h-8"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                        />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl shadow-lg p-6 text-white"
-                                        >
-                                            <div
-                                                class="flex items-center justify-between"
-                                            >
-                                                <div>
-                                                    <p
-                                                        class="text-purple-100 text-sm font-medium"
-                                                    >
-                                                        Perlu Revisi
-                                                    </p>
-                                                    <p
-                                                        class="text-3xl font-bold"
-                                                    >
-                                                        {{
-                                                            reportStats?.revision_reports ||
-                                                            0
-                                                        }}
-                                                    </p>
-                                                </div>
-                                                <div
-                                                    class="bg-purple-400 bg-opacity-30 rounded-full p-3"
-                                                >
-                                                    <svg
-                                                        class="w-8 h-8"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.966-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-                                                        />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- Content -->
-                                <div class="p-6">
-                                    <div
-                                        v-if="!reports || reports.length === 0"
-                                        class="text-center py-12"
-                                    >
-                                        <svg
-                                            class="mx-auto h-12 w-12 text-gray-400 mb-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                            />
-                                        </svg>
-                                        <h3
-                                            class="text-lg font-medium text-gray-900 mb-2"
-                                        >
-                                            Belum ada laporan
-                                        </h3>
-                                        <p class="text-gray-500 mb-2">
-                                            Upload laporan akhir berdasarkan
-                                            kegiatan magang Anda.
-                                        </p>
-                                        <p class="text-xs text-gray-400 mb-4">
-                                            Debug: Reports data =
-                                            {{ JSON.stringify(reports) }}
-                                        </p>
-                                        <button
-                                            @click="
-                                                showCreateReportModal = true
-                                            "
-                                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                                        >
-                                            <svg
-                                                class="w-4 h-4 mr-2"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                                />
-                                            </svg>
-                                            Buat Laporan
-                                        </button>
-                                    </div>
-
-                                    <!-- Reports List -->
-                                    <div
-                                        v-else-if="
-                                            reports && reports.length > 0
-                                        "
-                                        class="space-y-6"
-                                    >
-                                        <div
-                                            v-for="report in reports"
-                                            :key="report?.id || Math.random()"
-                                            class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-emerald-200 hover:shadow-lg transition-all duration-300 group"
-                                        >
-                                            <!-- Header -->
-                                            <div
-                                                class="flex items-start justify-between mb-4"
+                                            <!-- Status Badge -->
+                                            <span
+                                                class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold shadow-sm border"
+                                                :class="{
+                                                    'bg-amber-50 text-amber-700 border-amber-200':
+                                                        (report?.status ||
+                                                            'submitted') ===
+                                                        'submitted',
+                                                    'bg-emerald-50 text-emerald-700 border-emerald-200':
+                                                        (report?.status ||
+                                                            'submitted') ===
+                                                        'approved',
+                                                    'bg-red-50 text-red-700 border-red-200':
+                                                        (report?.status ||
+                                                            'submitted') ===
+                                                        'revision',
+                                                }"
                                             >
                                                 <div
-                                                    class="flex items-center space-x-4"
-                                                >
-                                                    <div
-                                                        class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg"
-                                                    >
-                                                        <svg
-                                                            class="w-7 h-7 text-white"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                            />
-                                                        </svg>
-                                                    </div>
-                                                    <div>
-                                                        <h4
-                                                            class="text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors"
-                                                        >
-                                                            {{
-                                                                report?.title ||
-                                                                "Laporan Tanpa Judul"
-                                                            }}
-                                                        </h4>
-                                                        <p
-                                                            class="text-sm text-gray-500 mt-1"
-                                                        >
-                                                            Laporan Akhir Magang
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Status Badge -->
-                                                <span
-                                                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold shadow-sm border"
+                                                    class="w-2.5 h-2.5 rounded-full mr-2"
                                                     :class="{
-                                                        'bg-amber-50 text-amber-700 border-amber-200':
+                                                        'bg-amber-400':
                                                             (report?.status ||
                                                                 'submitted') ===
                                                             'submitted',
-                                                        'bg-emerald-50 text-emerald-700 border-emerald-200':
+                                                        'bg-emerald-400':
                                                             (report?.status ||
                                                                 'submitted') ===
                                                             'approved',
-                                                        'bg-red-50 text-red-700 border-red-200':
+                                                        'bg-red-400':
                                                             (report?.status ||
                                                                 'submitted') ===
                                                             'revision',
                                                     }"
-                                                >
-                                                    <div
-                                                        class="w-2.5 h-2.5 rounded-full mr-2"
-                                                        :class="{
-                                                            'bg-amber-400':
-                                                                (report?.status ||
-                                                                    'submitted') ===
-                                                                'submitted',
-                                                            'bg-emerald-400':
-                                                                (report?.status ||
-                                                                    'submitted') ===
-                                                                'approved',
-                                                            'bg-red-400':
-                                                                (report?.status ||
-                                                                    'submitted') ===
-                                                                'revision',
-                                                        }"
-                                                    ></div>
-                                                    {{
-                                                        (report?.status ||
-                                                            "submitted") ===
-                                                        "submitted"
-                                                            ? "Pending"
-                                                            : (report?.status ||
-                                                                  "submitted") ===
-                                                              "approved"
-                                                            ? "Disetujui"
-                                                            : "Perlu Revisi"
-                                                    }}
-                                                </span>
-                                            </div>
+                                                ></div>
+                                                {{
+                                                    (report?.status ||
+                                                        "submitted") ===
+                                                    "submitted"
+                                                        ? "Pending"
+                                                        : (report?.status ||
+                                                              "submitted") ===
+                                                          "approved"
+                                                        ? "Disetujui"
+                                                        : "Perlu Revisi"
+                                                }}
+                                            </span>
+                                        </div>
 
-                                            <!-- Content -->
-                                            <div class="space-y-4">
-                                                <div
-                                                    class="bg-gray-50 rounded-xl p-4 border-l-4 border-emerald-400"
-                                                >
-                                                    <h6
-                                                        class="text-xs font-semibold text-emerald-800 mb-2 uppercase tracking-wide"
-                                                    >
-                                                        Deskripsi Laporan
-                                                    </h6>
-                                                    <p
-                                                        class="text-gray-700 leading-relaxed"
-                                                    >
-                                                        {{
-                                                            report?.description ||
-                                                            "Tidak ada deskripsi"
-                                                        }}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            <!-- Footer -->
+                                        <!-- Content -->
+                                        <div class="space-y-4">
                                             <div
-                                                class="flex items-center justify-between pt-4 border-t border-gray-100 mt-6"
+                                                class="bg-gray-50 rounded-xl p-4 border-l-4 border-emerald-400"
                                             >
-                                                <div
-                                                    class="flex items-center text-sm text-gray-500"
+                                                <h6
+                                                    class="text-xs font-semibold text-emerald-800 mb-2 uppercase tracking-wide"
+                                                >
+                                                    Deskripsi Laporan
+                                                </h6>
+                                                <p
+                                                    class="text-gray-700 leading-relaxed"
+                                                >
+                                                    {{
+                                                        report?.description ||
+                                                        "Tidak ada deskripsi"
+                                                    }}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Footer -->
+                                        <div
+                                            class="flex items-center justify-between pt-4 border-t border-gray-100 mt-6"
+                                        >
+                                            <div
+                                                class="flex items-center text-sm text-gray-500"
+                                            >
+                                                <svg
+                                                    class="w-4 h-4 mr-2"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                    />
+                                                </svg>
+                                                Dibuat
+                                                {{
+                                                    report?.created_at
+                                                        ? formatDate(
+                                                              report.created_at
+                                                          )
+                                                        : "N/A"
+                                                }}
+                                            </div>
+
+                                            <!-- Actions -->
+                                            <div
+                                                class="flex items-center space-x-3"
+                                            >
+                                                <a
+                                                    v-if="report?.file_path"
+                                                    :href="`/storage/${report.file_path}`"
+                                                    target="_blank"
+                                                    class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 shadow-sm transition-all duration-200 group-hover:shadow-md"
                                                 >
                                                     <svg
                                                         class="w-4 h-4 mr-2"
@@ -1561,89 +1579,55 @@
                                                             stroke-linecap="round"
                                                             stroke-linejoin="round"
                                                             stroke-width="2"
-                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                                         />
                                                     </svg>
-                                                    Dibuat
-                                                    {{
-                                                        report?.created_at
-                                                            ? formatDate(
-                                                                  report.created_at
-                                                              )
-                                                            : "N/A"
-                                                    }}
-                                                </div>
+                                                    Download
+                                                </a>
 
-                                                <!-- Actions -->
-                                                <div
-                                                    class="flex items-center space-x-3"
+                                                <!-- View Button -->
+                                                <button
+                                                    class="p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
                                                 >
-                                                    <a
-                                                        v-if="report?.file_path"
-                                                        :href="`/storage/${report.file_path}`"
-                                                        target="_blank"
-                                                        class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 shadow-sm transition-all duration-200 group-hover:shadow-md"
+                                                    <svg
+                                                        class="w-5 h-5"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
                                                     >
-                                                        <svg
-                                                            class="w-4 h-4 mr-2"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                            />
-                                                        </svg>
-                                                        Download
-                                                    </a>
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                        />
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                        />
+                                                    </svg>
+                                                </button>
 
-                                                    <!-- View Button -->
-                                                    <button
-                                                        class="p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                                                <!-- Share Button -->
+                                                <button
+                                                    class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                                                >
+                                                    <svg
+                                                        class="w-5 h-5"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
                                                     >
-                                                        <svg
-                                                            class="w-5 h-5"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                                            />
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                                            />
-                                                        </svg>
-                                                    </button>
-
-                                                    <!-- Share Button -->
-                                                    <button
-                                                        class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-                                                    >
-                                                        <svg
-                                                            class="w-5 h-5"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </div>
+                                                        <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                                                        />
+                                                    </svg>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
