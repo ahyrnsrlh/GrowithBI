@@ -17,4 +17,15 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        sourcemap: false,
+    },
+    define: {
+        __VUE_PROD_DEVTOOLS__: false,
+    },
+    server: {
+        hmr: {
+            host: 'localhost',
+        },
+    },
 });

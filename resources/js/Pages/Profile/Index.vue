@@ -1379,13 +1379,9 @@
                                     >
                                         Belum ada laporan
                                     </h3>
-                                    <p class="text-gray-500 mb-2">
+                                    <p class="text-gray-500 mb-6">
                                         Upload laporan akhir berdasarkan
                                         kegiatan magang Anda.
-                                    </p>
-                                    <p class="text-xs text-gray-400 mb-4">
-                                        Debug: Reports data =
-                                        {{ JSON.stringify(reports) }}
                                     </p>
                                     <button
                                         @click="showCreateReportModal = true"
@@ -2283,8 +2279,16 @@ onMounted(() => {
         showToast("success", props.status);
     }
 
-    // Check for missing fields from URL parameters
+    // Check for URL parameters
     const urlParams = new URLSearchParams(window.location.search);
+    
+    // Check for tab parameter to switch to specific tab
+    const tab = urlParams.get("tab");
+    if (tab && ['profile', 'documents', 'applications', 'logbook', 'reports'].includes(tab)) {
+        activeTab.value = tab;
+    }
+    
+    // Check for missing fields from URL parameters
     const missingFields = urlParams.get("missing_fields");
     if (missingFields) {
         const fieldNames = missingFields.split(",");
