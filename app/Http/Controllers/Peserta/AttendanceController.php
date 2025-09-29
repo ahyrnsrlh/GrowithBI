@@ -126,6 +126,9 @@ class AttendanceController extends Controller
         $attendance->location_address = $this->getLocationAddress($request->latitude, $request->longitude);
         $attendance->save();
 
+        // Fire event for real-time updates
+        event(new \App\Events\AttendanceUpdated($attendance));
+
         $message = $status === 'On-Time' 
             ? 'Check-in berhasil! Anda tepat waktu.' 
             : 'Check-in berhasil! Anda terlambat.';
@@ -165,6 +168,9 @@ class AttendanceController extends Controller
 
         $attendance->check_out = Carbon::now();
         $attendance->save();
+
+        // Fire event for real-time updates
+        event(new \App\Events\AttendanceUpdated($attendance));
 
         return redirect()->back()->with('success', 'Check-out berhasil! Terima kasih atas kerja keras Anda hari ini.');
     }

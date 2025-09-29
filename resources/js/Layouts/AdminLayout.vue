@@ -207,30 +207,58 @@
                         </Link>
 
                         <!-- Attendance Management -->
-                        <Link
-                            href="/admin/attendance"
-                            :class="[
-                                'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
-                                $page.url.startsWith('/admin/attendance')
-                                    ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
-                            ]"
-                        >
-                            <svg
-                                class="mr-3 h-5 w-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                        <div class="space-y-1">
+                            <Link
+                                href="/admin/attendance"
+                                :class="[
+                                    'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                    $page.url.startsWith('/admin/attendance') && !$page.url.includes('/maps')
+                                        ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
+                                        : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
+                                ]"
                             >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
-                            Absensi Peserta
-                        </Link>
+                                <svg
+                                    class="mr-3 h-5 w-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                                Absensi Peserta
+                            </Link>
+
+                            <!-- Maps Real-Time Sub-menu -->
+                            <Link
+                                href="/admin/attendance/maps"
+                                :class="[
+                                    'flex items-center px-4 py-2 ml-4 text-sm font-medium rounded-lg transition-colors duration-200',
+                                    $page.url.includes('/admin/attendance/maps')
+                                        ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
+                                        : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
+                                ]"
+                            >
+                                <svg
+                                    class="mr-3 h-4 w-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                                    />
+                                </svg>
+                                Maps Real-Time
+                            </Link>
+                        </div>
 
                         <!-- Final Reports -->
                         <Link

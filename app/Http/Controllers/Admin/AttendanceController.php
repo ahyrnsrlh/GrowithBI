@@ -285,4 +285,139 @@ class AttendanceController extends Controller
 
         return redirect()->back()->with('success', 'Catatan absensi berhasil diperbarui.');
     }
+
+    /**
+     * Display maps dashboard for real-time attendance tracking
+     */
+    public function maps(): Response
+    {
+        $today = Carbon::now()->format('Y-m-d');
+        
+        // Get today's attendances with location data
+        $attendances = Attendance::with(['user', 'user.division'])
+            ->whereHas('user', function ($q) {
+                $q->where('role', 'peserta');
+            })
+            ->where('date', $today)
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->get()
+            ->map(function ($attendance) {
+                return [
+                    'id' => $attendance->id,
+                    'user_id' => $attendance->user_id,
+                    'user_name' => $attendance->user->name,
+                    'division' => $attendance->user->division->name ?? 'N/A',
+                    'check_in_time' => $attendance->check_in,
+                    'check_out_time' => $attendance->check_out,
+                    'latitude' => $attendance->latitude,
+                    'longitude' => $attendance->longitude,
+                    'status' => $attendance->status,
+                    'is_valid_location' => $this->isValidLocation(
+                        $attendance->latitude,
+                        $attendance->longitude
+                    ),
+                ];
+            });
+
+        // Statistics for today
+        $stats = [
+            'total_attendances' => $attendances->count(),
+            'valid_attendances' => $attendances->where('is_valid_location', true)->count(),
+            'invalid_attendances' => $attendances->where('is_valid_location', false)->count(),
+            'on_time' => $attendances->where('status', 'On-Time')->count(),
+            'late' => $attendances->where('status', 'Late')->count(),
+        ];
+
+        // Office location (Bank Indonesia KPw Lampung)
+        $officeLocation = [
+            'latitude' => -5.3971,
+            'longitude' => 105.2669,
+            'radius' => 200, // 200 meters
+            'name' => 'Bank Indonesia KPw Lampung'
+        ];
+
+        return Inertia::render('Admin/Maps/Index', [
+            'attendances' => $attendances,
+            'stats' => $stats,
+            'officeLocation' => $officeLocation,
+            'currentDate' => $today,
+        ]);
+    }
+
+    /**
+     * API endpoint to get real-time attendance data for maps
+     */
+    public function getAttendanceLocations(Request $request)
+    {
+        $date = $request->get('date', Carbon::now()->format('Y-m-d'));
+        
+        $attendances = Attendance::with(['user', 'user.division'])
+            ->whereHas('user', function ($q) {
+                $q->where('role', 'peserta');
+            })
+            ->where('date', $date)
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->get()
+            ->map(function ($attendance) {
+                return [
+                    'id' => $attendance->id,
+                    'user_id' => $attendance->user_id,
+                    'user_name' => $attendance->user->name,
+                    'division' => $attendance->user->division->name ?? 'N/A',
+                    'check_in_time' => $attendance->check_in,
+                    'check_out_time' => $attendance->check_out,
+                    'latitude' => (float) $attendance->latitude,
+                    'longitude' => (float) $attendance->longitude,
+                    'status' => $attendance->status,
+                    'is_valid_location' => $this->isValidLocation(
+                        $attendance->latitude,
+                        $attendance->longitude
+                    ),
+                    'updated_at' => $attendance->updated_at->toISOString(),
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'data' => $attendances,
+            'stats' => [
+                'total_attendances' => $attendances->count(),
+                'valid_attendances' => $attendances->where('is_valid_location', true)->count(),
+                'invalid_attendances' => $attendances->where('is_valid_location', false)->count(),
+            ]
+        ]);
+    }
+
+    /**
+     * Check if location is within valid radius from office
+     */
+    private function isValidLocation($latitude, $longitude): bool
+    {
+        // Office coordinates (Bank Indonesia KPw Lampung)
+        $officeLat = -5.3971;
+        $officeLng = 105.2669;
+        $radius = 200; // meters
+
+        $distance = $this->calculateDistance($officeLat, $officeLng, $latitude, $longitude);
+        
+        return $distance <= $radius;
+    }
+
+    /**
+     * Calculate distance between two coordinates using Haversine formula
+     */
+    private function calculateDistance($lat1, $lon1, $lat2, $lon2): float
+    {
+        $earth_radius = 6371000; // Earth radius in meters
+
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+
+        $a = sin($dLat/2) * sin($dLat/2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon/2) * sin($dLon/2);
+        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+
+        return $earth_radius * $c;
+    }
 }

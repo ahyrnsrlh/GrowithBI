@@ -167,6 +167,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Attendance Management (Admin)
     Route::prefix('attendance')->name('attendance.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\AttendanceController::class, 'index'])->name('index');
+        Route::get('/maps', [\App\Http\Controllers\Admin\AttendanceController::class, 'maps'])->name('maps');
+        Route::get('/locations/api', [\App\Http\Controllers\Admin\AttendanceController::class, 'getAttendanceLocations'])->name('locations.api');
         Route::get('/{attendance}', [\App\Http\Controllers\Admin\AttendanceController::class, 'show'])->name('show');
         Route::get('/stats/data', [\App\Http\Controllers\Admin\AttendanceController::class, 'stats'])->name('stats');
         Route::get('/export/excel', [\App\Http\Controllers\Admin\AttendanceController::class, 'export'])->name('export');
