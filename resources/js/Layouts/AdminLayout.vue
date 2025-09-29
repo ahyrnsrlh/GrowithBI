@@ -212,7 +212,8 @@
                                 href="/admin/attendance"
                                 :class="[
                                     'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
-                                    $page.url.startsWith('/admin/attendance') && !$page.url.includes('/maps')
+                                    $page.url.startsWith('/admin/attendance') &&
+                                    !$page.url.includes('/maps')
                                         ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
                                         : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                                 ]"

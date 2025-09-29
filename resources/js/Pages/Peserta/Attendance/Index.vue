@@ -428,7 +428,14 @@ import {
     LinearScale,
 } from "chart.js";
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+ChartJS.register(
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale
+);
 
 const props = defineProps({
     todayAttendance: Object,
@@ -489,13 +496,13 @@ const chartOptions = {
             borderWidth: 1,
             bodyFont: {
                 size: 13,
-                family: "Inter, system-ui, sans-serif"
+                family: "Inter, system-ui, sans-serif",
             },
             titleFont: {
                 size: 14,
                 family: "Inter, system-ui, sans-serif",
-                weight: '600'
-            }
+                weight: "600",
+            },
         },
     },
     scales: {
@@ -507,15 +514,15 @@ const chartOptions = {
                 font: {
                     size: 12,
                     family: "Inter, system-ui, sans-serif",
-                    weight: '500'
+                    weight: "500",
                 },
-                color: '#6B7280'
-            }
+                color: "#6B7280",
+            },
         },
         y: {
             beginAtZero: true,
             grid: {
-                color: 'rgba(156, 163, 175, 0.2)',
+                color: "rgba(156, 163, 175, 0.2)",
                 borderDash: [5, 5],
             },
             ticks: {
@@ -523,19 +530,19 @@ const chartOptions = {
                     size: 12,
                     family: "Inter, system-ui, sans-serif",
                 },
-                color: '#6B7280',
+                color: "#6B7280",
                 stepSize: 1,
-            }
-        }
+            },
+        },
     },
     layout: {
         padding: {
             top: 20,
             bottom: 10,
             left: 10,
-            right: 10
-        }
-    }
+            right: 10,
+        },
+    },
 };
 
 // Update current time every second
