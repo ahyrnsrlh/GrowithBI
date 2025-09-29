@@ -163,6 +163,15 @@
                                     Logbook & Laporan
                                 </h3>
                                 <div class="space-y-1">
+                                    <Link
+                                        :href="
+                                            route('profile.attendance.index')
+                                        "
+                                        class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-blue-100 hover:bg-blue-700 hover:bg-opacity-30 block"
+                                    >
+                                        <i class="fas fa-clock mr-3"></i>
+                                        Absensi Online
+                                    </Link>
                                     <button
                                         @click="activeTab = 'logbook'"
                                         :class="[

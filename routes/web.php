@@ -87,6 +87,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'show'])->name('profile.logbooks.show');
     Route::post('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'store'])->name('profile.logbooks.store');
     
+    // Attendance routes (accessible from profile page for participants)
+    Route::prefix('profile/attendance')->name('profile.attendance.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Peserta\AttendanceController::class, 'index'])->name('index');
+        Route::post('/check-in', [\App\Http\Controllers\Peserta\AttendanceController::class, 'checkIn'])->name('check-in');
+        Route::post('/check-out', [\App\Http\Controllers\Peserta\AttendanceController::class, 'checkOut'])->name('check-out');
+        Route::get('/stats', [\App\Http\Controllers\Peserta\AttendanceController::class, 'stats'])->name('stats');
+    });
+    
     // Reports routes (accessible from profile page)
     Route::post('/profile/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'store'])->name('profile.reports.store');
     Route::delete('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'destroy'])->name('profile.reports.destroy');
@@ -155,6 +163,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('/participants', [ParticipantController::class, 'index'])->name('participants.index');
     Route::get('/participants/{participant}', [ParticipantController::class, 'show'])->name('participants.show');
     Route::put('/participants/{participant}/status', [ParticipantController::class, 'updateStatus'])->name('participants.update-status');
+    
+    // Attendance Management (Admin)
+    Route::prefix('attendance')->name('attendance.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\AttendanceController::class, 'index'])->name('index');
+        Route::get('/{attendance}', [\App\Http\Controllers\Admin\AttendanceController::class, 'show'])->name('show');
+        Route::get('/stats/data', [\App\Http\Controllers\Admin\AttendanceController::class, 'stats'])->name('stats');
+        Route::get('/export/excel', [\App\Http\Controllers\Admin\AttendanceController::class, 'export'])->name('export');
+        Route::put('/{attendance}/notes', [\App\Http\Controllers\Admin\AttendanceController::class, 'updateNotes'])->name('update-notes');
+    });
     
     // Logbooks Management (enhanced with review capabilities)
     Route::get('/logbooks', [\App\Http\Controllers\Admin\LogbookController::class, 'index'])->name('logbooks.index');

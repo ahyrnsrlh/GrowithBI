@@ -206,6 +206,32 @@
                             Laporan Harian
                         </Link>
 
+                        <!-- Attendance Management -->
+                        <Link
+                            href="/admin/attendance"
+                            :class="[
+                                'flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                $page.url.startsWith('/admin/attendance')
+                                    ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
+                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
+                            ]"
+                        >
+                            <svg
+                                class="mr-3 h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                            Absensi Peserta
+                        </Link>
+
                         <!-- Final Reports -->
                         <Link
                             href="/admin/final-reports"

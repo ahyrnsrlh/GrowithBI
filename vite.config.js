@@ -24,6 +24,7 @@ export default defineConfig({
         __VUE_PROD_DEVTOOLS__: false,
     },
     server: {
+        port: 5173,
         hmr: {
             host: "localhost",
         },

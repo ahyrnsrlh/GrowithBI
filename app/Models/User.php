@@ -224,4 +224,58 @@ class User extends Authenticatable
     {
         $this->notify(new \App\Notifications\ResetPasswordNotification($token));
     }
+
+    /**
+     * Get the attendances for the user.
+     */
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    /**
+     * Get today's attendance record
+     */
+    public function todayAttendance()
+    {
+        return $this->attendances()->where('date', now()->toDateString())->first();
+    }
+
+    /**
+     * Check if user can access attendance feature
+     */
+    public function canAccessAttendance(): bool
+    {
+        if ($this->role !== 'peserta') return false;
+        
+        // Check if user has accepted application
+        return $this->applications()
+            ->where('status', 'diterima')
+            ->exists();
+    }
+
+    /**
+     * Get attendance statistics for the user
+     */
+    public function getAttendanceStats($month = null, $year = null)
+    {
+        $query = $this->attendances();
+        
+        if ($month && $year) {
+            $query->whereMonth('date', $month)->whereYear('date', $year);
+        } else {
+            $query->currentMonth();
+        }
+        
+        $attendances = $query->get();
+        
+        return [
+            'total_days' => $attendances->count(),
+            'present_days' => $attendances->whereIn('status', ['On-Time', 'Late'])->count(),
+            'on_time' => $attendances->where('status', 'On-Time')->count(),
+            'late' => $attendances->where('status', 'Late')->count(),
+            'absent' => $attendances->where('status', 'Absent')->count(),
+            'not_checked_out' => $attendances->where('status', 'Not-Checked-Out')->count(),
+        ];
+    }
 }
