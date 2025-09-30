@@ -401,6 +401,14 @@
                 </div>
             </div>
         </div>
+
+        <!-- Camera Modal -->
+        <CameraModal
+            :show="showCameraModal"
+            :title="pendingAction === 'check-in' ? 'Ambil Foto Check-in' : 'Ambil Foto Check-out'"
+            @close="handleCameraModalClose"
+            @captured="handlePhotoCaptured"
+        />
     </div>
 </template>
 
@@ -427,6 +435,7 @@ import {
     CategoryScale,
     LinearScale,
 } from "chart.js";
+import CameraModal from "@/Components/CameraModal.vue";
 
 ChartJS.register(
     Title,
@@ -449,6 +458,12 @@ const currentTime = ref(new Date(props.currentDateTime));
 const isProcessing = ref(false);
 const processingAction = ref(null);
 const locationStatus = ref(null);
+
+// Camera modal state
+const showCameraModal = ref(false);
+const pendingAction = ref(null);
+const pendingLocation = ref(null);
+const capturedPhoto = ref(null);
 
 // Chart data for bar chart
 const chartData = computed(() => ({
@@ -649,8 +664,12 @@ const requestLocation = (action) => {
                     )}m dari kantor)`,
                 };
 
-                // Submit the attendance
-                submitAttendance(action, latitude, longitude);
+                // Open camera modal for photo capture
+                pendingAction.value = action;
+                pendingLocation.value = { latitude, longitude };
+                showCameraModal.value = true;
+                isProcessing.value = false;
+                processingAction.value = null;
             } else {
                 locationStatus.value = {
                     isValid: false,
@@ -691,6 +710,32 @@ const requestLocation = (action) => {
     );
 };
 
+// Handle photo captured from camera modal
+const handlePhotoCaptured = (photoBase64) => {
+    capturedPhoto.value = photoBase64;
+    
+    if (pendingAction.value && pendingLocation.value) {
+        submitAttendance(
+            pendingAction.value,
+            pendingLocation.value.latitude,
+            pendingLocation.value.longitude,
+            photoBase64
+        );
+    }
+    
+    // Reset pending state
+    pendingAction.value = null;
+    pendingLocation.value = null;
+};
+
+// Handle camera modal closed
+const handleCameraModalClose = () => {
+    showCameraModal.value = false;
+    pendingAction.value = null;
+    pendingLocation.value = null;
+    capturedPhoto.value = null;
+};
+
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371000; // meters
     const φ1 = (lat1 * Math.PI) / 180;
@@ -706,17 +751,21 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
     return R * c;
 };
 
-const submitAttendance = (action, latitude, longitude) => {
+const submitAttendance = (action, latitude, longitude, photo) => {
     const routeName =
         action === "check-in"
             ? "profile.attendance.check-in"
             : "profile.attendance.check-out";
+
+    isProcessing.value = true;
+    processingAction.value = action;
 
     router.post(
         route(routeName),
         {
             latitude: latitude,
             longitude: longitude,
+            photo: photo,
         },
         {
             preserveScroll: true,
@@ -724,6 +773,7 @@ const submitAttendance = (action, latitude, longitude) => {
                 isProcessing.value = false;
                 processingAction.value = null;
                 locationStatus.value = null;
+                capturedPhoto.value = null;
             },
         }
     );

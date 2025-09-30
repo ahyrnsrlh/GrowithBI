@@ -7,14 +7,15 @@ use App\Models\Attendance;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class AttendanceController extends Controller
 {
-    // Bank Indonesia KPw Lampung office coordinates (example)
-    const OFFICE_LATITUDE = -5.397140;  // Replace with actual coordinates
-    const OFFICE_LONGITUDE = 105.266792; // Replace with actual coordinates
+    // Bank Indonesia KPw Lampung office coordinates
+    const OFFICE_LATITUDE = -5.780602;
+    const OFFICE_LONGITUDE = 105.631293;
     const ALLOWED_RADIUS = 200; // meters
 
     public function __construct()
@@ -72,6 +73,8 @@ class AttendanceController extends Controller
                 'status' => $todayAttendance->status,
                 'can_check_in' => !$todayAttendance->check_in,
                 'can_check_out' => $todayAttendance->check_in && !$todayAttendance->check_out,
+                'photo_checkin_url' => $todayAttendance->photo_checkin_url,
+                'photo_checkout_url' => $todayAttendance->photo_checkout_url,
             ] : null,
             'attendanceHistory' => $attendanceHistory,
             'stats' => $stats,
@@ -92,6 +95,7 @@ class AttendanceController extends Controller
         $request->validate([
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
+            'photo' => 'required|string', // Base64 encoded image
         ]);
 
         $user = Auth::user();
@@ -111,6 +115,9 @@ class AttendanceController extends Controller
             return redirect()->back()->with('error', 'Absensi hanya dapat dilakukan di lokasi magang Bank Indonesia.');
         }
 
+        // Save photo
+        $photoPath = $this->savePhoto($request->photo, 'checkin', $user->id);
+
         $now = Carbon::now();
         $officeStartTime = Carbon::today()->setTime(8, 0, 0);
         $status = $now->isAfter($officeStartTime) ? 'Late' : 'On-Time';
@@ -124,6 +131,7 @@ class AttendanceController extends Controller
         $attendance->latitude = $request->latitude;
         $attendance->longitude = $request->longitude;
         $attendance->location_address = $this->getLocationAddress($request->latitude, $request->longitude);
+        $attendance->photo_checkin = $photoPath;
         $attendance->save();
 
         // Fire event for real-time updates
@@ -144,6 +152,7 @@ class AttendanceController extends Controller
         $request->validate([
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
+            'photo' => 'required|string', // Base64 encoded image
         ]);
 
         $user = Auth::user();
@@ -166,7 +175,11 @@ class AttendanceController extends Controller
             return redirect()->back()->with('error', 'Check-out hanya dapat dilakukan di lokasi magang Bank Indonesia.');
         }
 
+        // Save photo
+        $photoPath = $this->savePhoto($request->photo, 'checkout', $user->id);
+
         $attendance->check_out = Carbon::now();
+        $attendance->photo_checkout = $photoPath;
         $attendance->save();
 
         // Fire event for real-time updates
@@ -218,6 +231,25 @@ class AttendanceController extends Controller
     {
         // In production, you would use Google Maps API or similar service
         return "Bank Indonesia KPw Lampung ({$latitude}, {$longitude})";
+    }
+
+    /**
+     * Save photo from base64 string
+     */
+    private function savePhoto(string $base64Photo, string $type, int $userId): string
+    {
+        // Remove data:image/png;base64, prefix if exists
+        $image = preg_replace('/^data:image\/\w+;base64,/', '', $base64Photo);
+        $image = base64_decode($image);
+
+        // Generate unique filename
+        $filename = $type . '_' . $userId . '_' . Carbon::now()->format('YmdHis') . '.jpg';
+        $path = 'attendance_photos/' . Carbon::now()->format('Y/m/d') . '/' . $filename;
+
+        // Save to storage
+        Storage::disk('public')->put($path, $image);
+
+        return $path;
     }
 
     /**

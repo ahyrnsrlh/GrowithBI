@@ -92,6 +92,10 @@ class AttendanceController extends Controller
                         'latitude' => $attendance->latitude,
                         'longitude' => $attendance->longitude,
                     ],
+                    'photos' => [
+                        'checkin' => $attendance->photo_checkin_url,
+                        'checkout' => $attendance->photo_checkout_url,
+                    ],
                 ];
             });
 

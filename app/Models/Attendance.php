@@ -21,6 +21,8 @@ class Attendance extends Model
         'longitude',
         'location_address',
         'notes',
+        'photo_checkin',
+        'photo_checkout',
     ];
 
     protected $casts = [
@@ -97,5 +99,21 @@ class Attendance extends Model
     {
         return $query->whereMonth('date', Carbon::now()->month)
                     ->whereYear('date', Carbon::now()->year);
+    }
+
+    /**
+     * Get the URL for check-in photo
+     */
+    public function getPhotoCheckinUrlAttribute(): ?string
+    {
+        return $this->photo_checkin ? asset('storage/' . $this->photo_checkin) : null;
+    }
+
+    /**
+     * Get the URL for check-out photo
+     */
+    public function getPhotoCheckoutUrlAttribute(): ?string
+    {
+        return $this->photo_checkout ? asset('storage/' . $this->photo_checkout) : null;
     }
 }

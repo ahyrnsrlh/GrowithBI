@@ -316,6 +316,12 @@
                                         scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
+                                        Foto
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    >
                                         Status
                                     </th>
                                     <th
@@ -367,6 +373,85 @@
                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                                     >
                                         {{ attendance.check_out || "-" }}
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                                    >
+                                        <div
+                                            class="flex items-center space-x-2"
+                                        >
+                                            <!-- Check-in Photo -->
+                                            <div
+                                                v-if="
+                                                    attendance.photos?.checkin
+                                                "
+                                                class="relative group"
+                                            >
+                                                <img
+                                                    :src="
+                                                        attendance.photos
+                                                            .checkin
+                                                    "
+                                                    alt="Check-in photo"
+                                                    class="w-10 h-10 rounded-lg object-cover cursor-pointer border-2 border-green-200 hover:border-green-400 transition-colors"
+                                                    @click="
+                                                        openPhotoModal(
+                                                            attendance.photos
+                                                                .checkin,
+                                                            'Check-in ' +
+                                                                attendance.user
+                                                                    .name
+                                                        )
+                                                    "
+                                                />
+                                                <div
+                                                    class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap"
+                                                >
+                                                    Check-in
+                                                </div>
+                                            </div>
+                                            <span
+                                                v-else
+                                                class="text-gray-400 text-xs"
+                                                >-</span
+                                            >
+
+                                            <!-- Check-out Photo -->
+                                            <div
+                                                v-if="
+                                                    attendance.photos?.checkout
+                                                "
+                                                class="relative group"
+                                            >
+                                                <img
+                                                    :src="
+                                                        attendance.photos
+                                                            .checkout
+                                                    "
+                                                    alt="Check-out photo"
+                                                    class="w-10 h-10 rounded-lg object-cover cursor-pointer border-2 border-orange-200 hover:border-orange-400 transition-colors"
+                                                    @click="
+                                                        openPhotoModal(
+                                                            attendance.photos
+                                                                .checkout,
+                                                            'Check-out ' +
+                                                                attendance.user
+                                                                    .name
+                                                        )
+                                                    "
+                                                />
+                                                <div
+                                                    class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap"
+                                                >
+                                                    Check-out
+                                                </div>
+                                            </div>
+                                            <span
+                                                v-else-if="attendance.check_out"
+                                                class="text-gray-400 text-xs"
+                                                >-</span
+                                            >
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span
@@ -467,27 +552,103 @@
                                 v-if="attendances.links"
                                 class="flex space-x-1"
                             >
-                                <Link
+                                <template
                                     v-for="link in attendances.links"
                                     :key="link.label"
-                                    :href="link.url"
-                                    preserve-scroll
-                                    preserve-state
-                                    v-html="link.label"
-                                    :class="[
-                                        'px-3 py-2 border text-sm font-medium rounded-md',
-                                        link.active
-                                            ? 'bg-blue-50 border-blue-500 text-blue-600'
-                                            : 'border-gray-300 text-gray-500 hover:bg-gray-50',
-                                    ]"
                                 >
-                                </Link>
+                                    <Link
+                                        v-if="link.url"
+                                        :href="link.url"
+                                        preserve-scroll
+                                        preserve-state
+                                        v-html="link.label"
+                                        :class="[
+                                            'px-3 py-2 border text-sm font-medium rounded-md',
+                                            link.active
+                                                ? 'bg-blue-50 border-blue-500 text-blue-600'
+                                                : 'border-gray-300 text-gray-500 hover:bg-gray-50',
+                                        ]"
+                                    >
+                                    </Link>
+                                    <span
+                                        v-else
+                                        v-html="link.label"
+                                        :class="[
+                                            'px-3 py-2 border text-sm font-medium rounded-md',
+                                            link.active
+                                                ? 'bg-blue-50 border-blue-500 text-blue-600'
+                                                : 'border-gray-300 text-gray-400 cursor-not-allowed',
+                                        ]"
+                                    >
+                                    </span>
+                                </template>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Photo Modal -->
+        <TransitionRoot appear :show="showPhotoModal" as="template">
+            <Dialog as="div" @close="closePhotoModal" class="relative z-50">
+                <TransitionChild
+                    as="template"
+                    enter="duration-300 ease-out"
+                    enter-from="opacity-0"
+                    enter-to="opacity-100"
+                    leave="duration-200 ease-in"
+                    leave-from="opacity-100"
+                    leave-to="opacity-0"
+                >
+                    <div class="fixed inset-0 bg-black bg-opacity-75" />
+                </TransitionChild>
+
+                <div class="fixed inset-0 overflow-y-auto">
+                    <div
+                        class="flex min-h-full items-center justify-center p-4"
+                    >
+                        <TransitionChild
+                            as="template"
+                            enter="duration-300 ease-out"
+                            enter-from="opacity-0 scale-95"
+                            enter-to="opacity-100 scale-100"
+                            leave="duration-200 ease-in"
+                            leave-from="opacity-100 scale-100"
+                            leave-to="opacity-0 scale-95"
+                        >
+                            <DialogPanel
+                                class="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                            >
+                                <DialogTitle
+                                    as="h3"
+                                    class="text-lg font-medium leading-6 text-gray-900 mb-4"
+                                >
+                                    {{ selectedPhotoTitle }}
+                                </DialogTitle>
+                                <div class="mt-2">
+                                    <img
+                                        :src="selectedPhoto"
+                                        :alt="selectedPhotoTitle"
+                                        class="w-full h-auto rounded-lg"
+                                    />
+                                </div>
+
+                                <div class="mt-4 flex justify-end">
+                                    <button
+                                        type="button"
+                                        class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                        @click="closePhotoModal"
+                                    >
+                                        Tutup
+                                    </button>
+                                </div>
+                            </DialogPanel>
+                        </TransitionChild>
+                    </div>
+                </div>
+            </Dialog>
+        </TransitionRoot>
     </AdminLayout>
 </template>
 
@@ -502,6 +663,13 @@ import {
     XCircleIcon,
     ArrowDownTrayIcon,
 } from "@heroicons/vue/24/outline";
+import {
+    Dialog,
+    DialogPanel,
+    DialogTitle,
+    TransitionChild,
+    TransitionRoot,
+} from "@headlessui/vue";
 import { debounce } from "lodash";
 
 const props = defineProps({
@@ -520,6 +688,23 @@ const filterForm = reactive({
     participant_id: props.filters.participant_id || "",
     status: props.filters.status || "",
 });
+
+// Photo modal state
+const showPhotoModal = ref(false);
+const selectedPhoto = ref(null);
+const selectedPhotoTitle = ref("");
+
+const openPhotoModal = (photoUrl, title) => {
+    selectedPhoto.value = photoUrl;
+    selectedPhotoTitle.value = title;
+    showPhotoModal.value = true;
+};
+
+const closePhotoModal = () => {
+    showPhotoModal.value = false;
+    selectedPhoto.value = null;
+    selectedPhotoTitle.value = "";
+};
 
 const getStatusText = (status) => {
     const statusMap = {

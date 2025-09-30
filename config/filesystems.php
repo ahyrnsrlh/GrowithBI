@@ -47,6 +47,15 @@ return [
             'report' => false,
         ],
 
+        'attendance_photos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/attendance_photos'),
+            'url' => env('APP_URL').'/storage/attendance_photos',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
