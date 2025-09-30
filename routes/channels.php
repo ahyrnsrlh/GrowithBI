@@ -17,6 +17,11 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
+// User-specific notification channel
+Broadcast::channel('App.User.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
+
 // Admin Maps channel - only admin users can access
 Broadcast::channel('admin-maps', function ($user) {
     return $user && $user->user_type === 'Admin';

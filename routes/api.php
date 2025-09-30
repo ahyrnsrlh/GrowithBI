@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\DivisionController;
 use App\Http\Controllers\Api\ApplicationController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,16 @@ Route::get('/user', function (Request $request) {
     // Return fresh user data from database
     return response()->json($user->fresh());
 })->middleware('auth');
+
+// Notification routes (authenticated)
+Route::middleware('auth')->prefix('notifications')->group(function () {
+    Route::get('/', [NotificationController::class, 'index']);
+    Route::get('/unread-count', [NotificationController::class, 'unreadCount']);
+    Route::post('/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+    Route::delete('/{id}', [NotificationController::class, 'destroy']);
+    Route::delete('/read/all', [NotificationController::class, 'destroyAllRead']);
+});
 
 // Check application route (authenticated)
 Route::get('/applications/check/{division}', [ApplicationController::class, 'checkExisting'])->middleware('auth');

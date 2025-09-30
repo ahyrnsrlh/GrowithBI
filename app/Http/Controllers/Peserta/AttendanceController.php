@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Peserta;
 
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
+use App\Notifications\AttendanceCheckedIn;
+use App\Notifications\AttendanceCheckedOut;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,10 +15,10 @@ use Inertia\Response;
 
 class AttendanceController extends Controller
 {
-    // Bank Indonesia KPw Lampung office coordinates
-    const OFFICE_LATITUDE = -5.780602;
-    const OFFICE_LONGITUDE = 105.631293;
-    const ALLOWED_RADIUS = 200; // meters
+    // PT Tunas Dwipa Matra Pramuka - Bandar Lampung coordinates
+    const OFFICE_LATITUDE = -5.397140;
+    const OFFICE_LONGITUDE = 105.266792;
+    const ALLOWED_RADIUS = 50000; // 50km - untuk testing (bisa absen dari mana saja)
 
     public function __construct()
     {
@@ -137,6 +139,9 @@ class AttendanceController extends Controller
         // Fire event for real-time updates
         event(new \App\Events\AttendanceUpdated($attendance));
 
+        // Send notification to user
+        $user->notify(new AttendanceCheckedIn($attendance));
+
         $message = $status === 'On-Time' 
             ? 'Check-in berhasil! Anda tepat waktu.' 
             : 'Check-in berhasil! Anda terlambat.';
@@ -184,6 +189,9 @@ class AttendanceController extends Controller
 
         // Fire event for real-time updates
         event(new \App\Events\AttendanceUpdated($attendance));
+
+        // Send notification to user
+        $user->notify(new AttendanceCheckedOut($attendance));
 
         return redirect()->back()->with('success', 'Check-out berhasil! Terima kasih atas kerja keras Anda hari ini.');
     }

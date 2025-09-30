@@ -316,147 +316,10 @@
                     <!-- User Menu -->
                     <div class="flex items-center space-x-4">
                         <!-- Notifications -->
-                        <div class="relative">
-                            <button
-                                @click="
-                                    showNotificationMenu = !showNotificationMenu
-                                "
-                                class="relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg"
-                            >
-                                <svg
-                                    class="h-6 w-6"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M15 17h5l-5 5v-5zM4 17h8a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                    />
-                                </svg>
-                                <span
-                                    v-if="notificationCount > 0"
-                                    class="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs font-medium flex items-center justify-center rounded-full"
-                                >
-                                    {{
-                                        notificationCount > 9
-                                            ? "9+"
-                                            : notificationCount
-                                    }}
-                                </span>
-                            </button>
-
-                            <!-- Notification Dropdown Menu -->
-                            <div
-                                v-show="showNotificationMenu"
-                                @click.away="showNotificationMenu = false"
-                                class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50"
-                            >
-                                <div class="px-4 py-3 border-b border-gray-200">
-                                    <h3
-                                        class="text-sm font-medium text-gray-900"
-                                    >
-                                        Notifikasi
-                                    </h3>
-                                </div>
-
-                                <!-- Notification Items -->
-                                <div class="max-h-96 overflow-y-auto">
-                                    <div
-                                        v-if="notifications.length === 0"
-                                        class="px-4 py-8 text-center"
-                                    >
-                                        <svg
-                                            class="mx-auto h-12 w-12 text-gray-400"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M15 17h5l-5 5v-5zM4 17h8a2 2 0 002-2V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                            />
-                                        </svg>
-                                        <p class="mt-2 text-sm text-gray-500">
-                                            Belum ada notifikasi
-                                        </p>
-                                    </div>
-
-                                    <div
-                                        v-for="notification in notifications"
-                                        :key="notification.id"
-                                        class="px-4 py-3 hover:bg-gray-50 border-b border-gray-100 cursor-pointer"
-                                        @click="
-                                            handleNotificationClick(
-                                                notification
-                                            )
-                                        "
-                                    >
-                                        <div class="flex items-start space-x-3">
-                                            <div class="flex-shrink-0">
-                                                <div
-                                                    class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center"
-                                                >
-                                                    <svg
-                                                        class="w-4 h-4 text-white"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                        />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                            <div class="flex-1 min-w-0">
-                                                <p
-                                                    class="text-sm font-medium text-gray-900"
-                                                >
-                                                    {{ notification.title }}
-                                                </p>
-                                                <p
-                                                    class="text-sm text-gray-500 mt-1"
-                                                >
-                                                    {{ notification.message }}
-                                                </p>
-                                                <p
-                                                    class="text-xs text-gray-400 mt-1"
-                                                >
-                                                    {{
-                                                        formatNotificationTime(
-                                                            notification.created_at
-                                                        )
-                                                    }}
-                                                </p>
-                                            </div>
-                                            <div
-                                                v-if="!notification.read_at"
-                                                class="w-2 h-2 bg-blue-500 rounded-full"
-                                            ></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- View All Link -->
-                                <div class="px-4 py-3 border-t border-gray-200">
-                                    <Link
-                                        href="/admin/notifications"
-                                        class="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                                        @click="showNotificationMenu = false"
-                                    >
-                                        Lihat semua notifikasi
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
+                        <NotificationBell
+                            v-if="auth.user"
+                            :userId="auth.user.id"
+                        />
 
                         <!-- Profile Dropdown -->
                         <div class="relative">
@@ -609,6 +472,7 @@ import { Link } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
+import NotificationBell from "@/Components/NotificationBell.vue";
 
 const page = usePage();
 const auth = computed(() => page.props.auth);

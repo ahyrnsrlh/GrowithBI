@@ -1,30 +1,34 @@
 <template>
     <Head title="Absensi Online" />
 
-    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-900 to-blue-800 shadow-lg">
+    <div
+        class="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50"
+    >
+        <!-- Header with Glass Morphism -->
+        <div
+            class="glass-card sticky top-0 z-50 shadow-lg border-b border-white/20"
+        >
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-20">
                     <div class="flex items-center space-x-6">
                         <Link
                             :href="route('profile.edit')"
-                            class="text-blue-100 hover:text-white transition-colors flex items-center space-x-2 group"
+                            class="text-indigo-700 hover:text-indigo-900 transition-colors flex items-center space-x-2 group"
                         >
                             <ArrowLeftIcon
                                 class="h-5 w-5 group-hover:transform group-hover:-translate-x-1 transition-transform"
                             />
                             <span class="font-medium">Kembali ke Profile</span>
                         </Link>
-                        <div class="h-8 w-px bg-blue-700"></div>
+                        <div class="h-8 w-px bg-indigo-200"></div>
                         <div class="flex items-center space-x-3">
                             <div
-                                class="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center"
+                                class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg animate-float"
                             >
-                                <CalendarIcon class="h-6 w-6 text-blue-900" />
+                                <CalendarIcon class="h-7 w-7 text-white" />
                             </div>
                             <h1
-                                class="text-2xl font-bold text-white tracking-tight"
+                                class="text-2xl font-bold gradient-text tracking-tight"
                             >
                                 Absensi Online
                             </h1>
@@ -32,10 +36,10 @@
                     </div>
                     <div class="flex items-center space-x-4">
                         <div
-                            class="bg-blue-800/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-blue-700"
+                            class="bg-white/80 backdrop-blur-sm rounded-xl px-5 py-3 border border-indigo-100 shadow-md"
                         >
                             <div
-                                class="text-sm text-blue-100 font-medium"
+                                class="text-sm text-indigo-900 font-semibold"
                                 id="current-time"
                             >
                                 {{ formattedCurrentTime }}
@@ -50,16 +54,16 @@
             <!-- Success/Error Messages -->
             <div
                 v-if="$page.props.flash.success"
-                class="mb-8 bg-gradient-to-r from-emerald-50 to-emerald-100/50 border-l-4 border-emerald-500 rounded-xl p-6 shadow-lg"
+                class="mb-8 glass-card rounded-2xl p-6 shadow-xl border-l-4 border-emerald-500 hover-glow"
             >
                 <div class="flex items-center">
                     <div
-                        class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0"
+                        class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg"
                     >
-                        <CheckCircleIcon class="h-6 w-6 text-white" />
+                        <CheckCircleIcon class="h-7 w-7 text-white" />
                     </div>
                     <div class="ml-4">
-                        <p class="text-emerald-800 font-medium">
+                        <p class="text-emerald-900 font-semibold text-base">
                             {{ $page.props.flash.success }}
                         </p>
                     </div>
@@ -68,16 +72,16 @@
 
             <div
                 v-if="$page.props.flash.error"
-                class="mb-8 bg-gradient-to-r from-rose-50 to-rose-100/50 border-l-4 border-rose-500 rounded-xl p-6 shadow-lg"
+                class="mb-8 glass-card rounded-2xl p-6 shadow-xl border-l-4 border-rose-500 hover-glow"
             >
                 <div class="flex items-center">
                     <div
-                        class="w-10 h-10 bg-rose-500 rounded-full flex items-center justify-center flex-shrink-0"
+                        class="w-12 h-12 bg-gradient-to-br from-rose-500 to-red-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg"
                     >
-                        <ExclamationCircleIcon class="h-6 w-6 text-white" />
+                        <ExclamationCircleIcon class="h-7 w-7 text-white" />
                     </div>
                     <div class="ml-4">
-                        <p class="text-rose-800 font-medium">
+                        <p class="text-rose-900 font-semibold text-base">
                             {{ $page.props.flash.error }}
                         </p>
                     </div>
@@ -89,19 +93,19 @@
                 <div class="space-y-6">
                     <!-- Today's Status Card -->
                     <div
-                        class="bg-white/90 rounded-xl shadow-sm border border-blue-100/50 p-6"
+                        class="glass-card rounded-2xl shadow-xl p-8 hover-glow"
                     >
-                        <div class="flex items-center space-x-3 mb-6">
+                        <div class="flex items-center space-x-4 mb-6">
                             <div
-                                class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center"
+                                class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg"
                             >
-                                <CalendarIcon class="h-5 w-5 text-white" />
+                                <CalendarIcon class="h-7 w-7 text-white" />
                             </div>
                             <div>
-                                <h2 class="text-lg font-semibold text-gray-900">
+                                <h2 class="text-xl font-bold text-gray-900">
                                     Status Hari Ini
                                 </h2>
-                                <p class="text-sm text-gray-500">
+                                <p class="text-sm text-indigo-600 font-medium">
                                     {{ todayFormatted }}
                                 </p>
                             </div>
@@ -110,63 +114,71 @@
                         <div v-if="todayAttendance" class="space-y-4">
                             <div class="grid grid-cols-2 gap-4">
                                 <div
-                                    class="bg-emerald-50 rounded-lg p-4 border border-emerald-100"
+                                    class="relative bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl p-5 border border-emerald-200/50 shadow-md overflow-hidden"
                                 >
+                                    <div
+                                        class="absolute -right-4 -top-4 w-20 h-20 bg-emerald-200/30 rounded-full blur-2xl"
+                                    ></div>
                                     <ClockIcon
-                                        class="h-8 w-8 text-emerald-600 mb-2"
+                                        class="h-10 w-10 text-emerald-600 mb-3 relative z-10"
                                     />
                                     <p
-                                        class="text-sm font-medium text-emerald-700 mb-1"
+                                        class="text-sm font-semibold text-emerald-700 mb-1 relative z-10"
                                     >
                                         Check-in
                                     </p>
                                     <p
-                                        class="text-lg font-bold text-emerald-900"
+                                        class="text-2xl font-bold text-emerald-900 relative z-10"
                                     >
                                         {{ todayAttendance.check_in || "-" }}
                                     </p>
                                 </div>
                                 <div
-                                    class="bg-amber-50 rounded-lg p-4 border border-amber-100"
+                                    class="relative bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-5 border border-amber-200/50 shadow-md overflow-hidden"
                                 >
+                                    <div
+                                        class="absolute -right-4 -top-4 w-20 h-20 bg-amber-200/30 rounded-full blur-2xl"
+                                    ></div>
                                     <ClockIcon
-                                        class="h-8 w-8 text-amber-600 mb-2"
+                                        class="h-10 w-10 text-amber-600 mb-3 relative z-10"
                                     />
                                     <p
-                                        class="text-sm font-medium text-amber-700 mb-1"
+                                        class="text-sm font-semibold text-amber-700 mb-1 relative z-10"
                                     >
                                         Check-out
                                     </p>
-                                    <p class="text-lg font-bold text-amber-900">
+                                    <p
+                                        class="text-2xl font-bold text-amber-900 relative z-10"
+                                    >
                                         {{ todayAttendance.check_out || "-" }}
                                     </p>
                                 </div>
                             </div>
 
-                            <div class="text-center">
+                            <div class="text-center mt-6">
                                 <span
                                     :class="
                                         getStatusBadgeClass(
                                             todayAttendance.status
                                         )
                                     "
-                                    class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium"
+                                    class="inline-flex items-center px-6 py-3 rounded-2xl text-sm font-semibold shadow-lg"
                                 >
                                     {{ getStatusText(todayAttendance.status) }}
                                 </span>
                             </div>
                         </div>
 
-                        <div v-else class="text-center py-8">
+                        <div v-else class="text-center py-10">
                             <div
-                                class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
+                                class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md"
                             >
-                                <CalendarIcon class="h-8 w-8 text-gray-400" />
+                                <CalendarIcon class="h-10 w-10 text-gray-400" />
                             </div>
-                            <p class="text-gray-500 font-medium">
+                            <p class="text-gray-600 font-semibold text-lg">
                                 Belum ada absensi hari ini
                             </p>
-                            <p class="text-sm text-gray-400 mt-1">
+                            <p class="text-sm text-gray-400 mt-2">
                                 Lakukan check-in untuk memulai
                             </p>
                         </div>
@@ -174,28 +186,28 @@
 
                     <!-- Attendance Actions -->
                     <div
-                        class="bg-white/90 rounded-xl shadow-sm border border-blue-100/50 p-6"
+                        class="glass-card rounded-2xl shadow-xl p-8 hover-glow"
                     >
-                        <div class="flex items-center space-x-3 mb-6">
+                        <div class="flex items-center space-x-4 mb-6">
                             <div
-                                class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center"
+                                class="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg"
                             >
-                                <ArrowRightIcon class="h-5 w-5 text-white" />
+                                <ArrowRightIcon class="h-7 w-7 text-white" />
                             </div>
-                            <h2 class="text-lg font-semibold text-gray-900">
+                            <h2 class="text-xl font-bold text-gray-900">
                                 Aksi Absensi
                             </h2>
                         </div>
 
-                        <div class="space-y-3">
+                        <div class="space-y-4">
                             <!-- Check-in Button -->
                             <button
                                 @click="requestLocation('check-in')"
                                 :disabled="!canCheckIn || isProcessing"
                                 :class="[
-                                    'w-full flex items-center justify-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
+                                    'w-full flex items-center justify-center px-6 py-4 text-base font-semibold rounded-2xl transition-all duration-300 shadow-lg',
                                     canCheckIn && !isProcessing
-                                        ? 'text-white bg-emerald-600 hover:bg-emerald-700 focus:ring-2 focus:ring-emerald-500'
+                                        ? 'text-white bg-gradient-to-r from-emerald-500 to-green-600 hover:scale-105 hover:shadow-2xl focus:ring-4 focus:ring-emerald-300'
                                         : 'text-gray-400 bg-gray-100 cursor-not-allowed',
                                 ]"
                             >
@@ -204,14 +216,14 @@
                                         isProcessing &&
                                         processingAction === 'check-in'
                                     "
-                                    class="animate-spin h-4 w-4 mr-2"
+                                    class="animate-spin h-5 w-5 mr-3"
                                 />
-                                <ArrowRightIcon v-else class="h-4 w-4 mr-2" />
+                                <ArrowRightIcon v-else class="h-5 w-5 mr-3" />
                                 {{
                                     isProcessing &&
                                     processingAction === "check-in"
                                         ? "Memproses..."
-                                        : "Check-in"
+                                        : "Check-in Sekarang"
                                 }}
                             </button>
 
@@ -220,9 +232,9 @@
                                 @click="requestLocation('check-out')"
                                 :disabled="!canCheckOut || isProcessing"
                                 :class="[
-                                    'w-full flex items-center justify-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
+                                    'w-full flex items-center justify-center px-6 py-4 text-base font-semibold rounded-2xl transition-all duration-300 shadow-lg',
                                     canCheckOut && !isProcessing
-                                        ? 'text-white bg-rose-600 hover:bg-rose-700 focus:ring-2 focus:ring-rose-500'
+                                        ? 'text-white bg-gradient-to-r from-rose-500 to-red-600 hover:scale-105 hover:shadow-2xl focus:ring-4 focus:ring-rose-300'
                                         : 'text-gray-400 bg-gray-100 cursor-not-allowed',
                                 ]"
                             >
@@ -231,14 +243,14 @@
                                         isProcessing &&
                                         processingAction === 'check-out'
                                     "
-                                    class="animate-spin h-4 w-4 mr-2"
+                                    class="animate-spin h-5 w-5 mr-3"
                                 />
-                                <ArrowLeftIcon v-else class="h-4 w-4 mr-2" />
+                                <ArrowLeftIcon v-else class="h-5 w-5 mr-3" />
                                 {{
                                     isProcessing &&
                                     processingAction === "check-out"
                                         ? "Memproses..."
-                                        : "Check-out"
+                                        : "Check-out Sekarang"
                                 }}
                             </button>
                         </div>
@@ -246,38 +258,38 @@
                         <!-- Location Status -->
                         <div
                             v-if="locationStatus"
-                            class="mt-4 p-3 rounded-lg"
+                            class="mt-6 p-4 rounded-2xl backdrop-blur-sm"
                             :class="
                                 locationStatus.isValid
-                                    ? 'bg-emerald-50 border border-emerald-200'
-                                    : 'bg-rose-50 border border-rose-200'
+                                    ? 'bg-emerald-50/80 border-2 border-emerald-300'
+                                    : 'bg-rose-50/80 border-2 border-rose-300'
                             "
                         >
-                            <div class="flex items-center space-x-2">
+                            <div class="flex items-center space-x-3">
                                 <div
                                     :class="[
-                                        'w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0',
+                                        'w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md',
                                         locationStatus.isValid
-                                            ? 'bg-emerald-500'
-                                            : 'bg-rose-500',
+                                            ? 'bg-gradient-to-br from-emerald-500 to-green-600'
+                                            : 'bg-gradient-to-br from-rose-500 to-red-600',
                                     ]"
                                 >
                                     <CheckCircleIcon
                                         v-if="locationStatus.isValid"
-                                        class="h-3 w-3 text-white"
+                                        class="h-6 w-6 text-white"
                                     />
                                     <ExclamationCircleIcon
                                         v-else
-                                        class="h-3 w-3 text-white"
+                                        class="h-6 w-6 text-white"
                                     />
                                 </div>
                                 <p
                                     :class="
                                         locationStatus.isValid
-                                            ? 'text-emerald-800'
-                                            : 'text-rose-800'
+                                            ? 'text-emerald-900'
+                                            : 'text-rose-900'
                                     "
-                                    class="text-sm font-medium"
+                                    class="text-sm font-semibold"
                                 >
                                     {{ locationStatus.message }}
                                 </p>
@@ -290,15 +302,15 @@
                 <div class="space-y-6">
                     <!-- Statistics -->
                     <div
-                        class="bg-white/90 rounded-xl shadow-sm border border-blue-100/50 p-6"
+                        class="glass-card rounded-2xl shadow-xl p-8 hover-glow"
                     >
-                        <div class="flex items-center space-x-3 mb-8">
+                        <div class="flex items-center space-x-4 mb-8">
                             <div
-                                class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center"
+                                class="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg"
                             >
-                                <ChartBarIcon class="h-5 w-5 text-white" />
+                                <ChartBarIcon class="h-7 w-7 text-white" />
                             </div>
-                            <h2 class="text-lg font-semibold text-gray-900">
+                            <h2 class="text-xl font-bold text-gray-900">
                                 Statistik Bulan Ini
                             </h2>
                         </div>
@@ -316,15 +328,15 @@
 
                     <!-- Recent History -->
                     <div
-                        class="bg-white/90 rounded-xl shadow-sm border border-blue-100/50 p-6"
+                        class="glass-card rounded-2xl shadow-xl p-8 hover-glow"
                     >
-                        <div class="flex items-center space-x-3 mb-6">
+                        <div class="flex items-center space-x-4 mb-6">
                             <div
-                                class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center"
+                                class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg"
                             >
-                                <ClockIcon class="h-5 w-5 text-white" />
+                                <ClockIcon class="h-7 w-7 text-white" />
                             </div>
-                            <h2 class="text-lg font-semibold text-gray-900">
+                            <h2 class="text-xl font-bold text-gray-900">
                                 Riwayat Absensi (30 Hari Terakhir)
                             </h2>
                         </div>
@@ -336,32 +348,43 @@
                             <div
                                 v-for="attendance in attendanceHistory"
                                 :key="attendance.id"
-                                class="bg-gray-50 rounded-lg p-4 border border-gray-100 hover:bg-blue-50 hover:border-blue-200 transition-all duration-200"
+                                class="relative bg-gradient-to-r from-white to-gray-50 rounded-2xl p-5 border border-gray-200/50 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 overflow-hidden"
                             >
-                                <div class="flex items-center justify-between">
+                                <div
+                                    class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-100/30 to-purple-100/30 rounded-full blur-3xl -z-10"
+                                ></div>
+                                <div
+                                    class="flex items-center justify-between relative z-10"
+                                >
                                     <div class="flex-1">
                                         <p
-                                            class="font-medium text-gray-900 mb-2"
+                                            class="font-bold text-gray-900 mb-3 text-base"
                                         >
                                             {{ attendance.date_formatted }}
                                         </p>
                                         <div
-                                            class="flex items-center space-x-4 text-sm"
+                                            class="flex items-center space-x-6 text-sm"
                                         >
-                                            <span class="text-gray-600">
-                                                Masuk:
+                                            <span
+                                                class="flex items-center text-gray-700"
+                                            >
+                                                <span class="mr-2">Masuk:</span>
                                                 <span
-                                                    class="text-emerald-700 font-medium"
+                                                    class="text-emerald-700 font-bold"
                                                     >{{
                                                         attendance.check_in ||
                                                         "-"
                                                     }}</span
                                                 >
                                             </span>
-                                            <span class="text-gray-600">
-                                                Keluar:
+                                            <span
+                                                class="flex items-center text-gray-700"
+                                            >
+                                                <span class="mr-2"
+                                                    >Keluar:</span
+                                                >
                                                 <span
-                                                    class="text-amber-700 font-medium"
+                                                    class="text-amber-700 font-bold"
                                                     >{{
                                                         attendance.check_out ||
                                                         "-"
@@ -376,7 +399,7 @@
                                                 attendance.status
                                             )
                                         "
-                                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                                        class="inline-flex items-center px-4 py-2 rounded-xl text-xs font-bold shadow-md"
                                     >
                                         {{ getStatusText(attendance.status) }}
                                     </span>
@@ -384,16 +407,16 @@
                             </div>
                         </div>
 
-                        <div v-else class="text-center py-8">
+                        <div v-else class="text-center py-12">
                             <div
-                                class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
+                                class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md"
                             >
-                                <ClockIcon class="h-8 w-8 text-gray-400" />
+                                <ClockIcon class="h-10 w-10 text-gray-400" />
                             </div>
-                            <p class="text-gray-500 font-medium">
+                            <p class="text-gray-600 font-semibold text-lg">
                                 Belum ada riwayat absensi
                             </p>
-                            <p class="text-sm text-gray-400 mt-1">
+                            <p class="text-sm text-gray-400 mt-2">
                                 Riwayat akan muncul setelah melakukan absensi
                             </p>
                         </div>
@@ -405,7 +428,11 @@
         <!-- Camera Modal -->
         <CameraModal
             :show="showCameraModal"
-            :title="pendingAction === 'check-in' ? 'Ambil Foto Check-in' : 'Ambil Foto Check-out'"
+            :title="
+                pendingAction === 'check-in'
+                    ? 'Ambil Foto Check-in'
+                    : 'Ambil Foto Check-out'
+            "
             @close="handleCameraModalClose"
             @captured="handlePhotoCaptured"
         />
@@ -713,7 +740,7 @@ const requestLocation = (action) => {
 // Handle photo captured from camera modal
 const handlePhotoCaptured = (photoBase64) => {
     capturedPhoto.value = photoBase64;
-    
+
     if (pendingAction.value && pendingLocation.value) {
         submitAttendance(
             pendingAction.value,
@@ -722,7 +749,7 @@ const handlePhotoCaptured = (photoBase64) => {
             photoBase64
         );
     }
-    
+
     // Reset pending state
     pendingAction.value = null;
     pendingLocation.value = null;
@@ -801,5 +828,46 @@ const submitAttendance = (action, latitude, longitude, photo) => {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(59, 130, 246, 0.5);
+}
+
+/* Glass Morphism Effect */
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Floating Animation */
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Gradient Text */
+.gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Hover Glow Effect */
+.hover-glow {
+    transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
 }
 </style>

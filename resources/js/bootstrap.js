@@ -50,19 +50,28 @@ window.axios.interceptors.response.use(
  * allows your team to easily build robust real-time web applications.
  */
 
-// Uncomment and configure when you're ready to use WebSockets
-// import Echo from 'laravel-echo';
-// import Pusher from 'pusher-js';
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 
-// window.Pusher = Pusher;
+window.Pusher = Pusher;
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: import.meta.env.VITE_PUSHER_APP_KEY,
-//     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-//     wsHost: import.meta.env.VITE_PUSHER_HOST || `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusherapp.com`,
-//     wsPort: import.meta.env.VITE_PUSHER_PORT || 80,
-//     wssPort: import.meta.env.VITE_PUSHER_PORT || 443,
-//     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME || 'https') === 'https',
-//     enabledTransports: ['ws', 'wss'],
-// });
+window.Echo = new Echo({
+    broadcaster: "pusher",
+    key: import.meta.env.VITE_PUSHER_APP_KEY || "local",
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER || "mt1",
+    wsHost: import.meta.env.VITE_PUSHER_HOST || "127.0.0.1",
+    wsPort: import.meta.env.VITE_PUSHER_PORT || 6001,
+    wssPort: import.meta.env.VITE_PUSHER_PORT || 6001,
+    forceTLS: (import.meta.env.VITE_PUSHER_SCHEME || "http") === "https",
+    enabledTransports: ["ws", "wss"],
+    disableStats: true,
+    authEndpoint: "/broadcasting/auth",
+    auth: {
+        headers: {
+            "X-CSRF-TOKEN": document.head.querySelector(
+                'meta[name="csrf-token"]'
+            )?.content,
+            Accept: "application/json",
+        },
+    },
+});

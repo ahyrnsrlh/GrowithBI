@@ -64,84 +64,142 @@
                 <div
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
                 >
+                    <!-- Total Hadir Card -->
                     <div
-                        class="bg-white/90 rounded-xl shadow-sm border border-blue-100/50 p-6"
+                        class="bg-gradient-to-br from-blue-500 to-blue-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                     >
-                        <div class="flex items-center">
-                            <div
-                                class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center"
-                            >
-                                <UsersIcon class="h-5 w-5 text-white" />
+                        <div class="p-6">
+                            <div class="flex items-center">
+                                <div
+                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
+                                >
+                                    <UsersIcon class="h-8 w-8 text-white" />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt
+                                            class="text-sm font-medium text-blue-100 truncate"
+                                        >
+                                            Total Hadir
+                                        </dt>
+                                        <dd
+                                            class="text-3xl font-bold text-white mt-1"
+                                        >
+                                            {{ stats.total_attendances }}
+                                        </dd>
+                                    </dl>
+                                </div>
                             </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-600">
-                                    Total Hadir
-                                </p>
-                                <p class="text-2xl font-bold text-gray-900">
-                                    {{ stats.total_attendances }}
-                                </p>
+                        </div>
+                        <div class="bg-blue-700/30 px-6 py-2">
+                            <div class="text-xs text-blue-100">
+                                Total peserta hadir hari ini
                             </div>
                         </div>
                     </div>
 
+                    <!-- Absensi Valid Card -->
                     <div
-                        class="bg-white/90 rounded-xl shadow-sm border border-emerald-100/50 p-6"
+                        class="bg-gradient-to-br from-green-500 to-green-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                     >
-                        <div class="flex items-center">
-                            <div
-                                class="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center"
-                            >
-                                <CheckCircleIcon class="h-5 w-5 text-white" />
+                        <div class="p-6">
+                            <div class="flex items-center">
+                                <div
+                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
+                                >
+                                    <CheckCircleIcon
+                                        class="h-8 w-8 text-white"
+                                    />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt
+                                            class="text-sm font-medium text-green-100 truncate"
+                                        >
+                                            Absensi Valid
+                                        </dt>
+                                        <dd
+                                            class="text-3xl font-bold text-white mt-1"
+                                        >
+                                            {{ stats.valid_attendances }}
+                                        </dd>
+                                    </dl>
+                                </div>
                             </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-600">
-                                    Absensi Valid
-                                </p>
-                                <p class="text-2xl font-bold text-emerald-600">
-                                    {{ stats.valid_attendances }}
-                                </p>
+                        </div>
+                        <div class="bg-green-700/30 px-6 py-2">
+                            <div class="text-xs text-green-100">
+                                Absensi dalam radius valid
                             </div>
                         </div>
                     </div>
 
+                    <!-- Absensi Tidak Valid Card -->
                     <div
-                        class="bg-white/90 rounded-xl shadow-sm border border-rose-100/50 p-6"
+                        class="bg-gradient-to-br from-red-500 to-red-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                     >
-                        <div class="flex items-center">
-                            <div
-                                class="w-10 h-10 bg-rose-600 rounded-lg flex items-center justify-center"
-                            >
-                                <ExclamationTriangleIcon
-                                    class="h-5 w-5 text-white"
-                                />
+                        <div class="p-6">
+                            <div class="flex items-center">
+                                <div
+                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
+                                >
+                                    <ExclamationTriangleIcon
+                                        class="h-8 w-8 text-white"
+                                    />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt
+                                            class="text-sm font-medium text-red-100 truncate"
+                                        >
+                                            Absensi Tidak Valid
+                                        </dt>
+                                        <dd
+                                            class="text-3xl font-bold text-white mt-1"
+                                        >
+                                            {{ stats.invalid_attendances }}
+                                        </dd>
+                                    </dl>
+                                </div>
                             </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-600">
-                                    Absensi Tidak Valid
-                                </p>
-                                <p class="text-2xl font-bold text-rose-600">
-                                    {{ stats.invalid_attendances }}
-                                </p>
+                        </div>
+                        <div class="bg-red-700/30 px-6 py-2">
+                            <div class="text-xs text-red-100">
+                                Absensi di luar radius
                             </div>
                         </div>
                     </div>
 
+                    <!-- Terlambat Card -->
                     <div
-                        class="bg-white/90 rounded-xl shadow-sm border border-amber-100/50 p-6"
+                        class="bg-gradient-to-br from-orange-500 to-orange-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                     >
-                        <div class="flex items-center">
-                            <div
-                                class="w-10 h-10 bg-amber-600 rounded-lg flex items-center justify-center"
-                            >
-                                <ClockIcon class="h-5 w-5 text-white" />
+                        <div class="p-6">
+                            <div class="flex items-center">
+                                <div
+                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
+                                >
+                                    <ClockIcon class="h-8 w-8 text-white" />
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt
+                                            class="text-sm font-medium text-orange-100 truncate"
+                                        >
+                                            Terlambat
+                                        </dt>
+                                        <dd
+                                            class="text-3xl font-bold text-white mt-1"
+                                        >
+                                            {{ stats.late }}
+                                        </dd>
+                                    </dl>
+                                </div>
                             </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-600">
-                                    Terlambat
-                                </p>
-                                <p class="text-2xl font-bold text-amber-600">
-                                    {{ stats.late }}
-                                </p>
+                        </div>
+                        <div class="bg-orange-700/30 px-6 py-2">
+                            <div class="text-xs text-orange-100">
+                                Peserta yang terlambat
                             </div>
                         </div>
                     </div>

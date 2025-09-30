@@ -5,6 +5,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import NotificationBell from "@/Components/NotificationBell.vue";
 import { Link, usePage } from "@inertiajs/vue3";
 
 defineProps({
@@ -90,7 +91,15 @@ const hasAcceptedApplication = computed(() => {
                             </div>
                         </div>
 
-                        <div class="hidden sm:flex sm:items-center sm:ms-6">
+                        <div
+                            class="hidden sm:flex sm:items-center sm:ms-6 sm:space-x-4"
+                        >
+                            <!-- Notifications -->
+                            <NotificationBell
+                                v-if="$page.props.auth.user"
+                                :userId="$page.props.auth.user.id"
+                            />
+
                             <!-- Settings Dropdown -->
                             <div class="ms-3 relative">
                                 <Dropdown align="right" width="48">

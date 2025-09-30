@@ -31,25 +31,28 @@
                 <div
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
                 >
+                    <!-- Total Kehadiran Card -->
                     <div
-                        class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200"
+                        class="bg-gradient-to-br from-blue-500 to-blue-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                     >
                         <div class="p-6">
                             <div class="flex items-center">
-                                <div class="flex-shrink-0">
+                                <div
+                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
+                                >
                                     <CalendarDaysIcon
-                                        class="h-8 w-8 text-blue-600"
+                                        class="h-8 w-8 text-white"
                                     />
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
                                         <dt
-                                            class="text-sm font-medium text-gray-500 truncate"
+                                            class="text-sm font-medium text-blue-100 truncate"
                                         >
                                             Total Kehadiran
                                         </dt>
                                         <dd
-                                            class="text-2xl font-semibold text-gray-900"
+                                            class="text-3xl font-bold text-white mt-1"
                                         >
                                             {{ stats.present_days }}
                                         </dd>
@@ -57,25 +60,33 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="bg-blue-700/30 px-6 py-2">
+                            <div class="text-xs text-blue-100">
+                                Total absensi bulan ini
+                            </div>
+                        </div>
                     </div>
 
+                    <!-- Tingkat Kehadiran Card -->
                     <div
-                        class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200"
+                        class="bg-gradient-to-br from-green-500 to-green-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                     >
                         <div class="p-6">
                             <div class="flex items-center">
-                                <div class="flex-shrink-0">
-                                    <ClockIcon class="h-8 w-8 text-green-600" />
+                                <div
+                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
+                                >
+                                    <ClockIcon class="h-8 w-8 text-white" />
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
                                         <dt
-                                            class="text-sm font-medium text-gray-500 truncate"
+                                            class="text-sm font-medium text-green-100 truncate"
                                         >
                                             Tingkat Kehadiran
                                         </dt>
                                         <dd
-                                            class="text-2xl font-semibold text-gray-900"
+                                            class="text-3xl font-bold text-white mt-1"
                                         >
                                             {{ stats.attendance_rate }}%
                                         </dd>
@@ -83,27 +94,35 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="bg-green-700/30 px-6 py-2">
+                            <div class="text-xs text-green-100">
+                                Persentase kehadiran aktif
+                            </div>
+                        </div>
                     </div>
 
+                    <!-- Ketepatan Waktu Card -->
                     <div
-                        class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200"
+                        class="bg-gradient-to-br from-emerald-500 to-emerald-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                     >
                         <div class="p-6">
                             <div class="flex items-center">
-                                <div class="flex-shrink-0">
+                                <div
+                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
+                                >
                                     <CheckCircleIcon
-                                        class="h-8 w-8 text-green-600"
+                                        class="h-8 w-8 text-white"
                                     />
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
                                         <dt
-                                            class="text-sm font-medium text-gray-500 truncate"
+                                            class="text-sm font-medium text-emerald-100 truncate"
                                         >
                                             Ketepatan Waktu
                                         </dt>
                                         <dd
-                                            class="text-2xl font-semibold text-gray-900"
+                                            class="text-3xl font-bold text-white mt-1"
                                         >
                                             {{ stats.punctuality_rate }}%
                                         </dd>
@@ -111,30 +130,43 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="bg-emerald-700/30 px-6 py-2">
+                            <div class="text-xs text-emerald-100">
+                                Persentase tepat waktu
+                            </div>
+                        </div>
                     </div>
 
+                    <!-- Tidak Hadir Card -->
                     <div
-                        class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200"
+                        class="bg-gradient-to-br from-red-500 to-red-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
                     >
                         <div class="p-6">
                             <div class="flex items-center">
-                                <div class="flex-shrink-0">
-                                    <XCircleIcon class="h-8 w-8 text-red-600" />
+                                <div
+                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
+                                >
+                                    <XCircleIcon class="h-8 w-8 text-white" />
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
                                         <dt
-                                            class="text-sm font-medium text-gray-500 truncate"
+                                            class="text-sm font-medium text-red-100 truncate"
                                         >
                                             Tidak Hadir
                                         </dt>
                                         <dd
-                                            class="text-2xl font-semibold text-gray-900"
+                                            class="text-3xl font-bold text-white mt-1"
                                         >
                                             {{ stats.absent_days }}
                                         </dd>
                                     </dl>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="bg-red-700/30 px-6 py-2">
+                            <div class="text-xs text-red-100">
+                                Total ketidakhadiran
                             </div>
                         </div>
                     </div>

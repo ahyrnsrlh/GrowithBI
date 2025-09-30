@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Division;
+use App\Notifications\ApplicationVerified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -108,6 +109,12 @@ class ApplicationController extends Controller
             'reviewed_by' => Auth::id() ?? 1 // For now, default to admin
         ]);
 
+        // Send notification to user if status is diterima or ditolak
+        if ($request->status === 'diterima' || $request->status === 'ditolak') {
+            $statusForNotification = $request->status === 'diterima' ? 'verified' : 'rejected';
+            $application->user->notify(new ApplicationVerified($application, $statusForNotification));
+        }
+
         return redirect()->back()->with('success', 'Status pendaftaran berhasil diupdate.');
     }
 
@@ -126,6 +133,16 @@ class ApplicationController extends Controller
             'reviewed_at' => now(),
             'reviewed_by' => Auth::id() ?? 1
         ]);
+
+        // Send notifications to all affected users
+        if ($request->status === 'diterima' || $request->status === 'ditolak') {
+            $applications = Application::whereIn('id', $request->application_ids)->get();
+            $statusForNotification = $request->status === 'diterima' ? 'verified' : 'rejected';
+            
+            foreach ($applications as $application) {
+                $application->user->notify(new ApplicationVerified($application, $statusForNotification));
+            }
+        }
 
         return redirect()->back()->with('success', 'Status pendaftaran berhasil diupdate secara bulk.');
     }
