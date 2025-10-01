@@ -43,49 +43,63 @@
         </div>
 
         <div class="min-h-screen bg-gray-50">
-            <!-- Header Section -->
-            <div class="bg-white border-b border-gray-200">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-900">
-                                Profil Saya
-                            </h1>
-                            <p class="text-gray-600">
-                                Kelola informasi profil dan lamaran magang Anda
-                            </p>
+            <!-- Header Navigation -->
+            <div
+                class="sticky top-0 z-50 bg-gradient-to-r from-blue-800 to-indigo-900 border-b border-blue-600 shadow-lg"
+            >
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex h-16 justify-between items-center">
+                        <!-- Logo BI -->
+                        <div class="flex shrink-0 items-center">
+                            <Link :href="route('dashboard')">
+                                <img
+                                    src="/logo.png"
+                                    alt="Bank Indonesia"
+                                    class="h-10 w-auto"
+                                />
+                            </Link>
                         </div>
-                        <!-- Progress Badge -->
-                        <div class="flex items-center space-x-4">
-                            <div class="text-right">
-                                <div class="text-sm text-gray-500">
-                                    Kelengkapan Profil
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <div
-                                        class="w-24 bg-gray-200 rounded-full h-2"
+
+                        <!-- User Dropdown -->
+                        <div class="flex items-center">
+                            <Dropdown align="right" width="48">
+                                <template #trigger>
+                                    <span class="inline-flex rounded-md">
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center rounded-md border border-transparent bg-transparent px-3 py-2 text-sm font-medium leading-4 text-blue-100 transition duration-150 ease-in-out hover:text-white focus:outline-none"
+                                        >
+                                            {{ $page.props.auth.user.name }}
+
+                                            <svg
+                                                class="-me-0.5 ms-2 h-4 w-4"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                            >
+                                                <path
+                                                    fill-rule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clip-rule="evenodd"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </span>
+                                </template>
+
+                                <template #content>
+                                    <DropdownLink :href="route('profile.edit')">
+                                        Profile
+                                    </DropdownLink>
+                                    <DropdownLink
+                                        :href="route('logout')"
+                                        method="post"
+                                        as="button"
                                     >
-                                        <div
-                                            :class="[
-                                                'h-2 rounded-full transition-all duration-300',
-                                                profileCompletion.percentage >=
-                                                80
-                                                    ? 'bg-green-500'
-                                                    : profileCompletion.percentage >=
-                                                      50
-                                                    ? 'bg-yellow-500'
-                                                    : 'bg-red-500',
-                                            ]"
-                                            :style="`width: ${profileCompletion.percentage}%`"
-                                        ></div>
-                                    </div>
-                                    <span class="text-sm font-medium"
-                                        >{{
-                                            profileCompletion.percentage
-                                        }}%</span
-                                    >
-                                </div>
-                            </div>
+                                        Log Out
+                                    </DropdownLink>
+                                </template>
+                            </Dropdown>
                         </div>
                     </div>
                 </div>
@@ -95,144 +109,150 @@
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                     <!-- Sidebar Navigation -->
                     <div class="lg:col-span-1">
-                        <nav
-                            class="bg-gradient-to-b from-blue-800 to-indigo-900 rounded-lg shadow-lg border border-blue-700 p-6"
-                        >
-                            <div class="space-y-2">
-                                <button
-                                    @click="activeTab = 'profile'"
-                                    :class="[
-                                        'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
-                                        activeTab === 'profile'
-                                            ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
-                                            : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
-                                    ]"
-                                >
-                                    <i class="fas fa-user mr-3"></i>
-                                    Informasi Pribadi
-                                </button>
-                                <button
-                                    @click="activeTab = 'documents'"
-                                    :class="[
-                                        'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
-                                        activeTab === 'documents'
-                                            ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
-                                            : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
-                                    ]"
-                                >
-                                    <i class="fas fa-file-alt mr-3"></i>
-                                    Dokumen Persyaratan
-                                </button>
-                                <button
-                                    @click="activeTab = 'applications'"
-                                    :class="[
-                                        'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
-                                        activeTab === 'applications'
-                                            ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
-                                            : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
-                                    ]"
-                                >
-                                    <i class="fas fa-briefcase mr-3"></i>
-                                    Status Lamaran
-                                    <span
-                                        v-if="applications.length"
-                                        class="ml-2 bg-white text-blue-600 text-xs px-2 py-1 rounded-full"
-                                    >
-                                        {{ applications.length }}
-                                    </span>
-                                </button>
-                                <a
-                                    :href="route('home') + '#divisions'"
-                                    class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors text-blue-100 hover:bg-blue-700 hover:bg-opacity-30 block"
-                                >
-                                    <i
-                                        class="fas fa-external-link-alt mr-3"
-                                    ></i>
-                                    Daftar Magang
-                                </a>
-                            </div>
-
-                            <!-- Logbook & Laporan Section (Only for accepted participants) -->
-                            <div
-                                v-if="hasAcceptedApplication"
-                                class="mt-6 pt-4 border-t border-blue-600 border-opacity-40"
+                        <div class="lg:sticky lg:top-24">
+                            <nav
+                                class="bg-gradient-to-b from-blue-800 to-indigo-900 rounded-lg shadow-lg border border-blue-700 p-6 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar"
                             >
-                                <h3
-                                    class="text-sm font-medium text-blue-100 mb-3"
-                                >
-                                    Logbook & Laporan
-                                </h3>
-                                <div class="space-y-1">
-                                    <Link
-                                        :href="
-                                            route('profile.attendance.index')
-                                        "
-                                        class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-blue-100 hover:bg-blue-700 hover:bg-opacity-30 block"
-                                    >
-                                        <i class="fas fa-clock mr-3"></i>
-                                        Absensi Online
-                                    </Link>
-                                    <button
-                                        @click="activeTab = 'logbook'"
-                                        :class="[
-                                            'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                                            activeTab === 'logbook'
-                                                ? 'bg-blue-700 bg-opacity-40 text-white'
-                                                : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
-                                        ]"
-                                    >
-                                        <i class="fas fa-book mr-3"></i>
-                                        Logbook Harian
-                                    </button>
-                                    <button
-                                        @click="activeTab = 'reports'"
-                                        :class="[
-                                            'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                                            activeTab === 'reports'
-                                                ? 'bg-blue-700 bg-opacity-40 text-white'
-                                                : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
-                                        ]"
-                                    >
-                                        <i class="fas fa-chart-line mr-3"></i>
-                                        Laporan Akhir
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Quick Links -->
-                            <div
-                                class="mt-8 pt-6 border-t border-blue-600 border-opacity-40"
-                            >
-                                <h3
-                                    class="text-sm font-medium text-blue-100 mb-3"
-                                >
-                                    Navigasi Cepat
-                                </h3>
                                 <div class="space-y-2">
-                                    <Link
-                                        href="/"
-                                        class="block text-sm text-blue-100 hover:text-white"
+                                    <button
+                                        @click="activeTab = 'profile'"
+                                        :class="[
+                                            'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                                            activeTab === 'profile'
+                                                ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
+                                                : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                        ]"
                                     >
-                                        <i class="fas fa-home mr-2"></i>
-                                        Beranda
-                                    </Link>
-                                    <Link
-                                        href="/divisi"
-                                        class="block text-sm text-blue-100 hover:text-white"
+                                        <i class="fas fa-user mr-3"></i>
+                                        Informasi Pribadi
+                                    </button>
+                                    <button
+                                        @click="activeTab = 'documents'"
+                                        :class="[
+                                            'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                                            activeTab === 'documents'
+                                                ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
+                                                : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                        ]"
                                     >
-                                        <i class="fas fa-building mr-2"></i>
-                                        Lowongan Magang
-                                    </Link>
-                                    <Link
-                                        href="/cek-status"
-                                        class="block text-sm text-blue-100 hover:text-white"
+                                        <i class="fas fa-file-alt mr-3"></i>
+                                        Dokumen Persyaratan
+                                    </button>
+                                    <button
+                                        @click="activeTab = 'applications'"
+                                        :class="[
+                                            'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                                            activeTab === 'applications'
+                                                ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
+                                                : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                        ]"
                                     >
-                                        <i class="fas fa-search mr-2"></i>
-                                        Cek Status
-                                    </Link>
+                                        <i class="fas fa-briefcase mr-3"></i>
+                                        Status Lamaran
+                                        <span
+                                            v-if="applications.length"
+                                            class="ml-2 bg-white text-blue-600 text-xs px-2 py-1 rounded-full"
+                                        >
+                                            {{ applications.length }}
+                                        </span>
+                                    </button>
+                                    <a
+                                        :href="route('home') + '#divisions'"
+                                        class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors text-blue-100 hover:bg-blue-700 hover:bg-opacity-30 block"
+                                    >
+                                        <i
+                                            class="fas fa-external-link-alt mr-3"
+                                        ></i>
+                                        Daftar Magang
+                                    </a>
                                 </div>
-                            </div>
-                        </nav>
+
+                                <!-- Logbook & Laporan Section (Only for accepted participants) -->
+                                <div
+                                    v-if="hasAcceptedApplication"
+                                    class="mt-6 pt-4 border-t border-blue-600 border-opacity-40"
+                                >
+                                    <h3
+                                        class="text-sm font-medium text-blue-100 mb-3"
+                                    >
+                                        Logbook & Laporan
+                                    </h3>
+                                    <div class="space-y-1">
+                                        <Link
+                                            :href="
+                                                route(
+                                                    'profile.attendance.index'
+                                                )
+                                            "
+                                            class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-blue-100 hover:bg-blue-700 hover:bg-opacity-30 block"
+                                        >
+                                            <i class="fas fa-clock mr-3"></i>
+                                            Absensi Online
+                                        </Link>
+                                        <button
+                                            @click="activeTab = 'logbook'"
+                                            :class="[
+                                                'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                                                activeTab === 'logbook'
+                                                    ? 'bg-blue-700 bg-opacity-40 text-white'
+                                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                            ]"
+                                        >
+                                            <i class="fas fa-book mr-3"></i>
+                                            Logbook Harian
+                                        </button>
+                                        <button
+                                            @click="activeTab = 'reports'"
+                                            :class="[
+                                                'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                                                activeTab === 'reports'
+                                                    ? 'bg-blue-700 bg-opacity-40 text-white'
+                                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                            ]"
+                                        >
+                                            <i
+                                                class="fas fa-chart-line mr-3"
+                                            ></i>
+                                            Laporan Akhir
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Quick Links -->
+                                <div
+                                    class="mt-8 pt-6 border-t border-blue-600 border-opacity-40"
+                                >
+                                    <h3
+                                        class="text-sm font-medium text-blue-100 mb-3"
+                                    >
+                                        Navigasi Cepat
+                                    </h3>
+                                    <div class="space-y-2">
+                                        <Link
+                                            href="/"
+                                            class="block text-sm text-blue-100 hover:text-white"
+                                        >
+                                            <i class="fas fa-home mr-2"></i>
+                                            Beranda
+                                        </Link>
+                                        <Link
+                                            href="/divisi"
+                                            class="block text-sm text-blue-100 hover:text-white"
+                                        >
+                                            <i class="fas fa-building mr-2"></i>
+                                            Lowongan Magang
+                                        </Link>
+                                        <Link
+                                            href="/cek-status"
+                                            class="block text-sm text-blue-100 hover:text-white"
+                                        >
+                                            <i class="fas fa-search mr-2"></i>
+                                            Cek Status
+                                        </Link>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
                     </div>
 
                     <!-- Main Content -->
@@ -2030,6 +2050,8 @@
 import { ref, reactive, computed, onMounted } from "vue";
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
 import DocumentUpload from "@/Components/DocumentUpload.vue";
 import ApplicationCard from "@/Components/ApplicationCard.vue";
 
@@ -2365,3 +2387,29 @@ onMounted(() => {
     }
 });
 </script>
+
+<style scoped>
+/* Custom scrollbar for sidebar */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(59, 130, 246, 0.5) rgba(59, 130, 246, 0.1);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.5);
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.7);
+}
+</style>

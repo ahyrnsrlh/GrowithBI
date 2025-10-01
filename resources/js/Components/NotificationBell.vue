@@ -182,6 +182,17 @@ const props = defineProps({
     },
 });
 
+onMounted(() => {
+    fetchUnreadCount();
+    setupEcho();
+});
+
+onUnmounted(() => {
+    if (echoChannel.value) {
+        window.Echo.leave(`App.User.${props.userId}`);
+    }
+});
+
 const toggleDropdown = () => {
     isOpen.value = !isOpen.value;
     if (isOpen.value && notifications.value.length === 0) {
@@ -328,9 +339,7 @@ const formatTime = (timestamp) => {
 };
 
 // Setup real-time notifications with Laravel Echo
-onMounted(() => {
-    fetchUnreadCount();
-
+const setupEcho = () => {
     // Listen to private notification channel
     if (window.Echo && props.userId) {
         echoChannel.value = window.Echo.private(
@@ -367,14 +376,7 @@ onMounted(() => {
     if ("Notification" in window && Notification.permission === "default") {
         Notification.requestPermission();
     }
-});
-
-onUnmounted(() => {
-    // Leave Echo channel
-    if (echoChannel.value) {
-        window.Echo.leave(`App.User.${props.userId}`);
-    }
-});
+};
 
 // Click outside directive
 const vClickOutside = {

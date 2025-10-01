@@ -91,12 +91,10 @@ const hasAcceptedApplication = computed(() => {
                             </div>
                         </div>
 
-                        <div
-                            class="hidden sm:flex sm:items-center sm:ms-6 sm:space-x-4"
-                        >
+                        <div class="flex items-center ms-6 space-x-4">
                             <!-- Notifications -->
                             <NotificationBell
-                                v-if="$page.props.auth.user"
+                                v-if="$page.props.auth?.user"
                                 :userId="$page.props.auth.user.id"
                             />
 
