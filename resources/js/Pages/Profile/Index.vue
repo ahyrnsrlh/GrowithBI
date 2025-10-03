@@ -1,7 +1,7 @@
 <template>
     <Head title="Profil Saya" />
 
-    <AuthenticatedLayout>
+    <div>
         <!-- Toast Notifications -->
         <div v-if="showNotification" class="fixed top-4 right-4 z-50">
             <div
@@ -49,15 +49,23 @@
             >
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex h-16 justify-between items-center">
-                        <!-- Logo BI -->
-                        <div class="flex shrink-0 items-center">
-                            <Link :href="route('dashboard')">
+                        <!-- Logo BI + Text -->
+                        <div class="flex items-center space-x-3">
+                            <Link :href="route('home')">
                                 <img
                                     src="/logo.png"
                                     alt="Bank Indonesia"
                                     class="h-10 w-auto"
                                 />
                             </Link>
+                            <div class="hidden sm:block">
+                                <h1 class="text-white font-bold text-lg">
+                                    GrowithBI
+                                </h1>
+                                <p class="text-blue-200 text-xs">
+                                    Bank Indonesia Lampung
+                                </p>
+                            </div>
                         </div>
 
                         <!-- User Dropdown -->
@@ -218,38 +226,19 @@
                                     </div>
                                 </div>
 
-                                <!-- Quick Links -->
+                                <!-- Logout Section -->
                                 <div
                                     class="mt-8 pt-6 border-t border-blue-600 border-opacity-40"
                                 >
-                                    <h3
-                                        class="text-sm font-medium text-blue-100 mb-3"
+                                    <Link
+                                        :href="route('logout')"
+                                        method="post"
+                                        as="button"
+                                        class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors text-red-200 hover:bg-red-700 hover:bg-opacity-30 hover:text-white flex items-center"
                                     >
-                                        Navigasi Cepat
-                                    </h3>
-                                    <div class="space-y-2">
-                                        <Link
-                                            href="/"
-                                            class="block text-sm text-blue-100 hover:text-white"
-                                        >
-                                            <i class="fas fa-home mr-2"></i>
-                                            Beranda
-                                        </Link>
-                                        <Link
-                                            href="/divisi"
-                                            class="block text-sm text-blue-100 hover:text-white"
-                                        >
-                                            <i class="fas fa-building mr-2"></i>
-                                            Lowongan Magang
-                                        </Link>
-                                        <Link
-                                            href="/cek-status"
-                                            class="block text-sm text-blue-100 hover:text-white"
-                                        >
-                                            <i class="fas fa-search mr-2"></i>
-                                            Cek Status
-                                        </Link>
-                                    </div>
+                                        <i class="fas fa-sign-out-alt mr-3"></i>
+                                        Log Out
+                                    </Link>
                                 </div>
                             </nav>
                         </div>
@@ -2043,13 +2032,12 @@
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted } from "vue";
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import DocumentUpload from "@/Components/DocumentUpload.vue";
