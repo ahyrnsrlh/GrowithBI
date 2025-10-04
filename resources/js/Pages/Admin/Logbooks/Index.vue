@@ -261,8 +261,8 @@
                             Daftar Logbook
                         </h3>
                         <p class="text-sm text-gray-600 mt-1">
-                            Menampilkan {{ filteredLogbooks.length }} dari
-                            {{ logbooks.length }} logbook
+                            Menampilkan {{ paginatedLogbooks.length }} dari
+                            {{ filteredLogbooks.length }} logbook
                         </p>
                     </div>
                     <label class="flex items-center">
@@ -322,7 +322,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <tr
-                            v-for="logbook in filteredLogbooks"
+                            v-for="logbook in paginatedLogbooks"
                             :key="logbook.id"
                             class="hover:bg-gray-50"
                         >
@@ -498,6 +498,105 @@
                 </table>
             </div>
 
+            <!-- Pagination -->
+            <div
+                v-if="filteredLogbooks.length > 0"
+                class="px-6 py-4 border-t border-gray-200 bg-gray-50"
+            >
+                <div
+                    class="flex flex-col sm:flex-row items-center justify-between gap-4"
+                >
+                    <!-- Items per page -->
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-700">Tampilkan:</span>
+                        <select
+                            v-model="itemsPerPage"
+                            @change="changeItemsPerPage(itemsPerPage)"
+                            class="rounded-md border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option :value="5">5</option>
+                            <option :value="10">10</option>
+                            <option :value="25">25</option>
+                            <option :value="50">50</option>
+                        </select>
+                        <span class="text-sm text-gray-700">data</span>
+                    </div>
+
+                    <!-- Page info -->
+                    <div class="text-sm text-gray-700">
+                        Halaman {{ currentPage }} dari {{ totalPages }}
+                        <span class="text-gray-500"
+                            >({{ filteredLogbooks.length }} total)</span
+                        >
+                    </div>
+
+                    <!-- Pagination buttons -->
+                    <div class="flex items-center gap-1">
+                        <!-- Previous button -->
+                        <button
+                            @click="goToPage(currentPage - 1)"
+                            :disabled="currentPage === 1"
+                            class="px-3 py-1 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 text-gray-700"
+                        >
+                            <svg
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 19l-7-7 7-7"
+                                />
+                            </svg>
+                        </button>
+
+                        <!-- Page numbers -->
+                        <template
+                            v-for="(page, index) in paginationRange"
+                            :key="index"
+                        >
+                            <button
+                                v-if="page !== '...'"
+                                @click="goToPage(page)"
+                                :class="[
+                                    'px-3 py-1 rounded-md text-sm font-medium transition-colors',
+                                    currentPage === page
+                                        ? 'bg-blue-600 text-white'
+                                        : 'hover:bg-gray-200 text-gray-700',
+                                ]"
+                            >
+                                {{ page }}
+                            </button>
+                            <span v-else class="px-2 text-gray-500">...</span>
+                        </template>
+
+                        <!-- Next button -->
+                        <button
+                            @click="goToPage(currentPage + 1)"
+                            :disabled="currentPage === totalPages"
+                            class="px-3 py-1 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200 text-gray-700"
+                        >
+                            <svg
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Empty State -->
             <div v-else class="p-12 text-center">
                 <div class="w-24 h-24 mx-auto mb-4 text-gray-400">
@@ -552,6 +651,10 @@ const divisionFilter = ref("");
 const monthFilter = ref("");
 const selectedLogbooks = ref([]);
 
+// Pagination state
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
+
 const filteredLogbooks = computed(() => {
     return props.logbooks.filter((logbook) => {
         const matchesSearch =
@@ -585,10 +688,50 @@ const filteredLogbooks = computed(() => {
     });
 });
 
+// Pagination computed
+const totalPages = computed(() => {
+    return Math.ceil(filteredLogbooks.value.length / itemsPerPage.value);
+});
+
+const paginatedLogbooks = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+    return filteredLogbooks.value.slice(start, end);
+});
+
+const paginationRange = computed(() => {
+    const range = [];
+    const delta = 2;
+    const left = currentPage.value - delta;
+    const right = currentPage.value + delta;
+
+    for (let i = 1; i <= totalPages.value; i++) {
+        if (i === 1 || i === totalPages.value || (i >= left && i <= right)) {
+            range.push(i);
+        } else if (range[range.length - 1] !== "...") {
+            range.push("...");
+        }
+    }
+
+    return range;
+});
+
+const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages.value) {
+        currentPage.value = page;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+};
+
+const changeItemsPerPage = (value) => {
+    itemsPerPage.value = value;
+    currentPage.value = 1;
+};
+
 const isAllSelected = computed(() => {
     return (
-        filteredLogbooks.value.length > 0 &&
-        selectedLogbooks.value.length === filteredLogbooks.value.length
+        paginatedLogbooks.value.length > 0 &&
+        selectedLogbooks.value.length === paginatedLogbooks.value.length
     );
 });
 
@@ -596,7 +739,7 @@ const toggleSelectAll = () => {
     if (isAllSelected.value) {
         selectedLogbooks.value = [];
     } else {
-        selectedLogbooks.value = filteredLogbooks.value.map(
+        selectedLogbooks.value = paginatedLogbooks.value.map(
             (logbook) => logbook.id
         );
     }
@@ -608,6 +751,7 @@ const resetFilters = () => {
     divisionFilter.value = "";
     monthFilter.value = "";
     selectedLogbooks.value = [];
+    currentPage.value = 1;
 };
 
 const formatDate = (dateString) => {

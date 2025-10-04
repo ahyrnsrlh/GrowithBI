@@ -507,85 +507,167 @@
                         <!-- Dokumen Persyaratan Tab -->
                         <div
                             v-if="activeTab === 'documents'"
-                            class="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+                            class="bg-gradient-to-br from-gray-50 to-white rounded-xl shadow-sm border border-gray-100"
                         >
-                            <h2
-                                class="text-xl font-semibold text-gray-900 mb-6"
+                            <!-- Header Modern -->
+                            <div
+                                class="p-6 border-b border-gray-100 bg-white rounded-t-xl"
                             >
-                                Dokumen Persyaratan
-                            </h2>
+                                <div
+                                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                                >
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
+                                        >
+                                            <svg
+                                                class="w-7 h-7 text-white"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h2
+                                                class="text-2xl font-bold text-blue-600"
+                                            >
+                                                Dokumen Persyaratan
+                                            </h2>
+                                            <p
+                                                class="text-sm text-gray-600 mt-1"
+                                            >
+                                                Lengkapi semua dokumen yang
+                                                diperlukan untuk proses magang
+                                            </p>
+                                        </div>
+                                    </div>
 
-                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                <!-- Surat Pengantar -->
-                                <DocumentUpload
-                                    title="Surat Pengantar"
-                                    type="surat_pengantar"
-                                    :current-file="user.surat_pengantar_path"
-                                    @upload="uploadDocument"
-                                    required
-                                />
+                                    <!-- Progress Badge -->
+                                    <div
+                                        class="flex items-center gap-3 bg-blue-50 px-4 py-2.5 rounded-lg border border-blue-100"
+                                    >
+                                        <div class="flex items-center gap-2">
+                                            <svg
+                                                class="w-5 h-5 text-blue-600"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                />
+                                            </svg>
+                                            <span
+                                                class="text-sm font-semibold text-blue-900"
+                                            >
+                                                {{ documentProgress }}% Complete
+                                            </span>
+                                        </div>
+                                        <div
+                                            class="w-24 h-2 bg-blue-200 rounded-full overflow-hidden"
+                                        >
+                                            <div
+                                                class="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500"
+                                                :style="{
+                                                    width:
+                                                        documentProgress + '%',
+                                                }"
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                <!-- CV -->
-                                <DocumentUpload
-                                    title="Curriculum Vitae (CV)"
-                                    type="cv"
-                                    :current-file="user.cv_path"
-                                    @upload="uploadDocument"
-                                    required
-                                />
+                            <!-- Document Grid with Modern Cards -->
+                            <div class="p-6 bg-gray-50">
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+                                >
+                                    <!-- Surat Pengantar -->
+                                    <DocumentUpload
+                                        title="Surat Pengantar"
+                                        type="surat_pengantar"
+                                        :current-file="
+                                            user.surat_pengantar_path
+                                        "
+                                        @upload="uploadDocument"
+                                        required
+                                    />
 
-                                <!-- Motivation Letter -->
-                                <DocumentUpload
-                                    title="Motivation Letter"
-                                    type="motivation_letter"
-                                    :current-file="user.motivation_letter_path"
-                                    @upload="uploadDocument"
-                                    required
-                                />
+                                    <!-- CV -->
+                                    <DocumentUpload
+                                        title="Curriculum Vitae (CV)"
+                                        type="cv"
+                                        :current-file="user.cv_path"
+                                        @upload="uploadDocument"
+                                        required
+                                    />
 
-                                <!-- Transkrip -->
-                                <DocumentUpload
-                                    title="Transkrip Nilai"
-                                    type="transkrip"
-                                    :current-file="user.transkrip_path"
-                                    @upload="uploadDocument"
-                                    required
-                                />
+                                    <!-- Motivation Letter -->
+                                    <DocumentUpload
+                                        title="Motivation Letter"
+                                        type="motivation_letter"
+                                        :current-file="
+                                            user.motivation_letter_path
+                                        "
+                                        @upload="uploadDocument"
+                                        required
+                                    />
 
-                                <!-- KTP -->
-                                <DocumentUpload
-                                    title="KTP"
-                                    type="ktp"
-                                    :current-file="user.ktp_path"
-                                    @upload="uploadDocument"
-                                    required
-                                />
+                                    <!-- Transkrip -->
+                                    <DocumentUpload
+                                        title="Transkrip Nilai"
+                                        type="transkrip"
+                                        :current-file="user.transkrip_path"
+                                        @upload="uploadDocument"
+                                        required
+                                    />
 
-                                <!-- NPWP -->
-                                <DocumentUpload
-                                    title="NPWP"
-                                    type="npwp"
-                                    :current-file="user.npwp_path"
-                                    @upload="uploadDocument"
-                                />
+                                    <!-- KTP -->
+                                    <DocumentUpload
+                                        title="KTP"
+                                        type="ktp"
+                                        :current-file="user.ktp_path"
+                                        @upload="uploadDocument"
+                                        required
+                                    />
 
-                                <!-- Buku Rekening -->
-                                <DocumentUpload
-                                    title="Buku Rekening Tabungan"
-                                    type="buku_rekening"
-                                    :current-file="user.buku_rekening_path"
-                                    @upload="uploadDocument"
-                                    required
-                                />
+                                    <!-- NPWP -->
+                                    <DocumentUpload
+                                        title="NPWP"
+                                        type="npwp"
+                                        :current-file="user.npwp_path"
+                                        @upload="uploadDocument"
+                                    />
 
-                                <!-- Pas Foto -->
-                                <DocumentUpload
-                                    title="Pas Foto 3x4 atau 4x6"
-                                    type="pas_foto"
-                                    :current-file="user.pas_foto_path"
-                                    @upload="uploadDocument"
-                                    required
-                                />
+                                    <!-- Buku Rekening -->
+                                    <DocumentUpload
+                                        title="Buku Rekening Tabungan"
+                                        type="buku_rekening"
+                                        :current-file="user.buku_rekening_path"
+                                        @upload="uploadDocument"
+                                        required
+                                    />
+
+                                    <!-- Pas Foto -->
+                                    <DocumentUpload
+                                        title="Pas Foto 3x4 atau 4x6"
+                                        type="pas_foto"
+                                        :current-file="user.pas_foto_path"
+                                        @upload="uploadDocument"
+                                        required
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -634,28 +716,32 @@
                         <!-- Logbook Tab -->
                         <div
                             v-if="activeTab === 'logbook'"
-                            class="bg-white rounded-lg shadow-sm border border-gray-200"
+                            class="bg-gradient-to-br from-gray-50 to-white rounded-xl shadow-sm border border-gray-100"
                         >
-                            <!-- Header -->
-                            <div class="p-6 border-b border-gray-200">
-                                <div class="flex items-center justify-between">
+                            <!-- Header dengan BI Theme -->
+                            <div
+                                class="p-6 border-b border-gray-100 bg-white rounded-t-xl"
+                            >
+                                <div
+                                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                                >
                                     <div>
                                         <h2
-                                            class="text-xl font-semibold text-gray-900"
+                                            class="text-2xl font-bold text-blue-600"
                                         >
                                             Logbook Harian
                                         </h2>
-                                        <p class="text-gray-600 mt-1">
+                                        <p class="text-gray-600 mt-1 text-sm">
                                             Catat perkembangan dan kegiatan
                                             harian selama masa magang
                                         </p>
                                     </div>
                                     <button
                                         @click="showCreateLogbookModal = true"
-                                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                                        class="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                                     >
                                         <svg
-                                            class="w-4 h-4 mr-2"
+                                            class="w-5 h-5 mr-2"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -672,24 +758,26 @@
                                 </div>
                             </div>
 
-                            <!-- Statistics -->
-                            <div class="p-6 border-b border-gray-200">
+                            <!-- Statistics - Compact Modern Cards -->
+                            <div class="p-6 border-b border-gray-100 bg-white">
                                 <div
                                     class="grid grid-cols-2 md:grid-cols-4 gap-4"
                                 >
                                     <div
-                                        class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white"
+                                        class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md p-5 text-white"
                                     >
                                         <div
                                             class="flex items-center justify-between"
                                         >
                                             <div>
                                                 <p
-                                                    class="text-blue-100 text-sm font-medium"
+                                                    class="text-blue-100 text-xs font-medium uppercase tracking-wide"
                                                 >
                                                     Total
                                                 </p>
-                                                <p class="text-3xl font-bold">
+                                                <p
+                                                    class="text-3xl font-bold mt-1"
+                                                >
                                                     {{
                                                         logbookStats?.total_logbooks ||
                                                         0
@@ -697,7 +785,7 @@
                                                 </p>
                                             </div>
                                             <div
-                                                class="bg-blue-400 bg-opacity-30 rounded-full p-3"
+                                                class="bg-white bg-opacity-20 rounded-lg p-2.5"
                                             >
                                                 <svg
                                                     class="w-8 h-8"
@@ -830,39 +918,46 @@
                             </div>
 
                             <!-- Content -->
-                            <div class="p-6">
+                            <div class="p-6 bg-gray-50">
+                                <!-- Empty State -->
                                 <div
                                     v-if="logbooks.length === 0"
-                                    class="text-center py-12"
+                                    class="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-16"
                                 >
-                                    <svg
-                                        class="mx-auto h-12 w-12 text-gray-400 mb-4"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
+                                    <div
+                                        class="w-20 h-20 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center"
                                     >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                        />
-                                    </svg>
+                                        <svg
+                                            class="w-10 h-10 text-gray-400"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="1.5"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                            />
+                                        </svg>
+                                    </div>
                                     <h3
-                                        class="text-lg font-medium text-gray-900 mb-2"
+                                        class="text-xl font-bold text-gray-900 mb-2"
                                     >
-                                        Belum ada logbook
+                                        Belum Ada Logbook
                                     </h3>
-                                    <p class="text-gray-500 mb-4">
+                                    <p
+                                        class="text-gray-600 mb-6 max-w-md mx-auto"
+                                    >
                                         Mulai catat kegiatan harian Anda dengan
                                         membuat logbook pertama.
                                     </p>
                                     <button
                                         @click="showCreateLogbookModal = true"
-                                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                        class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
                                     >
                                         <svg
-                                            class="w-4 h-4 mr-2"
+                                            class="w-5 h-5 mr-2"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -874,324 +969,302 @@
                                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                                             />
                                         </svg>
-                                        Buat Logbook
+                                        Buat Logbook Pertama
                                     </button>
                                 </div>
 
-                                <!-- Logbooks List -->
-                                <div v-else class="space-y-6">
-                                    <template
-                                        v-for="logbook in logbooks"
-                                        :key="logbook?.id || Math.random()"
+                                <!-- Logbooks Grid - Modern Card Layout -->
+                                <div v-else>
+                                    <div
+                                        class="grid grid-cols-1 md:grid-cols-2 gap-5"
                                     >
-                                        <div
-                                            v-if="logbook?.id"
-                                            class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all duration-300 group"
+                                        <template
+                                            v-for="logbook in logbooks"
+                                            :key="logbook?.id || Math.random()"
                                         >
-                                            <!-- Header -->
                                             <div
-                                                class="flex items-start justify-between mb-4"
+                                                v-if="logbook?.id"
+                                                class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group"
                                             >
+                                                <!-- Card Header - Compact Design -->
                                                 <div
-                                                    class="flex items-center space-x-3"
+                                                    class="px-5 py-4 bg-gradient-to-r from-[#F6F8FA] to-white border-b border-gray-100"
                                                 >
                                                     <div
-                                                        class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg"
-                                                    >
-                                                        <svg
-                                                            class="w-6 h-6 text-white"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                            />
-                                                        </svg>
-                                                    </div>
-                                                    <div>
-                                                        <h4
-                                                            class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors"
-                                                        >
-                                                            {{
-                                                                formatDate(
-                                                                    logbook?.date
-                                                                )
-                                                            }}
-                                                        </h4>
-                                                        <p
-                                                            class="text-sm text-gray-500"
-                                                        >
-                                                            {{
-                                                                logbook
-                                                                    ?.division
-                                                                    ?.name ||
-                                                                "Tidak ada divisi"
-                                                            }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div
-                                                    class="flex items-center space-x-3"
-                                                >
-                                                    <!-- Duration Badge -->
-                                                    <div
-                                                        class="flex items-center bg-gray-50 px-3 py-1.5 rounded-lg"
-                                                    >
-                                                        <svg
-                                                            class="w-4 h-4 text-gray-400 mr-1.5"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                            />
-                                                        </svg>
-                                                        <span
-                                                            class="text-sm font-medium text-gray-600"
-                                                            >{{
-                                                                logbook?.duration ||
-                                                                0
-                                                            }}h</span
-                                                        >
-                                                    </div>
-
-                                                    <!-- Status Badge -->
-                                                    <span
-                                                        class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold"
-                                                        :class="{
-                                                            'bg-amber-50 text-amber-700 border border-amber-200':
-                                                                logbook?.status ===
-                                                                'submitted',
-                                                            'bg-emerald-50 text-emerald-700 border border-emerald-200':
-                                                                logbook?.status ===
-                                                                'approved',
-                                                            'bg-red-50 text-red-700 border border-red-200':
-                                                                logbook?.status ===
-                                                                'revision',
-                                                            'bg-gray-50 text-gray-700 border border-gray-200':
-                                                                logbook?.status ===
-                                                                'draft',
-                                                        }"
+                                                        class="flex items-start justify-between gap-3"
                                                     >
                                                         <div
-                                                            class="w-2 h-2 rounded-full mr-2"
+                                                            class="flex-1 min-w-0"
+                                                        >
+                                                            <div
+                                                                class="flex items-center gap-2 text-sm text-gray-600 mb-1"
+                                                            >
+                                                                <svg
+                                                                    class="w-4 h-4 flex-shrink-0"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    viewBox="0 0 24 24"
+                                                                >
+                                                                    <path
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                                    />
+                                                                </svg>
+                                                                <span
+                                                                    class="font-medium truncate"
+                                                                    >{{
+                                                                        formatDate(
+                                                                            logbook?.date
+                                                                        )
+                                                                    }}</span
+                                                                >
+                                                            </div>
+                                                            <div
+                                                                class="flex items-center gap-2 text-sm text-gray-600"
+                                                            >
+                                                                <svg
+                                                                    class="w-4 h-4 flex-shrink-0"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    viewBox="0 0 24 24"
+                                                                >
+                                                                    <path
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                                    />
+                                                                </svg>
+                                                                <span
+                                                                    class="font-semibold"
+                                                                    >{{
+                                                                        logbook?.duration ||
+                                                                        0
+                                                                    }}h</span
+                                                                >
+                                                            </div>
+                                                        </div>
+                                                        <span
+                                                            class="px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0"
                                                             :class="{
-                                                                'bg-amber-400':
+                                                                'bg-[#FFA726] text-white':
                                                                     logbook?.status ===
                                                                     'submitted',
-                                                                'bg-emerald-400':
+                                                                'bg-[#43A047] text-white':
                                                                     logbook?.status ===
                                                                     'approved',
-                                                                'bg-red-400':
+                                                                'bg-[#AB47BC] text-white':
                                                                     logbook?.status ===
                                                                     'revision',
-                                                                'bg-gray-400':
+                                                                'bg-gray-500 text-white':
                                                                     logbook?.status ===
                                                                     'draft',
                                                             }"
-                                                        ></div>
-                                                        {{
-                                                            logbook?.status ===
-                                                            "submitted"
-                                                                ? "Pending"
-                                                                : logbook?.status ===
-                                                                  "approved"
-                                                                ? "Disetujui"
-                                                                : logbook?.status ===
-                                                                  "revision"
-                                                                ? "Revisi"
-                                                                : "Draft"
-                                                        }}
-                                                    </span>
+                                                        >
+                                                            {{
+                                                                logbook?.status ===
+                                                                "submitted"
+                                                                    ? "Pending"
+                                                                    : logbook?.status ===
+                                                                      "approved"
+                                                                    ? "Disetujui"
+                                                                    : logbook?.status ===
+                                                                      "revision"
+                                                                    ? "Revisi"
+                                                                    : "Draft"
+                                                            }}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <!-- Content -->
-                                            <div class="space-y-4">
-                                                <div>
-                                                    <h5
-                                                        class="text-base font-semibold text-gray-800 mb-2"
+                                                <!-- Card Body -->
+                                                <div class="px-5 py-4">
+                                                    <h3
+                                                        class="text-base font-bold text-blue-600 mb-2 line-clamp-2 group-hover:text-blue-700 transition-colors"
                                                     >
                                                         {{
                                                             logbook?.title ||
                                                             "Aktivitas Harian"
                                                         }}
-                                                    </h5>
+                                                    </h3>
                                                     <p
-                                                        class="text-gray-600 text-sm leading-relaxed line-clamp-3"
+                                                        class="text-sm text-gray-600 line-clamp-2 leading-relaxed mb-3"
                                                     >
                                                         {{
                                                             logbook?.activities ||
-                                                            "Tidak ada aktivitas"
+                                                            "Tidak ada deskripsi"
                                                         }}
                                                     </p>
-                                                </div>
 
-                                                <!-- Learning Points (if exists) -->
-                                                <div
-                                                    v-if="
-                                                        logbook?.learning_points
-                                                    "
-                                                    class="bg-blue-50 rounded-lg p-3 border-l-4 border-blue-400"
-                                                >
-                                                    <h6
-                                                        class="text-xs font-semibold text-blue-800 mb-1 uppercase tracking-wide"
-                                                    >
-                                                        Poin Pembelajaran
-                                                    </h6>
-                                                    <p
-                                                        class="text-sm text-blue-700"
-                                                    >
-                                                        {{
+                                                    <!-- Learning Points Preview -->
+                                                    <div
+                                                        v-if="
                                                             logbook?.learning_points
-                                                        }}
-                                                    </p>
+                                                        "
+                                                        class="mb-3 p-3 bg-blue-50 rounded-lg border border-blue-100"
+                                                    >
+                                                        <div
+                                                            class="flex items-start gap-2"
+                                                        >
+                                                            <svg
+                                                                class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                    stroke-linecap="round"
+                                                                    stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                                                                />
+                                                            </svg>
+                                                            <p
+                                                                class="text-xs text-blue-700 line-clamp-1 flex-1"
+                                                            >
+                                                                {{
+                                                                    logbook?.learning_points
+                                                                }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
-                                                <!-- Challenges (if exists) -->
+                                                <!-- Card Footer -->
                                                 <div
-                                                    v-if="logbook?.challenges"
-                                                    class="bg-orange-50 rounded-lg p-3 border-l-4 border-orange-400"
+                                                    class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between"
                                                 >
-                                                    <h6
-                                                        class="text-xs font-semibold text-orange-800 mb-1 uppercase tracking-wide"
-                                                    >
-                                                        Tantangan
-                                                    </h6>
-                                                    <p
-                                                        class="text-sm text-orange-700"
+                                                    <div
+                                                        class="text-xs text-gray-500"
                                                     >
                                                         {{
-                                                            logbook?.challenges
+                                                            logbook?.division
+                                                                ?.name ||
+                                                            "Tidak ada divisi"
                                                         }}
-                                                    </p>
+                                                    </div>
+                                                    <div
+                                                        class="flex items-center gap-2"
+                                                    >
+                                                        <button
+                                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+                                                        >
+                                                            <svg
+                                                                class="w-4 h-4"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                    stroke-linecap="round"
+                                                                    stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                                />
+                                                                <path
+                                                                    stroke-linecap="round"
+                                                                    stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                                />
+                                                            </svg>
+                                                            Detail
+                                                        </button>
+                                                        <button
+                                                            v-if="
+                                                                logbook?.status !==
+                                                                'approved'
+                                                            "
+                                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all duration-200"
+                                                        >
+                                                            <svg
+                                                                class="w-4 h-4"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                    stroke-linecap="round"
+                                                                    stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                                />
+                                                            </svg>
+                                                            Edit
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
+                                        </template>
+                                    </div>
 
-                                            <!-- Footer -->
-                                            <div
-                                                class="flex items-center justify-between pt-4 border-t border-gray-100 mt-4"
-                                            >
-                                                <div
-                                                    class="flex items-center text-xs text-gray-500"
-                                                >
-                                                    <svg
-                                                        class="w-4 h-4 mr-1"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                                        />
-                                                    </svg>
-                                                    Dibuat
-                                                    {{
-                                                        formatDate(
-                                                            logbook?.created_at
-                                                        )
-                                                    }}
-                                                </div>
-
-                                                <!-- Actions -->
-                                                <div
-                                                    class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                >
-                                                    <button
-                                                        class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                    >
-                                                        <svg
-                                                            class="w-4 h-4"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                    <button
-                                                        class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                                                    >
-                                                        <svg
-                                                            class="w-4 h-4"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                                            />
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                stroke-width="2"
-                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </template>
-
-                                    <!-- View More Button -->
+                                    <!-- View More Info -->
                                     <div
-                                        v-if="logbooks.length >= 5"
-                                        class="text-center pt-4"
+                                        v-if="logbooks.length >= 4"
+                                        class="text-center mt-6 pt-4 border-t border-gray-200"
                                     >
-                                        <p class="text-sm text-gray-500">
-                                            Menampilkan 5 logbook terbaru
+                                        <p class="text-sm text-gray-600">
+                                            Menampilkan
+                                            {{ logbooks.length }} logbook
+                                            terbaru
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Reports Tab -->
+                        <!-- Reports Tab - Modern Design -->
                         <div
                             v-if="activeTab === 'reports'"
-                            class="bg-white rounded-lg shadow-sm border border-gray-200"
+                            class="bg-gradient-to-br from-gray-50 to-white rounded-xl shadow-sm border border-gray-100"
                         >
-                            <!-- Header -->
-                            <div class="p-6 border-b border-gray-200">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <h2
-                                            class="text-xl font-semibold text-gray-900"
+                            <!-- Header Modern -->
+                            <div
+                                class="p-6 border-b border-gray-100 bg-white rounded-t-xl"
+                            >
+                                <div
+                                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                                >
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
                                         >
-                                            Laporan Akhir
-                                        </h2>
-                                        <p class="text-gray-600 mt-1">
-                                            Kelola laporan dan statistik magang
-                                            Anda
-                                        </p>
+                                            <svg
+                                                class="w-7 h-7 text-white"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h2
+                                                class="text-2xl font-bold text-blue-600"
+                                            >
+                                                Laporan Akhir
+                                            </h2>
+                                            <p
+                                                class="text-sm text-gray-600 mt-1"
+                                            >
+                                                Kelola laporan dan statistik
+                                                magang Anda
+                                            </p>
+                                        </div>
                                     </div>
                                     <button
                                         @click="showCreateReportModal = true"
-                                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                                        class="inline-flex items-center px-5 py-2.5 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                                     >
                                         <svg
-                                            class="w-4 h-4 mr-2"
+                                            class="w-5 h-5 mr-2"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -1208,10 +1281,10 @@
                                 </div>
                             </div>
 
-                            <!-- Statistics -->
-                            <div class="p-6 border-b border-gray-200">
+                            <!-- Statistics - Compact Modern Cards -->
+                            <div class="p-6 border-b border-gray-100 bg-white">
                                 <h3
-                                    class="text-lg font-medium text-gray-900 mb-4"
+                                    class="text-lg font-semibold text-blue-600 mb-4"
                                 >
                                     Statistik Laporan Akhir
                                 </h3>
@@ -1219,18 +1292,20 @@
                                     class="grid grid-cols-2 md:grid-cols-4 gap-4"
                                 >
                                     <div
-                                        class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white"
+                                        class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-md p-5 text-white"
                                     >
                                         <div
                                             class="flex items-center justify-between"
                                         >
                                             <div>
                                                 <p
-                                                    class="text-blue-100 text-sm font-medium"
+                                                    class="text-emerald-100 text-xs font-medium uppercase tracking-wide"
                                                 >
                                                     Total Laporan
                                                 </p>
-                                                <p class="text-3xl font-bold">
+                                                <p
+                                                    class="text-3xl font-bold mt-1"
+                                                >
                                                     {{
                                                         reportStats?.total_reports ||
                                                         0
@@ -1238,7 +1313,7 @@
                                                 </p>
                                             </div>
                                             <div
-                                                class="bg-blue-400 bg-opacity-30 rounded-full p-3"
+                                                class="bg-white bg-opacity-20 rounded-lg p-2.5"
                                             >
                                                 <svg
                                                     class="w-8 h-8"
@@ -1374,39 +1449,46 @@
                             </div>
 
                             <!-- Content -->
-                            <div class="p-6">
+                            <div class="p-6 bg-gray-50">
+                                <!-- Empty State -->
                                 <div
                                     v-if="!reports || reports.length === 0"
-                                    class="text-center py-12"
+                                    class="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-16"
                                 >
-                                    <svg
-                                        class="mx-auto h-12 w-12 text-gray-400 mb-4"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
+                                    <div
+                                        class="w-20 h-20 mx-auto mb-6 bg-emerald-100 rounded-full flex items-center justify-center"
                                     >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                        />
-                                    </svg>
+                                        <svg
+                                            class="w-10 h-10 text-emerald-600"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="1.5"
+                                                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                            />
+                                        </svg>
+                                    </div>
                                     <h3
-                                        class="text-lg font-medium text-gray-900 mb-2"
+                                        class="text-xl font-bold text-gray-900 mb-2"
                                     >
-                                        Belum ada laporan
+                                        Belum Ada Laporan
                                     </h3>
-                                    <p class="text-gray-500 mb-6">
+                                    <p
+                                        class="text-gray-600 mb-6 max-w-md mx-auto"
+                                    >
                                         Upload laporan akhir berdasarkan
                                         kegiatan magang Anda.
                                     </p>
                                     <button
                                         @click="showCreateReportModal = true"
-                                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                        class="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl"
                                     >
                                         <svg
-                                            class="w-4 h-4 mr-2"
+                                            class="w-5 h-5 mr-2"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -1418,193 +1500,170 @@
                                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                                             />
                                         </svg>
-                                        Buat Laporan
+                                        Buat Laporan Pertama
                                     </button>
                                 </div>
 
-                                <!-- Reports List -->
-                                <div
-                                    v-else-if="reports && reports.length > 0"
-                                    class="space-y-6"
-                                >
+                                <!-- Reports Grid - Modern Card Layout -->
+                                <div v-else-if="reports && reports.length > 0">
                                     <div
-                                        v-for="report in reports"
-                                        :key="report?.id || Math.random()"
-                                        class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-emerald-200 hover:shadow-lg transition-all duration-300 group"
+                                        class="grid grid-cols-1 md:grid-cols-2 gap-5"
                                     >
-                                        <!-- Header -->
                                         <div
-                                            class="flex items-start justify-between mb-4"
+                                            v-for="report in reports"
+                                            :key="report?.id || Math.random()"
+                                            class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group"
                                         >
+                                            <!-- Card Header - Compact with gradient -->
                                             <div
-                                                class="flex items-center space-x-4"
+                                                class="px-5 py-4 bg-gradient-to-r from-[#F6F8FA] to-white border-b border-gray-100"
                                             >
                                                 <div
-                                                    class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg"
+                                                    class="flex items-start justify-between gap-3"
                                                 >
-                                                    <svg
-                                                        class="w-7 h-7 text-white"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
+                                                    <div class="flex-1 min-w-0">
+                                                        <div
+                                                            class="flex items-center gap-2 mb-1"
+                                                        >
+                                                            <div
+                                                                class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center flex-shrink-0"
+                                                            >
+                                                                <svg
+                                                                    class="w-4 h-4 text-white"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    viewBox="0 0 24 24"
+                                                                >
+                                                                    <path
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                                    />
+                                                                </svg>
+                                                            </div>
+                                                            <h4
+                                                                class="text-base font-bold text-blue-600 group-hover:text-blue-600 transition-colors truncate"
+                                                            >
+                                                                {{
+                                                                    report?.title ||
+                                                                    "Laporan Tanpa Judul"
+                                                                }}
+                                                            </h4>
+                                                        </div>
+                                                        <p
+                                                            class="text-xs text-gray-500 ml-10"
+                                                        >
+                                                            Laporan Akhir Magang
+                                                        </p>
+                                                    </div>
+
+                                                    <!-- Status Badge with BI Colors -->
+                                                    <span
+                                                        v-if="
+                                                            (report?.status ||
+                                                                'submitted') ===
+                                                            'submitted'
+                                                        "
+                                                        class="px-3 py-1 bg-orange-50 text-orange-700 rounded-full text-xs font-semibold flex items-center gap-1.5 flex-shrink-0"
                                                     >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                        />
-                                                    </svg>
+                                                        <div
+                                                            class="w-2 h-2 rounded-full bg-orange-400 animate-pulse"
+                                                        ></div>
+                                                        Pending
+                                                    </span>
+                                                    <span
+                                                        v-else-if="
+                                                            (report?.status ||
+                                                                'submitted') ===
+                                                            'approved'
+                                                        "
+                                                        class="px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-semibold flex items-center gap-1.5 flex-shrink-0"
+                                                    >
+                                                        <div
+                                                            class="w-2 h-2 rounded-full bg-green-400"
+                                                        ></div>
+                                                        Disetujui
+                                                    </span>
+                                                    <span
+                                                        v-else-if="
+                                                            (report?.status ||
+                                                                'submitted') ===
+                                                            'revision'
+                                                        "
+                                                        class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-semibold flex items-center gap-1.5 flex-shrink-0"
+                                                    >
+                                                        <div
+                                                            class="w-2 h-2 rounded-full bg-purple-400"
+                                                        ></div>
+                                                        Perlu Revisi
+                                                    </span>
                                                 </div>
-                                                <div>
-                                                    <h4
-                                                        class="text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors"
-                                                    >
-                                                        {{
-                                                            report?.title ||
-                                                            "Laporan Tanpa Judul"
-                                                        }}
-                                                    </h4>
+                                            </div>
+
+                                            <!-- Card Body - Description -->
+                                            <div class="p-5 space-y-3">
+                                                <div
+                                                    v-if="report?.description"
+                                                    class="bg-blue-50 rounded-lg p-3 border-l-4 border-blue-400"
+                                                >
                                                     <p
-                                                        class="text-sm text-gray-500 mt-1"
+                                                        class="text-sm text-blue-900 line-clamp-3"
                                                     >
-                                                        Laporan Akhir Magang
+                                                        {{ report.description }}
                                                     </p>
                                                 </div>
-                                            </div>
 
-                                            <!-- Status Badge -->
-                                            <span
-                                                class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold shadow-sm border"
-                                                :class="{
-                                                    'bg-amber-50 text-amber-700 border-amber-200':
-                                                        (report?.status ||
-                                                            'submitted') ===
-                                                        'submitted',
-                                                    'bg-emerald-50 text-emerald-700 border-emerald-200':
-                                                        (report?.status ||
-                                                            'submitted') ===
-                                                        'approved',
-                                                    'bg-red-50 text-red-700 border-red-200':
-                                                        (report?.status ||
-                                                            'submitted') ===
-                                                        'revision',
-                                                }"
-                                            >
+                                                <!-- Document Info if exists -->
                                                 <div
-                                                    class="w-2.5 h-2.5 rounded-full mr-2"
-                                                    :class="{
-                                                        'bg-amber-400':
-                                                            (report?.status ||
-                                                                'submitted') ===
-                                                            'submitted',
-                                                        'bg-emerald-400':
-                                                            (report?.status ||
-                                                                'submitted') ===
-                                                            'approved',
-                                                        'bg-red-400':
-                                                            (report?.status ||
-                                                                'submitted') ===
-                                                            'revision',
-                                                    }"
-                                                ></div>
-                                                {{
-                                                    (report?.status ||
-                                                        "submitted") ===
-                                                    "submitted"
-                                                        ? "Pending"
-                                                        : (report?.status ||
-                                                              "submitted") ===
-                                                          "approved"
-                                                        ? "Disetujui"
-                                                        : "Perlu Revisi"
-                                                }}
-                                            </span>
-                                        </div>
-
-                                        <!-- Content -->
-                                        <div class="space-y-4">
-                                            <div
-                                                class="bg-gray-50 rounded-xl p-4 border-l-4 border-emerald-400"
-                                            >
-                                                <h6
-                                                    class="text-xs font-semibold text-emerald-800 mb-2 uppercase tracking-wide"
-                                                >
-                                                    Deskripsi Laporan
-                                                </h6>
-                                                <p
-                                                    class="text-gray-700 leading-relaxed"
-                                                >
-                                                    {{
-                                                        report?.description ||
-                                                        "Tidak ada deskripsi"
-                                                    }}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Footer -->
-                                        <div
-                                            class="flex items-center justify-between pt-4 border-t border-gray-100 mt-6"
-                                        >
-                                            <div
-                                                class="flex items-center text-sm text-gray-500"
-                                            >
-                                                <svg
-                                                    class="w-4 h-4 mr-2"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                                    />
-                                                </svg>
-                                                Dibuat
-                                                {{
-                                                    report?.created_at
-                                                        ? formatDate(
-                                                              report.created_at
-                                                          )
-                                                        : "N/A"
-                                                }}
-                                            </div>
-
-                                            <!-- Actions -->
-                                            <div
-                                                class="flex items-center space-x-3"
-                                            >
-                                                <a
                                                     v-if="report?.file_path"
-                                                    :href="`/storage/${report.file_path}`"
-                                                    target="_blank"
-                                                    class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 shadow-sm transition-all duration-200 group-hover:shadow-md"
+                                                    class="bg-green-50 rounded-lg p-3 flex items-center gap-3"
                                                 >
-                                                    <svg
-                                                        class="w-4 h-4 mr-2"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
+                                                    <div
+                                                        class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0"
                                                     >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                                        />
-                                                    </svg>
-                                                    Download
-                                                </a>
+                                                        <svg
+                                                            class="w-5 h-5 text-green-600"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                    <div class="flex-1 min-w-0">
+                                                        <p
+                                                            class="text-xs text-green-900 font-semibold"
+                                                        >
+                                                            Dokumen Tersimpan
+                                                        </p>
+                                                        <p
+                                                            class="text-xs text-green-600 truncate"
+                                                        >
+                                                            {{
+                                                                report.file_path
+                                                                    .split("/")
+                                                                    .pop()
+                                                            }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                                <!-- View Button -->
-                                                <button
-                                                    class="p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                                            <!-- Card Footer - Actions -->
+                                            <div
+                                                class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-between items-center"
+                                            >
+                                                <span
+                                                    class="text-xs text-gray-500 flex items-center gap-1.5"
                                                 >
                                                     <svg
-                                                        class="w-5 h-5"
+                                                        class="w-3.5 h-3.5"
                                                         fill="none"
                                                         stroke="currentColor"
                                                         viewBox="0 0 24 24"
@@ -1613,35 +1672,64 @@
                                                             stroke-linecap="round"
                                                             stroke-linejoin="round"
                                                             stroke-width="2"
-                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                                        />
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                                         />
                                                     </svg>
-                                                </button>
-
-                                                <!-- Share Button -->
-                                                <button
-                                                    class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-                                                >
-                                                    <svg
-                                                        class="w-5 h-5"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
+                                                    {{
+                                                        report?.created_at
+                                                            ? formatDate(
+                                                                  report.created_at
+                                                              )
+                                                            : "N/A"
+                                                    }}
+                                                </span>
+                                                <div class="flex gap-2">
+                                                    <a
+                                                        v-if="report?.file_path"
+                                                        :href="`/storage/${report.file_path}`"
+                                                        target="_blank"
+                                                        class="px-3 py-1.5 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 flex items-center gap-1.5"
                                                     >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-                                                        />
-                                                    </svg>
-                                                </button>
+                                                        <svg
+                                                            class="w-3.5 h-3.5"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                                            />
+                                                        </svg>
+                                                        Download
+                                                    </a>
+                                                    <button
+                                                        class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                                                        title="Lihat Detail"
+                                                    >
+                                                        <svg
+                                                            class="w-4 h-4"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                                            />
+                                                            <path
+                                                                stroke-linecap="round"
+                                                                stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                                            />
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -2080,6 +2168,23 @@ const hasAcceptedApplication = computed(() => {
 // Computed property to get accepted application details
 const acceptedApplication = computed(() => {
     return props.applications.find((app) => app.status === "diterima");
+});
+
+// Computed property for document upload progress
+const documentProgress = computed(() => {
+    const totalDocuments = 8; // Total required documents
+    const uploadedDocuments = [
+        user.surat_pengantar_path,
+        user.cv_path,
+        user.motivation_letter_path,
+        user.transkrip_path,
+        user.ktp_path,
+        user.npwp_path,
+        user.buku_rekening_path,
+        user.pas_foto_path,
+    ].filter(Boolean).length;
+
+    return Math.round((uploadedDocuments / totalDocuments) * 100);
 });
 
 // Format date helper
