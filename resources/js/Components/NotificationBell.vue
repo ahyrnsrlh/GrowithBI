@@ -3,8 +3,8 @@
         <!-- Notification Bell Button -->
         <button
             @click="toggleDropdown"
-            class="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg transition-all duration-200"
-            :class="{ 'bg-indigo-50': isOpen }"
+            class="relative p-2 text-white hover:text-blue-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 rounded-lg transition-all duration-200"
+            :class="{ 'bg-white bg-opacity-10': isOpen }"
         >
             <BellIcon class="h-6 w-6" />
 

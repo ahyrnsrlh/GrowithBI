@@ -111,9 +111,10 @@ Route::middleware('auth')->group(function () {
 // Peserta Routes (require peserta role)
 Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [PesertaDashboardController::class, 'index'])->name('dashboard');
-    // Logbook routes moved to /profile/logbooks
-    // Route::resource('logbooks', App\Http\Controllers\LogbookController::class);
-    // Route::post('/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbooks.comments.store');
+    
+    // Logbook routes for participants
+    Route::resource('logbooks', App\Http\Controllers\LogbookController::class);
+    Route::post('/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbooks.comments.store');
     
     // Reports management for participants
     Route::resource('reports', App\Http\Controllers\Peserta\PesertaReportController::class);

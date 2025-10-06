@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Report;
 use App\Models\Logbook;
+use App\Models\User;
+use App\Notifications\ReportSubmitted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -153,7 +155,7 @@ class PesertaReportController extends Controller
             $filePath = $file->storeAs('reports', $filename, 'public');
 
             // Create report record
-            Report::create([
+            $report = Report::create([
                 'user_id' => $user->id,
                 'application_id' => $acceptedApplication->id,
                 'title' => $request->title,
@@ -164,6 +166,12 @@ class PesertaReportController extends Controller
                 'file_type' => $file->getMimeType(),
                 'status' => 'submitted'
             ]);
+
+            // Send notification to all admins
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new ReportSubmitted($report));
+            }
 
             return redirect()->route('profile.edit')
                 ->with('success', 'Laporan berhasil diupload dan dikirim untuk review.');

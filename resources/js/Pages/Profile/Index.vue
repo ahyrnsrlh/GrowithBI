@@ -68,8 +68,15 @@
                             </div>
                         </div>
 
-                        <!-- User Dropdown -->
-                        <div class="flex items-center">
+                        <!-- Right Section: Notification Bell & User Dropdown -->
+                        <div class="flex items-center space-x-4">
+                            <!-- Notification Bell -->
+                            <NotificationBell
+                                v-if="$page.props.auth?.user"
+                                :userId="$page.props.auth.user.id"
+                            />
+
+                            <!-- User Dropdown -->
                             <Dropdown align="right" width="48">
                                 <template #trigger>
                                     <span class="inline-flex rounded-md">
@@ -109,6 +116,7 @@
                                 </template>
                             </Dropdown>
                         </div>
+                        <!-- End Right Section -->
                     </div>
                 </div>
             </div>
@@ -1149,6 +1157,11 @@
                                                         class="flex items-center gap-2"
                                                     >
                                                         <button
+                                                            @click="
+                                                                viewLogbookDetail(
+                                                                    logbook.id
+                                                                )
+                                                            "
                                                             class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
                                                         >
                                                             <svg
@@ -1176,6 +1189,11 @@
                                                             v-if="
                                                                 logbook?.status !==
                                                                 'approved'
+                                                            "
+                                                            @click="
+                                                                editLogbook(
+                                                                    logbook.id
+                                                                )
                                                             "
                                                             class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all duration-200"
                                                         >
@@ -2130,6 +2148,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import DocumentUpload from "@/Components/DocumentUpload.vue";
 import ApplicationCard from "@/Components/ApplicationCard.vue";
+import NotificationBell from "@/Components/NotificationBell.vue";
 
 const props = defineProps({
     user: Object,
@@ -2237,6 +2256,17 @@ const showToast = (type, message) => {
     setTimeout(() => {
         showNotification.value = false;
     }, 5000);
+};
+
+// Logbook actions
+const viewLogbookDetail = (logbookId) => {
+    router.visit(route("profile.logbooks.show", logbookId));
+};
+
+const editLogbook = (logbookId) => {
+    router.visit(route("profile.logbooks.show", logbookId), {
+        data: { edit: true },
+    });
 };
 
 const updateProfile = () => {

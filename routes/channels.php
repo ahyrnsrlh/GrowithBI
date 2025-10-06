@@ -24,7 +24,7 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 
 // Admin Maps channel - only admin users can access
 Broadcast::channel('admin-maps', function ($user) {
-    return $user && $user->user_type === 'Admin';
+    return $user && $user->role === 'admin';
 });
 
 // Public attendance channel - for general attendance updates

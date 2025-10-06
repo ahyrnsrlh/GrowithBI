@@ -7,6 +7,7 @@ use App\Models\Logbook;
 use App\Models\LogbookComment;
 use App\Models\Division;
 use App\Models\User;
+use App\Notifications\LogbookStatusUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -188,6 +189,9 @@ class LogbookController extends Controller
         ]);
 
         if ($success) {
+            // Send notification to user
+            $logbook->user->notify(new LogbookStatusUpdated($logbook->fresh(), $request->status));
+            
             return back()->with('success', $message);
         }
 

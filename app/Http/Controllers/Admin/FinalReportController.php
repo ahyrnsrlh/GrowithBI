@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Report;
 use App\Models\Division;
+use App\Notifications\ReportStatusUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -90,6 +91,9 @@ class FinalReportController extends Controller
             'reviewed_by' => Auth::id(),
             'reviewed_at' => now()
         ]);
+
+        // Send notification to peserta when status is updated
+        $report->user->notify(new ReportStatusUpdated($report->fresh(), $request->status));
 
         return back()->with('success', 'Status laporan berhasil diperbarui.');
     }
