@@ -45,9 +45,7 @@ const hasAcceptedApplication = computed(() => {
                             >
                                 <NavLink
                                     :href="route('profile.edit')"
-                                    :active="
-                                        route().current('profile.edit')
-                                    "
+                                    :active="route().current('profile.edit')"
                                 >
                                     Dashboard
                                 </NavLink>
