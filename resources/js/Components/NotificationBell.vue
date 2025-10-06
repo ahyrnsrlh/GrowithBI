@@ -211,7 +211,10 @@ const fetchNotifications = async () => {
         notifications.value = response.data.notifications;
         unreadCount.value = response.data.unread_count;
     } catch (error) {
-        console.error("Error fetching notifications:", error);
+        // Ignore 401 errors (user not authenticated)
+        if (error.response?.status !== 401) {
+            console.error("Error fetching notifications:", error);
+        }
     } finally {
         loading.value = false;
     }
@@ -222,7 +225,11 @@ const fetchUnreadCount = async () => {
         const response = await axios.get("/api/notifications/unread-count");
         unreadCount.value = response.data.count;
     } catch (error) {
-        console.error("Error fetching unread count:", error);
+        // Silently ignore 401 errors (user not authenticated)
+        // This is expected when user is not logged in
+        if (error.response?.status !== 401) {
+            console.error("Error fetching unread count:", error);
+        }
     }
 };
 

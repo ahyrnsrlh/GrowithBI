@@ -69,6 +69,7 @@
 -   **📧 Email Notifications**: Sistem notifikasi otomatis
 -   **📱 API Integration**: RESTful API untuk integrasi external
 -   **🔐 Authentication**: Laravel Breeze dengan role-based access
+-   **⏰ Server Time Security**: Waktu absensi 100% menggunakan waktu server, tidak bisa dimanipulasi client ([Dokumentasi lengkap](docs/SERVER_TIME_SECURITY.md))
 
 ---
 

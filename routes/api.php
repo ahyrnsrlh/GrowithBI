@@ -2,9 +2,14 @@
 
 use App\Http\Controllers\Api\DivisionController;
 use App\Http\Controllers\Api\ApplicationController;
+use App\Http\Controllers\Api\ServerTimeController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// Server time endpoint (no auth required - for displaying time)
+Route::get('/server-time', [ServerTimeController::class, 'getServerTime']);
+Route::get('/check-in-time-range', [ServerTimeController::class, 'getCheckInTimeRange']);
 
 Route::get('/user', function (Request $request) {
     $user = $request->user();

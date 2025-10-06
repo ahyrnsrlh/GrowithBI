@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\Peserta\DashboardController as PesertaDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Foundation\Application;
@@ -110,7 +109,7 @@ Route::middleware('auth')->group(function () {
 
 // Peserta Routes (require peserta role)
 Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [PesertaDashboardController::class, 'index'])->name('dashboard');
+    // Dashboard is now in profile index tab, no separate dashboard route needed
     
     // Logbook routes for participants
     Route::resource('logbooks', App\Http\Controllers\LogbookController::class);

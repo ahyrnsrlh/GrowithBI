@@ -32,7 +32,7 @@ const hasAcceptedApplication = computed(() => {
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('peserta.dashboard')">
+                                <Link :href="route('profile.edit')">
                                     <ApplicationLogo
                                         class="block h-9 w-auto fill-current text-gray-800"
                                     />
@@ -44,9 +44,9 @@ const hasAcceptedApplication = computed(() => {
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
                                 <NavLink
-                                    :href="route('peserta.dashboard')"
+                                    :href="route('profile.edit')"
                                     :active="
-                                        route().current('peserta.dashboard')
+                                        route().current('profile.edit')
                                     "
                                 >
                                     Dashboard
@@ -196,8 +196,8 @@ const hasAcceptedApplication = computed(() => {
                 >
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink
-                            :href="route('peserta.dashboard')"
-                            :active="route().current('peserta.dashboard')"
+                            :href="route('profile.edit')"
+                            :active="route().current('profile.edit')"
                         >
                             Dashboard
                         </ResponsiveNavLink>

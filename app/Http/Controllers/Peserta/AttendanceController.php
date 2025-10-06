@@ -55,8 +55,8 @@ class AttendanceController extends Controller
                     'id' => $attendance->id,
                     'date' => $attendance->date->format('Y-m-d'),
                     'date_formatted' => $attendance->date->format('d M Y'),
-                    'check_in' => $attendance->check_in ? $attendance->check_in->format('H:i:s') : null,
-                    'check_out' => $attendance->check_out ? $attendance->check_out->format('H:i:s') : null,
+                    'check_in' => $attendance->check_in ? $attendance->check_in->format('Y-m-d H:i:s') : null,
+                    'check_out' => $attendance->check_out ? $attendance->check_out->format('Y-m-d H:i:s') : null,
                     'status' => $attendance->status,
                     'working_duration' => $attendance->getWorkingDuration(),
                     'is_complete' => $attendance->isComplete(),
@@ -70,8 +70,8 @@ class AttendanceController extends Controller
             'todayAttendance' => $todayAttendance ? [
                 'id' => $todayAttendance->id,
                 'date' => $todayAttendance->date->format('Y-m-d'),
-                'check_in' => $todayAttendance->check_in ? $todayAttendance->check_in->format('H:i:s') : null,
-                'check_out' => $todayAttendance->check_out ? $todayAttendance->check_out->format('H:i:s') : null,
+                'check_in' => $todayAttendance->check_in ? $todayAttendance->check_in->format('Y-m-d H:i:s') : null,
+                'check_out' => $todayAttendance->check_out ? $todayAttendance->check_out->format('Y-m-d H:i:s') : null,
                 'status' => $todayAttendance->status,
                 'can_check_in' => !$todayAttendance->check_in,
                 'can_check_out' => $todayAttendance->check_in && !$todayAttendance->check_out,
@@ -101,7 +101,21 @@ class AttendanceController extends Controller
         ]);
 
         $user = Auth::user();
-        $today = Carbon::now()->toDateString();
+        
+        // IMPORTANT: Always use server time, never trust client time
+        $now = Carbon::now('Asia/Jakarta');
+        $today = $now->toDateString();
+
+        // Validate check-in time range (07:30 - 08:00 WIB)
+        $checkInStart = Carbon::today('Asia/Jakarta')->setTime(7, 30, 0);
+        $checkInEnd = Carbon::today('Asia/Jakarta')->setTime(8, 0, 0);
+        
+        if ($now->lt($checkInStart) || $now->gt($checkInEnd)) {
+            return redirect()->back()->with('error', 
+                'Check-in hanya diperbolehkan antara pukul 07:30 - 08:00 WIB. ' .
+                'Waktu server saat ini: ' . $now->format('H:i:s') . ' WIB'
+            );
+        }
 
         // Check if already checked in today
         $existingAttendance = $user->attendances()
@@ -120,15 +134,15 @@ class AttendanceController extends Controller
         // Save photo
         $photoPath = $this->savePhoto($request->photo, 'checkin', $user->id);
 
-        $now = Carbon::now();
-        $officeStartTime = Carbon::today()->setTime(8, 0, 0);
+        // Determine status based on server time
+        $officeStartTime = Carbon::today('Asia/Jakarta')->setTime(8, 0, 0);
         $status = $now->isAfter($officeStartTime) ? 'Late' : 'On-Time';
 
-        // Create or update attendance
+        // Create or update attendance - ALWAYS use server time
         $attendance = $existingAttendance ?: new Attendance();
         $attendance->user_id = $user->id;
         $attendance->date = $today;
-        $attendance->check_in = $now;
+        $attendance->check_in = $now; // Server time only!
         $attendance->status = $status;
         $attendance->latitude = $request->latitude;
         $attendance->longitude = $request->longitude;
@@ -143,8 +157,8 @@ class AttendanceController extends Controller
         $user->notify(new AttendanceCheckedIn($attendance));
 
         $message = $status === 'On-Time' 
-            ? 'Check-in berhasil! Anda tepat waktu.' 
-            : 'Check-in berhasil! Anda terlambat.';
+            ? 'Check-in berhasil pada ' . $now->format('H:i:s') . ' WIB! Anda tepat waktu.' 
+            : 'Check-in berhasil pada ' . $now->format('H:i:s') . ' WIB! Anda terlambat.';
 
         return redirect()->back()->with('success', $message);
     }
@@ -161,7 +175,10 @@ class AttendanceController extends Controller
         ]);
 
         $user = Auth::user();
-        $today = Carbon::now()->toDateString();
+        
+        // IMPORTANT: Always use server time, never trust client time
+        $now = Carbon::now('Asia/Jakarta');
+        $today = $now->toDateString();
 
         $attendance = $user->attendances()
             ->where('date', $today)
@@ -175,6 +192,17 @@ class AttendanceController extends Controller
             return redirect()->back()->with('error', 'Anda sudah melakukan check-out hari ini.');
         }
 
+        // Validate check-out time range (16:00 - 18:00 WIB)
+        $checkOutStart = Carbon::today('Asia/Jakarta')->setTime(16, 0, 0);
+        $checkOutEnd = Carbon::today('Asia/Jakarta')->setTime(18, 0, 0);
+        
+        if ($now->lt($checkOutStart) || $now->gt($checkOutEnd)) {
+            return redirect()->back()->with('error', 
+                'Check-out hanya diperbolehkan antara pukul 16:00 - 18:00 WIB. ' .
+                'Waktu server saat ini: ' . $now->format('H:i:s') . ' WIB'
+            );
+        }
+
         // Validate location
         if (!$this->isWithinAllowedLocation($request->latitude, $request->longitude)) {
             return redirect()->back()->with('error', 'Check-out hanya dapat dilakukan di lokasi magang Bank Indonesia.');
@@ -183,7 +211,8 @@ class AttendanceController extends Controller
         // Save photo
         $photoPath = $this->savePhoto($request->photo, 'checkout', $user->id);
 
-        $attendance->check_out = Carbon::now();
+        // Update attendance - ALWAYS use server time
+        $attendance->check_out = $now; // Server time only!
         $attendance->photo_checkout = $photoPath;
         $attendance->save();
 
@@ -193,7 +222,9 @@ class AttendanceController extends Controller
         // Send notification to user
         $user->notify(new AttendanceCheckedOut($attendance));
 
-        return redirect()->back()->with('success', 'Check-out berhasil! Terima kasih atas kerja keras Anda hari ini.');
+        return redirect()->back()->with('success', 
+            'Check-out berhasil pada ' . $now->format('H:i:s') . ' WIB! Terima kasih atas kerja keras Anda hari ini.'
+        );
     }
 
     /**
