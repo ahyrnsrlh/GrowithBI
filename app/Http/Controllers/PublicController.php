@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Division;
 use App\Models\Application;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\RegistrationStatusNotification;
 use Inertia\Inertia;
 
 class PublicController extends Controller
@@ -157,6 +160,15 @@ class PublicController extends Controller
             'division_id' => $request->division_id,
             'status' => 'menunggu',
         ]);
+
+        // Notify all admins about new application
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new RegistrationStatusNotification($user, 'application_submit'));
+        }
+
+        // Notify user about application submission
+        $user->notify(new RegistrationStatusNotification($user, 'application_submit'));
 
         return response()->json([
             'success' => true,

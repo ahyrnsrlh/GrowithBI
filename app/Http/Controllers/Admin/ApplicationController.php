@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Division;
-use App\Notifications\ApplicationVerified;
+use App\Notifications\RegistrationStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -110,9 +110,10 @@ class ApplicationController extends Controller
         ]);
 
         // Send notification to user if status is diterima or ditolak
-        if ($request->status === 'diterima' || $request->status === 'ditolak') {
-            $statusForNotification = $request->status === 'diterima' ? 'verified' : 'rejected';
-            $application->user->notify(new ApplicationVerified($application, $statusForNotification));
+        if ($request->status === 'diterima') {
+            $application->user->notify(new RegistrationStatusNotification($application, 'accepted'));
+        } elseif ($request->status === 'ditolak') {
+            $application->user->notify(new RegistrationStatusNotification($application, 'rejected'));
         }
 
         return redirect()->back()->with('success', 'Status pendaftaran berhasil diupdate.');

@@ -27,6 +27,7 @@
         "@vitejs/plugin-vue": "^6.0.0",
         "aos": "^2.3.4",
         "chart.js": "^4.5.0",
+        "face-api.js": "^0.22.2",
         "laravel-echo": "^2.2.4",
         "leaflet": "^1.9.4",
         "lodash": "^4.17.21",

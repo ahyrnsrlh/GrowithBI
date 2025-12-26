@@ -1,0 +1,173 @@
+# 🔔 Use Case Notifikasi Real-Time
+
+Berikut saya berikan **use case notifikasi real-time** yang relevan untuk sistem manajemen magang (Admin, Pembimbing, dan Peserta):
+
+---
+
+## 📋 **4 KATEGORI NOTIFIKASI**
+
+### **1. Status Pendaftaran & Seleksi** 📝
+
+#### **Untuk Peserta:**
+
+-   ✅ Pendaftaran berhasil dikirim
+-   📧 Perubahan status seleksi (menunggu, wawancara, diterima, ditolak)
+-   📅 Penjadwalan atau perubahan jadwal wawancara
+-   ✉️ Surat penerimaan tersedia untuk diunduh
+
+#### **Untuk Admin:**
+
+-   🆕 Pendaftaran baru masuk
+-   📝 User melengkapi dokumen pendaftaran
+
+**Channel**: Database + Broadcast + **Email**  
+**Notification Class**: `RegistrationStatusNotification`
+
+**Event Types:**
+
+-   `application_submit` - User submit pendaftaran
+-   `selection_in_progress` - Proses seleksi dimulai
+-   `interview_scheduled` - Jadwal wawancara
+-   `accepted` - Diterima
+-   `rejected` - Ditolak
+-   `acceptance_letter_ready` - Surat penerimaan siap
+
+---
+
+### **2. Absensi & Kehadiran** ✅
+
+#### **Untuk Peserta:**
+
+-   ✅ Check-in berhasil (tepat waktu/terlambat)
+-   ✅ Check-out berhasil
+-   ❌ Check-in gagal (lokasi tidak valid)
+-   ❌ Face recognition gagal
+
+#### **Untuk Admin:**
+
+-   👤 User check-in (On-Time)
+-   ⏰ User check-in TERLAMBAT
+-   ✅ User check-out
+-   🚨 Check-in gagal (lokasi/face recognition)
+-   ⚠️ User belum check-in/check-out
+
+**Channel**: Database + Broadcast (**TANPA EMAIL**)  
+**Notification Class**: `AttendanceNotification`
+
+**Event Types:**
+
+-   `checked_in` - Check-in berhasil (On-Time)
+-   `late` - Check-in terlambat
+-   `checked_out` - Check-out berhasil
+-   `location_invalid` - Lokasi di luar radius
+-   `face_not_recognized` - Face recognition gagal
+-   `face_registered` - Face descriptor berhasil didaftarkan
+-   `missing_checkin` - Belum check-in (reminder)
+-   `missing_checkout` - Belum check-out (reminder)
+
+---
+
+### **3. Logbook & Aktivitas Harian** 📔
+
+#### **Untuk Peserta:**
+
+-   ✅ Logbook berhasil dikirim
+-   ✅ Logbook disetujui pembimbing
+-   ❌ Logbook ditolak pembimbing
+-   📝 Permintaan revisi logbook
+
+#### **Untuk Admin/Pembimbing:**
+
+-   📔 Logbook baru submitted
+-   ⏰ Logbook pending review >3 hari
+-   ⚠️ User belum submit logbook hari ini
+
+**Channel**: Database + Broadcast + **Email** (hanya untuk approved/rejected)  
+**Notification Class**: `LogbookNotification`
+
+**Event Types:**
+
+-   `submitted` - Logbook baru disubmit
+-   `approved` - Logbook disetujui (+ email)
+-   `rejected` - Logbook ditolak (+ email)
+-   `revision_requested` - Perlu revisi
+-   `commented` - Ada komentar baru
+
+---
+
+### **4. Laporan Akhir** 📄
+
+#### **Untuk Peserta:**
+
+-   ✅ Laporan akhir berhasil diunggah
+-   ✅ Laporan disetujui
+-   ❌ Laporan perlu revisi
+-   ⏰ Tenggat pengumpulan mendekat (3 hari)
+-   🎓 Nilai dan sertifikat tersedia
+
+#### **Untuk Admin:**
+
+-   📄 Laporan akhir baru submitted
+-   ⏰ Deadline laporan 3 hari lagi
+-   🚨 User OVERDUE laporan akhir
+-   ✅ Laporan direvisi oleh pembimbing
+
+**Channel**: Database + Broadcast + **Email** (untuk status kritis)  
+**Notification Class**: `ReportNotification`
+
+**Event Types:**
+
+-   `submitted` - Laporan baru diupload
+-   `under_review` - Sedang direview
+-   `approved` - Laporan disetujui (+ email)
+-   `revision_required` - Perlu revisi (+ email)
+-   `graded` - Nilai keluar (+ email)
+-   `certificate_ready` - Sertifikat siap (+ email)
+-   `deadline_approaching` - Deadline 3 hari lagi
+
+---
+
+## 📊 **Summary Matrix**
+
+| Kategori                  | Peserta | Admin | Email     | Real-Time |
+| ------------------------- | ------- | ----- | --------- | --------- |
+| **Pendaftaran & Seleksi** | ✅      | ✅    | ✅        | ✅        |
+| **Absensi & Kehadiran**   | ✅      | ✅    | ❌        | ✅        |
+| **Logbook & Aktivitas**   | ✅      | ✅    | Selective | ✅        |
+| **Laporan Akhir**         | ✅      | ✅    | Selective | ✅        |
+
+---
+
+## 🔧 **Implementasi Saat Ini**
+
+### ✅ **Sudah Diimplementasikan:**
+
+1. ✅ 4 Notification Classes (RegistrationStatusNotification, AttendanceNotification, LogbookNotification, ReportNotification)
+2. ✅ NotificationController dengan 7 methods
+3. ✅ NotificationBell component dengan real-time updates
+4. ✅ Fallback polling jika WebSocket gagal
+5. ✅ Connection status indicator
+6. ✅ Environment validation
+7. ✅ Admin dan Peserta menerima notifikasi attendance
+
+### 🔄 **Yang Perlu Dicek:**
+
+-   [ ] Admin dapat notifikasi saat user check-in/check-out
+-   [ ] Logbook notification untuk admin saat ada submission baru
+-   [ ] Report notification untuk admin saat ada submission baru
+-   [ ] Email dikirim untuk kategori yang sesuai (Pendaftaran, Logbook approved/rejected, Report critical events)
+
+---
+
+## 💡 **Catatan Penting**
+
+> **Notifikasi Attendance**: Tidak menggunakan email, **HANYA database + broadcast** untuk menghindari spam email. Admin melihat real-time di dashboard.
+
+> **Real-time via WebSocket**: Menggunakan Laravel Reverb/Pusher dengan **fallback polling** (30 detik) jika WebSocket gagal.
+
+> **Email Selective**: Hanya untuk event penting (pendaftaran, logbook approved/rejected, report critical status) untuk menghindari information overload.
+
+---
+
+**Last Updated**: December 26, 2025  
+**Status**: ✅ Implemented - **Admin now receives attendance notifications**

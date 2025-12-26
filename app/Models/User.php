@@ -45,6 +45,8 @@ class User extends Authenticatable
         'npwp_path',
         'buku_rekening_path',
         'pas_foto_path',
+        'face_descriptor',
+        'face_registered_at',
     ];
 
     /**
@@ -71,6 +73,7 @@ class User extends Authenticatable
             'gpa' => 'decimal:2',
             'semester' => 'integer',
             'preferences' => 'array',
+            'face_registered_at' => 'datetime',
         ];
     }
 

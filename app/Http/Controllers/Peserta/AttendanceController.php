@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Peserta;
 
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
-use App\Notifications\AttendanceCheckedIn;
-use App\Notifications\AttendanceCheckedOut;
+use App\Notifications\AttendanceNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -98,6 +97,7 @@ class AttendanceController extends Controller
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'photo' => 'required|string', // Base64 encoded image
+            'face_descriptor' => 'required|array|size:128', // Face-API.js descriptor
         ]);
 
         $user = Auth::user();
@@ -106,7 +106,15 @@ class AttendanceController extends Controller
         $now = Carbon::now('Asia/Jakarta');
         $today = $now->toDateString();
 
+        // 1. FACE VERIFICATION - Must be first!
+        $faceVerificationResult = $this->verifyFace($user, $request->face_descriptor);
+        if (!$faceVerificationResult['success']) {
+            return redirect()->back()->with('error', $faceVerificationResult['message']);
+        }
+
         // Validate check-in time range (07:30 - 08:00 WIB)
+        // DISABLED FOR TESTING - Uncomment for production
+        /*
         $checkInStart = Carbon::today('Asia/Jakarta')->setTime(7, 30, 0);
         $checkInEnd = Carbon::today('Asia/Jakarta')->setTime(8, 0, 0);
         
@@ -116,6 +124,7 @@ class AttendanceController extends Controller
                 'Waktu server saat ini: ' . $now->format('H:i:s') . ' WIB'
             );
         }
+        */
 
         // Check if already checked in today
         $existingAttendance = $user->attendances()
@@ -148,13 +157,40 @@ class AttendanceController extends Controller
         $attendance->longitude = $request->longitude;
         $attendance->location_address = $this->getLocationAddress($request->latitude, $request->longitude);
         $attendance->photo_checkin = $photoPath;
-        $attendance->save();
+        
+        // Save with error handling
+        try {
+            $saved = $attendance->save();
+            
+            \Log::info('Attendance check-in saved', [
+                'user_id' => $user->id,
+                'attendance_id' => $attendance->id,
+                'date' => $today,
+                'check_in' => $now->format('Y-m-d H:i:s'),
+                'status' => $status,
+                'saved' => $saved
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to save attendance', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return redirect()->back()->with('error', 'Gagal menyimpan data absensi. Silakan coba lagi.');
+        }
 
         // Fire event for real-time updates
         event(new \App\Events\AttendanceUpdated($attendance));
 
         // Send notification to user
-        $user->notify(new AttendanceCheckedIn($attendance));
+        $notificationType = $status === 'On-Time' ? 'checked_in' : 'late';
+        $user->notify(new AttendanceNotification($attendance, $notificationType));
+
+        // Send notification to all admins
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new AttendanceNotification($attendance, $notificationType));
+        }
 
         $message = $status === 'On-Time' 
             ? 'Check-in berhasil pada ' . $now->format('H:i:s') . ' WIB! Anda tepat waktu.' 
@@ -172,6 +208,7 @@ class AttendanceController extends Controller
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'photo' => 'required|string', // Base64 encoded image
+            'face_descriptor' => 'required|array|size:128', // Face-API.js descriptor
         ]);
 
         $user = Auth::user();
@@ -179,6 +216,12 @@ class AttendanceController extends Controller
         // IMPORTANT: Always use server time, never trust client time
         $now = Carbon::now('Asia/Jakarta');
         $today = $now->toDateString();
+
+        // 1. FACE VERIFICATION - Must be first!
+        $faceVerificationResult = $this->verifyFace($user, $request->face_descriptor);
+        if (!$faceVerificationResult['success']) {
+            return redirect()->back()->with('error', $faceVerificationResult['message']);
+        }
 
         $attendance = $user->attendances()
             ->where('date', $today)
@@ -193,6 +236,8 @@ class AttendanceController extends Controller
         }
 
         // Validate check-out time range (16:00 - 18:00 WIB)
+        // DISABLED FOR TESTING - Uncomment for production
+        /*
         $checkOutStart = Carbon::today('Asia/Jakarta')->setTime(16, 0, 0);
         $checkOutEnd = Carbon::today('Asia/Jakarta')->setTime(18, 0, 0);
         
@@ -202,6 +247,7 @@ class AttendanceController extends Controller
                 'Waktu server saat ini: ' . $now->format('H:i:s') . ' WIB'
             );
         }
+        */
 
         // Validate location
         if (!$this->isWithinAllowedLocation($request->latitude, $request->longitude)) {
@@ -214,13 +260,38 @@ class AttendanceController extends Controller
         // Update attendance - ALWAYS use server time
         $attendance->check_out = $now; // Server time only!
         $attendance->photo_checkout = $photoPath;
-        $attendance->save();
+        
+        // Save with error handling
+        try {
+            $saved = $attendance->save();
+            
+            \Log::info('Attendance check-out saved', [
+                'user_id' => $user->id,
+                'attendance_id' => $attendance->id,
+                'date' => $today,
+                'check_out' => $now->format('Y-m-d H:i:s'),
+                'saved' => $saved
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to save check-out', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return redirect()->back()->with('error', 'Gagal menyimpan data check-out. Silakan coba lagi.');
+        }
 
         // Fire event for real-time updates
         event(new \App\Events\AttendanceUpdated($attendance));
 
         // Send notification to user
-        $user->notify(new AttendanceCheckedOut($attendance));
+        $user->notify(new AttendanceNotification($attendance, 'checked_out'));
+
+        // Send notification to all admins
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new AttendanceNotification($attendance, 'checked_out'));
+        }
 
         return redirect()->back()->with('success', 
             'Check-out berhasil pada ' . $now->format('H:i:s') . ' WIB! Terima kasih atas kerja keras Anda hari ini.'
@@ -300,5 +371,114 @@ class AttendanceController extends Controller
         $stats = $user->getAttendanceStats();
         
         return response()->json($stats);
+    }
+
+    /**
+     * Verify face descriptor matches user's registered face
+     * 
+     * @param \App\Models\User $user
+     * @param array $descriptor Face descriptor from face-api.js (128 float array)
+     * @return array ['success' => bool, 'message' => string, 'distance' => float|null]
+     */
+    private function verifyFace($user, array $descriptor): array
+    {
+        // First time registration - store face descriptor
+        if (empty($user->face_descriptor)) {
+            $user->face_descriptor = json_encode($descriptor);
+            $user->face_registered_at = now();
+            $user->save();
+            
+            \Log::info('Face registered for user', [
+                'user_id' => $user->id,
+                'timestamp' => now()
+            ]);
+            
+            // Send face registration notification
+            try {
+                $attendance = new Attendance(); // Create temporary attendance object for notification
+                $attendance->user_id = $user->id;
+                $attendance->date = now();
+                $user->notify(new AttendanceNotification($attendance, 'face_registered'));
+            } catch (\Exception $e) {
+                \Log::error('Failed to send face registration notification', [
+                    'user_id' => $user->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+            
+            return [
+                'success' => true,
+                'message' => 'Wajah berhasil didaftarkan untuk pertama kali.',
+                'distance' => null,
+            ];
+        }
+
+        // Get stored face descriptor
+        $storedDescriptor = json_decode($user->face_descriptor, true);
+        
+        if (!$storedDescriptor || count($storedDescriptor) !== 128) {
+            \Log::error('Invalid stored face descriptor', [
+                'user_id' => $user->id,
+                'stored_length' => count($storedDescriptor ?? [])
+            ]);
+            
+            return [
+                'success' => false,
+                'message' => 'Data wajah tidak valid. Silakan hubungi admin untuk registrasi ulang.',
+                'distance' => null,
+            ];
+        }
+
+        // Calculate Euclidean distance between descriptors
+        $distance = $this->calculateEuclideanDistance($descriptor, $storedDescriptor);
+        
+        // Threshold: 0.6 (face-api.js standard threshold for face matching)
+        // Lower distance = more similar faces
+        $threshold = 0.6;
+        $isMatch = $distance < $threshold;
+        
+        \Log::info('Face verification attempt', [
+            'user_id' => $user->id,
+            'distance' => $distance,
+            'threshold' => $threshold,
+            'match' => $isMatch,
+            'timestamp' => now()
+        ]);
+
+        if (!$isMatch) {
+            return [
+                'success' => false,
+                'message' => '❌ Verifikasi wajah gagal! Wajah tidak cocok dengan foto profil Anda. Pastikan Anda yang melakukan absensi.',
+                'distance' => $distance,
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Verifikasi wajah berhasil.',
+            'distance' => $distance,
+        ];
+    }
+
+    /**
+     * Calculate Euclidean distance between two face descriptors
+     * 
+     * @param array $descriptor1 First face descriptor (128 float array)
+     * @param array $descriptor2 Second face descriptor (128 float array)
+     * @return float Distance between descriptors
+     */
+    private function calculateEuclideanDistance(array $descriptor1, array $descriptor2): float
+    {
+        if (count($descriptor1) !== 128 || count($descriptor2) !== 128) {
+            throw new \InvalidArgumentException('Face descriptors must be 128-dimensional arrays');
+        }
+
+        $sum = 0.0;
+        for ($i = 0; $i < 128; $i++) {
+            $diff = $descriptor1[$i] - $descriptor2[$i];
+            $sum += $diff * $diff;
+        }
+
+        return sqrt($sum);
     }
 }

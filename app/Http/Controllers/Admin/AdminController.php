@@ -184,26 +184,50 @@ class AdminController extends Controller
 
     public function approveApplication(Request $request, $id)
     {
-        $application = Application::findOrFail($id);
+        $application = Application::with(['user', 'division'])->findOrFail($id);
         $application->update([
             'status' => 'approved',
             'approved_by' => Auth::id(),
             'approved_at' => now(),
         ]);
 
-        return back()->with('message', 'Application approved successfully.');
+        // Send notification to user (database + broadcast)
+        if ($application->user) {
+            $application->user->notify(new \App\Notifications\ApplicationVerified($application, 'verified'));
+        }
+        
+        // Send email notification (queued)
+        if ($application->email) {
+            \Illuminate\Support\Facades\Mail::to($application->email)->queue(
+                new \App\Mail\ApplicationStatusMail($application, 'approved')
+            );
+        }
+
+        return back()->with('message', 'Application approved successfully. Notification and email will be sent.');
     }
 
     public function rejectApplication(Request $request, $id)
     {
-        $application = Application::findOrFail($id);
+        $application = Application::with(['user', 'division'])->findOrFail($id);
         $application->update([
             'status' => 'rejected',
             'approved_by' => Auth::id(),
             'approved_at' => now(),
         ]);
 
-        return back()->with('message', 'Application rejected.');
+        // Send notification to user (database + broadcast)
+        if ($application->user) {
+            $application->user->notify(new \App\Notifications\ApplicationVerified($application, 'rejected'));
+        }
+        
+        // Send email notification (queued)
+        if ($application->email) {
+            \Illuminate\Support\Facades\Mail::to($application->email)->queue(
+                new \App\Mail\ApplicationStatusMail($application, 'rejected')
+            );
+        }
+
+        return back()->with('message', 'Application rejected. Notification and email will be sent.');
     }
 
     public function showApplication($id)

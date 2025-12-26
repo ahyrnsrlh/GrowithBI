@@ -6,7 +6,7 @@ use App\Models\Logbook;
 use App\Models\LogbookComment;
 use App\Models\Application;
 use App\Models\User;
-use App\Notifications\LogbookSubmitted;
+use App\Notifications\LogbookNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -169,12 +169,9 @@ class LogbookController extends Controller
             'attachments' => !empty($attachments) ? json_encode($attachments) : null,
         ]);
 
-        // Send notification to all admins when logbook is submitted
+        // Send notification to user when logbook is submitted
         if ($request->status === 'submitted') {
-            $admins = User::where('role', 'admin')->get();
-            foreach ($admins as $admin) {
-                $admin->notify(new LogbookSubmitted($logbook));
-            }
+            $user->notify(new LogbookNotification($logbook, 'submitted'));
         }
 
         $message = $request->status === 'draft' ? 'Logbook berhasil disimpan sebagai draft.' : 'Logbook berhasil dikirim untuk review.';

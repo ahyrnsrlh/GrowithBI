@@ -44,6 +44,37 @@ class NotificationController extends Controller
     }
 
     /**
+     * Get notifications for dropdown (formatted)
+     */
+    public function dropdown(Request $request)
+    {
+        $user = Auth::user();
+        
+        $notifications = $user->notifications()
+            ->latest()
+            ->take(10)
+            ->get()
+            ->map(function ($notification) {
+                return [
+                    'id' => $notification->id,
+                    'type' => $notification->data['type'] ?? 'info',
+                    'title' => $notification->data['title'] ?? 'Notification',
+                    'message' => $notification->data['message'] ?? '',
+                    'icon' => $notification->data['icon'] ?? 'bell',
+                    'color' => $notification->data['color'] ?? 'gray',
+                    'url' => $notification->data['url'] ?? '#',
+                    'read_at' => $notification->read_at,
+                    'created_at' => $notification->created_at->diffForHumans(),
+                ];
+            });
+
+        return response()->json([
+            'notifications' => $notifications,
+            'unreadCount' => $user->unreadNotifications()->count(),
+        ]);
+    }
+
+    /**
      * Mark a specific notification as read
      */
     public function markAsRead($id)

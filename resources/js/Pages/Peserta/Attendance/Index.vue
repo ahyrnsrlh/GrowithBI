@@ -926,6 +926,7 @@ const showCamera = ref(false);
 const actionType = ref("");
 const isProcessing = ref(false);
 const photoBase64 = ref(null);
+const faceDescriptor = ref(null);
 const userLocation = ref(null);
 
 // Toast notifications
@@ -1426,14 +1427,27 @@ const getLocation = async () => {
     }
 };
 
-const onPhotoCaptured = (base64) => {
-    photoBase64.value = base64;
+const onPhotoCaptured = (data) => {
+    // Handle both old format (string) and new format (object with photo + faceDescriptor)
+    if (typeof data === "string") {
+        // Old format: just base64 photo
+        photoBase64.value = data;
+    } else {
+        // New format: { photo, faceDescriptor }
+        photoBase64.value = data.photo;
+        faceDescriptor.value = data.faceDescriptor;
+    }
     submit();
 };
 
 const submit = () => {
     if (!photoBase64.value || !userLocation.value) {
         alert("Data tidak lengkap");
+        return;
+    }
+
+    if (!faceDescriptor.value || faceDescriptor.value.length !== 128) {
+        alert("Face descriptor tidak valid. Silakan ambil foto ulang.");
         return;
     }
 
@@ -1448,6 +1462,7 @@ const submit = () => {
         route(routeName),
         {
             photo: photoBase64.value,
+            face_descriptor: faceDescriptor.value,
             latitude: userLocation.value.latitude,
             longitude: userLocation.value.longitude,
         },
@@ -1456,13 +1471,17 @@ const submit = () => {
             onSuccess: () => {
                 isProcessing.value = false;
                 photoBase64.value = null;
+                faceDescriptor.value = null;
                 userLocation.value = null;
                 actionType.value = "";
             },
             onError: (errors) => {
                 isProcessing.value = false;
                 alert(
-                    errors.error || errors.photo || "Gagal menyimpan absensi"
+                    errors.error ||
+                        errors.photo ||
+                        errors.face_descriptor ||
+                        "Gagal menyimpan absensi"
                 );
             },
             onFinish: () => {

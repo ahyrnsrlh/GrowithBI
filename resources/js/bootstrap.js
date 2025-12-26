@@ -55,21 +55,52 @@ import Pusher from "pusher-js";
 
 window.Pusher = Pusher;
 
-window.Echo = new Echo({
-    broadcaster: "reverb",
-    key: import.meta.env.VITE_REVERB_APP_KEY || "local",
-    wsHost: import.meta.env.VITE_REVERB_HOST || "127.0.0.1",
-    wsPort: import.meta.env.VITE_REVERB_PORT || 8080,
-    wssPort: import.meta.env.VITE_REVERB_PORT || 8080,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME || "http") === "https",
-    enabledTransports: ["ws", "wss"],
-    authEndpoint: "/broadcasting/auth",
-    auth: {
-        headers: {
-            "X-CSRF-TOKEN": document.head.querySelector(
-                'meta[name="csrf-token"]'
-            )?.content,
-            Accept: "application/json",
-        },
-    },
-});
+// Validate environment variables
+const requiredEnvVars = [
+    'VITE_REVERB_APP_KEY',
+    'VITE_REVERB_HOST',
+];
+
+const missingVars = requiredEnvVars.filter(
+    varName => !import.meta.env[varName]
+);
+
+if (missingVars.length > 0) {
+    console.warn(
+        '⚠️ Missing environment variables:',
+        missingVars.join(', '),
+        '\nReal-time notifications will fall back to polling mode.'
+    );
+}
+
+// Only initialize Echo if required vars are present
+if (missingVars.length === 0) {
+    try {
+        window.Echo = new Echo({
+            broadcaster: "reverb",
+            key: import.meta.env.VITE_REVERB_APP_KEY,
+            wsHost: import.meta.env.VITE_REVERB_HOST,
+            wsPort: import.meta.env.VITE_REVERB_PORT || 8080,
+            wssPort: import.meta.env.VITE_REVERB_PORT || 8080,
+            forceTLS: (import.meta.env.VITE_REVERB_SCHEME || "http") === "https",
+            enabledTransports: ["ws", "wss"],
+            authEndpoint: "/broadcasting/auth",
+            auth: {
+                headers: {
+                    "X-CSRF-TOKEN": document.head.querySelector(
+                        'meta[name="csrf-token"]'
+                    )?.content,
+                    Accept: "application/json",
+                },
+            },
+        });
+        
+        console.log('✅ Laravel Echo initialized successfully');
+    } catch (error) {
+        console.error('❌ Echo initialization failed:', error);
+        console.warn('⚠️ Falling back to polling mode for notifications');
+    }
+} else {
+    console.warn('⚠️ Laravel Echo NOT initialized - missing configuration');
+    console.info('ℹ️ Notifications will use polling mode as fallback');
+}

@@ -3,7 +3,8 @@
         <!-- Notification Bell Button -->
         <button
             @click="toggleDropdown"
-            class="relative p-2 text-white hover:text-blue-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 rounded-lg transition-all duration-200"
+            data-notification-bell
+            class="relative p-2 text-blue-500 hover:text-blue-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 rounded-lg transition-all duration-200"
             :class="{ 'bg-white bg-opacity-10': isOpen }"
         >
             <BellIcon class="h-6 w-6" />
@@ -15,6 +16,21 @@
             >
                 {{ unreadCount > 99 ? "99+" : unreadCount }}
             </span>
+
+            <!-- Connection Status Indicator -->
+            <span
+                :class="[
+                    'absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white',
+                    isWebSocketConnected
+                        ? 'bg-green-500'
+                        : 'bg-yellow-500 animate-pulse',
+                ]"
+                :title="
+                    isWebSocketConnected
+                        ? 'Real-time aktif'
+                        : 'Menggunakan polling'
+                "
+            ></span>
         </button>
 
         <!-- Dropdown Panel -->
@@ -28,19 +44,44 @@
         >
             <div
                 v-if="isOpen"
-                v-click-outside="closeDropdown"
+                data-notification-dropdown
                 class="absolute right-0 mt-2 w-96 bg-white rounded-2xl shadow-2xl ring-1 ring-black ring-opacity-5 z-50 max-h-[600px] flex flex-col"
             >
                 <!-- Header -->
                 <div
-                    class="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-indigo-50 to-purple-50 rounded-t-2xl"
+                    class="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-blue-50 to-blue-100 rounded-t-2xl"
                 >
-                    <h3 class="text-lg font-bold text-gray-900">Notifikasi</h3>
+                    <div class="flex items-center space-x-3">
+                        <h3 class="text-lg font-bold text-gray-900">
+                            Notifikasi
+                        </h3>
+                        <!-- Connection Status Badge -->
+                        <div
+                            :class="[
+                                'px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1',
+                                isWebSocketConnected
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-yellow-100 text-yellow-800',
+                            ]"
+                        >
+                            <div
+                                :class="[
+                                    'w-1.5 h-1.5 rounded-full',
+                                    isWebSocketConnected
+                                        ? 'bg-green-600'
+                                        : 'bg-yellow-600',
+                                ]"
+                            ></div>
+                            <span>
+                                {{ isWebSocketConnected ? "Live" : "Polling" }}
+                            </span>
+                        </div>
+                    </div>
                     <div class="flex items-center space-x-2">
                         <button
                             v-if="unreadCount > 0"
                             @click="markAllAsRead"
-                            class="text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
+                            class="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
                         >
                             Tandai Semua
                         </button>
@@ -60,7 +101,7 @@
                         class="flex items-center justify-center py-12"
                     >
                         <div
-                            class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"
+                            class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"
                         ></div>
                     </div>
 
@@ -85,12 +126,12 @@
                             :key="notification.id"
                             @click="handleNotificationClick(notification)"
                             class="px-6 py-4 hover:bg-gray-50 cursor-pointer transition-colors relative group"
-                            :class="{ 'bg-indigo-50': !notification.read_at }"
+                            :class="{ 'bg-blue-50': !notification.read_at }"
                         >
                             <!-- Unread Indicator -->
                             <div
                                 v-if="!notification.read_at"
-                                class="absolute left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-indigo-600 rounded-full"
+                                class="absolute left-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-600 rounded-full"
                             ></div>
 
                             <div class="flex items-start space-x-3 ml-4">
@@ -145,7 +186,7 @@
                 >
                     <button
                         @click="viewAllNotifications"
-                        class="text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
+                        class="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
                     >
                         Lihat Semua Notifikasi
                     </button>
@@ -174,6 +215,9 @@ const notifications = ref([]);
 const unreadCount = ref(0);
 const loading = ref(false);
 const echoChannel = ref(null);
+const dropdownRef = ref(null);
+const isWebSocketConnected = ref(false);
+let pollingInterval = null;
 
 const props = defineProps({
     userId: {
@@ -183,15 +227,36 @@ const props = defineProps({
 });
 
 onMounted(() => {
+    // Request notification permission
+    if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission();
+    }
+
     fetchUnreadCount();
     setupEcho();
+    // Add click outside listener
+    document.addEventListener("click", handleClickOutside);
 });
 
 onUnmounted(() => {
+    stopPolling();
     if (echoChannel.value) {
         window.Echo.leave(`App.User.${props.userId}`);
     }
+    // Remove click outside listener
+    document.removeEventListener("click", handleClickOutside);
 });
+
+const handleClickOutside = (event) => {
+    // Check if click is outside the dropdown component
+    const bellButton = event.target.closest("[data-notification-bell]");
+    const dropdownPanel = event.target.closest("[data-notification-dropdown]");
+
+    // Close dropdown if click is outside both button and dropdown
+    if (!bellButton && !dropdownPanel && isOpen.value) {
+        closeDropdown();
+    }
+};
 
 const toggleDropdown = () => {
     isOpen.value = !isOpen.value;
@@ -305,10 +370,31 @@ const viewAllNotifications = () => {
 const getIcon = (iconName) => {
     const iconMap = {
         "check-circle": CheckCircleIcon,
+        "check-badge": CheckCircleIcon,
         "x-circle": ExclamationCircleIcon,
+        "exclamation-triangle": ExclamationCircleIcon,
+        "exclamation-circle": ExclamationCircleIcon,
         clock: ClockIcon,
         document: DocumentTextIcon,
+        "document-text": DocumentTextIcon,
+        "document-check": DocumentTextIcon,
+        "document-arrow-up": DocumentTextIcon,
+        "paper-airplane": DocumentTextIcon,
         megaphone: MegaphoneIcon,
+        bell: BellIcon,
+        "bell-alert": BellIcon,
+        // Attendance icons (use available alternatives)
+        "arrow-right-on-rectangle": CheckCircleIcon,
+        "arrow-left-on-rectangle": CheckCircleIcon,
+        "map-pin": ExclamationCircleIcon,
+        "user-circle": CheckCircleIcon,
+        // Logbook icons
+        "chat-bubble-left-right": MegaphoneIcon,
+        "book-open": DocumentTextIcon,
+        // Report icons
+        "magnifying-glass": ClockIcon,
+        "arrow-path": ClockIcon,
+        "academic-cap": CheckCircleIcon,
     };
     return iconMap[iconName] || BellIcon;
 };
@@ -347,57 +433,106 @@ const formatTime = (timestamp) => {
 
 // Setup real-time notifications with Laravel Echo
 const setupEcho = () => {
-    // Listen to private notification channel
-    if (window.Echo && props.userId) {
-        echoChannel.value = window.Echo.private(
-            `App.User.${props.userId}`
-        ).notification((notification) => {
-            console.log("Received real-time notification:", notification);
-
-            // Add to notifications list
-            notifications.value.unshift({
-                id: notification.id,
-                type: notification.type,
-                data: notification,
-                read_at: null,
-                created_at: new Date().toISOString(),
-            });
-
-            // Increment unread count
-            unreadCount.value++;
-
-            // Show browser notification if permitted
-            if (
-                "Notification" in window &&
-                Notification.permission === "granted"
-            ) {
-                new Notification(notification.title, {
-                    body: notification.message,
-                    icon: "/logo.png",
-                });
-            }
-        });
+    if (!window.Echo || !props.userId) {
+        console.warn("⚠️ Laravel Echo not available, falling back to polling");
+        startPolling();
+        return;
     }
 
-    // Request notification permission
-    if ("Notification" in window && Notification.permission === "default") {
-        Notification.requestPermission();
+    try {
+        // Listen to private notification channel
+        echoChannel.value = window.Echo.private(`App.User.${props.userId}`)
+            .notification((notification) => {
+                console.log(
+                    "✅ Real-time notification received:",
+                    notification
+                );
+                handleRealtimeNotification(notification);
+            })
+            .error((error) => {
+                console.error("❌ Echo channel error:", error);
+                if (!isWebSocketConnected.value) {
+                    startPolling();
+                }
+            });
+
+        // Monitor connection status
+        if (window.Echo.connector?.pusher?.connection) {
+            window.Echo.connector.pusher.connection.bind("connected", () => {
+                console.log("✅ WebSocket connected");
+                isWebSocketConnected.value = true;
+                stopPolling();
+            });
+
+            window.Echo.connector.pusher.connection.bind("disconnected", () => {
+                console.log("⚠️ WebSocket disconnected, starting polling");
+                isWebSocketConnected.value = false;
+                startPolling();
+            });
+
+            window.Echo.connector.pusher.connection.bind("unavailable", () => {
+                console.log("⚠️ WebSocket unavailable, using polling");
+                isWebSocketConnected.value = false;
+                startPolling();
+            });
+        }
+    } catch (error) {
+        console.error("❌ Echo setup failed:", error);
+        startPolling();
     }
 };
 
-// Click outside directive
-const vClickOutside = {
-    mounted(el, binding) {
-        el.clickOutsideEvent = (event) => {
-            if (!(el === event.target || el.contains(event.target))) {
-                binding.value(event);
+// Handle realtime notification
+const handleRealtimeNotification = (notification) => {
+    // Add to notifications list
+    notifications.value.unshift({
+        id: notification.id,
+        type: notification.type,
+        data: notification,
+        read_at: null,
+        created_at: new Date().toISOString(),
+    });
+
+    // Increment unread count
+    unreadCount.value++;
+
+    // Show browser notification if permitted
+    if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(notification.title || "Notifikasi Baru", {
+            body: notification.message || "",
+            icon: "/logo.png",
+        });
+    }
+};
+
+// Start polling as fallback
+const startPolling = () => {
+    if (pollingInterval) return; // Prevent multiple intervals
+
+    console.log("🔄 Starting polling mode (fallback)");
+
+    // Poll every 30 seconds
+    pollingInterval = setInterval(async () => {
+        try {
+            await fetchUnreadCount();
+
+            // If dropdown is open, refresh notifications too
+            if (isOpen.value) {
+                await fetchNotifications();
             }
-        };
-        document.addEventListener("click", el.clickOutsideEvent);
-    },
-    unmounted(el) {
-        document.removeEventListener("click", el.clickOutsideEvent);
-    },
+        } catch (error) {
+            console.error("Polling error:", error);
+        }
+    }, 30000); // 30 seconds
+};
+
+// Stop polling
+const stopPolling = () => {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+        console.log("⏹️ Stopped polling mode");
+    }
 };
 </script>
 

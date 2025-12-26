@@ -7,7 +7,7 @@ use App\Models\Logbook;
 use App\Models\LogbookComment;
 use App\Models\Division;
 use App\Models\User;
-use App\Notifications\LogbookStatusUpdated;
+use App\Notifications\LogbookNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +25,7 @@ class LogbookController extends Controller
         $user = Auth::user();
         
         $query = Logbook::with(['user.division', 'division', 'reviewer'])
+            ->whereHas('user') // Only get logbooks with valid user
             ->orderBy('created_at', 'desc');
 
         // If user is mentor, only show logbooks from their division
@@ -91,7 +92,7 @@ class LogbookController extends Controller
                     'attachments' => $logbook->attachments ? json_decode($logbook->attachments, true) : [],
                     'created_at' => $logbook->created_at,
                     'updated_at' => $logbook->updated_at,
-                    'user' => [
+                    'user' => $logbook->user ? [
                         'id' => $logbook->user->id,
                         'name' => $logbook->user->name,
                         'email' => $logbook->user->email,
@@ -99,7 +100,7 @@ class LogbookController extends Controller
                             'id' => $logbook->user->division->id,
                             'name' => $logbook->user->division->name
                         ] : null
-                    ]
+                    ] : null
                 ];
             }),
             'divisions' => $divisions,
@@ -190,7 +191,15 @@ class LogbookController extends Controller
 
         if ($success) {
             // Send notification to user
-            $logbook->user->notify(new LogbookStatusUpdated($logbook->fresh(), $request->status));
+            if ($logbook->user) {
+                $notificationType = match($request->status) {
+                    'approved' => 'approved',
+                    'rejected' => 'rejected',
+                    'revision' => 'rejected', // Use rejected for revision request
+                    default => 'submitted'
+                };
+                $logbook->user->notify(new LogbookNotification($logbook->fresh(), $notificationType));
+            }
             
             return back()->with('success', $message);
         }
@@ -298,6 +307,7 @@ class LogbookController extends Controller
         $user = Auth::user();
         
         $query = Logbook::with(['user.division', 'division', 'reviewer'])
+            ->whereHas('user') // Only get logbooks with valid user
             ->orderBy('created_at', 'desc');
 
         // If user is mentor, only show logbooks from their division

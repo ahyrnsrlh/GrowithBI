@@ -21,6 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\ShareUserAcceptanceStatus::class,
         ]);
 
+        // Add Sanctum middleware for API authentication
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
+
         // Register role middleware
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,

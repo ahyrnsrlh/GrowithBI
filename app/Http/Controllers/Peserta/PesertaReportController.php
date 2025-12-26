@@ -7,7 +7,7 @@ use App\Models\Application;
 use App\Models\Report;
 use App\Models\Logbook;
 use App\Models\User;
-use App\Notifications\ReportSubmitted;
+use App\Notifications\ReportNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -167,11 +167,8 @@ class PesertaReportController extends Controller
                 'status' => 'submitted'
             ]);
 
-            // Send notification to all admins
-            $admins = User::where('role', 'admin')->get();
-            foreach ($admins as $admin) {
-                $admin->notify(new ReportSubmitted($report));
-            }
+            // Send notification to user
+            $user->notify(new ReportNotification($report, 'submitted'));
 
             return redirect()->route('profile.edit')
                 ->with('success', 'Laporan berhasil diupload dan dikirim untuk review.');

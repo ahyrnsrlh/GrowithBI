@@ -19,10 +19,10 @@ Route::get('/user', function (Request $request) {
     
     // Return fresh user data from database
     return response()->json($user->fresh());
-})->middleware('auth');
+})->middleware('auth:sanctum');
 
-// Notification routes (authenticated)
-Route::middleware('auth')->prefix('notifications')->group(function () {
+// Notification routes (authenticated with Sanctum for SPA)
+Route::middleware('auth:sanctum')->prefix('notifications')->group(function () {
     Route::get('/', [NotificationController::class, 'index']);
     Route::get('/unread-count', [NotificationController::class, 'unreadCount']);
     Route::post('/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
@@ -31,9 +31,9 @@ Route::middleware('auth')->prefix('notifications')->group(function () {
     Route::delete('/read/all', [NotificationController::class, 'destroyAllRead']);
 });
 
-// Check application route (authenticated)
-Route::get('/applications/check/{division}', [ApplicationController::class, 'checkExisting'])->middleware('auth');
-Route::get('/applications/{application}/status', [ApplicationController::class, 'getStatus'])->middleware('auth');
+// Check application route (authenticated with Sanctum)
+Route::get('/applications/check/{division}', [ApplicationController::class, 'checkExisting'])->middleware('auth:sanctum');
+Route::get('/applications/{application}/status', [ApplicationController::class, 'getStatus'])->middleware('auth:sanctum');
 
 // Public API routes
 Route::get('/divisions', [DivisionController::class, 'index']);

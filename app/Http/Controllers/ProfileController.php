@@ -275,6 +275,9 @@ class ProfileController extends Controller
             $application = Application::create($applicationData);
             
             Log::info('Application created successfully:', $application->toArray());
+            
+            // Send notification to user
+            $user->notify(new \App\Notifications\RegistrationStatusNotification($application, 'submitted'));
 
             if ($request->wantsJson()) {
                 return response()->json([

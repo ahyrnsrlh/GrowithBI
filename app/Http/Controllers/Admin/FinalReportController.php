@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Report;
 use App\Models\Division;
-use App\Notifications\ReportStatusUpdated;
+use App\Notifications\ReportNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -93,7 +93,12 @@ class FinalReportController extends Controller
         ]);
 
         // Send notification to peserta when status is updated
-        $report->user->notify(new ReportStatusUpdated($report->fresh(), $request->status));
+        $notificationType = match($request->status) {
+            'approved' => 'approved',
+            'revision' => 'revision_requested',
+            default => 'reviewed'
+        };
+        $report->user->notify(new ReportNotification($report->fresh(), $notificationType));
 
         return back()->with('success', 'Status laporan berhasil diperbarui.');
     }

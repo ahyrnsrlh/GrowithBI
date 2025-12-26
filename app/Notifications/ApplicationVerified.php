@@ -87,6 +87,6 @@ class ApplicationVerified extends Notification implements ShouldBroadcast, Shoul
      */
     public function broadcastOn(): array
     {
-        return ['private-App.User.' . $this->application->user->id];
+        return ['App.User.' . $this->application->user_id];
     }
 }

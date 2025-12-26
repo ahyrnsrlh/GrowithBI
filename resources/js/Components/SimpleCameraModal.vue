@@ -88,9 +88,47 @@
                                     class="w-full h-full object-cover"
                                 />
 
+                                <!-- Loading Models Overlay -->
+                                <div
+                                    v-if="loadingModels"
+                                    class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75"
+                                >
+                                    <div class="text-center text-white">
+                                        <svg
+                                            class="animate-spin h-12 w-12 mx-auto mb-3"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                class="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                stroke-width="4"
+                                            ></circle>
+                                            <path
+                                                class="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            ></path>
+                                        </svg>
+                                        <p class="text-sm font-medium">
+                                            Memuat Model Face Recognition...
+                                        </p>
+                                        <p class="text-xs text-gray-300 mt-1">
+                                            Mohon tunggu sebentar
+                                        </p>
+                                    </div>
+                                </div>
+
                                 <!-- Camera Not Ready Overlay -->
                                 <div
-                                    v-if="!cameraReady && !capturedPhoto"
+                                    v-if="
+                                        !cameraReady &&
+                                        !capturedPhoto &&
+                                        !loadingModels
+                                    "
                                     class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
                                 >
                                     <div class="text-center text-white">
@@ -117,6 +155,57 @@
                                     </div>
                                 </div>
 
+                                <!-- Face Detection Status Indicator -->
+                                <div
+                                    v-if="
+                                        cameraReady &&
+                                        !capturedPhoto &&
+                                        modelsLoaded
+                                    "
+                                    class="absolute top-4 left-4 right-4 flex items-center justify-between"
+                                >
+                                    <div
+                                        :class="[
+                                            'px-4 py-2 rounded-lg font-medium text-sm shadow-lg transition-all duration-300',
+                                            faceDetected
+                                                ? 'bg-green-500 text-white'
+                                                : 'bg-yellow-500 text-white',
+                                        ]"
+                                    >
+                                        <div class="flex items-center gap-2">
+                                            <svg
+                                                v-if="faceDetected"
+                                                class="w-5 h-5"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path
+                                                    fill-rule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                    clip-rule="evenodd"
+                                                />
+                                            </svg>
+                                            <svg
+                                                v-else
+                                                class="w-5 h-5 animate-pulse"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path
+                                                    fill-rule="evenodd"
+                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                    clip-rule="evenodd"
+                                                />
+                                            </svg>
+                                            <span>{{
+                                                faceDetected
+                                                    ? "Wajah Terdeteksi"
+                                                    : "Mencari Wajah..."
+                                            }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Guide Overlay (circle frame) -->
                                 <div
                                     v-if="!capturedPhoto && cameraReady"
@@ -126,7 +215,12 @@
                                         class="absolute inset-0 flex items-center justify-center"
                                     >
                                         <div
-                                            class="w-64 h-64 border-4 border-white border-dashed rounded-full opacity-50"
+                                            :class="[
+                                                'w-64 h-64 border-4 border-dashed rounded-full transition-all duration-300',
+                                                faceDetected
+                                                    ? 'border-green-400 opacity-70'
+                                                    : 'border-white opacity-50',
+                                            ]"
                                         ></div>
                                     </div>
                                 </div>
@@ -135,14 +229,22 @@
                             <!-- Instructions -->
                             <div class="mt-4 text-center">
                                 <p
-                                    v-if="!capturedPhoto"
+                                    v-if="!capturedPhoto && !loadingModels"
                                     class="text-sm text-gray-600"
                                 >
-                                    Posisikan wajah Anda di dalam lingkaran dan
-                                    pastikan pencahayaan cukup
+                                    <span v-if="!faceDetected"
+                                        >Posisikan wajah Anda di dalam lingkaran
+                                        dan pastikan pencahayaan cukup</span
+                                    >
+                                    <span
+                                        v-else
+                                        class="text-green-600 font-medium"
+                                        >✓ Wajah terdeteksi! Klik "Ambil Foto"
+                                        untuk melanjutkan</span
+                                    >
                                 </p>
                                 <p
-                                    v-else
+                                    v-else-if="capturedPhoto"
                                     class="text-sm text-green-600 font-medium"
                                 >
                                     ✓ Foto berhasil diambil! Klik konfirmasi
@@ -189,8 +291,19 @@
                                     v-if="!capturedPhoto"
                                     type="button"
                                     @click="capturePhoto"
-                                    :disabled="!cameraReady"
-                                    class="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-xl transition flex items-center justify-center gap-2"
+                                    :disabled="
+                                        !cameraReady ||
+                                        !faceDetected ||
+                                        loadingModels
+                                    "
+                                    :class="[
+                                        'flex-1 px-4 py-3 font-medium rounded-xl transition flex items-center justify-center gap-2',
+                                        cameraReady &&
+                                        faceDetected &&
+                                        !loadingModels
+                                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                            : 'bg-gray-300 cursor-not-allowed text-gray-500',
+                                    ]"
                                 >
                                     <svg
                                         class="w-5 h-5"
@@ -211,7 +324,11 @@
                                             d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
                                         />
                                     </svg>
-                                    Ambil Foto
+                                    {{
+                                        faceDetected && !loadingModels
+                                            ? "Ambil Foto"
+                                            : "Tunggu Deteksi Wajah..."
+                                    }}
                                 </button>
 
                                 <!-- Confirm Button (shown when photo captured) -->
@@ -246,7 +363,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onBeforeUnmount } from "vue";
+import { ref, watch, onBeforeUnmount, onMounted } from "vue";
 import {
     Dialog,
     DialogPanel,
@@ -254,6 +371,7 @@ import {
     TransitionChild,
     TransitionRoot,
 } from "@headlessui/vue";
+import * as faceapi from "face-api.js";
 
 const props = defineProps({
     show: {
@@ -272,7 +390,35 @@ const videoElement = ref(null);
 const capturedPhoto = ref(null);
 const cameraReady = ref(false);
 const errorMessage = ref("");
+const modelsLoaded = ref(false);
+const faceDetected = ref(false);
+const faceDescriptor = ref(null);
+const loadingModels = ref(true);
 let stream = null;
+let detectionInterval = null;
+
+// Load face-api.js models on component mount
+onMounted(async () => {
+    try {
+        loadingModels.value = true;
+        console.log("Loading face-api.js models...");
+
+        await Promise.all([
+            faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+            faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+            faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+        ]);
+
+        modelsLoaded.value = true;
+        loadingModels.value = false;
+        console.log("✓ All face-api.js models loaded successfully");
+    } catch (error) {
+        console.error("Failed to load face-api.js models:", error);
+        errorMessage.value =
+            "Gagal memuat model face recognition. Silakan refresh halaman.";
+        loadingModels.value = false;
+    }
+});
 
 // Watch for modal open/close
 watch(
@@ -305,6 +451,11 @@ const startCamera = async () => {
             videoElement.value.srcObject = stream;
             await videoElement.value.play();
             cameraReady.value = true;
+
+            // Start face detection loop
+            if (modelsLoaded.value) {
+                startFaceDetection();
+            }
         }
     } catch (error) {
         console.error("Camera error:", error);
@@ -314,8 +465,50 @@ const startCamera = async () => {
     }
 };
 
+// Real-time face detection loop
+const startFaceDetection = () => {
+    if (detectionInterval) {
+        clearInterval(detectionInterval);
+    }
+
+    detectionInterval = setInterval(async () => {
+        if (!videoElement.value || !cameraReady.value || capturedPhoto.value) {
+            return;
+        }
+
+        try {
+            const detections = await faceapi
+                .detectSingleFace(
+                    videoElement.value,
+                    new faceapi.TinyFaceDetectorOptions({
+                        inputSize: 224,
+                        scoreThreshold: 0.5,
+                    })
+                )
+                .withFaceLandmarks()
+                .withFaceDescriptor();
+
+            if (detections && detections.descriptor) {
+                faceDetected.value = true;
+                faceDescriptor.value = Array.from(detections.descriptor);
+            } else {
+                faceDetected.value = false;
+                faceDescriptor.value = null;
+            }
+        } catch (error) {
+            console.error("Face detection error:", error);
+            faceDetected.value = false;
+        }
+    }, 300); // Check every 300ms for better performance
+};
+
 // Stop camera
 const stopCamera = () => {
+    if (detectionInterval) {
+        clearInterval(detectionInterval);
+        detectionInterval = null;
+    }
+
     if (stream) {
         stream.getTracks().forEach((track) => track.stop());
         stream = null;
@@ -326,11 +519,22 @@ const stopCamera = () => {
     cameraReady.value = false;
     capturedPhoto.value = null;
     errorMessage.value = "";
+    faceDetected.value = false;
+    faceDescriptor.value = null;
 };
 
 // Capture photo
 const capturePhoto = () => {
-    if (!videoElement.value || !cameraReady.value) return;
+    if (!videoElement.value || !cameraReady.value) {
+        errorMessage.value = "Kamera belum siap";
+        return;
+    }
+
+    if (!faceDetected.value) {
+        errorMessage.value =
+            "❌ Wajah tidak terdeteksi! Posisikan wajah Anda di dalam frame dengan pencahayaan yang cukup.";
+        return;
+    }
 
     const canvas = document.createElement("canvas");
     canvas.width = videoElement.value.videoWidth;
@@ -347,12 +551,29 @@ const capturePhoto = () => {
     // Convert to base64
     capturedPhoto.value = canvas.toDataURL("image/jpeg", 0.85);
 
-    console.log("Photo captured, base64 length:", capturedPhoto.value.length);
+    // Stop detection when photo captured
+    if (detectionInterval) {
+        clearInterval(detectionInterval);
+        detectionInterval = null;
+    }
+
+    console.log(
+        "Photo captured with face descriptor, base64 length:",
+        capturedPhoto.value.length
+    );
+    console.log("Face descriptor length:", faceDescriptor.value?.length);
 };
 
 // Retake photo
 const retakePhoto = () => {
     capturedPhoto.value = null;
+    faceDetected.value = false;
+    faceDescriptor.value = null;
+
+    // Restart face detection
+    if (modelsLoaded.value && cameraReady.value) {
+        startFaceDetection();
+    }
 };
 
 // Confirm photo
@@ -362,8 +583,17 @@ const confirmPhoto = () => {
         return;
     }
 
-    console.log("Emitting photo-captured event with base64 string");
-    emit("photo-captured", capturedPhoto.value);
+    if (!faceDescriptor.value || faceDescriptor.value.length !== 128) {
+        errorMessage.value =
+            "Face descriptor tidak valid. Silakan ambil foto ulang.";
+        return;
+    }
+
+    console.log("Emitting photo-captured event with photo and face descriptor");
+    emit("photo-captured", {
+        photo: capturedPhoto.value,
+        faceDescriptor: faceDescriptor.value,
+    });
     close();
 };
 
