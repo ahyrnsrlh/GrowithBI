@@ -94,6 +94,7 @@ const hasAcceptedApplication = computed(() => {
                             <NotificationBell
                                 v-if="$page.props.auth?.user"
                                 :userId="$page.props.auth.user.id"
+                                :userRole="$page.props.auth.user.role"
                             />
 
                             <!-- Settings Dropdown -->

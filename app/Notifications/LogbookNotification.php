@@ -80,8 +80,9 @@ class LogbookNotification extends Notification implements ShouldQueue
         return [
             'type' => $this->type,
             'title' => $this->getTitle(),
-            'message' => $this->getMessage(),
+            'message' => $this->getMessage($notifiable),
             'logbook_id' => $this->logbook->id,
+            'user_name' => $this->logbook->user->name,
             'date' => $this->logbook->date->format('Y-m-d'),
             'activity' => $this->logbook->activity,
             'status' => $this->logbook->status,
@@ -99,8 +100,9 @@ class LogbookNotification extends Notification implements ShouldQueue
         return new BroadcastMessage([
             'type' => $this->type,
             'title' => $this->getTitle(),
-            'message' => $this->getMessage(),
+            'message' => $this->getMessage($notifiable),
             'logbook_id' => $this->logbook->id,
+            'user_name' => $this->logbook->user->name,
             'date' => $this->logbook->date->format('Y-m-d'),
             'activity' => $this->logbook->activity,
             'status' => $this->logbook->status,
@@ -128,16 +130,33 @@ class LogbookNotification extends Notification implements ShouldQueue
 
     /**
      * Get notification message based on type
+     * Berbeda untuk admin (menampilkan nama user) vs user (menampilkan "Anda")
      */
-    private function getMessage(): string
+    private function getMessage(object $notifiable): string
     {
+        $userName = $this->logbook->user->name;
+        $isAdmin = $notifiable->role === 'admin';
+        $dateFormatted = $this->logbook->date->format('d/m/Y');
+        
         return match($this->type) {
-            'submitted' => 'Logbook Anda untuk tanggal ' . $this->logbook->date->format('d/m/Y') . ' telah berhasil dikirim.',
-            'approved' => 'Logbook Anda untuk tanggal ' . $this->logbook->date->format('d/m/Y') . ' telah disetujui.',
-            'rejected' => 'Logbook Anda untuk tanggal ' . $this->logbook->date->format('d/m/Y') . ' perlu direvisi.',
-            'commented' => 'Supervisor memberikan komentar pada logbook Anda tanggal ' . $this->logbook->date->format('d/m/Y') . '.',
-            'reminder' => 'Jangan lupa mengisi logbook untuk hari ini.',
-            default => 'Logbook Anda telah diperbarui.',
+            'submitted' => $isAdmin
+                ? "{$userName} submit logbook tanggal {$dateFormatted}"
+                : "Logbook Anda untuk tanggal {$dateFormatted} telah berhasil dikirim.",
+            'approved' => $isAdmin
+                ? "Logbook {$userName} tanggal {$dateFormatted} telah disetujui"
+                : "Logbook Anda untuk tanggal {$dateFormatted} telah disetujui.",
+            'rejected' => $isAdmin
+                ? "Logbook {$userName} tanggal {$dateFormatted} perlu direvisi"
+                : "Logbook Anda untuk tanggal {$dateFormatted} perlu direvisi.",
+            'commented' => $isAdmin
+                ? "Ada komentar baru pada logbook {$userName} tanggal {$dateFormatted}"
+                : "Supervisor memberikan komentar pada logbook Anda tanggal {$dateFormatted}.",
+            'reminder' => $isAdmin
+                ? "{$userName} belum mengisi logbook hari ini"
+                : "Jangan lupa mengisi logbook untuk hari ini.",
+            default => $isAdmin
+                ? "Logbook {$userName} telah diperbarui"
+                : "Logbook Anda telah diperbarui.",
         };
     }
 

@@ -101,8 +101,9 @@ class RegistrationStatusNotification extends Notification implements ShouldQueue
         return [
             'type' => $this->type,
             'title' => $this->getTitle(),
-            'message' => $this->getMessage(),
+            'message' => $this->getMessage($notifiable),
             'application_id' => $this->application->id,
+            'user_name' => $this->application->user->name,
             'division_name' => $this->application->division->name,
             'status' => $this->application->status,
             'url' => '/peserta/application',
@@ -119,8 +120,9 @@ class RegistrationStatusNotification extends Notification implements ShouldQueue
         return new BroadcastMessage([
             'type' => $this->type,
             'title' => $this->getTitle(),
-            'message' => $this->getMessage(),
+            'message' => $this->getMessage($notifiable),
             'application_id' => $this->application->id,
+            'user_name' => $this->application->user->name,
             'division_name' => $this->application->division->name,
             'status' => $this->application->status,
             'url' => '/peserta/application',
@@ -148,17 +150,36 @@ class RegistrationStatusNotification extends Notification implements ShouldQueue
 
     /**
      * Get notification message based on type
+     * Berbeda untuk admin (menampilkan nama user) vs user (menampilkan "Anda")
      */
-    private function getMessage(): string
+    private function getMessage(object $notifiable): string
     {
+        $userName = $this->application->user->name;
+        $isAdmin = $notifiable->role === 'admin';
+        $divisionName = $this->application->division->name;
+        
         return match($this->type) {
-            'submitted' => 'Pendaftaran Anda untuk posisi ' . $this->application->division->name . ' telah berhasil dikirim.',
-            'verified' => 'Dokumen pendaftaran Anda telah diverifikasi oleh admin.',
-            'accepted' => 'Selamat! Anda telah diterima untuk posisi ' . $this->application->division->name . '.',
-            'rejected' => 'Mohon maaf, pendaftaran Anda untuk posisi ' . $this->application->division->name . ' tidak dapat kami terima.',
-            'letter_sent' => 'Surat penerimaan resmi Anda telah tersedia untuk diunduh.',
-            'application_expired' => 'Pendaftaran Anda telah melewati batas waktu tanpa tindakan lanjutan.',
-            default => 'Status pendaftaran Anda telah diperbarui.',
+            'submitted' => $isAdmin
+                ? "{$userName} mendaftar untuk posisi {$divisionName}"
+                : "Pendaftaran Anda untuk posisi {$divisionName} telah berhasil dikirim.",
+            'verified' => $isAdmin
+                ? "Dokumen pendaftaran {$userName} telah diverifikasi"
+                : "Dokumen pendaftaran Anda telah diverifikasi oleh admin.",
+            'accepted' => $isAdmin
+                ? "{$userName} telah diterima untuk posisi {$divisionName}"
+                : "Selamat! Anda telah diterima untuk posisi {$divisionName}.",
+            'rejected' => $isAdmin
+                ? "{$userName} tidak diterima untuk posisi {$divisionName}"
+                : "Mohon maaf, pendaftaran Anda untuk posisi {$divisionName} tidak dapat kami terima.",
+            'letter_sent' => $isAdmin
+                ? "Surat penerimaan {$userName} telah dikirim"
+                : "Surat penerimaan resmi Anda telah tersedia untuk diunduh.",
+            'application_expired' => $isAdmin
+                ? "Pendaftaran {$userName} telah kedaluwarsa"
+                : "Pendaftaran Anda telah melewati batas waktu tanpa tindakan lanjutan.",
+            default => $isAdmin
+                ? "Status pendaftaran {$userName} telah diperbarui"
+                : "Status pendaftaran Anda telah diperbarui.",
         };
     }
 

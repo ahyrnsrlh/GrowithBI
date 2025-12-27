@@ -46,10 +46,9 @@ class AttendanceNotification extends Notification implements ShouldQueue
         return [
             'type' => $this->type,
             'title' => $this->getTitle(),
-            'message' => $this->getMessage(),
+            'message' => $this->getMessage($notifiable),
             'attendance_id' => $this->attendance->id,
-            'date' => $this->attendance->date,
-            'check_in_time' => $this->attendance->check_in_time,
+            'date' => $this->attendance->date,            'user_name' => $this->attendance->user->name,            'check_in_time' => $this->attendance->check_in_time,
             'check_out_time' => $this->attendance->check_out_time,
             'url' => '/peserta/attendance',
             'icon' => $this->getIcon(),
@@ -65,10 +64,9 @@ class AttendanceNotification extends Notification implements ShouldQueue
         return new BroadcastMessage([
             'type' => $this->type,
             'title' => $this->getTitle(),
-            'message' => $this->getMessage(),
+            'message' => $this->getMessage($notifiable),
             'attendance_id' => $this->attendance->id,
-            'date' => $this->attendance->date,
-            'check_in_time' => $this->attendance->check_in_time,
+            'date' => $this->attendance->date,            'user_name' => $this->attendance->user->name,            'check_in_time' => $this->attendance->check_in_time,
             'check_out_time' => $this->attendance->check_out_time,
             'url' => '/peserta/attendance',
             'icon' => $this->getIcon(),
@@ -97,19 +95,41 @@ class AttendanceNotification extends Notification implements ShouldQueue
 
     /**
      * Get notification message based on type
+     * Berbeda untuk admin (menampilkan nama user) vs user (menampilkan "Anda")
      */
-    private function getMessage(): string
+    private function getMessage(object $notifiable): string
     {
+        $userName = $this->attendance->user->name;
+        $isAdmin = $notifiable->role === 'admin';
+        
         return match($this->type) {
-            'checked_in' => 'Anda telah berhasil check-in pada ' . $this->attendance->check_in_time,
-            'checked_out' => 'Anda telah berhasil check-out pada ' . $this->attendance->check_out_time,
-            'late' => 'Anda terlambat melakukan check-in. Waktu check-in: ' . $this->attendance->check_in_time,
-            'early_checkout' => 'Anda melakukan check-out lebih awal dari jadwal.',
-            'location_warning' => 'Lokasi check-in Anda berbeda dari lokasi yang ditetapkan.',
-            'face_registered' => 'Wajah Anda telah berhasil didaftarkan untuk verifikasi absensi.',
-            'reminder_checkin' => 'Jangan lupa untuk melakukan check-in hari ini.',
-            'reminder_checkout' => 'Jangan lupa untuk melakukan check-out hari ini.',
-            default => 'Absensi Anda telah diperbarui.',
+            'checked_in' => $isAdmin 
+                ? "{$userName} telah check-in pada {$this->attendance->check_in_time}"
+                : "Anda telah berhasil check-in pada {$this->attendance->check_in_time}",
+            'checked_out' => $isAdmin
+                ? "{$userName} telah check-out pada {$this->attendance->check_out_time}"
+                : "Anda telah berhasil check-out pada {$this->attendance->check_out_time}",
+            'late' => $isAdmin
+                ? "{$userName} terlambat check-in. Waktu: {$this->attendance->check_in_time}"
+                : "Anda terlambat melakukan check-in. Waktu check-in: {$this->attendance->check_in_time}",
+            'early_checkout' => $isAdmin
+                ? "{$userName} melakukan check-out lebih awal dari jadwal"
+                : "Anda melakukan check-out lebih awal dari jadwal.",
+            'location_warning' => $isAdmin
+                ? "Lokasi check-in {$userName} berbeda dari lokasi yang ditetapkan"
+                : "Lokasi check-in Anda berbeda dari lokasi yang ditetapkan.",
+            'face_registered' => $isAdmin
+                ? "Wajah {$userName} telah berhasil didaftarkan untuk verifikasi absensi"
+                : "Wajah Anda telah berhasil didaftarkan untuk verifikasi absensi.",
+            'reminder_checkin' => $isAdmin
+                ? "{$userName} belum melakukan check-in hari ini"
+                : "Jangan lupa untuk melakukan check-in hari ini.",
+            'reminder_checkout' => $isAdmin
+                ? "{$userName} belum melakukan check-out hari ini"
+                : "Jangan lupa untuk melakukan check-out hari ini.",
+            default => $isAdmin
+                ? "Absensi {$userName} telah diperbarui"
+                : "Absensi Anda telah diperbarui.",
         };
     }
 

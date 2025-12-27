@@ -156,7 +156,7 @@
                                         {{ notification.data.title }}
                                     </p>
                                     <p class="text-sm text-gray-600 mt-1">
-                                        {{ notification.data.message }}
+                                        {{ getDisplayMessage(notification) }}
                                     </p>
                                     <p class="text-xs text-gray-400 mt-2">
                                         {{
@@ -222,6 +222,10 @@ let pollingInterval = null;
 const props = defineProps({
     userId: {
         type: Number,
+        required: true,
+    },
+    userRole: {
+        type: String,
         required: true,
     },
 });
@@ -439,6 +443,75 @@ const formatTime = (timestamp) => {
         month: "short",
         year: "numeric",
     });
+};
+
+// Transform notification message berdasarkan role user
+const getDisplayMessage = (notification) => {
+    // Jika role bukan admin, return message original
+    if (props.userRole !== "admin") {
+        return notification.data.message;
+    }
+
+    // Untuk admin, extract user name dari notification data jika ada
+    const data = notification.data;
+    const message = data.message;
+
+    // Jika message sudah mengandung nama user (bukan "Anda"), return as is
+    if (!message.includes("Anda")) {
+        return message;
+    }
+
+    // Pattern untuk extract info dari notification
+    // Default: jika ada user_name di data, gunakan itu
+    const userName =
+        data.user_name ||
+        data.attendance_user_name ||
+        data.logbook_user_name ||
+        "User";
+
+    // Transform message "Anda" menjadi nama user untuk admin
+    let transformedMessage = message;
+
+    // Check-in/Check-out attendance
+    if (message.includes("Anda telah berhasil check-in")) {
+        const time = message.match(/pada (\d{2}:\d{2}:\d{2})/)?.[1] || "";
+        transformedMessage = `${userName} telah check-in pada ${time}`;
+    } else if (message.includes("Anda telah berhasil check-out")) {
+        const time = message.match(/pada (\d{2}:\d{2}:\d{2})/)?.[1] || "";
+        transformedMessage = `${userName} telah check-out pada ${time}`;
+    }
+    // Logbook
+    else if (message.includes("Logbook Anda untuk tanggal")) {
+        const dateMatch = message.match(/tanggal (\d{2}\/\d{2}\/\d{4})/);
+        const date = dateMatch ? dateMatch[1] : "";
+        if (message.includes("telah berhasil dikirim")) {
+            transformedMessage = `${userName} submit logbook tanggal ${date}`;
+        } else if (message.includes("telah disetujui")) {
+            transformedMessage = `Logbook ${userName} tanggal ${date} telah disetujui`;
+        } else if (message.includes("perlu direvisi")) {
+            transformedMessage = `Logbook ${userName} tanggal ${date} perlu direvisi`;
+        }
+    }
+    // Application/Pendaftaran
+    else if (message.includes("Pendaftaran Anda untuk posisi")) {
+        const positionMatch = message.match(/posisi ([^t]+) telah/);
+        const position = positionMatch ? positionMatch[1].trim() : "";
+        if (message.includes("telah berhasil dikirim")) {
+            transformedMessage = `${userName} mendaftar untuk posisi ${position}`;
+        }
+    }
+    // Report
+    else if (message.includes("Laporan akhir Anda")) {
+        if (message.includes("telah berhasil dikirim")) {
+            transformedMessage = `${userName} telah mengirim laporan akhir`;
+        } else if (message.includes("telah disetujui")) {
+            transformedMessage = `Laporan akhir ${userName} telah disetujui`;
+        } else if (message.includes("memerlukan revisi")) {
+            transformedMessage = `Laporan akhir ${userName} memerlukan revisi`;
+        }
+    }
+
+    return transformedMessage;
 };
 
 // Setup real-time notifications with Laravel Echo

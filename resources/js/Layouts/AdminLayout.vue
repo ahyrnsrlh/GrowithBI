@@ -319,6 +319,7 @@
                         <NotificationBell
                             v-if="auth.user"
                             :userId="auth.user.id"
+                            :userRole="auth.user.role"
                         />
 
                         <!-- Profile Dropdown -->

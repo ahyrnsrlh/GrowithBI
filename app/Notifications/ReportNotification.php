@@ -96,8 +96,9 @@ class ReportNotification extends Notification implements ShouldQueue
         return [
             'type' => $this->type,
             'title' => $this->getTitle(),
-            'message' => $this->getMessage(),
+            'message' => $this->getMessage($notifiable),
             'report_id' => $this->report->id,
+            'user_name' => $this->report->user->name,
             'status' => $this->report->status,
             'url' => '/peserta/report',
             'icon' => $this->getIcon(),
@@ -113,8 +114,9 @@ class ReportNotification extends Notification implements ShouldQueue
         return new BroadcastMessage([
             'type' => $this->type,
             'title' => $this->getTitle(),
-            'message' => $this->getMessage(),
+            'message' => $this->getMessage($notifiable),
             'report_id' => $this->report->id,
+            'user_name' => $this->report->user->name,
             'status' => $this->report->status,
             'url' => '/peserta/report',
             'icon' => $this->getIcon(),
@@ -142,18 +144,38 @@ class ReportNotification extends Notification implements ShouldQueue
 
     /**
      * Get notification message based on type
+     * Berbeda untuk admin (menampilkan nama user) vs user (menampilkan "Anda")
      */
-    private function getMessage(): string
+    private function getMessage(object $notifiable): string
     {
+        $userName = $this->report->user->name;
+        $isAdmin = $notifiable->role === 'admin';
+        
         return match($this->type) {
-            'submitted' => 'Laporan akhir Anda telah berhasil dikirim dan akan segera direview oleh supervisor.',
-            'reviewed' => 'Supervisor sedang mereview laporan akhir Anda.',
-            'approved' => 'Selamat! Laporan akhir Anda telah disetujui. Sertifikat Anda akan segera diproses.',
-            'revision_requested' => 'Laporan akhir Anda memerlukan revisi. Silakan cek catatan dari supervisor.',
-            'deadline_reminder' => 'Deadline pengumpulan laporan akhir akan berakhir dalam 3 hari. Segera kirimkan laporan Anda.',
-            'deadline_passed' => 'Anda telah melewati deadline pengumpulan laporan akhir. Segera hubungi supervisor.',
-            'certificate_ready' => 'Sertifikat magang Anda telah siap untuk diunduh. Terima kasih atas partisipasi Anda.',
-            default => 'Status laporan Anda telah diperbarui.',
+            'submitted' => $isAdmin
+                ? "{$userName} telah mengirim laporan akhir"
+                : "Laporan akhir Anda telah berhasil dikirim dan akan segera direview oleh supervisor.",
+            'reviewed' => $isAdmin
+                ? "Laporan akhir {$userName} sedang direview"
+                : "Supervisor sedang mereview laporan akhir Anda.",
+            'approved' => $isAdmin
+                ? "Laporan akhir {$userName} telah disetujui"
+                : "Selamat! Laporan akhir Anda telah disetujui. Sertifikat Anda akan segera diproses.",
+            'revision_requested' => $isAdmin
+                ? "Laporan akhir {$userName} memerlukan revisi"
+                : "Laporan akhir Anda memerlukan revisi. Silakan cek catatan dari supervisor.",
+            'deadline_reminder' => $isAdmin
+                ? "Deadline laporan akhir {$userName} akan berakhir dalam 3 hari"
+                : "Deadline pengumpulan laporan akhir akan berakhir dalam 3 hari. Segera kirimkan laporan Anda.",
+            'deadline_passed' => $isAdmin
+                ? "{$userName} melewati deadline laporan akhir"
+                : "Anda telah melewati deadline pengumpulan laporan akhir. Segera hubungi supervisor.",
+            'certificate_ready' => $isAdmin
+                ? "Sertifikat magang {$userName} telah siap"
+                : "Sertifikat magang Anda telah siap untuk diunduh. Terima kasih atas partisipasi Anda.",
+            default => $isAdmin
+                ? "Status laporan {$userName} telah diperbarui"
+                : "Status laporan Anda telah diperbarui.",
         };
     }
 
