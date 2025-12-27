@@ -22,7 +22,12 @@ class PesertaReportController extends Controller
      */
     public function index(Request $request)
     {
-        $user = Auth::user();
+        /** @var User|null $user */
+        $user = $request->user();
+
+        if (!$user) {
+            abort(401);
+        }
         
         // Check if user has accepted application
         $acceptedApplication = Application::where('user_id', $user->id)
@@ -127,7 +132,12 @@ class PesertaReportController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
+        /** @var User|null $user */
+        $user = $request->user();
+
+        if (!$user) {
+            abort(401);
+        }
         
         // Check if user has accepted application
         $acceptedApplication = Application::where('user_id', $user->id)
@@ -171,8 +181,9 @@ class PesertaReportController extends Controller
             $user->notify(new ReportNotification($report, 'submitted'));
             
             // Send notification to all admins about new report
-            $admins = \App\Models\User::where('role', 'admin')->get();
+            $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
+                /** @var User $admin */
                 $admin->notify(new ReportNotification($report, 'submitted'));
             }
 
@@ -192,7 +203,12 @@ class PesertaReportController extends Controller
      */
     public function show(string $id)
     {
+        /** @var User|null $user */
         $user = Auth::user();
+
+        if (!$user) {
+            abort(401);
+        }
         $report = Report::where('user_id', $user->id)->findOrFail($id);
         
         return Inertia::render('Peserta/Reports/Show', [
@@ -205,7 +221,12 @@ class PesertaReportController extends Controller
      */
     public function download(Report $report)
     {
+        /** @var User|null $user */
         $user = Auth::user();
+
+        if (!$user) {
+            abort(401);
+        }
         
         // Check if user owns this report
         if ($report->user_id !== $user->id) {

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\User;
 use App\Models\Application;
 use App\Models\Division;
 use App\Models\Logbook;

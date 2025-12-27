@@ -20,7 +20,12 @@ class LogbookController extends Controller
      */
     public function index(Request $request)
     {
-        $user = Auth::user();
+        /** @var User|null $user */
+        $user = $request->user();
+
+        if (!$user) {
+            abort(401);
+        }
         
         // Check if user has accepted application
         $acceptedApplication = Application::where('user_id', $user->id)
@@ -111,7 +116,12 @@ class LogbookController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
+        /** @var User|null $user */
+        $user = $request->user();
+
+        if (!$user) {
+            abort(401);
+        }
         
         $acceptedApplication = Application::where('user_id', $user->id)
             ->where('status', 'diterima')
@@ -176,6 +186,7 @@ class LogbookController extends Controller
             // Send notification to all admins
             $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
+                /** @var User $admin */
                 $admin->notify(new LogbookNotification($logbook, 'submitted'));
             }
         }
@@ -190,7 +201,12 @@ class LogbookController extends Controller
      */
     public function show(Logbook $logbook)
     {
+        /** @var User|null $user */
         $user = Auth::user();
+
+        if (!$user) {
+            abort(401);
+        }
         
         // Check if user owns this logbook
         if ($logbook->user_id !== $user->id) {

@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Peserta;
 
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
+use App\Models\User;
 use App\Notifications\AttendanceNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -23,7 +25,10 @@ class AttendanceController extends Controller
     {
         $this->middleware('auth');
         $this->middleware(function ($request, $next) {
-            if (!Auth::user()->canAccessAttendance()) {
+            /** @var User|null $user */
+            $user = $request->user();
+
+            if (!$user || !$user->canAccessAttendance()) {
                 return redirect()->route('profile.edit')
                     ->with('error', 'Anda harus memiliki status aplikasi "Diterima" untuk mengakses fitur absensi.');
             }
@@ -36,7 +41,12 @@ class AttendanceController extends Controller
      */
     public function index(): Response
     {
+        /** @var User|null $user */
         $user = Auth::user();
+
+        if (!$user) {
+            abort(401);
+        }
         $today = Carbon::now()->toDateString();
         
         // Get today's attendance
@@ -100,7 +110,12 @@ class AttendanceController extends Controller
             'face_descriptor' => 'required|array|size:128', // Face-API.js descriptor
         ]);
 
-        $user = Auth::user();
+        /** @var User|null $user */
+        $user = $request->user();
+
+        if (!$user) {
+            abort(401);
+        }
         
         // IMPORTANT: Always use server time, never trust client time
         $now = Carbon::now('Asia/Jakarta');
@@ -162,7 +177,7 @@ class AttendanceController extends Controller
         try {
             $saved = $attendance->save();
             
-            \Log::info('Attendance check-in saved', [
+            Log::info('Attendance check-in saved', [
                 'user_id' => $user->id,
                 'attendance_id' => $attendance->id,
                 'date' => $today,
@@ -171,7 +186,7 @@ class AttendanceController extends Controller
                 'saved' => $saved
             ]);
         } catch (\Exception $e) {
-            \Log::error('Failed to save attendance', [
+            Log::error('Failed to save attendance', [
                 'user_id' => $user->id,
                 'error' => $e->getMessage()
             ]);
@@ -187,8 +202,9 @@ class AttendanceController extends Controller
         $user->notify(new AttendanceNotification($attendance, $notificationType));
 
         // Send notification to all admins
-        $admins = \App\Models\User::where('role', 'admin')->get();
+        $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
+            /** @var User $admin */
             $admin->notify(new AttendanceNotification($attendance, $notificationType));
         }
 
@@ -211,7 +227,12 @@ class AttendanceController extends Controller
             'face_descriptor' => 'required|array|size:128', // Face-API.js descriptor
         ]);
 
-        $user = Auth::user();
+        /** @var User|null $user */
+        $user = $request->user();
+
+        if (!$user) {
+            abort(401);
+        }
         
         // IMPORTANT: Always use server time, never trust client time
         $now = Carbon::now('Asia/Jakarta');
@@ -265,7 +286,7 @@ class AttendanceController extends Controller
         try {
             $saved = $attendance->save();
             
-            \Log::info('Attendance check-out saved', [
+            Log::info('Attendance check-out saved', [
                 'user_id' => $user->id,
                 'attendance_id' => $attendance->id,
                 'date' => $today,
@@ -273,7 +294,7 @@ class AttendanceController extends Controller
                 'saved' => $saved
             ]);
         } catch (\Exception $e) {
-            \Log::error('Failed to save check-out', [
+            Log::error('Failed to save check-out', [
                 'user_id' => $user->id,
                 'error' => $e->getMessage()
             ]);
@@ -288,8 +309,9 @@ class AttendanceController extends Controller
         $user->notify(new AttendanceNotification($attendance, 'checked_out'));
 
         // Send notification to all admins
-        $admins = \App\Models\User::where('role', 'admin')->get();
+        $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
+            /** @var User $admin */
             $admin->notify(new AttendanceNotification($attendance, 'checked_out'));
         }
 
@@ -367,7 +389,12 @@ class AttendanceController extends Controller
      */
     public function stats()
     {
+        /** @var User|null $user */
         $user = Auth::user();
+
+        if (!$user) {
+            abort(401);
+        }
         $stats = $user->getAttendanceStats();
         
         return response()->json($stats);
@@ -380,7 +407,7 @@ class AttendanceController extends Controller
      * @param array $descriptor Face descriptor from face-api.js (128 float array)
      * @return array ['success' => bool, 'message' => string, 'distance' => float|null]
      */
-    private function verifyFace($user, array $descriptor): array
+    private function verifyFace(User $user, array $descriptor): array
     {
         // First time registration - store face descriptor
         if (empty($user->face_descriptor)) {
@@ -388,7 +415,7 @@ class AttendanceController extends Controller
             $user->face_registered_at = now();
             $user->save();
             
-            \Log::info('Face registered for user', [
+            Log::info('Face registered for user', [
                 'user_id' => $user->id,
                 'timestamp' => now()
             ]);
@@ -400,7 +427,7 @@ class AttendanceController extends Controller
                 $attendance->date = now();
                 $user->notify(new AttendanceNotification($attendance, 'face_registered'));
             } catch (\Exception $e) {
-                \Log::error('Failed to send face registration notification', [
+                Log::error('Failed to send face registration notification', [
                     'user_id' => $user->id,
                     'error' => $e->getMessage()
                 ]);
@@ -417,7 +444,7 @@ class AttendanceController extends Controller
         $storedDescriptor = json_decode($user->face_descriptor, true);
         
         if (!$storedDescriptor || count($storedDescriptor) !== 128) {
-            \Log::error('Invalid stored face descriptor', [
+            Log::error('Invalid stored face descriptor', [
                 'user_id' => $user->id,
                 'stored_length' => count($storedDescriptor ?? [])
             ]);
@@ -437,7 +464,7 @@ class AttendanceController extends Controller
         $threshold = 0.6;
         $isMatch = $distance < $threshold;
         
-        \Log::info('Face verification attempt', [
+        Log::info('Face verification attempt', [
             'user_id' => $user->id,
             'distance' => $distance,
             'threshold' => $threshold,

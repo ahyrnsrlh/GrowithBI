@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +13,12 @@ class NotificationController extends Controller
      */
     public function index(Request $request)
     {
-        $user = Auth::user();
+        /** @var User|null $user */
+        $user = $request->user();
+
+        if (!$user) {
+            abort(401);
+        }
         
         $limit = $request->query('limit', 10);
         $unreadOnly = $request->query('unread_only', false);
@@ -36,7 +42,14 @@ class NotificationController extends Controller
      */
     public function unreadCount()
     {
-        $count = Auth::user()->unreadNotifications()->count();
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        if (!$user) {
+            abort(401);
+        }
+
+        $count = $user->unreadNotifications()->count();
         
         return response()->json([
             'count' => $count,
@@ -48,7 +61,12 @@ class NotificationController extends Controller
      */
     public function dropdown(Request $request)
     {
-        $user = Auth::user();
+        /** @var User|null $user */
+        $user = $request->user();
+
+        if (!$user) {
+            abort(401);
+        }
         
         $notifications = $user->notifications()
             ->latest()
@@ -79,7 +97,12 @@ class NotificationController extends Controller
      */
     public function markAsRead($id)
     {
+        /** @var User|null $user */
         $user = Auth::user();
+
+        if (!$user) {
+            abort(401);
+        }
         $notification = $user->notifications()->findOrFail($id);
         
         $notification->markAsRead();
@@ -95,7 +118,12 @@ class NotificationController extends Controller
      */
     public function markAllAsRead()
     {
+        /** @var User|null $user */
         $user = Auth::user();
+
+        if (!$user) {
+            abort(401);
+        }
         $user->unreadNotifications->markAsRead();
         
         return response()->json([
@@ -109,7 +137,12 @@ class NotificationController extends Controller
      */
     public function destroy($id)
     {
+        /** @var User|null $user */
         $user = Auth::user();
+
+        if (!$user) {
+            abort(401);
+        }
         $notification = $user->notifications()->findOrFail($id);
         
         $notification->delete();
@@ -124,7 +157,12 @@ class NotificationController extends Controller
      */
     public function destroyAllRead()
     {
+        /** @var User|null $user */
         $user = Auth::user();
+
+        if (!$user) {
+            abort(401);
+        }
         $user->readNotifications()->delete();
         
         return response()->json([
