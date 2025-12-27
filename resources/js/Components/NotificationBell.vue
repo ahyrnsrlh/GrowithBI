@@ -227,6 +227,8 @@ const props = defineProps({
 });
 
 onMounted(() => {
+    console.log("📢 NotificationBell mounted for userId:", props.userId);
+
     // Request notification permission
     if ("Notification" in window && Notification.permission === "default") {
         Notification.requestPermission();
@@ -271,30 +273,38 @@ const closeDropdown = () => {
 
 const fetchNotifications = async () => {
     loading.value = true;
+    console.log("🔍 Fetching notifications for userId:", props.userId);
     try {
         const response = await axios.get("/api/notifications?limit=20");
+        console.log("✅ Notifications fetched:", response.data);
         notifications.value = response.data.notifications;
         unreadCount.value = response.data.unread_count;
     } catch (error) {
-        // Ignore 401 errors (user not authenticated)
-        if (error.response?.status !== 401) {
-            console.error("Error fetching notifications:", error);
-        }
+        console.error("❌ Error fetching notifications:", {
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            data: error.response?.data,
+            message: error.message,
+        });
     } finally {
         loading.value = false;
     }
 };
 
 const fetchUnreadCount = async () => {
+    console.log("🔢 Fetching unread count for userId:", props.userId);
     try {
         const response = await axios.get("/api/notifications/unread-count");
+        console.log("✅ Unread count fetched:", response.data.count);
         unreadCount.value = response.data.count;
     } catch (error) {
-        // Silently ignore 401 errors (user not authenticated)
-        // This is expected when user is not logged in
-        if (error.response?.status !== 401) {
-            console.error("Error fetching unread count:", error);
-        }
+        console.error("❌ Error fetching unread count:", {
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            data: error.response?.data,
+            message: error.message,
+            userId: props.userId,
+        });
     }
 };
 

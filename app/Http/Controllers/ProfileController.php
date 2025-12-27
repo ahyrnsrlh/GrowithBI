@@ -278,6 +278,12 @@ class ProfileController extends Controller
             
             // Send notification to user
             $user->notify(new \App\Notifications\RegistrationStatusNotification($application, 'submitted'));
+            
+            // Send notification to all admins about new application
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new \App\Notifications\RegistrationStatusNotification($application, 'submitted'));
+            }
 
             if ($request->wantsJson()) {
                 return response()->json([

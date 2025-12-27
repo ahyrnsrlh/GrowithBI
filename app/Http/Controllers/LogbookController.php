@@ -172,6 +172,12 @@ class LogbookController extends Controller
         // Send notification to user when logbook is submitted
         if ($request->status === 'submitted') {
             $user->notify(new LogbookNotification($logbook, 'submitted'));
+            
+            // Send notification to all admins
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new LogbookNotification($logbook, 'submitted'));
+            }
         }
 
         $message = $request->status === 'draft' ? 'Logbook berhasil disimpan sebagai draft.' : 'Logbook berhasil dikirim untuk review.';

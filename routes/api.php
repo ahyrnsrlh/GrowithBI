@@ -21,8 +21,8 @@ Route::get('/user', function (Request $request) {
     return response()->json($user->fresh());
 })->middleware('auth:sanctum');
 
-// Notification routes (authenticated with Sanctum for SPA)
-Route::middleware('auth:sanctum')->prefix('notifications')->group(function () {
+// Notification routes (support both Sanctum and session auth for Inertia)
+Route::middleware(['auth:sanctum,web'])->prefix('notifications')->group(function () {
     Route::get('/', [NotificationController::class, 'index']);
     Route::get('/unread-count', [NotificationController::class, 'unreadCount']);
     Route::post('/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);

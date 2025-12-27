@@ -169,6 +169,12 @@ class PesertaReportController extends Controller
 
             // Send notification to user
             $user->notify(new ReportNotification($report, 'submitted'));
+            
+            // Send notification to all admins about new report
+            $admins = \App\Models\User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new ReportNotification($report, 'submitted'));
+            }
 
             return redirect()->route('profile.edit')
                 ->with('success', 'Laporan berhasil diupload dan dikirim untuk review.');

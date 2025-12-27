@@ -56,20 +56,17 @@ import Pusher from "pusher-js";
 window.Pusher = Pusher;
 
 // Validate environment variables
-const requiredEnvVars = [
-    'VITE_REVERB_APP_KEY',
-    'VITE_REVERB_HOST',
-];
+const requiredEnvVars = ["VITE_REVERB_APP_KEY", "VITE_REVERB_HOST"];
 
 const missingVars = requiredEnvVars.filter(
-    varName => !import.meta.env[varName]
+    (varName) => !import.meta.env[varName]
 );
 
 if (missingVars.length > 0) {
     console.warn(
-        '⚠️ Missing environment variables:',
-        missingVars.join(', '),
-        '\nReal-time notifications will fall back to polling mode.'
+        "⚠️ Missing environment variables:",
+        missingVars.join(", "),
+        "\nReal-time notifications will fall back to polling mode."
     );
 }
 
@@ -82,7 +79,8 @@ if (missingVars.length === 0) {
             wsHost: import.meta.env.VITE_REVERB_HOST,
             wsPort: import.meta.env.VITE_REVERB_PORT || 8080,
             wssPort: import.meta.env.VITE_REVERB_PORT || 8080,
-            forceTLS: (import.meta.env.VITE_REVERB_SCHEME || "http") === "https",
+            forceTLS:
+                (import.meta.env.VITE_REVERB_SCHEME || "http") === "https",
             enabledTransports: ["ws", "wss"],
             authEndpoint: "/broadcasting/auth",
             auth: {
@@ -94,13 +92,13 @@ if (missingVars.length === 0) {
                 },
             },
         });
-        
-        console.log('✅ Laravel Echo initialized successfully');
+
+        console.log("✅ Laravel Echo initialized successfully");
     } catch (error) {
-        console.error('❌ Echo initialization failed:', error);
-        console.warn('⚠️ Falling back to polling mode for notifications');
+        console.error("❌ Echo initialization failed:", error);
+        console.warn("⚠️ Falling back to polling mode for notifications");
     }
 } else {
-    console.warn('⚠️ Laravel Echo NOT initialized - missing configuration');
-    console.info('ℹ️ Notifications will use polling mode as fallback');
+    console.warn("⚠️ Laravel Echo NOT initialized - missing configuration");
+    console.info("ℹ️ Notifications will use polling mode as fallback");
 }
