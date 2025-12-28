@@ -27,9 +27,12 @@ class LogbookController extends Controller
             abort(401);
         }
         
+        // Statuses that indicate accepted application
+        $acceptedStatuses = ['accepted', 'letter_ready', 'diterima'];
+        
         // Check if user has accepted application
         $acceptedApplication = Application::where('user_id', $user->id)
-            ->where('status', 'diterima')
+            ->whereIn('status', $acceptedStatuses)
             ->with('division')
             ->first();
             
@@ -96,8 +99,11 @@ class LogbookController extends Controller
     {
         $user = Auth::user();
         
+        // Statuses that indicate accepted application
+        $acceptedStatuses = ['accepted', 'letter_ready', 'diterima'];
+        
         $acceptedApplication = Application::where('user_id', $user->id)
-            ->where('status', 'diterima')
+            ->whereIn('status', $acceptedStatuses)
             ->with('division')
             ->first();
             
@@ -123,8 +129,11 @@ class LogbookController extends Controller
             abort(401);
         }
         
+        // Statuses that indicate accepted application
+        $acceptedStatuses = ['accepted', 'letter_ready', 'diterima'];
+        
         $acceptedApplication = Application::where('user_id', $user->id)
-            ->where('status', 'diterima')
+            ->whereIn('status', $acceptedStatuses)
             ->first();
             
         if (!$acceptedApplication) {

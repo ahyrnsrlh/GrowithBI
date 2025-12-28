@@ -50,7 +50,11 @@
                                     : application.status ===
                                       'interview_scheduled'
                                     ? 'bg-purple-100 text-purple-800'
-                                    : application.status === 'accepted'
+                                    : [
+                                          'accepted',
+                                          'letter_ready',
+                                          'diterima',
+                                      ].includes(application.status)
                                     ? 'bg-green-100 text-green-800'
                                     : application.status === 'rejected'
                                     ? 'bg-red-100 text-red-800'
@@ -735,13 +739,23 @@
                                 <div
                                     :class="[
                                         'w-8 h-8 rounded-full flex items-center justify-center',
-                                        application.status === 'accepted'
+                                        [
+                                            'accepted',
+                                            'letter_ready',
+                                            'diterima',
+                                        ].includes(application.status)
                                             ? 'bg-green-100'
                                             : 'bg-red-100',
                                     ]"
                                 >
                                     <svg
-                                        v-if="application.status === 'accepted'"
+                                        v-if="
+                                            [
+                                                'accepted',
+                                                'letter_ready',
+                                                'diterima',
+                                            ].includes(application.status)
+                                        "
                                         class="w-4 h-4 text-green-600"
                                         fill="currentColor"
                                         viewBox="0 0 20 20"
@@ -770,7 +784,11 @@
                                         class="text-sm font-medium text-gray-900"
                                     >
                                         {{
-                                            application.status === "accepted"
+                                            [
+                                                "accepted",
+                                                "letter_ready",
+                                                "diterima",
+                                            ].includes(application.status)
                                                 ? "Diterima"
                                                 : "Ditolak"
                                         }}
@@ -815,7 +833,11 @@
                                             : application.status ===
                                               'interview_scheduled'
                                             ? 'text-purple-600'
-                                            : application.status === 'accepted'
+                                            : [
+                                                  'accepted',
+                                                  'letter_ready',
+                                                  'diterima',
+                                              ].includes(application.status)
                                             ? 'text-green-600'
                                             : application.status === 'rejected'
                                             ? 'text-red-600'
@@ -850,7 +872,11 @@
 
                     <!-- Acceptance Letter Upload -->
                     <div
-                        v-if="application.status === 'accepted'"
+                        v-if="
+                            ['accepted', 'letter_ready', 'diterima'].includes(
+                                application.status
+                            )
+                        "
                         class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
                     >
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">
@@ -1123,24 +1149,196 @@
                 </div>
             </div>
         </div>
+
+        <!-- Success Modal -->
+        <div
+            v-if="showSuccessModal"
+            class="fixed inset-0 z-50 overflow-y-auto"
+            aria-labelledby="modal-title"
+            role="dialog"
+            aria-modal="true"
+        >
+            <div
+                class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+            >
+                <!-- Background overlay -->
+                <div
+                    class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                    @click="showSuccessModal = false"
+                ></div>
+
+                <!-- Modal panel -->
+                <div
+                    class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+                >
+                    <div class="bg-white px-6 pt-6 pb-6">
+                        <div class="flex flex-col items-center text-center">
+                            <!-- Success Icon -->
+                            <div
+                                class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4"
+                            >
+                                <svg
+                                    class="h-10 w-10 text-green-600"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M5 13l4 4L19 7"
+                                    />
+                                </svg>
+                            </div>
+
+                            <!-- Title -->
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">
+                                Berhasil!
+                            </h3>
+
+                            <!-- Message -->
+                            <p class="text-gray-600 mb-6">
+                                {{ successMessage }}
+                            </p>
+
+                            <!-- Success Details -->
+                            <div class="w-full bg-green-50 rounded-xl p-4 mb-6">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <svg
+                                            class="h-6 w-6 text-green-600"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                                clip-rule="evenodd"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 text-left">
+                                        <p
+                                            class="text-sm font-medium text-green-800"
+                                        >
+                                            Surat Penerimaan
+                                        </p>
+                                        <p class="text-xs text-green-600">
+                                            Status diperbarui ke "Letter Ready"
+                                        </p>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <svg
+                                            class="h-5 w-5 text-green-500"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clip-rule="evenodd"
+                                            />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notification Info -->
+                            <div class="w-full bg-blue-50 rounded-xl p-4 mb-6">
+                                <div class="flex items-start space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <svg
+                                            class="h-6 w-6 text-blue-600"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 text-left">
+                                        <p
+                                            class="text-sm font-medium text-blue-800"
+                                        >
+                                            Notifikasi Terkirim
+                                        </p>
+                                        <p class="text-xs text-blue-600">
+                                            Peserta telah menerima notifikasi
+                                            bahwa surat penerimaan sudah
+                                            tersedia untuk diunduh.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="bg-gray-50 px-6 py-4">
+                        <button
+                            type="button"
+                            @click="showSuccessModal = false"
+                            class="w-full inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+                        >
+                            <svg
+                                class="h-5 w-5 mr-2"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M5 13l4 4L19 7"
+                                />
+                            </svg>
+                            Mengerti
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </AdminLayout>
 </template>
 
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { Link, router } from "@inertiajs/vue3";
-import { ref, reactive } from "vue";
+import { Link, router, usePage } from "@inertiajs/vue3";
+import { ref, reactive, computed, watch } from "vue";
 
 const props = defineProps({
     application: Object,
 });
 
+const page = usePage();
+
 const showStatusModal = ref(false);
 const showLetterUpload = ref(false);
+const showSuccessModal = ref(false);
+const successMessage = ref("");
 const selectedFile = ref(null);
 const isUploading = ref(false);
 const uploadError = ref("");
 const fileInput = ref(null);
+
+// Watch for flash messages
+watch(
+    () => page.props.flash,
+    (flash) => {
+        if (flash?.success) {
+            successMessage.value = flash.success;
+            showSuccessModal.value = true;
+        }
+    },
+    { immediate: true }
+);
 
 const statusForm = reactive({
     status: props.application.status,

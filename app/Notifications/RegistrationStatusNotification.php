@@ -2,27 +2,50 @@
 
 namespace App\Notifications;
 
+use App\Enums\RegistrationEventType;
+use App\Enums\RegistrationStatus;
 use App\Models\Application;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+/**
+ * Unified notification class for all registration-related events.
+ * 
+ * This notification supports:
+ * - Multiple event types via RegistrationEventType enum
+ * - Role-aware content (different messages for users vs admins)
+ * - Multiple channels: database, broadcast, and email
+ * - Clean payload structure with metadata support
+ */
 class RegistrationStatusNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $application;
-    public $type; // 'submitted', 'verified', 'accepted', 'rejected', 'letter_sent', 'application_expired'
+    public Application $application;
+    public RegistrationEventType $eventType;
+    public array $metadata;
+    public bool $isAdminNotification;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Application $application, string $type)
-    {
+    public function __construct(
+        Application $application,
+        RegistrationEventType $eventType,
+        array $metadata = [],
+        bool $isAdminNotification = false
+    ) {
         $this->application = $application;
-        $this->type = $type;
+        $this->eventType = $eventType;
+        $this->metadata = $metadata;
+        $this->isAdminNotification = $isAdminNotification;
+        
+        // Configure queue settings using Queueable trait methods
+        $this->onConnection('sync'); // Use sync for immediate processing
+        $this->onQueue('notifications');
     }
 
     /**
@@ -32,7 +55,6 @@ class RegistrationStatusNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        // Database + Broadcast + Mail untuk semua event registrasi
         return ['database', 'broadcast', 'mail'];
     }
 
@@ -41,74 +63,137 @@ class RegistrationStatusNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $divisionName = $this->application->division->name ?? 'N/A';
+        $userName = $this->application->user->name ?? 'Pendaftar';
+
         $message = (new MailMessage)
-            ->subject($this->getTitle());
+            ->subject($this->eventType->emailSubject($divisionName));
 
-        switch ($this->type) {
-            case 'submitted':
-                return $message
-                    ->greeting('Pendaftaran Berhasil Dikirim')
-                    ->line('Pendaftaran Anda untuk posisi ' . $this->application->division->name . ' telah berhasil dikirim.')
-                    ->line('Tim kami akan segera memverifikasi dokumen Anda.')
-                    ->action('Lihat Status Pendaftaran', url('/peserta/application'));
-                
-            case 'verified':
-                return $message
-                    ->greeting('Dokumen Terverifikasi')
-                    ->line('Dokumen pendaftaran Anda telah diverifikasi oleh admin.')
-                    ->line('Anda dapat melanjutkan ke tahap selanjutnya.')
-                    ->action('Lihat Detail', url('/peserta/application'));
+        return match($this->eventType) {
+            RegistrationEventType::APPLICATION_SUBMITTED => $message
+                ->greeting('Halo ' . $notifiable->name . '!')
+                ->line('Pendaftaran Anda untuk posisi **' . $divisionName . '** telah berhasil dikirim.')
+                ->line('Tim kami akan segera meninjau berkas Anda.')
+                ->line('Anda akan menerima notifikasi ketika ada update status pendaftaran.')
+                ->action('Lihat Status Pendaftaran', url('/profile'))
+                ->line('Terima kasih telah mendaftar di GrowithBI!'),
 
-            case 'accepted':
-                return $message
-                    ->greeting('Selamat! Pendaftaran Diterima')
-                    ->line('Anda telah diterima untuk posisi ' . $this->application->division->name . '.')
-                    ->line('Silakan cek dashboard Anda untuk informasi lebih lanjut.')
-                    ->action('Lihat Detail', url('/peserta/application'));
+            RegistrationEventType::SELECTION_IN_PROGRESS => $message
+                ->greeting('Halo ' . $notifiable->name . '!')
+                ->line('Proses seleksi untuk pendaftaran Anda di posisi **' . $divisionName . '** telah dimulai.')
+                ->line('Tim kami sedang meninjau kelengkapan dokumen dan kualifikasi Anda.')
+                ->action('Lihat Detail', url('/profile'))
+                ->line('Mohon tunggu informasi selanjutnya.'),
 
-            case 'rejected':
-                return $message
-                    ->greeting('Pendaftaran Ditolak')
-                    ->line('Mohon maaf, pendaftaran Anda untuk posisi ' . $this->application->division->name . ' tidak dapat kami terima.')
-                    ->line('Alasan: ' . ($this->application->rejection_reason ?? 'Tidak disebutkan'))
-                    ->line('Anda dapat mencoba mendaftar kembali di periode berikutnya.');
+            RegistrationEventType::INTERVIEW_SCHEDULED => $message
+                ->greeting('Halo ' . $notifiable->name . '!')
+                ->line('Selamat! Anda telah lolos tahap seleksi dokumen.')
+                ->line('Jadwal wawancara Anda telah ditentukan:')
+                ->line('**Tanggal:** ' . ($this->metadata['interview_date'] ?? 'Akan dikonfirmasi'))
+                ->line('**Lokasi:** ' . ($this->metadata['interview_location'] ?? 'Akan dikonfirmasi'))
+                ->action('Lihat Detail Wawancara', url('/profile'))
+                ->line('Silakan hadir tepat waktu dan persiapkan diri dengan baik.'),
 
-            case 'letter_sent':
-                return $message
-                    ->greeting('Surat Penerimaan Tersedia')
-                    ->line('Surat penerimaan resmi Anda telah tersedia untuk diunduh.')
-                    ->action('Download Surat', url('/peserta/application'))
-                    ->line('Harap cetak dan bawa surat ini pada hari pertama magang.');
+            RegistrationEventType::INTERVIEW_RESCHEDULED => $message
+                ->greeting('Halo ' . $notifiable->name . '!')
+                ->line('Jadwal wawancara Anda telah diubah.')
+                ->line('**Jadwal Baru:**')
+                ->line('**Tanggal:** ' . ($this->metadata['interview_date'] ?? 'Akan dikonfirmasi'))
+                ->line('**Lokasi:** ' . ($this->metadata['interview_location'] ?? 'Akan dikonfirmasi'))
+                ->action('Lihat Detail', url('/profile'))
+                ->line('Mohon maaf atas ketidaknyamanan ini.'),
 
-            case 'application_expired':
-                return $message
-                    ->greeting('Pendaftaran Kedaluwarsa')
-                    ->line('Pendaftaran Anda telah melewati batas waktu tanpa tindakan lanjutan.')
-                    ->line('Silakan hubungi admin jika ada pertanyaan.');
+            RegistrationEventType::APPLICATION_ACCEPTED => $message
+                ->greeting('Selamat ' . $notifiable->name . '! 🎉')
+                ->line('Kami dengan senang hati mengumumkan bahwa Anda telah **DITERIMA** sebagai peserta magang di posisi **' . $divisionName . '**.')
+                ->line('Surat penerimaan resmi akan segera tersedia untuk diunduh di dashboard Anda.')
+                ->action('Lihat Dashboard', url('/profile'))
+                ->line('Selamat bergabung dengan tim GrowithBI!'),
 
-            default:
-                return $message->line('Status pendaftaran Anda telah diperbarui.');
-        }
+            RegistrationEventType::APPLICATION_REJECTED => $message
+                ->greeting('Halo ' . $notifiable->name)
+                ->line('Kami informasikan bahwa pendaftaran Anda untuk posisi **' . $divisionName . '** tidak dapat kami terima pada periode ini.')
+                ->when(
+                    isset($this->metadata['rejection_reason']),
+                    fn ($m) => $m->line('**Alasan:** ' . $this->metadata['rejection_reason'])
+                )
+                ->line('Jangan berkecil hati! Anda dapat mencoba mendaftar kembali di periode berikutnya.')
+                ->line('Terima kasih atas minat Anda di GrowithBI.'),
+
+            RegistrationEventType::ACCEPTANCE_LETTER_READY => $message
+                ->greeting('Halo ' . $notifiable->name . '!')
+                ->line('Surat penerimaan resmi Anda telah tersedia untuk diunduh.')
+                ->line('Silakan unduh dan cetak surat ini untuk dibawa pada hari pertama magang.')
+                ->action('Download Surat Penerimaan', $this->metadata['download_url'] ?? url('/profile'))
+                ->line('Pastikan untuk menyimpan salinan digital dan cetak dari surat ini.'),
+
+            RegistrationEventType::APPLICATION_EXPIRED => $message
+                ->greeting('Halo ' . $notifiable->name)
+                ->line('Pendaftaran Anda untuk posisi **' . $divisionName . '** telah melewati batas waktu yang ditentukan.')
+                ->line('Jika Anda masih berminat, silakan hubungi tim kami atau ajukan pendaftaran baru.')
+                ->action('Hubungi Kami', url('/contact')),
+
+            // Admin-only notifications
+            RegistrationEventType::NEW_REGISTRATION => $message
+                ->greeting('Pendaftaran Baru!')
+                ->line('**' . $userName . '** telah mendaftar untuk posisi **' . $divisionName . '**.')
+                ->line('**Email:** ' . ($this->application->user->email ?? 'N/A'))
+                ->action('Review Pendaftaran', url('/admin/applications/' . $this->application->id))
+                ->line('Silakan tinjau dokumen pendaftaran.'),
+
+            RegistrationEventType::DOCUMENTS_COMPLETED => $message
+                ->greeting('Dokumen Lengkap!')
+                ->line('**' . $userName . '** telah melengkapi semua dokumen yang diperlukan.')
+                ->line('Posisi yang dilamar: **' . $divisionName . '**')
+                ->action('Review Dokumen', url('/admin/applications/' . $this->application->id))
+                ->line('Pendaftaran siap untuk ditinjau lebih lanjut.'),
+
+            default => $message
+                ->greeting('Halo ' . $notifiable->name)
+                ->line('Status pendaftaran Anda telah diperbarui.')
+                ->action('Lihat Detail', url('/profile')),
+        };
     }
 
     /**
-     * Get the array representation of the notification.
+     * Get the array representation of the notification (for database channel).
      *
      * @return array<string, mixed>
      */
     public function toArray(object $notifiable): array
     {
+        $divisionName = $this->application->division->name ?? 'N/A';
+        $userName = $this->application->user->name ?? 'Pendaftar';
+
         return [
-            'type' => $this->type,
-            'title' => $this->getTitle(),
-            'message' => $this->getMessage($notifiable),
+            // Core data
+            'type' => 'registration_status',
+            'event_type' => $this->eventType->value,
             'application_id' => $this->application->id,
-            'user_name' => $this->application->user->name,
-            'division_name' => $this->application->division->name,
+            
+            // Display data
+            'title' => $this->eventType->title($this->isAdminNotification),
+            'message' => $this->getMessage($userName, $divisionName),
+            'icon' => $this->eventType->icon(),
+            'color' => $this->eventType->color(),
+            
+            // Context data
+            'user_id' => $this->application->user_id,
+            'user_name' => $userName,
+            'user_email' => $this->application->user->email ?? null,
+            'division_id' => $this->application->division_id,
+            'division_name' => $divisionName,
             'status' => $this->application->status,
-            'url' => '/peserta/application',
-            'icon' => $this->getIcon(),
-            'color' => $this->getColor(),
+            'status_label' => $this->getStatusLabel(),
+            
+            // Action URL
+            'action_url' => $this->getActionUrl(),
+            'action_text' => $this->getActionText(),
+            
+            // Metadata
+            'metadata' => $this->metadata,
+            'is_admin_notification' => $this->isAdminNotification,
+            'created_at' => now()->toISOString(),
         ];
     }
 
@@ -117,101 +202,93 @@ class RegistrationStatusNotification extends Notification implements ShouldQueue
      */
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
-        return new BroadcastMessage([
-            'type' => $this->type,
-            'title' => $this->getTitle(),
-            'message' => $this->getMessage($notifiable),
-            'application_id' => $this->application->id,
-            'user_name' => $this->application->user->name,
-            'division_name' => $this->application->division->name,
-            'status' => $this->application->status,
-            'url' => '/peserta/application',
-            'icon' => $this->getIcon(),
-            'color' => $this->getColor(),
-            'created_at' => now()->toISOString(),
-        ]);
+        return new BroadcastMessage($this->toArray($notifiable));
     }
 
     /**
-     * Get notification title based on type
+     * Get the type of the notification being broadcast.
      */
-    private function getTitle(): string
+    public function broadcastType(): string
     {
-        return match($this->type) {
-            'submitted' => 'Pendaftaran Berhasil Dikirim',
-            'verified' => 'Dokumen Terverifikasi',
-            'accepted' => 'Pendaftaran Diterima',
-            'rejected' => 'Pendaftaran Ditolak',
-            'letter_sent' => 'Surat Penerimaan Tersedia',
-            'application_expired' => 'Pendaftaran Kedaluwarsa',
-            default => 'Status Pendaftaran Diperbarui',
+        return 'registration.status.notification';
+    }
+
+    /**
+     * Get the contextual message based on event type and recipient role.
+     */
+    private function getMessage(string $userName, string $divisionName): string
+    {
+        if ($this->isAdminNotification) {
+            return match($this->eventType) {
+                RegistrationEventType::APPLICATION_SUBMITTED,
+                RegistrationEventType::NEW_REGISTRATION => "{$userName} mendaftar untuk posisi {$divisionName}",
+                RegistrationEventType::SELECTION_IN_PROGRESS => "Proses seleksi {$userName} telah dimulai",
+                RegistrationEventType::INTERVIEW_SCHEDULED => "Wawancara {$userName} telah dijadwalkan",
+                RegistrationEventType::INTERVIEW_RESCHEDULED => "Jadwal wawancara {$userName} telah diubah",
+                RegistrationEventType::APPLICATION_ACCEPTED => "{$userName} telah diterima untuk posisi {$divisionName}",
+                RegistrationEventType::APPLICATION_REJECTED => "{$userName} tidak diterima untuk posisi {$divisionName}",
+                RegistrationEventType::ACCEPTANCE_LETTER_READY => "Surat penerimaan {$userName} telah diupload",
+                RegistrationEventType::APPLICATION_EXPIRED => "Pendaftaran {$userName} telah kedaluwarsa",
+                RegistrationEventType::DOCUMENTS_COMPLETED => "{$userName} telah melengkapi semua dokumen pendaftaran",
+            };
+        }
+
+        return match($this->eventType) {
+            RegistrationEventType::APPLICATION_SUBMITTED => "Pendaftaran Anda untuk posisi {$divisionName} telah berhasil dikirim.",
+            RegistrationEventType::SELECTION_IN_PROGRESS => "Proses seleksi untuk pendaftaran Anda telah dimulai.",
+            RegistrationEventType::INTERVIEW_SCHEDULED => "Jadwal wawancara Anda telah ditentukan. Silakan cek detail di dashboard.",
+            RegistrationEventType::INTERVIEW_RESCHEDULED => "Jadwal wawancara Anda telah diubah. Silakan cek jadwal baru di dashboard.",
+            RegistrationEventType::APPLICATION_ACCEPTED => "Selamat! Anda telah diterima untuk posisi {$divisionName}.",
+            RegistrationEventType::APPLICATION_REJECTED => "Mohon maaf, pendaftaran Anda untuk posisi {$divisionName} tidak dapat kami terima.",
+            RegistrationEventType::ACCEPTANCE_LETTER_READY => "Surat penerimaan resmi Anda telah tersedia untuk diunduh.",
+            RegistrationEventType::APPLICATION_EXPIRED => "Pendaftaran Anda telah melewati batas waktu yang ditentukan.",
+            default => "Status pendaftaran Anda telah diperbarui.",
         };
     }
 
     /**
-     * Get notification message based on type
-     * Berbeda untuk admin (menampilkan nama user) vs user (menampilkan "Anda")
+     * Get the action URL based on recipient role.
      */
-    private function getMessage(object $notifiable): string
+    private function getActionUrl(): string
     {
-        $userName = $this->application->user->name;
-        $isAdmin = $notifiable->role === 'admin';
-        $divisionName = $this->application->division->name;
-        
-        return match($this->type) {
-            'submitted' => $isAdmin
-                ? "{$userName} mendaftar untuk posisi {$divisionName}"
-                : "Pendaftaran Anda untuk posisi {$divisionName} telah berhasil dikirim.",
-            'verified' => $isAdmin
-                ? "Dokumen pendaftaran {$userName} telah diverifikasi"
-                : "Dokumen pendaftaran Anda telah diverifikasi oleh admin.",
-            'accepted' => $isAdmin
-                ? "{$userName} telah diterima untuk posisi {$divisionName}"
-                : "Selamat! Anda telah diterima untuk posisi {$divisionName}.",
-            'rejected' => $isAdmin
-                ? "{$userName} tidak diterima untuk posisi {$divisionName}"
-                : "Mohon maaf, pendaftaran Anda untuk posisi {$divisionName} tidak dapat kami terima.",
-            'letter_sent' => $isAdmin
-                ? "Surat penerimaan {$userName} telah dikirim"
-                : "Surat penerimaan resmi Anda telah tersedia untuk diunduh.",
-            'application_expired' => $isAdmin
-                ? "Pendaftaran {$userName} telah kedaluwarsa"
-                : "Pendaftaran Anda telah melewati batas waktu tanpa tindakan lanjutan.",
-            default => $isAdmin
-                ? "Status pendaftaran {$userName} telah diperbarui"
-                : "Status pendaftaran Anda telah diperbarui.",
+        if ($this->isAdminNotification) {
+            return url('/admin/applications/' . $this->application->id);
+        }
+
+        if ($this->eventType === RegistrationEventType::ACCEPTANCE_LETTER_READY) {
+            return $this->metadata['download_url'] ?? url('/profile');
+        }
+
+        return url('/profile');
+    }
+
+    /**
+     * Get the action button text.
+     */
+    private function getActionText(): string
+    {
+        if ($this->isAdminNotification) {
+            return 'Review Pendaftaran';
+        }
+
+        return match($this->eventType) {
+            RegistrationEventType::ACCEPTANCE_LETTER_READY => 'Download Surat',
+            RegistrationEventType::INTERVIEW_SCHEDULED,
+            RegistrationEventType::INTERVIEW_RESCHEDULED => 'Lihat Jadwal',
+            default => 'Lihat Detail',
         };
     }
 
     /**
-     * Get icon based on type
+     * Get the status label from the application.
      */
-    private function getIcon(): string
+    private function getStatusLabel(): string
     {
-        return match($this->type) {
-            'submitted' => 'paper-airplane',
-            'verified' => 'check-circle',
-            'accepted' => 'check-badge',
-            'rejected' => 'x-circle',
-            'letter_sent' => 'document-text',
-            'application_expired' => 'clock',
-            default => 'bell',
-        };
-    }
-
-    /**
-     * Get color based on type
-     */
-    private function getColor(): string
-    {
-        return match($this->type) {
-            'submitted' => 'blue',
-            'verified' => 'indigo',
-            'accepted' => 'green',
-            'rejected' => 'red',
-            'letter_sent' => 'purple',
-            'application_expired' => 'gray',
-            default => 'gray',
-        };
+        try {
+            $status = RegistrationStatus::from($this->application->status);
+            return $status->label();
+        } catch (\ValueError $e) {
+            return ucfirst($this->application->status);
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\RegistrationStatus;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,15 @@ use App\Models\Application;
 
 class ShareUserAcceptanceStatus
 {
+    /**
+     * Statuses that indicate accepted application (grants access to logbook, attendance, etc.)
+     */
+    private const ACCEPTED_STATUSES = [
+        'accepted',
+        'letter_ready', 
+        'diterima', // Legacy status
+    ];
+
     /**
      * Handle an incoming request.
      *
@@ -20,9 +30,9 @@ class ShareUserAcceptanceStatus
         if (Auth::check()) {
             $user = Auth::user();
             
-            // Check if user has accepted application
+            // Check if user has accepted application (any of the accepted statuses)
             $hasAcceptedApplication = Application::where('user_id', $user->id)
-                ->where('status', 'diterima')
+                ->whereIn('status', self::ACCEPTED_STATUSES)
                 ->exists();
             
             // Share this information with Inertia

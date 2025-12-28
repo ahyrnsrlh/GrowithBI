@@ -2179,14 +2179,21 @@ const showCreateLogbookModal = ref(false);
 // Modal state for report creation
 const showCreateReportModal = ref(false);
 
+// Accepted statuses that grant access to logbook, attendance, etc.
+const acceptedStatuses = ["accepted", "letter_ready", "diterima"];
+
 // Computed property to check if user has accepted application
 const hasAcceptedApplication = computed(() => {
-    return props.applications.some((app) => app.status === "accepted");
+    return props.applications.some((app) =>
+        acceptedStatuses.includes(app.status)
+    );
 });
 
 // Computed property to get accepted application details
 const acceptedApplication = computed(() => {
-    return props.applications.find((app) => app.status === "accepted");
+    return props.applications.find((app) =>
+        acceptedStatuses.includes(app.status)
+    );
 });
 
 // Computed property for document upload progress

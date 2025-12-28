@@ -164,11 +164,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Statuses that indicate accepted application
+     */
+    private const ACCEPTED_STATUSES = ['accepted', 'letter_ready', 'diterima'];
+
+    /**
      * Check if user has accepted application
      */
     public function hasAcceptedApplication()
     {
-        return $this->applications()->where('status', 'diterima')->exists();
+        return $this->applications()->whereIn('status', self::ACCEPTED_STATUSES)->exists();
     }
 
     /**
@@ -176,7 +181,7 @@ class User extends Authenticatable
      */
     public function getAcceptedApplication()
     {
-        return $this->applications()->where('status', 'diterima')->with('division')->first();
+        return $this->applications()->whereIn('status', self::ACCEPTED_STATUSES)->with('division')->first();
     }
 
     /**
@@ -251,9 +256,9 @@ class User extends Authenticatable
     {
         if ($this->role !== 'peserta') return false;
         
-        // Check if user has accepted application
+        // Check if user has accepted application (any of the accepted statuses)
         return $this->applications()
-            ->where('status', 'diterima')
+            ->whereIn('status', self::ACCEPTED_STATUSES)
             ->exists();
     }
 

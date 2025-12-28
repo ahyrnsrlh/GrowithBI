@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\RegistrationStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Division;
-use App\Notifications\ApplicationVerified;
-use App\Notifications\RegistrationStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rules\Enum;
 use Inertia\Inertia;
 
 class ApplicationController extends Controller
@@ -40,21 +42,36 @@ class ApplicationController extends Controller
 
         $applications = $query->latest()->paginate(10)->withQueryString();
 
+        // Add status info to each application for frontend
+        $applications->getCollection()->transform(function ($application) {
+            $application->status_info = $application->status_info;
+            $application->available_transitions = $application->available_transitions;
+            return $application;
+        });
+
         $divisions = Division::select('id', 'name')->get();
 
+        // Use enum for stats
         $stats = [
             'total' => Application::count(),
-            'pending' => Application::where('status', 'menunggu')->count(),
-            'in_review' => Application::where('status', 'in_review')->count(),
-            'accepted' => Application::where('status', 'accepted')->count(),
-            'rejected' => Application::where('status', 'rejected')->count(),
+            'pending' => Application::where('status', RegistrationStatus::MENUNGGU->value)->count(),
+            'in_review' => Application::where('status', RegistrationStatus::IN_REVIEW->value)->count(),
+            'accepted' => Application::whereIn('status', [
+                RegistrationStatus::ACCEPTED->value,
+                RegistrationStatus::LETTER_READY->value,
+            ])->count(),
+            'rejected' => Application::where('status', RegistrationStatus::REJECTED->value)->count(),
         ];
+
+        // Get status options for filter dropdown
+        $statusOptions = RegistrationStatus::options();
 
         return Inertia::render('Admin/Applications/Index', [
             'applications' => $applications,
             'divisions' => $divisions,
             'filters' => $request->only(['status', 'division', 'search']),
-            'stats' => $stats
+            'stats' => $stats,
+            'statusOptions' => $statusOptions,
         ]);
     }
 
@@ -79,10 +96,16 @@ class ApplicationController extends Controller
      */
     public function show($id)
     {
-        $application = Application::with(['division', 'user', 'letterUploader'])->findOrFail($id);
+        $application = Application::with(['division', 'user', 'letterUploader', 'reviewer'])->findOrFail($id);
+        
+        // Add computed attributes for frontend
+        $application->status_info = $application->status_info;
+        $application->available_transitions = $application->available_transitions;
+        $application->can_download_letter = $application->canDownloadAcceptanceLetter();
         
         return Inertia::render('Admin/Applications/Show', [
-            'application' => $application
+            'application' => $application,
+            'statusOptions' => RegistrationStatus::options(),
         ]);
     }
 
@@ -96,58 +119,111 @@ class ApplicationController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * 
+     * Uses the Application model's transitionTo method which:
+     * - Validates the status transition
+     * - Wraps update in a transaction
+     * - Dispatches appropriate events for notifications
      */
     public function update(Request $request, Application $application)
     {
         $request->validate([
-            'status' => 'required|in:menunggu,in_review,interview_scheduled,accepted,rejected,expired',
-            'admin_notes' => 'nullable|string|max:1000'
+            'status' => ['required', 'string', 'in:' . implode(',', RegistrationStatus::values())],
+            'admin_notes' => 'nullable|string|max:1000',
+            'rejection_reason' => 'nullable|string|max:1000',
+            'interview_date' => 'nullable|date',
+            'interview_location' => 'nullable|string|max:255',
         ]);
 
-        $application->update([
-            'status' => $request->status,
-            'admin_notes' => $request->admin_notes,
-            'reviewed_at' => now(),
-            'reviewed_by' => Auth::id() ?? 1 // For now, default to admin
-        ]);
+        try {
+            $newStatus = RegistrationStatus::from($request->status);
+            $admin = Auth::user();
 
-        // Send notification to user if status is accepted or rejected
-        if ($request->status === 'accepted') {
-            $application->user->notify(new RegistrationStatusNotification($application, 'accepted'));
-        } elseif ($request->status === 'rejected') {
-            $application->user->notify(new RegistrationStatusNotification($application, 'rejected'));
+            // Build metadata from request
+            $metadata = array_filter([
+                'admin_notes' => $request->admin_notes,
+                'rejection_reason' => $request->rejection_reason,
+                'interview_date' => $request->interview_date,
+                'interview_location' => $request->interview_location,
+            ]);
+
+            // Use the model's transitionTo method (handles events & notifications)
+            $success = $application->transitionTo($newStatus, $admin, $metadata);
+
+            if (!$success) {
+                return redirect()->back()->with('error', 'Transisi status tidak valid dari ' . $application->status . ' ke ' . $request->status);
+            }
+
+            Log::info('Application status updated', [
+                'application_id' => $application->id,
+                'new_status' => $request->status,
+                'admin_id' => $admin?->id,
+            ]);
+
+            return redirect()->back()->with('success', 'Status pendaftaran berhasil diupdate.');
+
+        } catch (\ValueError $e) {
+            return redirect()->back()->with('error', 'Status tidak valid: ' . $request->status);
+        } catch (\Exception $e) {
+            Log::error('Failed to update application status', [
+                'application_id' => $application->id,
+                'error' => $e->getMessage(),
+            ]);
+            return redirect()->back()->with('error', 'Gagal mengupdate status: ' . $e->getMessage());
         }
-
-        return redirect()->back()->with('success', 'Status pendaftaran berhasil diupdate.');
     }
 
+    /**
+     * Bulk update applications status
+     */
     public function bulkUpdate(Request $request)
     {
         $request->validate([
             'application_ids' => 'required|array',
             'application_ids.*' => 'exists:applications,id',
-            'status' => 'required|in:menunggu,in_review,interview_scheduled,accepted,rejected,expired',
-            'admin_notes' => 'nullable|string|max:1000'
+            'status' => ['required', 'string', 'in:' . implode(',', RegistrationStatus::values())],
+            'admin_notes' => 'nullable|string|max:1000',
+            'rejection_reason' => 'nullable|string|max:1000',
         ]);
 
-        Application::whereIn('id', $request->application_ids)->update([
-            'status' => $request->status,
-            'admin_notes' => $request->admin_notes,
-            'reviewed_at' => now(),
-            'reviewed_by' => Auth::id() ?? 1
-        ]);
+        try {
+            $newStatus = RegistrationStatus::from($request->status);
+            $admin = Auth::user();
+            $metadata = array_filter([
+                'admin_notes' => $request->admin_notes,
+                'rejection_reason' => $request->rejection_reason,
+            ]);
 
-        // Send notifications to all affected users
-        if ($request->status === 'accepted' || $request->status === 'rejected') {
+            $successCount = 0;
+            $failedCount = 0;
+
+            // Process each application individually to trigger proper events
             $applications = Application::whereIn('id', $request->application_ids)->get();
-            $statusForNotification = $request->status === 'accepted' ? 'verified' : 'rejected';
             
             foreach ($applications as $application) {
-                $application->user->notify(new ApplicationVerified($application, $statusForNotification));
+                $success = $application->transitionTo($newStatus, $admin, $metadata);
+                if ($success) {
+                    $successCount++;
+                } else {
+                    $failedCount++;
+                }
             }
-        }
 
-        return redirect()->back()->with('success', 'Status pendaftaran berhasil diupdate secara bulk.');
+            $message = "Berhasil mengupdate {$successCount} pendaftaran.";
+            if ($failedCount > 0) {
+                $message .= " {$failedCount} pendaftaran gagal diupdate (transisi tidak valid).";
+            }
+
+            return redirect()->back()->with('success', $message);
+
+        } catch (\ValueError $e) {
+            return redirect()->back()->with('error', 'Status tidak valid: ' . $request->status);
+        } catch (\Exception $e) {
+            Log::error('Failed to bulk update applications', [
+                'error' => $e->getMessage(),
+            ]);
+            return redirect()->back()->with('error', 'Gagal mengupdate status: ' . $e->getMessage());
+        }
     }
 
     /**

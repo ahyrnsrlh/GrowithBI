@@ -701,7 +701,9 @@ const formatDate = (date) => {
 const getAcceptedApplication = (participant) => {
     if (!participant?.applications || !Array.isArray(participant.applications))
         return null;
-    return participant.applications.find((app) => app?.status === "accepted");
+    return participant.applications.find((app) =>
+        ["accepted", "letter_ready", "diterima"].includes(app?.status)
+    );
 };
 
 const getLastApplicationStatusClass = (participant) => {

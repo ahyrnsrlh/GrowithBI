@@ -172,11 +172,13 @@
                         class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                         <option value="">Semua Status</option>
-                        <option value="menunggu">Menunggu</option>
-                        <option value="in_review">Dalam Review</option>
-                        <option value="interview_scheduled">Wawancara</option>
-                        <option value="accepted">Diterima</option>
-                        <option value="rejected">Ditolak</option>
+                        <option
+                            v-for="option in statusOptions"
+                            :key="option.value"
+                            :value="option.value"
+                        >
+                            {{ option.label }}
+                        </option>
                     </select>
 
                     <!-- Division Filter -->
@@ -311,25 +313,10 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <span
-                                    :class="[
-                                        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                                        application.status === 'menunggu'
-                                            ? 'bg-yellow-100 text-yellow-800'
-                                            : application.status === 'in_review'
-                                            ? 'bg-blue-100 text-blue-800'
-                                            : application.status ===
-                                              'interview_scheduled'
-                                            ? 'bg-purple-100 text-purple-800'
-                                            : application.status === 'accepted'
-                                            ? 'bg-green-100 text-green-800'
-                                            : application.status === 'rejected'
-                                            ? 'bg-red-100 text-red-800'
-                                            : 'bg-gray-100 text-gray-800',
-                                    ]"
-                                >
-                                    {{ application.status }}
-                                </span>
+                                <StatusBadge
+                                    :status="application.status"
+                                    :statusInfo="application.status_info"
+                                />
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">
                                 {{ formatDate(application.created_at) }}
@@ -425,7 +412,7 @@
             class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
         >
             <div
-                class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+                class="relative top-20 mx-auto p-5 border w-[28rem] shadow-lg rounded-md bg-white"
             >
                 <div class="mt-3">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">
@@ -435,32 +422,82 @@
                         <div class="mb-4">
                             <label
                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                >Status</label
+                                >Status Baru</label
                             >
                             <select
                                 v-model="statusForm.status"
                                 class="w-full border border-gray-300 rounded-md px-3 py-2"
                             >
-                                <option value="menunggu">Menunggu</option>
-                                <option value="in_review">Dalam Review</option>
-                                <option value="interview_scheduled">
-                                    Wawancara Dijadwalkan
+                                <option
+                                    v-for="option in statusOptions"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
                                 </option>
-                                <option value="accepted">Diterima</option>
-                                <option value="rejected">Ditolak</option>
-                                <option value="expired">Kedaluwarsa</option>
                             </select>
                         </div>
+
+                        <!-- Interview fields (shown when interview_scheduled) -->
+                        <div
+                            v-if="statusForm.status === 'interview_scheduled'"
+                            class="mb-4 space-y-4"
+                        >
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Tanggal & Waktu Wawancara
+                                </label>
+                                <input
+                                    type="datetime-local"
+                                    v-model="statusForm.interview_date"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Lokasi Wawancara
+                                </label>
+                                <input
+                                    type="text"
+                                    v-model="statusForm.interview_location"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2"
+                                    placeholder="Contoh: Kantor BI Lampung, Ruang Meeting Lt. 3"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Rejection reason (shown when rejected) -->
+                        <div
+                            v-if="statusForm.status === 'rejected'"
+                            class="mb-4"
+                        >
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                            >
+                                Alasan Penolakan
+                            </label>
+                            <textarea
+                                v-model="statusForm.rejection_reason"
+                                rows="2"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2"
+                                placeholder="Jelaskan alasan penolakan (akan dikirim ke pelamar)"
+                            ></textarea>
+                        </div>
+
                         <div class="mb-4">
                             <label
                                 class="block text-sm font-medium text-gray-700 mb-2"
-                                >Catatan Admin</label
+                                >Catatan Admin (Internal)</label
                             >
                             <textarea
                                 v-model="statusForm.admin_notes"
-                                rows="3"
+                                rows="2"
                                 class="w-full border border-gray-300 rounded-md px-3 py-2"
-                                placeholder="Tambahkan catatan (opsional)"
+                                placeholder="Catatan internal (tidak dikirim ke pelamar)"
                             ></textarea>
                         </div>
                         <div class="flex justify-end space-x-2">
@@ -509,14 +546,13 @@
                                 v-model="bulkForm.status"
                                 class="w-full border border-gray-300 rounded-md px-3 py-2"
                             >
-                                <option value="menunggu">Menunggu</option>
-                                <option value="in_review">Dalam Review</option>
-                                <option value="interview_scheduled">
-                                    Wawancara Dijadwalkan
+                                <option
+                                    v-for="option in statusOptions"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
                                 </option>
-                                <option value="accepted">Diterima</option>
-                                <option value="rejected">Ditolak</option>
-                                <option value="expired">Kedaluwarsa</option>
                             </select>
                         </div>
                         <div class="mb-4">
@@ -555,14 +591,27 @@
 
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import StatusBadge from "@/Components/StatusBadge.vue";
 import { Link, router } from "@inertiajs/vue3";
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted, onUnmounted } from "vue";
 
 const props = defineProps({
     applications: Object,
     divisions: Array,
     filters: Object,
     stats: Object,
+    statusOptions: {
+        type: Array,
+        default: () => [
+            { value: "menunggu", label: "Menunggu Review" },
+            { value: "in_review", label: "Dalam Proses Seleksi" },
+            { value: "interview_scheduled", label: "Wawancara Dijadwalkan" },
+            { value: "accepted", label: "Diterima" },
+            { value: "rejected", label: "Ditolak" },
+            { value: "letter_ready", label: "Surat Penerimaan Tersedia" },
+            { value: "expired", label: "Kedaluwarsa" },
+        ],
+    },
 });
 
 // Reactive data
@@ -577,11 +626,39 @@ const currentApplication = ref(null);
 const statusForm = reactive({
     status: "",
     admin_notes: "",
+    rejection_reason: "",
+    interview_date: "",
+    interview_location: "",
 });
 
 const bulkForm = reactive({
     status: "",
     admin_notes: "",
+});
+
+// Real-time updates via Echo (if available)
+let echoChannel = null;
+
+onMounted(() => {
+    // Listen for real-time application status updates
+    if (window.Echo) {
+        echoChannel = window.Echo.private("admin.applications")
+            .listen(".application.status.changed", (data) => {
+                // Refresh the page to get updated data
+                router.reload({ only: ["applications", "stats"] });
+            })
+            .listen(".application.submitted", (data) => {
+                // Refresh when new application submitted
+                router.reload({ only: ["applications", "stats"] });
+            });
+    }
+});
+
+onUnmounted(() => {
+    if (echoChannel) {
+        echoChannel.stopListening(".application.status.changed");
+        echoChannel.stopListening(".application.submitted");
+    }
 });
 
 // Methods
@@ -655,21 +732,48 @@ const openStatusModal = (application) => {
     currentApplication.value = application;
     statusForm.status = application.status;
     statusForm.admin_notes = application.admin_notes || "";
+    statusForm.interview_date = application.interview_date || "";
+    statusForm.interview_location = application.interview_location || "";
+    statusForm.rejection_reason = application.rejection_reason || "";
     showStatusModal.value = true;
 };
 
+const closeStatusModal = () => {
+    showStatusModal.value = false;
+    statusForm.status = "";
+    statusForm.admin_notes = "";
+    statusForm.interview_date = "";
+    statusForm.interview_location = "";
+    statusForm.rejection_reason = "";
+    currentApplication.value = null;
+};
+
 const updateStatus = () => {
-    router.put(
-        `/admin/applications/${currentApplication.value.id}`,
-        statusForm,
-        {
-            onSuccess: () => {
-                showStatusModal.value = false;
-                statusForm.status = "";
-                statusForm.admin_notes = "";
-            },
-        }
-    );
+    // Prepare form data based on status
+    const formData = {
+        status: statusForm.status,
+        admin_notes: statusForm.admin_notes,
+    };
+
+    // Include interview fields only for interview_scheduled status
+    if (statusForm.status === "interview_scheduled") {
+        formData.interview_date = statusForm.interview_date;
+        formData.interview_location = statusForm.interview_location;
+    }
+
+    // Include rejection reason only for rejected status
+    if (statusForm.status === "rejected") {
+        formData.rejection_reason = statusForm.rejection_reason;
+    }
+
+    router.put(`/admin/applications/${currentApplication.value.id}`, formData, {
+        onSuccess: () => {
+            closeStatusModal();
+        },
+        onError: (errors) => {
+            console.error("Status update failed:", errors);
+        },
+    });
 };
 
 const bulkUpdateStatus = () => {

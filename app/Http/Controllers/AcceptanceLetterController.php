@@ -2,35 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AcceptanceLetterUploaded;
 use App\Models\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class AcceptanceLetterController extends Controller
 {
     /**
-     * Upload acceptance letter by mentor/admin
+     * Check if request is from Inertia
      */
-    public function upload(Request $request, Application $application): JsonResponse
+    private function isInertiaRequest(Request $request): bool
+    {
+        return $request->header('X-Inertia') === 'true';
+    }
+
+    /**
+     * Check if request expects JSON (non-Inertia AJAX)
+     */
+    private function expectsJson(Request $request): bool
+    {
+        return !$this->isInertiaRequest($request) && ($request->wantsJson() || $request->ajax());
+    }
+
+    /**
+     * Upload acceptance letter by mentor/admin
+     * 
+     * This method handles both Inertia and AJAX requests.
+     */
+    public function upload(Request $request, Application $application): JsonResponse|RedirectResponse
     {
         // Validate user has permission to upload (admin or mentor)
         $user = Auth::user();
-        if (!$user->hasRole(['admin', 'mentor'])) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized. Only admin and mentors can upload acceptance letters.'
-            ], 403);
+        if (!in_array($user->role, ['admin', 'mentor'])) {
+            if ($this->expectsJson($request)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized. Only admin and mentors can upload acceptance letters.'
+                ], 403);
+            }
+            return redirect()->back()->with('error', 'Unauthorized. Only admin and mentors can upload acceptance letters.');
         }
 
-        // Validate the application is accepted
-        if ($application->status !== 'diterima') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Can only upload acceptance letter for accepted applications.'
-            ], 400);
+        // Validate the application is accepted or letter_ready
+        if (!in_array($application->status, ['accepted', 'letter_ready'])) {
+            if ($this->expectsJson($request)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Can only upload acceptance letter for accepted applications.'
+                ], 400);
+            }
+            return redirect()->back()->with('error', 'Can only upload acceptance letter for accepted applications.');
         }
 
         $request->validate([
@@ -55,11 +82,45 @@ class AcceptanceLetterController extends Controller
                 'uploaded_by' => $user->id
             ]);
 
-        return back()->with('success', 'Surat penerimaan berhasil diupload.');        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal mengupload surat penerimaan: ' . $e->getMessage()
-            ], 500);
+            // Dispatch event to notify user and update status
+            AcceptanceLetterUploaded::dispatch($application->fresh(['user', 'division']), $user);
+
+            Log::info('Acceptance letter uploaded', [
+                'application_id' => $application->id,
+                'uploaded_by' => $user->id,
+                'path' => $path,
+            ]);
+
+            // Return appropriate response based on request type
+            // For Inertia requests, always return redirect with flash message
+            if ($this->expectsJson($request)) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Surat penerimaan berhasil diupload.',
+                    'data' => [
+                        'path' => $path,
+                        'uploaded_at' => now()->format('d/m/Y H:i'),
+                    ]
+                ]);
+            }
+
+            // For Inertia and normal requests - redirect back with success message
+            return redirect()->back()->with('success', 'Surat penerimaan berhasil diupload dan notifikasi telah dikirim ke peserta.');
+
+        } catch (\Exception $e) {
+            Log::error('Failed to upload acceptance letter', [
+                'application_id' => $application->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            if ($this->expectsJson($request)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengupload surat penerimaan: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', 'Gagal mengupload surat penerimaan: ' . $e->getMessage());
         }
     }
 
@@ -71,12 +132,12 @@ class AcceptanceLetterController extends Controller
         $user = Auth::user();
         
         // Check if user is the owner of the application or admin/mentor
-        if ($application->user_id !== $user->id && !$user->hasRole(['admin', 'mentor'])) {
+        if ($application->user_id !== $user->id && !in_array($user->role, ['admin', 'mentor'])) {
             abort(403, 'Unauthorized to download this acceptance letter.');
         }
 
-        // Check if application is accepted
-        if ($application->status !== 'diterima') {
+        // Check if application is accepted or letter_ready
+        if (!in_array($application->status, ['accepted', 'letter_ready'])) {
             abort(404, 'Acceptance letter not available for this application.');
         }
 
@@ -100,7 +161,7 @@ class AcceptanceLetterController extends Controller
         $user = Auth::user();
         
         // Check if user is the owner of the application or admin/mentor
-        if ($application->user_id !== $user->id && !$user->hasRole(['admin', 'mentor'])) {
+        if ($application->user_id !== $user->id && !in_array($user->role, ['admin', 'mentor'])) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'
@@ -113,6 +174,9 @@ class AcceptanceLetterController extends Controller
         return response()->json([
             'success' => true,
             'has_letter' => $hasLetter,
+            'can_download' => $application->canDownloadAcceptanceLetter(),
+            'status' => $application->status,
+            'status_info' => $application->status_info,
             'uploaded_at' => $hasLetter ? $application->acceptance_letter_uploaded_at?->format('d/m/Y H:i') : null,
             'uploaded_by' => $hasLetter ? $application->letterUploader?->name : null
         ]);

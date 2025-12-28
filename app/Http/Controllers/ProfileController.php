@@ -77,7 +77,10 @@ class ProfileController extends Controller
             'revision_reports' => $allReports->where('status', 'revision')->count()
         ];
         
-        $acceptedApplication = $applications->where('status', 'diterima')->first();
+        // Statuses that indicate accepted application
+        $acceptedStatuses = ['accepted', 'letter_ready', 'diterima'];
+        
+        $acceptedApplication = $applications->filter(fn($app) => in_array($app->status, $acceptedStatuses))->first();
         if ($acceptedApplication) {
             $userLogbooks = Logbook::where('user_id', $user->id)
                 ->with(['division', 'comments.user'])

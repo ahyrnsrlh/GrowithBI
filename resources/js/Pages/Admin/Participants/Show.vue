@@ -367,8 +367,12 @@
                                 <span
                                     class="text-sm font-medium text-green-600"
                                     >{{
-                                        applications.filter(
-                                            (app) => app.status === "accepted"
+                                        applications.filter((app) =>
+                                            [
+                                                "accepted",
+                                                "letter_ready",
+                                                "diterima",
+                                            ].includes(app.status)
                                         ).length
                                     }}</span
                                 >
@@ -545,7 +549,9 @@ const getStatusText = (status) => {
 };
 
 const getAcceptedApplication = () => {
-    return props.applications.find((app) => app.status === "accepted");
+    return props.applications.find((app) =>
+        ["accepted", "letter_ready", "diterima"].includes(app.status)
+    );
 };
 
 const toggleStatus = () => {

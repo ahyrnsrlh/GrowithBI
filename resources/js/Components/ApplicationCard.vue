@@ -94,6 +94,11 @@
                         :class="[
                             'w-3 h-3 rounded-full mr-3',
                             [
+                                'in_review',
+                                'interview_scheduled',
+                                'accepted',
+                                'rejected',
+                                'letter_ready',
                                 'dalam_review',
                                 'wawancara',
                                 'diterima',
@@ -119,18 +124,30 @@
                 <!-- Interview (if applicable) -->
                 <div
                     v-if="
-                        ['wawancara', 'diterima', 'ditolak'].includes(
-                            application.status
-                        )
+                        [
+                            'interview_scheduled',
+                            'accepted',
+                            'rejected',
+                            'letter_ready',
+                            'wawancara',
+                            'diterima',
+                            'ditolak',
+                        ].includes(application.status)
                     "
                     class="flex items-center"
                 >
                     <div
                         :class="[
                             'w-3 h-3 rounded-full mr-3',
-                            ['wawancara', 'diterima', 'ditolak'].includes(
-                                application.status
-                            )
+                            [
+                                'interview_scheduled',
+                                'accepted',
+                                'rejected',
+                                'letter_ready',
+                                'wawancara',
+                                'diterima',
+                                'ditolak',
+                            ].includes(application.status)
                                 ? 'bg-purple-500'
                                 : 'bg-gray-300',
                         ]"
@@ -145,18 +162,34 @@
                         >
                             {{ formatDate(application.interview_date) }}
                         </span>
+                        <span
+                            v-if="application.interview_location"
+                            class="ml-2 text-xs text-gray-400"
+                        >
+                            - {{ application.interview_location }}
+                        </span>
                     </div>
                 </div>
 
                 <!-- Final Decision -->
                 <div
-                    v-if="['diterima', 'ditolak'].includes(application.status)"
+                    v-if="
+                        [
+                            'accepted',
+                            'rejected',
+                            'letter_ready',
+                            'diterima',
+                            'ditolak',
+                        ].includes(application.status)
+                    "
                     class="flex items-center"
                 >
                     <div
                         :class="[
                             'w-3 h-3 rounded-full mr-3',
-                            application.status === 'diterima'
+                            ['accepted', 'letter_ready', 'diterima'].includes(
+                                application.status
+                            )
                                 ? 'bg-green-500'
                                 : 'bg-red-500',
                         ]"
@@ -164,7 +197,11 @@
                     <div class="flex-1">
                         <span class="text-sm font-medium text-gray-900">
                             {{
-                                application.status === "diterima"
+                                [
+                                    "accepted",
+                                    "letter_ready",
+                                    "diterima",
+                                ].includes(application.status)
                                     ? "Diterima"
                                     : "Ditolak"
                             }}
@@ -175,6 +212,22 @@
                         >
                             {{ formatDate(application.decision_date) }}
                         </span>
+                    </div>
+                </div>
+
+                <!-- Letter Ready (if applicable) -->
+                <div
+                    v-if="application.status === 'letter_ready'"
+                    class="flex items-center"
+                >
+                    <div class="w-3 h-3 rounded-full mr-3 bg-emerald-500"></div>
+                    <div class="flex-1">
+                        <span class="text-sm font-medium text-gray-900"
+                            >Surat Penerimaan Siap</span
+                        >
+                        <span class="ml-2 text-xs text-emerald-600 font-medium"
+                            >Unduh sekarang!</span
+                        >
                     </div>
                 </div>
             </div>
@@ -230,7 +283,11 @@
             </button>
 
             <button
-                v-if="application.status === 'diterima'"
+                v-if="
+                    ['accepted', 'letter_ready', 'diterima'].includes(
+                        application.status
+                    )
+                "
                 @click="downloadOffer"
                 class="px-4 py-2 text-sm text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
             >
@@ -384,17 +441,64 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { router, Link } from "@inertiajs/vue3";
 
 const props = defineProps({
     application: Object,
 });
 
+const emit = defineEmits(["status-updated"]);
+
 const showModal = ref(false);
 const showCancelModal = ref(false);
 const refreshing = ref(false);
 const cancelling = ref(false);
+const currentStatus = ref(props.application.status);
+const statusInfo = ref(props.application.status_info);
+
+// Watch for prop changes
+watch(
+    () => props.application.status,
+    (newStatus) => {
+        currentStatus.value = newStatus;
+    }
+);
+
+watch(
+    () => props.application.status_info,
+    (newInfo) => {
+        statusInfo.value = newInfo;
+    }
+);
+
+// Echo channel for real-time status updates
+let echoChannel = null;
+
+onMounted(() => {
+    // Listen for real-time status updates
+    if (window.Echo && props.application.user_id) {
+        echoChannel = window.Echo.private(
+            `App.Models.User.${props.application.user_id}`
+        ).notification((notification) => {
+            if (notification.application_id === props.application.id) {
+                // Refresh the page to get updated application data
+                router.reload({ only: ["applications"] });
+                emit("status-updated", {
+                    applicationId: props.application.id,
+                    newStatus: notification.status,
+                });
+            }
+        });
+    }
+});
+
+onUnmounted(() => {
+    // Cleanup Echo listener
+    if (echoChannel && window.Echo) {
+        window.Echo.leave(`App.Models.User.${props.application.user_id}`);
+    }
+});
 
 // Check if application is new (created in last 30 minutes)
 const isNewApplication = computed(() => {
@@ -427,6 +531,15 @@ const refreshStatus = async () => {
 const getStatusClass = (status) => {
     const classes = {
         menunggu: "bg-yellow-100 text-yellow-800 border border-yellow-200",
+        in_review: "bg-blue-100 text-blue-800 border border-blue-200",
+        interview_scheduled:
+            "bg-purple-100 text-purple-800 border border-purple-200",
+        accepted: "bg-green-100 text-green-800 border border-green-200",
+        rejected: "bg-red-100 text-red-800 border border-red-200",
+        letter_ready:
+            "bg-emerald-100 text-emerald-800 border border-emerald-200",
+        expired: "bg-gray-100 text-gray-600 border border-gray-200",
+        // Legacy status values for backward compatibility
         dalam_review: "bg-blue-100 text-blue-800 border border-blue-200",
         wawancara: "bg-purple-100 text-purple-800 border border-purple-200",
         diterima: "bg-green-100 text-green-800 border border-green-200",
@@ -440,6 +553,13 @@ const getStatusClass = (status) => {
 const getStatusText = (status) => {
     const texts = {
         menunggu: "Menunggu Review",
+        in_review: "Sedang Direview",
+        interview_scheduled: "Wawancara Dijadwalkan",
+        accepted: "Diterima",
+        rejected: "Ditolak",
+        letter_ready: "Surat Siap",
+        expired: "Kadaluarsa",
+        // Legacy status values for backward compatibility
         dalam_review: "Sedang Direview",
         wawancara: "Tahap Wawancara",
         diterima: "Diterima",
