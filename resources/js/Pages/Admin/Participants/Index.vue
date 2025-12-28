@@ -701,7 +701,7 @@ const formatDate = (date) => {
 const getAcceptedApplication = (participant) => {
     if (!participant?.applications || !Array.isArray(participant.applications))
         return null;
-    return participant.applications.find((app) => app?.status === "diterima");
+    return participant.applications.find((app) => app?.status === "accepted");
 };
 
 const getLastApplicationStatusClass = (participant) => {
@@ -718,8 +718,11 @@ const getLastApplicationStatusClass = (participant) => {
 
     const classes = {
         menunggu: "bg-yellow-100 text-yellow-800",
-        diterima: "bg-green-100 text-green-800",
-        ditolak: "bg-red-100 text-red-800",
+        in_review: "bg-blue-100 text-blue-800",
+        interview_scheduled: "bg-purple-100 text-purple-800",
+        accepted: "bg-green-100 text-green-800",
+        rejected: "bg-red-100 text-red-800",
+        expired: "bg-gray-100 text-gray-800",
     };
     return classes[lastApp.status] || "bg-gray-100 text-gray-800";
 };
@@ -738,8 +741,11 @@ const getLastApplicationStatusText = (participant) => {
 
     const texts = {
         menunggu: "Menunggu",
-        diterima: "Diterima",
-        ditolak: "Ditolak",
+        in_review: "Dalam Review",
+        interview_scheduled: "Wawancara",
+        accepted: "Diterima",
+        rejected: "Ditolak",
+        expired: "Kedaluwarsa",
     };
     return texts[lastApp.status] || lastApp.status;
 };

@@ -368,7 +368,7 @@
                                     class="text-sm font-medium text-green-600"
                                     >{{
                                         applications.filter(
-                                            (app) => app.status === "diterima"
+                                            (app) => app.status === "accepted"
                                         ).length
                                     }}</span
                                 >
@@ -381,7 +381,7 @@
                                     class="text-sm font-medium text-red-600"
                                     >{{
                                         applications.filter(
-                                            (app) => app.status === "ditolak"
+                                            (app) => app.status === "rejected"
                                         ).length
                                     }}</span
                                 >
@@ -523,8 +523,11 @@ const formatDate = (date) => {
 const getStatusClass = (status) => {
     const classes = {
         menunggu: "bg-yellow-100 text-yellow-800",
-        diterima: "bg-green-100 text-green-800",
-        ditolak: "bg-red-100 text-red-800",
+        in_review: "bg-blue-100 text-blue-800",
+        interview_scheduled: "bg-purple-100 text-purple-800",
+        accepted: "bg-green-100 text-green-800",
+        rejected: "bg-red-100 text-red-800",
+        expired: "bg-gray-100 text-gray-800",
     };
     return classes[status] || "bg-gray-100 text-gray-800";
 };
@@ -532,14 +535,17 @@ const getStatusClass = (status) => {
 const getStatusText = (status) => {
     const texts = {
         menunggu: "Menunggu",
-        diterima: "Diterima",
-        ditolak: "Ditolak",
+        in_review: "Dalam Review",
+        interview_scheduled: "Wawancara",
+        accepted: "Diterima",
+        rejected: "Ditolak",
+        expired: "Kedaluwarsa",
     };
     return texts[status] || status;
 };
 
 const getAcceptedApplication = () => {
-    return props.applications.find((app) => app.status === "diterima");
+    return props.applications.find((app) => app.status === "accepted");
 };
 
 const toggleStatus = () => {

@@ -19,6 +19,20 @@ export default defineConfig({
     ],
     build: {
         sourcemap: false,
+        manifest: true, // Generate manifest for cache busting
+        rollupOptions: {
+            output: {
+                // Add hash to filenames for cache busting
+                entryFileNames: "js/[name]-[hash].js",
+                chunkFileNames: "js/[name]-[hash].js",
+                assetFileNames: (assetInfo) => {
+                    if (assetInfo.name.endsWith(".css")) {
+                        return "css/[name]-[hash][extname]";
+                    }
+                    return "assets/[name]-[hash][extname]";
+                },
+            },
+        },
     },
     define: {
         __VUE_PROD_DEVTOOLS__: false,

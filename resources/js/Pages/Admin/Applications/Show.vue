@@ -45,9 +45,16 @@
                                 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
                                 application.status === 'menunggu'
                                     ? 'bg-yellow-100 text-yellow-800'
-                                    : application.status === 'diterima'
+                                    : application.status === 'in_review'
+                                    ? 'bg-blue-100 text-blue-800'
+                                    : application.status ===
+                                      'interview_scheduled'
+                                    ? 'bg-purple-100 text-purple-800'
+                                    : application.status === 'accepted'
                                     ? 'bg-green-100 text-green-800'
-                                    : 'bg-red-100 text-red-800',
+                                    : application.status === 'rejected'
+                                    ? 'bg-red-100 text-red-800'
+                                    : 'bg-gray-100 text-gray-800',
                             ]"
                         >
                             {{ application.status }}
@@ -728,13 +735,13 @@
                                 <div
                                     :class="[
                                         'w-8 h-8 rounded-full flex items-center justify-center',
-                                        application.status === 'diterima'
+                                        application.status === 'accepted'
                                             ? 'bg-green-100'
                                             : 'bg-red-100',
                                     ]"
                                 >
                                     <svg
-                                        v-if="application.status === 'diterima'"
+                                        v-if="application.status === 'accepted'"
                                         class="w-4 h-4 text-green-600"
                                         fill="currentColor"
                                         viewBox="0 0 20 20"
@@ -763,7 +770,7 @@
                                         class="text-sm font-medium text-gray-900"
                                     >
                                         {{
-                                            application.status === "diterima"
+                                            application.status === "accepted"
                                                 ? "Diterima"
                                                 : "Ditolak"
                                         }}
@@ -803,9 +810,16 @@
                                         'text-sm font-medium',
                                         application.status === 'menunggu'
                                             ? 'text-yellow-600'
-                                            : application.status === 'diterima'
+                                            : application.status === 'in_review'
+                                            ? 'text-blue-600'
+                                            : application.status ===
+                                              'interview_scheduled'
+                                            ? 'text-purple-600'
+                                            : application.status === 'accepted'
                                             ? 'text-green-600'
-                                            : 'text-red-600',
+                                            : application.status === 'rejected'
+                                            ? 'text-red-600'
+                                            : 'text-gray-600',
                                     ]"
                                 >
                                     {{ application.status }}
@@ -836,7 +850,7 @@
 
                     <!-- Acceptance Letter Upload -->
                     <div
-                        v-if="application.status === 'diterima'"
+                        v-if="application.status === 'accepted'"
                         class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
                     >
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">
@@ -986,8 +1000,13 @@
                                 class="w-full border border-gray-300 rounded-md px-3 py-2"
                             >
                                 <option value="menunggu">Menunggu</option>
-                                <option value="diterima">Diterima</option>
-                                <option value="ditolak">Ditolak</option>
+                                <option value="in_review">Dalam Review</option>
+                                <option value="interview_scheduled">
+                                    Wawancara Dijadwalkan
+                                </option>
+                                <option value="accepted">Diterima</option>
+                                <option value="rejected">Ditolak</option>
+                                <option value="expired">Kedaluwarsa</option>
                             </select>
                         </div>
                         <div class="mb-4">

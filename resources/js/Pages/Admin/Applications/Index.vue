@@ -173,8 +173,10 @@
                     >
                         <option value="">Semua Status</option>
                         <option value="menunggu">Menunggu</option>
-                        <option value="diterima">Diterima</option>
-                        <option value="ditolak">Ditolak</option>
+                        <option value="in_review">Dalam Review</option>
+                        <option value="interview_scheduled">Wawancara</option>
+                        <option value="accepted">Diterima</option>
+                        <option value="rejected">Ditolak</option>
                     </select>
 
                     <!-- Division Filter -->
@@ -314,9 +316,16 @@
                                         'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
                                         application.status === 'menunggu'
                                             ? 'bg-yellow-100 text-yellow-800'
-                                            : application.status === 'diterima'
+                                            : application.status === 'in_review'
+                                            ? 'bg-blue-100 text-blue-800'
+                                            : application.status ===
+                                              'interview_scheduled'
+                                            ? 'bg-purple-100 text-purple-800'
+                                            : application.status === 'accepted'
                                             ? 'bg-green-100 text-green-800'
-                                            : 'bg-red-100 text-red-800',
+                                            : application.status === 'rejected'
+                                            ? 'bg-red-100 text-red-800'
+                                            : 'bg-gray-100 text-gray-800',
                                     ]"
                                 >
                                     {{ application.status }}
@@ -433,8 +442,13 @@
                                 class="w-full border border-gray-300 rounded-md px-3 py-2"
                             >
                                 <option value="menunggu">Menunggu</option>
-                                <option value="diterima">Diterima</option>
-                                <option value="ditolak">Ditolak</option>
+                                <option value="in_review">Dalam Review</option>
+                                <option value="interview_scheduled">
+                                    Wawancara Dijadwalkan
+                                </option>
+                                <option value="accepted">Diterima</option>
+                                <option value="rejected">Ditolak</option>
+                                <option value="expired">Kedaluwarsa</option>
                             </select>
                         </div>
                         <div class="mb-4">
@@ -496,8 +510,13 @@
                                 class="w-full border border-gray-300 rounded-md px-3 py-2"
                             >
                                 <option value="menunggu">Menunggu</option>
-                                <option value="diterima">Diterima</option>
-                                <option value="ditolak">Ditolak</option>
+                                <option value="in_review">Dalam Review</option>
+                                <option value="interview_scheduled">
+                                    Wawancara Dijadwalkan
+                                </option>
+                                <option value="accepted">Diterima</option>
+                                <option value="rejected">Ditolak</option>
+                                <option value="expired">Kedaluwarsa</option>
                             </select>
                         </div>
                         <div class="mb-4">

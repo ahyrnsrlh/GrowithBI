@@ -65,17 +65,18 @@ class Application extends Model
 
     public function scopeActive($query)
     {
-        return $query->whereIn('status', ['menunggu', 'dalam_review', 'wawancara']);
+        return $query->whereIn('status', ['menunggu', 'in_review', 'interview_scheduled']);
     }
 
     public function getStatusBadgeAttribute()
     {
         $badges = [
             'menunggu' => ['text' => 'Menunggu Review', 'class' => 'bg-yellow-100 text-yellow-800'],
-            'dalam_review' => ['text' => 'Dalam Review', 'class' => 'bg-blue-100 text-blue-800'],
-            'wawancara' => ['text' => 'Tahap Wawancara', 'class' => 'bg-purple-100 text-purple-800'],
-            'diterima' => ['text' => 'Diterima', 'class' => 'bg-green-100 text-green-800'],
-            'ditolak' => ['text' => 'Ditolak', 'class' => 'bg-red-100 text-red-800'],
+            'in_review' => ['text' => 'Dalam Review', 'class' => 'bg-blue-100 text-blue-800'],
+            'interview_scheduled' => ['text' => 'Tahap Wawancara', 'class' => 'bg-purple-100 text-purple-800'],
+            'accepted' => ['text' => 'Diterima', 'class' => 'bg-green-100 text-green-800'],
+            'rejected' => ['text' => 'Ditolak', 'class' => 'bg-red-100 text-red-800'],
+            'expired' => ['text' => 'Kedaluwarsa', 'class' => 'bg-gray-100 text-gray-800'],
         ];
 
         return $badges[$this->status] ?? ['text' => $this->status, 'class' => 'bg-gray-100 text-gray-800'];

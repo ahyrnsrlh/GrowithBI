@@ -19,10 +19,46 @@ AOS.init({
     offset: 50,
 });
 
-// Mark SPA navigation to skip loading screen
-router.on("start", () => {
+// Sync CSRF token from Inertia props to meta tag and axios
+const syncCsrfToken = (token) => {
+    if (!token) return;
+
+    const metaTag = document.head.querySelector('meta[name="csrf-token"]');
+    if (metaTag) {
+        metaTag.content = token;
+    }
+
+    if (window.axios) {
+        window.axios.defaults.headers.common["X-CSRF-TOKEN"] = token;
+    }
+};
+
+// Monitor Inertia page visits to sync CSRF token
+router.on("navigate", (event) => {
     sessionStorage.setItem("spa-navigation", "true");
+
+    // Sync CSRF token from page props if available
+    if (event.detail?.page?.props?.csrf_token) {
+        syncCsrfToken(event.detail.page.props.csrf_token);
+    }
 });
+
+// Warn about session expiry (480min - 10min warning)
+let sessionWarningShown = false;
+const SESSION_LIFETIME_MS = 480 * 60 * 1000; // 480 minutes
+const WARNING_BEFORE_MS = 10 * 60 * 1000; // 10 minutes warning
+
+setTimeout(() => {
+    if (!sessionWarningShown) {
+        sessionWarningShown = true;
+        console.warn(
+            "⏰ Your session will expire in 10 minutes. Please save your work."
+        );
+
+        // Optional: Show toast notification to user
+        // You can implement a toast component here
+    }
+}, SESSION_LIFETIME_MS - WARNING_BEFORE_MS);
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

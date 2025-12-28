@@ -2181,12 +2181,12 @@ const showCreateReportModal = ref(false);
 
 // Computed property to check if user has accepted application
 const hasAcceptedApplication = computed(() => {
-    return props.applications.some((app) => app.status === "diterima");
+    return props.applications.some((app) => app.status === "accepted");
 });
 
 // Computed property to get accepted application details
 const acceptedApplication = computed(() => {
-    return props.applications.find((app) => app.status === "diterima");
+    return props.applications.find((app) => app.status === "accepted");
 });
 
 // Computed property for document upload progress
@@ -2416,10 +2416,11 @@ const uploadDocument = (type, file) => {
 const getStatusText = (status) => {
     const statusMap = {
         menunggu: "Pending",
-        dalam_review: "Sedang Direview",
-        wawancara: "Tahap Wawancara",
-        diterima: "Diterima",
-        ditolak: "Ditolak",
+        in_review: "Sedang Direview",
+        interview_scheduled: "Tahap Wawancara",
+        accepted: "Diterima",
+        rejected: "Ditolak",
+        expired: "Kedaluwarsa",
     };
     return statusMap[status] || status;
 };

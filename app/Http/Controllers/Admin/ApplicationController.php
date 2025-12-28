@@ -45,8 +45,9 @@ class ApplicationController extends Controller
         $stats = [
             'total' => Application::count(),
             'pending' => Application::where('status', 'menunggu')->count(),
-            'accepted' => Application::where('status', 'diterima')->count(),
-            'rejected' => Application::where('status', 'ditolak')->count(),
+            'in_review' => Application::where('status', 'in_review')->count(),
+            'accepted' => Application::where('status', 'accepted')->count(),
+            'rejected' => Application::where('status', 'rejected')->count(),
         ];
 
         return Inertia::render('Admin/Applications/Index', [
@@ -99,7 +100,7 @@ class ApplicationController extends Controller
     public function update(Request $request, Application $application)
     {
         $request->validate([
-            'status' => 'required|in:menunggu,diterima,ditolak',
+            'status' => 'required|in:menunggu,in_review,interview_scheduled,accepted,rejected,expired',
             'admin_notes' => 'nullable|string|max:1000'
         ]);
 
@@ -110,10 +111,10 @@ class ApplicationController extends Controller
             'reviewed_by' => Auth::id() ?? 1 // For now, default to admin
         ]);
 
-        // Send notification to user if status is diterima or ditolak
-        if ($request->status === 'diterima') {
+        // Send notification to user if status is accepted or rejected
+        if ($request->status === 'accepted') {
             $application->user->notify(new RegistrationStatusNotification($application, 'accepted'));
-        } elseif ($request->status === 'ditolak') {
+        } elseif ($request->status === 'rejected') {
             $application->user->notify(new RegistrationStatusNotification($application, 'rejected'));
         }
 
@@ -125,7 +126,7 @@ class ApplicationController extends Controller
         $request->validate([
             'application_ids' => 'required|array',
             'application_ids.*' => 'exists:applications,id',
-            'status' => 'required|in:menunggu,diterima,ditolak',
+            'status' => 'required|in:menunggu,in_review,interview_scheduled,accepted,rejected,expired',
             'admin_notes' => 'nullable|string|max:1000'
         ]);
 
@@ -137,9 +138,9 @@ class ApplicationController extends Controller
         ]);
 
         // Send notifications to all affected users
-        if ($request->status === 'diterima' || $request->status === 'ditolak') {
+        if ($request->status === 'accepted' || $request->status === 'rejected') {
             $applications = Application::whereIn('id', $request->application_ids)->get();
-            $statusForNotification = $request->status === 'diterima' ? 'verified' : 'rejected';
+            $statusForNotification = $request->status === 'accepted' ? 'verified' : 'rejected';
             
             foreach ($applications as $application) {
                 $application->user->notify(new ApplicationVerified($application, $statusForNotification));

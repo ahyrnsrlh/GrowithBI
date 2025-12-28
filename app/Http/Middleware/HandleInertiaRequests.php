@@ -16,9 +16,15 @@ class HandleInertiaRequests extends Middleware
 
     /**
      * Determine the current asset version.
+     * Uses manifest hash for cache busting.
      */
     public function version(Request $request): ?string
     {
+        $manifestPath = public_path('build/manifest.json');
+        if (file_exists($manifestPath)) {
+            return md5_file($manifestPath);
+        }
+        
         return parent::version($request);
     }
 
@@ -34,6 +40,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'csrf_token' => csrf_token(), // Always inject fresh CSRF token
             'flash' => [
                 'registration_success' => session('registration_success'),
                 'user_email' => session('user_email'),
