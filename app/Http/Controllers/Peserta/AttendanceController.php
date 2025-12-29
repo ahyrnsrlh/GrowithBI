@@ -75,7 +75,10 @@ class AttendanceController extends Controller
         // Get attendance statistics for current month
         $stats = $user->getAttendanceStats();
 
-        return Inertia::render('Peserta/Attendance/Index', [
+        // Check if user has accepted application for ProfileLayout
+        $hasAcceptedApplication = $user->canAccessAttendance();
+
+        return Inertia::render('Profile/Attendance', [
             'todayAttendance' => $todayAttendance ? [
                 'id' => $todayAttendance->id,
                 'date' => $todayAttendance->date->format('Y-m-d'),
@@ -95,6 +98,7 @@ class AttendanceController extends Controller
                 'radius' => self::ALLOWED_RADIUS,
             ],
             'currentDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
+            'hasAcceptedApplication' => $hasAcceptedApplication,
         ]);
     }
 
