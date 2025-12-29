@@ -22,7 +22,9 @@
                         <p class="text-blue-100 text-sm font-medium">
                             Total Laporan
                         </p>
-                        <p class="text-3xl font-bold">{{ stats.total }}</p>
+                        <p class="text-3xl font-bold">
+                            {{ stats?.total || 0 }}
+                        </p>
                     </div>
                     <div class="bg-blue-400 bg-opacity-30 rounded-full p-3">
                         <svg
@@ -50,7 +52,9 @@
                         <p class="text-orange-100 text-sm font-medium">
                             Menunggu Review
                         </p>
-                        <p class="text-3xl font-bold">{{ stats.submitted }}</p>
+                        <p class="text-3xl font-bold">
+                            {{ stats?.submitted || 0 }}
+                        </p>
                     </div>
                     <div class="bg-orange-400 bg-opacity-30 rounded-full p-3">
                         <svg
@@ -78,7 +82,9 @@
                         <p class="text-green-100 text-sm font-medium">
                             Disetujui
                         </p>
-                        <p class="text-3xl font-bold">{{ stats.approved }}</p>
+                        <p class="text-3xl font-bold">
+                            {{ stats?.approved || 0 }}
+                        </p>
                     </div>
                     <div class="bg-green-400 bg-opacity-30 rounded-full p-3">
                         <svg
@@ -106,7 +112,9 @@
                         <p class="text-red-100 text-sm font-medium">
                             Perlu Revisi
                         </p>
-                        <p class="text-3xl font-bold">{{ stats.revision }}</p>
+                        <p class="text-3xl font-bold">
+                            {{ stats?.revision || 0 }}
+                        </p>
                     </div>
                     <div class="bg-red-400 bg-opacity-30 rounded-full p-3">
                         <svg
@@ -245,7 +253,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <tr
-                            v-for="report in reports.data"
+                            v-for="report in reports?.data || []"
                             :key="report.id"
                             class="hover:bg-gray-50"
                         >
@@ -263,15 +271,18 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm font-medium text-gray-900">
-                                    {{ report.user.name }}
+                                    {{ report.user?.name || "-" }}
                                 </div>
                                 <div class="text-sm text-gray-500">
-                                    {{ report.user.email }}
+                                    {{ report.user?.email || "-" }}
                                 </div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">
-                                    {{ report.application.division.name }}
+                                    {{
+                                        report.application?.division?.name ||
+                                        "-"
+                                    }}
                                 </div>
                             </td>
                             <td class="px-6 py-4">
@@ -364,7 +375,10 @@
         </div>
 
         <!-- Empty State -->
-        <div v-if="reports.data.length === 0" class="text-center py-12">
+        <div
+            v-if="!reports?.data || reports.data.length === 0"
+            class="text-center py-12"
+        >
             <svg
                 class="mx-auto h-12 w-12 text-gray-400"
                 fill="none"

@@ -188,13 +188,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::get('/logbooks/export', [\App\Http\Controllers\Admin\LogbookController::class, 'exportLogbooks'])->name('logbooks.export');
     
     // Final Reports Management
+    // Export capabilities for final reports (must come before {report} param route)
+    Route::get('/final-reports/export/all', [\App\Http\Controllers\Admin\FinalReportController::class, 'exportAll'])->name('final-reports.export.all');
     Route::get('/final-reports', [\App\Http\Controllers\Admin\FinalReportController::class, 'index'])->name('final-reports.index');
     Route::get('/final-reports/{report}', [\App\Http\Controllers\Admin\FinalReportController::class, 'show'])->name('final-reports.show');
     Route::put('/final-reports/{report}/status', [\App\Http\Controllers\Admin\FinalReportController::class, 'updateStatus'])->name('final-reports.update-status');
     Route::get('/final-reports/{report}/download', [\App\Http\Controllers\Admin\FinalReportController::class, 'download'])->name('final-reports.download');
     Route::post('/final-reports/{report}/feedback', [\App\Http\Controllers\Admin\FinalReportController::class, 'addFeedback'])->name('final-reports.add-feedback');
     
-    // Export capabilities for final reports
-    Route::get('/final-reports/export/all', [\App\Http\Controllers\Admin\FinalReportController::class, 'exportAll'])->name('final-reports.export.all');
     Route::get('/applications/export', [ApplicationController::class, 'exportApplications'])->name('applications.export');
 });

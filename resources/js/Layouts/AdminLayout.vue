@@ -476,7 +476,7 @@ import { usePage } from "@inertiajs/vue3";
 import NotificationBell from "@/Components/NotificationBell.vue";
 
 const page = usePage();
-const auth = computed(() => page.props.auth);
+const auth = computed(() => page.props.auth || { user: null });
 
 const props = defineProps({
     title: {

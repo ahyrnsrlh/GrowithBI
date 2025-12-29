@@ -222,15 +222,23 @@ let pollingInterval = null;
 const props = defineProps({
     userId: {
         type: Number,
-        required: true,
+        required: false,
+        default: null,
     },
     userRole: {
         type: String,
-        required: true,
+        required: false,
+        default: "user",
     },
 });
 
 onMounted(() => {
+    if (!props.userId) {
+        console.warn(
+            "📢 NotificationBell: userId is required but not provided"
+        );
+        return;
+    }
     console.log("📢 NotificationBell mounted for userId:", props.userId);
 
     // Request notification permission
