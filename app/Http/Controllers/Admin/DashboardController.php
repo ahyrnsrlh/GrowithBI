@@ -18,11 +18,11 @@ class DashboardController extends Controller
             abort(403, 'Unauthorized access. Admin role required.');
         }
 
-        // Real data from database with fallback dummy data
+        // Real data from database - support both Indonesian and English status values
         $totalApplications = Application::count();
-        $pendingApplications = Application::where('status', 'menunggu')->count();
-        $acceptedApplications = Application::where('status', 'diterima')->count();
-        $rejectedApplications = Application::where('status', 'ditolak')->count();
+        $pendingApplications = Application::whereIn('status', ['menunggu', 'pending', 'in_review'])->count();
+        $acceptedApplications = Application::whereIn('status', ['diterima', 'accepted'])->count();
+        $rejectedApplications = Application::whereIn('status', ['ditolak', 'rejected'])->count();
 
         // Use dummy data if database is empty
         if ($totalApplications == 0) {
@@ -50,11 +50,11 @@ class DashboardController extends Controller
             ->map(function ($application) {
                 return [
                     'id' => $application->id,
-                    'name' => $application->user->name,
-                    'email' => $application->user->email,
-                    'division' => $application->division->name,
+                    'name' => $application->user->name ?? 'Unknown',
+                    'email' => $application->user->email ?? '-',
+                    'division' => $application->division->name ?? '-',
                     'status' => $application->status,
-                    'applied_at' => $application->created_at->format('Y-m-d H:i:s')
+                    'created_at' => $application->created_at->format('Y-m-d H:i:s')
                 ];
             });
 
@@ -63,43 +63,43 @@ class DashboardController extends Controller
             $recentApplications = collect([
                 [
                     'id' => 1,
-                    'name' => 'Ahmad Rizki',
+                    'name' => 'Ahmad Rizki Pratama',
                     'email' => 'ahmad.rizki@email.com',
                     'division' => 'Software Development',
-                    'status' => 'menunggu',
-                    'applied_at' => '2025-09-01 10:30:00'
+                    'status' => 'pending',
+                    'created_at' => '2025-12-29 10:30:00'
                 ],
                 [
                     'id' => 2,
-                    'name' => 'Sari Dewi',
+                    'name' => 'Sari Dewi Lestari',
                     'email' => 'sari.dewi@email.com',
                     'division' => 'UI/UX Design',
-                    'status' => 'diterima',
-                    'applied_at' => '2025-08-31 14:15:00'
+                    'status' => 'approved',
+                    'created_at' => '2025-12-28 14:15:00'
                 ],
                 [
                     'id' => 3,
                     'name' => 'Budi Santoso',
                     'email' => 'budi.santoso@email.com',
                     'division' => 'Data Science',
-                    'status' => 'menunggu',
-                    'applied_at' => '2025-08-30 09:45:00'
+                    'status' => 'pending',
+                    'created_at' => '2025-12-27 09:45:00'
                 ],
                 [
                     'id' => 4,
-                    'name' => 'Maya Putri',
+                    'name' => 'Maya Putri Anggraini',
                     'email' => 'maya.putri@email.com',
                     'division' => 'Business Intelligence',
-                    'status' => 'diterima',
-                    'applied_at' => '2025-08-29 16:20:00'
+                    'status' => 'approved',
+                    'created_at' => '2025-12-26 16:20:00'
                 ],
                 [
                     'id' => 5,
-                    'name' => 'Joko Widodo',
-                    'email' => 'joko.widodo@email.com',
+                    'name' => 'Eko Prasetyo',
+                    'email' => 'eko.prasetyo@email.com',
                     'division' => 'Digital Marketing',
-                    'status' => 'ditolak',
-                    'applied_at' => '2025-08-28 11:10:00'
+                    'status' => 'rejected',
+                    'created_at' => '2025-12-25 11:10:00'
                 ]
             ]);
         }
@@ -107,7 +107,7 @@ class DashboardController extends Controller
         $divisionsData = Division::withCount([
                 'applications',
                 'applications as accepted_count' => function ($query) {
-                    $query->where('status', 'diterima');
+                    $query->whereIn('status', ['diterima', 'accepted']);
                 }
             ])
             ->get()
@@ -115,7 +115,7 @@ class DashboardController extends Controller
                 return [
                     'id' => $division->id,
                     'name' => $division->name,
-                    'quota' => $division->quota,
+                    'quota' => $division->quota ?? 10,
                     'applications' => $division->applications_count,
                     'accepted' => $division->accepted_count,
                     'supervisor' => 'GrowithBI Admin'
@@ -187,14 +187,14 @@ class DashboardController extends Controller
             ]
         ];
 
-        // Application trends data for line chart (dummy data for 6 months)
+        // Application trends data for line chart (6 months ending December 2025)
         $applicationTrends = [
-            ['month' => 'Mar 2025', 'applications' => 45],
-            ['month' => 'Apr 2025', 'applications' => 52],
-            ['month' => 'May 2025', 'applications' => 38],
-            ['month' => 'Jun 2025', 'applications' => 65],
-            ['month' => 'Jul 2025', 'applications' => 78],
-            ['month' => 'Aug 2025', 'applications' => 89],
+            ['month' => 'Jul 2025', 'applications' => 42],
+            ['month' => 'Ags 2025', 'applications' => 58],
+            ['month' => 'Sep 2025', 'applications' => 73],
+            ['month' => 'Okt 2025', 'applications' => 65],
+            ['month' => 'Nov 2025', 'applications' => 89],
+            ['month' => 'Des 2025', 'applications' => 118],
         ];
 
         // Division data for bar chart
