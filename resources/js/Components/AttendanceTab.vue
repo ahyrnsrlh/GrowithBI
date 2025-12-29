@@ -562,15 +562,22 @@ const submit = () => {
 
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <!-- Total Hadir Card - Blue Gradient -->
             <div
-                class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
+                class="relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 shadow-lg shadow-blue-500/25"
             >
-                <div class="flex items-center gap-3">
+                <div
+                    class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"
+                ></div>
+                <div
+                    class="absolute bottom-0 left-0 -mb-4 -ml-4 w-20 h-20 bg-white/10 rounded-full blur-xl"
+                ></div>
+                <div class="relative flex items-center gap-4">
                     <div
-                        class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center"
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                     >
                         <svg
-                            class="w-5 h-5 text-blue-600"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -584,22 +591,32 @@ const submit = () => {
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-gray-900">
+                        <p class="text-3xl font-bold text-white">
                             {{ monthlyStats.total }}
                         </p>
-                        <p class="text-xs text-gray-500">Total Hadir</p>
+                        <p class="text-sm text-blue-100 font-medium">
+                            Total Hadir
+                        </p>
                     </div>
                 </div>
             </div>
+
+            <!-- Tepat Waktu Card - Emerald Gradient -->
             <div
-                class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
+                class="relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-700 shadow-lg shadow-emerald-500/25"
             >
-                <div class="flex items-center gap-3">
+                <div
+                    class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"
+                ></div>
+                <div
+                    class="absolute bottom-0 left-0 -mb-4 -ml-4 w-20 h-20 bg-white/10 rounded-full blur-xl"
+                ></div>
+                <div class="relative flex items-center gap-4">
                     <div
-                        class="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center"
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                     >
                         <svg
-                            class="w-5 h-5 text-emerald-600"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -613,22 +630,32 @@ const submit = () => {
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-gray-900">
+                        <p class="text-3xl font-bold text-white">
                             {{ monthlyStats.onTime }}
                         </p>
-                        <p class="text-xs text-gray-500">Tepat Waktu</p>
+                        <p class="text-sm text-emerald-100 font-medium">
+                            Tepat Waktu
+                        </p>
                     </div>
                 </div>
             </div>
+
+            <!-- Terlambat Card - Amber/Orange Gradient -->
             <div
-                class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
+                class="relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 shadow-lg shadow-amber-500/25"
             >
-                <div class="flex items-center gap-3">
+                <div
+                    class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"
+                ></div>
+                <div
+                    class="absolute bottom-0 left-0 -mb-4 -ml-4 w-20 h-20 bg-white/10 rounded-full blur-xl"
+                ></div>
+                <div class="relative flex items-center gap-4">
                     <div
-                        class="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center"
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                     >
                         <svg
-                            class="w-5 h-5 text-amber-600"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -642,10 +669,12 @@ const submit = () => {
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-gray-900">
+                        <p class="text-3xl font-bold text-white">
                             {{ monthlyStats.late }}
                         </p>
-                        <p class="text-xs text-gray-500">Terlambat</p>
+                        <p class="text-sm text-amber-100 font-medium">
+                            Terlambat
+                        </p>
                     </div>
                 </div>
             </div>
@@ -655,15 +684,15 @@ const submit = () => {
         <div
             class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-8"
         >
-            <!-- Card Header -->
+            <!-- Card Header with Blue Styling -->
             <div
-                class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-gray-50"
+                class="px-6 py-4 border-b border-blue-100 bg-gradient-to-r from-blue-600 to-indigo-600"
             >
                 <h2
-                    class="text-lg font-semibold text-gray-900 flex items-center gap-2"
+                    class="text-lg font-semibold text-white flex items-center gap-2"
                 >
                     <svg
-                        class="w-5 h-5 text-blue-600"
+                        class="w-5 h-5 text-blue-100"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -1080,16 +1109,16 @@ const submit = () => {
         <div
             class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
         >
-            <!-- Card Header -->
+            <!-- Card Header with Blue Styling -->
             <div
-                class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-gray-50"
+                class="px-6 py-4 border-b border-blue-100 bg-gradient-to-r from-blue-600 to-indigo-600"
             >
                 <div class="flex items-center justify-between flex-wrap gap-3">
                     <h2
-                        class="text-lg font-semibold text-gray-900 flex items-center gap-2"
+                        class="text-lg font-semibold text-white flex items-center gap-2"
                     >
                         <svg
-                            class="w-5 h-5 text-blue-600"
+                            class="w-5 h-5 text-blue-100"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -1107,11 +1136,17 @@ const submit = () => {
                     <!-- Filter Dropdown -->
                     <select
                         v-model="filterStatus"
-                        class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                        class="text-sm border border-white/30 rounded-lg px-3 py-2 bg-white/10 text-white focus:ring-2 focus:ring-white/50 focus:border-white/50 transition-colors backdrop-blur-sm"
                     >
-                        <option value="all">Semua Status</option>
-                        <option value="On-Time">Tepat Waktu</option>
-                        <option value="Late">Terlambat</option>
+                        <option value="all" class="text-gray-900">
+                            Semua Status
+                        </option>
+                        <option value="On-Time" class="text-gray-900">
+                            Tepat Waktu
+                        </option>
+                        <option value="Late" class="text-gray-900">
+                            Terlambat
+                        </option>
                     </select>
                 </div>
             </div>
