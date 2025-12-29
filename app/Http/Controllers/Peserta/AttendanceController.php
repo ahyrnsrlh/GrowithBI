@@ -37,69 +37,12 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Display attendance page
+     * Display attendance page - redirects to Profile with attendance tab for SPA experience
      */
-    public function index(): Response
+    public function index()
     {
-        /** @var User|null $user */
-        $user = Auth::user();
-
-        if (!$user) {
-            abort(401);
-        }
-        $today = Carbon::now()->toDateString();
-        
-        // Get today's attendance
-        $todayAttendance = $user->attendances()
-            ->where('date', $today)
-            ->first();
-
-        // Get attendance history (last 30 days)
-        $attendanceHistory = $user->attendances()
-            ->where('date', '>=', Carbon::now()->subDays(30))
-            ->orderBy('date', 'desc')
-            ->get()
-            ->map(function ($attendance) {
-                return [
-                    'id' => $attendance->id,
-                    'date' => $attendance->date->format('Y-m-d'),
-                    'date_formatted' => $attendance->date->format('d M Y'),
-                    'check_in' => $attendance->check_in ? $attendance->check_in->format('Y-m-d H:i:s') : null,
-                    'check_out' => $attendance->check_out ? $attendance->check_out->format('Y-m-d H:i:s') : null,
-                    'status' => $attendance->status,
-                    'working_duration' => $attendance->getWorkingDuration(),
-                    'is_complete' => $attendance->isComplete(),
-                ];
-            });
-
-        // Get attendance statistics for current month
-        $stats = $user->getAttendanceStats();
-
-        // Check if user has accepted application for ProfileLayout
-        $hasAcceptedApplication = $user->canAccessAttendance();
-
-        return Inertia::render('Profile/Attendance', [
-            'todayAttendance' => $todayAttendance ? [
-                'id' => $todayAttendance->id,
-                'date' => $todayAttendance->date->format('Y-m-d'),
-                'check_in' => $todayAttendance->check_in ? $todayAttendance->check_in->format('Y-m-d H:i:s') : null,
-                'check_out' => $todayAttendance->check_out ? $todayAttendance->check_out->format('Y-m-d H:i:s') : null,
-                'status' => $todayAttendance->status,
-                'can_check_in' => !$todayAttendance->check_in,
-                'can_check_out' => $todayAttendance->check_in && !$todayAttendance->check_out,
-                'photo_checkin_url' => $todayAttendance->photo_checkin_url,
-                'photo_checkout_url' => $todayAttendance->photo_checkout_url,
-            ] : null,
-            'attendanceHistory' => $attendanceHistory,
-            'stats' => $stats,
-            'officeLocation' => [
-                'latitude' => self::OFFICE_LATITUDE,
-                'longitude' => self::OFFICE_LONGITUDE,
-                'radius' => self::ALLOWED_RADIUS,
-            ],
-            'currentDateTime' => Carbon::now()->format('Y-m-d H:i:s'),
-            'hasAcceptedApplication' => $hasAcceptedApplication,
-        ]);
+        // Redirect to profile page with attendance tab for SPA experience
+        return redirect()->route('profile.edit', ['tab' => 'attendance']);
     }
 
     /**

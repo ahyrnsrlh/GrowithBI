@@ -126,8 +126,10 @@ class AcceptanceLetterController extends Controller
 
     /**
      * Download acceptance letter by participant
+     * 
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function download(Application $application)
+    public function download(Application $application): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
         $user = Auth::user();
         
@@ -149,8 +151,9 @@ class AcceptanceLetterController extends Controller
         // Generate download filename
         $filename = 'Surat_Penerimaan_' . $application->user->name . '_' . $application->division->name . '.pdf';
 
-        // Return file download
-        return Storage::disk('public')->download($application->acceptance_letter_path, $filename);
+        // Return file download using response helper
+        $path = Storage::disk('public')->path($application->acceptance_letter_path);
+        return response()->download($path, $filename);
     }
 
     /**

@@ -152,7 +152,7 @@ class PublicController extends Controller
             ]);
         }
 
-        Application::create([
+        $application = Application::create([
             'name' => $user->name,
             'email' => $user->email,
             'phone' => $user->phone ?? '',
@@ -164,11 +164,11 @@ class PublicController extends Controller
         // Notify all admins about new application
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
-            $admin->notify(new RegistrationStatusNotification($user, 'application_submit'));
+            $admin->notify(new RegistrationStatusNotification($application, \App\Enums\RegistrationEventType::NEW_REGISTRATION, [], true));
         }
 
         // Notify user about application submission
-        $user->notify(new RegistrationStatusNotification($user, 'application_submit'));
+        $user->notify(new RegistrationStatusNotification($application, \App\Enums\RegistrationEventType::APPLICATION_SUBMITTED));
 
         return response()->json([
             'success' => true,

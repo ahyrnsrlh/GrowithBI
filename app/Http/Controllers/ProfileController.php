@@ -14,9 +14,11 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\User;
 use App\Models\Application;
+use App\Models\Attendance;
 use App\Models\Division;
 use App\Models\Logbook;
 use App\Models\Report;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
@@ -114,6 +116,43 @@ class ProfileController extends Controller
             ];
         }
 
+        // Get attendance data for accepted participants
+        $attendanceData = [];
+        $todayAttendance = null;
+        if ($acceptedApplication) {
+            $today = Carbon::now()->toDateString();
+            
+            // Get today's attendance
+            $todayAttendanceRecord = Attendance::where('user_id', $user->id)
+                ->where('date', $today)
+                ->first();
+            
+            if ($todayAttendanceRecord) {
+                $todayAttendance = [
+                    'id' => $todayAttendanceRecord->id,
+                    'date' => $todayAttendanceRecord->date->format('Y-m-d'),
+                    'check_in' => $todayAttendanceRecord->check_in ? $todayAttendanceRecord->check_in->format('Y-m-d H:i:s') : null,
+                    'check_out' => $todayAttendanceRecord->check_out ? $todayAttendanceRecord->check_out->format('Y-m-d H:i:s') : null,
+                    'status' => $todayAttendanceRecord->status,
+                ];
+            }
+
+            // Get attendance history (last 30 days)
+            $attendanceData = Attendance::where('user_id', $user->id)
+                ->where('date', '>=', Carbon::now()->subDays(30))
+                ->orderBy('date', 'desc')
+                ->get()
+                ->map(function ($attendance) {
+                    return [
+                        'id' => $attendance->id,
+                        'date' => $attendance->date->format('Y-m-d'),
+                        'check_in' => $attendance->check_in ? $attendance->check_in->format('Y-m-d H:i:s') : null,
+                        'check_out' => $attendance->check_out ? $attendance->check_out->format('Y-m-d H:i:s') : null,
+                        'status' => $attendance->status,
+                    ];
+                });
+        }
+
         return Inertia::render('Profile/Index', [
             'user' => $user,
             'applications' => $applications,
@@ -124,6 +163,8 @@ class ProfileController extends Controller
             'logbookStats' => $logbookStats,
             'reports' => $reports,
             'reportStats' => $reportStats,
+            'attendanceHistory' => $attendanceData,
+            'todayAttendance' => $todayAttendance,
             'profileCompletion' => $profileCompletion,
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
@@ -281,12 +322,12 @@ class ProfileController extends Controller
             Log::info('Application created successfully:', $application->toArray());
             
             // Send notification to user
-            $user->notify(new \App\Notifications\RegistrationStatusNotification($application, 'submitted'));
+            $user->notify(new \App\Notifications\RegistrationStatusNotification($application, \App\Enums\RegistrationEventType::APPLICATION_SUBMITTED));
             
             // Send notification to all admins about new application
             $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
-                $admin->notify(new \App\Notifications\RegistrationStatusNotification($application, 'submitted'));
+                $admin->notify(new \App\Notifications\RegistrationStatusNotification($application, \App\Enums\RegistrationEventType::NEW_REGISTRATION, [], true));
             }
 
             if ($request->wantsJson()) {

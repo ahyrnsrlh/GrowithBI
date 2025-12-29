@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
-import { Head, Link, router, usePage } from "@inertiajs/vue3";
-import ProfileLayout from "@/Layouts/ProfileLayout.vue";
+import { router, usePage } from "@inertiajs/vue3";
 import SimpleCameraModal from "@/Components/SimpleCameraModal.vue";
 import axios from "axios";
 
@@ -19,13 +18,9 @@ const props = defineProps({
         default: null,
     },
     stats: Object,
-    officeLocation: Object,
-    currentDateTime: String,
-    hasAcceptedApplication: {
-        type: Boolean,
-        default: false,
-    },
 });
+
+const emit = defineEmits(["show-toast"]);
 
 const page = usePage();
 
@@ -40,10 +35,6 @@ const isProcessing = ref(false);
 const photoBase64 = ref(null);
 const faceDescriptor = ref(null);
 const userLocation = ref(null);
-
-// Toast notifications
-const showSuccessToast = ref(false);
-const showErrorToast = ref(false);
 
 // Real-time clock - USING SERVER TIME
 const currentTime = ref("");
@@ -288,31 +279,6 @@ const isWithinCheckOutTime = computed(() => {
     );
 });
 
-// Watch for flash messages
-watch(
-    () => page.props.flash?.success,
-    (newValue) => {
-        if (newValue) {
-            showSuccessToast.value = true;
-            setTimeout(() => {
-                showSuccessToast.value = false;
-            }, 5000);
-        }
-    }
-);
-
-watch(
-    () => page.props.flash?.error,
-    (newValue) => {
-        if (newValue) {
-            showErrorToast.value = true;
-            setTimeout(() => {
-                showErrorToast.value = false;
-            }, 5000);
-        }
-    }
-);
-
 // Reset to page 1 when filter changes
 watch(filterStatus, () => {
     currentPage.value = 1;
@@ -329,19 +295,6 @@ onMounted(() => {
     clockInterval = setInterval(updateClockDisplay, 1000);
 
     serverSyncInterval = setInterval(fetchServerTime, 60000);
-
-    if (page.props.flash?.success) {
-        showSuccessToast.value = true;
-        setTimeout(() => {
-            showSuccessToast.value = false;
-        }, 5000);
-    }
-    if (page.props.flash?.error) {
-        showErrorToast.value = true;
-        setTimeout(() => {
-            showErrorToast.value = false;
-        }, 5000);
-    }
 });
 
 onUnmounted(() => {
@@ -458,7 +411,7 @@ const handleCheckOut = async () => {
 
 const getLocation = async () => {
     if (!navigator.geolocation) {
-        alert("Geolocation tidak didukung");
+        emit("show-toast", "error", "Geolocation tidak didukung");
         return;
     }
 
@@ -477,7 +430,9 @@ const getLocation = async () => {
 
         showCamera.value = true;
     } catch (error) {
-        alert(
+        emit(
+            "show-toast",
+            "error",
             "Gagal mendapatkan lokasi. Pastikan GPS aktif dan izinkan akses lokasi."
         );
     }
@@ -495,12 +450,16 @@ const onPhotoCaptured = (data) => {
 
 const submit = () => {
     if (!photoBase64.value || !userLocation.value) {
-        alert("Data tidak lengkap");
+        emit("show-toast", "error", "Data tidak lengkap");
         return;
     }
 
     if (!faceDescriptor.value || faceDescriptor.value.length !== 128) {
-        alert("Face descriptor tidak valid. Silakan ambil foto ulang.");
+        emit(
+            "show-toast",
+            "error",
+            "Face descriptor tidak valid. Silakan ambil foto ulang."
+        );
         return;
     }
 
@@ -523,16 +482,23 @@ const submit = () => {
             preserveScroll: true,
             preserveState: false,
             onSuccess: () => {
+                const successMessage =
+                    actionType.value === "check-in"
+                        ? "Check-in berhasil!"
+                        : "Check-out berhasil!";
                 isProcessing.value = false;
                 photoBase64.value = null;
                 faceDescriptor.value = null;
                 userLocation.value = null;
                 actionType.value = "";
                 showCamera.value = false;
+                emit("show-toast", "success", successMessage);
             },
             onError: (errors) => {
                 isProcessing.value = false;
-                alert(
+                emit(
+                    "show-toast",
+                    "error",
                     errors.error ||
                         errors.photo ||
                         errors.face_descriptor ||
@@ -548,140 +514,10 @@ const submit = () => {
 </script>
 
 <template>
-    <ProfileLayout
-        title="Absensi Online"
-        :hasAcceptedApplication="hasAcceptedApplication"
-    >
-        <!-- Toast Notifications -->
-        <Teleport to="body">
-            <transition
-                enter-active-class="transition ease-out duration-300"
-                enter-from-class="transform translate-y-[-100%] opacity-0"
-                enter-to-class="transform translate-y-0 opacity-100"
-                leave-active-class="transition ease-in duration-200"
-                leave-from-class="transform translate-y-0 opacity-100"
-                leave-to-class="transform translate-y-[-100%] opacity-0"
-            >
-                <div
-                    v-if="page.props.flash?.success && showSuccessToast"
-                    class="fixed top-20 right-4 z-[100] max-w-sm"
-                >
-                    <div
-                        class="bg-white rounded-xl shadow-lg border-l-4 border-emerald-500 p-4 flex items-start gap-3"
-                    >
-                        <div
-                            class="flex-shrink-0 w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center"
-                        >
-                            <svg
-                                class="w-4 h-4 text-emerald-600"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M5 13l4 4L19 7"
-                                />
-                            </svg>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-semibold text-gray-900">
-                                Berhasil
-                            </p>
-                            <p class="text-sm text-gray-600 mt-0.5">
-                                {{ page.props.flash.success }}
-                            </p>
-                        </div>
-                        <button
-                            @click="showSuccessToast = false"
-                            class="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </transition>
-
-            <transition
-                enter-active-class="transition ease-out duration-300"
-                enter-from-class="transform translate-y-[-100%] opacity-0"
-                enter-to-class="transform translate-y-0 opacity-100"
-                leave-active-class="transition ease-in duration-200"
-                leave-from-class="transform translate-y-0 opacity-100"
-                leave-to-class="transform translate-y-[-100%] opacity-0"
-            >
-                <div
-                    v-if="page.props.flash?.error && showErrorToast"
-                    class="fixed top-20 right-4 z-[100] max-w-sm"
-                >
-                    <div
-                        class="bg-white rounded-xl shadow-lg border-l-4 border-red-500 p-4 flex items-start gap-3"
-                    >
-                        <div
-                            class="flex-shrink-0 w-8 h-8 bg-red-100 rounded-full flex items-center justify-center"
-                        >
-                            <svg
-                                class="w-4 h-4 text-red-600"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-semibold text-gray-900">
-                                Gagal
-                            </p>
-                            <p class="text-sm text-gray-600 mt-0.5">
-                                {{ page.props.flash.error }}
-                            </p>
-                        </div>
-                        <button
-                            @click="showErrorToast = false"
-                            class="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </transition>
-        </Teleport>
-
+    <div>
         <!-- Page Header -->
         <div class="mb-8">
-            <div class="flex items-start justify-between">
+            <div class="flex items-start justify-between flex-wrap gap-4">
                 <div class="flex items-center gap-4">
                     <div
                         class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25"
@@ -712,7 +548,7 @@ const submit = () => {
 
                 <!-- Real-time Clock Badge -->
                 <div
-                    class="hidden sm:flex items-center gap-2 bg-slate-100 px-4 py-2.5 rounded-xl"
+                    class="flex items-center gap-2 bg-slate-100 px-4 py-2.5 rounded-xl"
                 >
                     <div
                         class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"
@@ -722,22 +558,10 @@ const submit = () => {
                     }}</span>
                 </div>
             </div>
-
-            <!-- Mobile Clock -->
-            <div
-                class="sm:hidden mt-4 flex items-center gap-2 bg-slate-100 px-4 py-2.5 rounded-xl w-fit"
-            >
-                <div
-                    class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"
-                ></div>
-                <span class="text-sm font-medium text-slate-700">{{
-                    currentTime
-                }}</span>
-            </div>
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-3 gap-4 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <div
                 class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
             >
@@ -1260,7 +1084,7 @@ const submit = () => {
             <div
                 class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-gray-50"
             >
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between flex-wrap gap-3">
                     <h2
                         class="text-lg font-semibold text-gray-900 flex items-center gap-2"
                     >
@@ -1303,9 +1127,13 @@ const submit = () => {
                         :key="att.id"
                         class="group bg-white rounded-xl p-4 border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all duration-200"
                     >
-                        <div class="flex items-center gap-4">
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center gap-4"
+                        >
                             <!-- Date Column -->
-                            <div class="flex items-center gap-3 min-w-[140px]">
+                            <div
+                                class="flex items-center gap-3 sm:min-w-[140px]"
+                            >
                                 <div
                                     class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center group-hover:bg-blue-50 transition-colors"
                                 >
@@ -1485,7 +1313,7 @@ const submit = () => {
                 <!-- Pagination -->
                 <div
                     v-if="filteredAttendance.length > perPage"
-                    class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between"
+                    class="mt-6 pt-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4"
                 >
                     <p class="text-sm text-gray-500">
                         Menampilkan {{ (currentPage - 1) * perPage + 1 }} -
@@ -1562,5 +1390,5 @@ const submit = () => {
             @close="showCamera = false"
             @photo-captured="onPhotoCaptured"
         />
-    </ProfileLayout>
+    </div>
 </template>

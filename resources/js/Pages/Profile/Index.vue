@@ -194,23 +194,24 @@
                                         Logbook & Laporan
                                     </h3>
                                     <div class="space-y-1">
-                                        <Link
-                                            :href="
-                                                route(
-                                                    'profile.attendance.index'
-                                                )
-                                            "
-                                            class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors text-blue-100 hover:bg-blue-700 hover:bg-opacity-30 block"
+                                        <button
+                                            @click="activeTab = 'attendance'"
+                                            :class="[
+                                                'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                                                activeTab === 'attendance'
+                                                    ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
+                                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                            ]"
                                         >
                                             <i class="fas fa-clock mr-3"></i>
                                             Absensi Online
-                                        </Link>
+                                        </button>
                                         <button
                                             @click="activeTab = 'logbook'"
                                             :class="[
                                                 'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                                                 activeTab === 'logbook'
-                                                    ? 'bg-blue-700 bg-opacity-40 text-white'
+                                                    ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
                                                     : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
                                             ]"
                                         >
@@ -222,7 +223,7 @@
                                             :class="[
                                                 'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                                                 activeTab === 'reports'
-                                                    ? 'bg-blue-700 bg-opacity-40 text-white'
+                                                    ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
                                                     : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
                                             ]"
                                         >
@@ -719,6 +720,17 @@
                                     :application="application"
                                 />
                             </div>
+                        </div>
+
+                        <!-- Attendance Tab (SPA) -->
+                        <div v-if="activeTab === 'attendance'">
+                            <AttendanceTab
+                                :attendanceHistory="attendanceHistory"
+                                :todayAttendance="todayAttendance"
+                                @show-toast="
+                                    (type, msg) => showToast(type, msg)
+                                "
+                            />
                         </div>
 
                         <!-- Logbook Tab -->
@@ -2149,6 +2161,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import DocumentUpload from "@/Components/DocumentUpload.vue";
 import ApplicationCard from "@/Components/ApplicationCard.vue";
 import NotificationBell from "@/Components/NotificationBell.vue";
+import AttendanceTab from "@/Components/AttendanceTab.vue";
 
 const props = defineProps({
     user: Object,
@@ -2158,6 +2171,8 @@ const props = defineProps({
     logbookStats: { type: Object, default: () => ({}) },
     reports: { type: Array, default: () => [] },
     reportStats: { type: Object, default: () => ({}) },
+    attendanceHistory: { type: Array, default: () => [] },
+    todayAttendance: { type: Object, default: null },
     profileCompletion: Object,
     mustVerifyEmail: Boolean,
     status: String,
@@ -2455,9 +2470,14 @@ onMounted(() => {
     const tab = urlParams.get("tab");
     if (
         tab &&
-        ["profile", "documents", "applications", "logbook", "reports"].includes(
-            tab
-        )
+        [
+            "profile",
+            "documents",
+            "applications",
+            "attendance",
+            "logbook",
+            "reports",
+        ].includes(tab)
     ) {
         activeTab.value = tab;
     }
