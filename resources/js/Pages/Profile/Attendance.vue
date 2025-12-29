@@ -737,16 +737,17 @@ const submit = () => {
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-3 gap-4 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <!-- Total Hadir -->
             <div
-                class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
+                class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-4">
                     <div
-                        class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center"
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                     >
                         <svg
-                            class="w-5 h-5 text-blue-600"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -760,22 +761,31 @@ const submit = () => {
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-gray-900">
-                            {{ monthlyStats.total }}
+                        <p class="text-sm font-medium text-white/90">
+                            Total Hadir
                         </p>
-                        <p class="text-xs text-gray-500">Total Hadir</p>
+                        <h3 class="text-3xl font-bold text-white">
+                            {{ monthlyStats.total }}
+                        </h3>
                     </div>
                 </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">
+                        Total kehadiran bulan ini
+                    </p>
+                </div>
             </div>
+
+            <!-- Tepat Waktu -->
             <div
-                class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
+                class="bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600 rounded-2xl p-5 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-4">
                     <div
-                        class="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center"
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                     >
                         <svg
-                            class="w-5 h-5 text-emerald-600"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -789,22 +799,29 @@ const submit = () => {
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-gray-900">
-                            {{ monthlyStats.onTime }}
+                        <p class="text-sm font-medium text-white/90">
+                            Tepat Waktu
                         </p>
-                        <p class="text-xs text-gray-500">Tepat Waktu</p>
+                        <h3 class="text-3xl font-bold text-white">
+                            {{ monthlyStats.onTime }}
+                        </h3>
                     </div>
                 </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Absensi tepat waktu</p>
+                </div>
             </div>
+
+            <!-- Terlambat -->
             <div
-                class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
+                class="bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-600 rounded-2xl p-5 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-4">
                     <div
-                        class="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center"
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                     >
                         <svg
-                            class="w-5 h-5 text-amber-600"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -818,11 +835,16 @@ const submit = () => {
                         </svg>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-gray-900">
-                            {{ monthlyStats.late }}
+                        <p class="text-sm font-medium text-white/90">
+                            Terlambat
                         </p>
-                        <p class="text-xs text-gray-500">Terlambat</p>
+                        <h3 class="text-3xl font-bold text-white">
+                            {{ monthlyStats.late }}
+                        </h3>
                     </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Absensi terlambat</p>
                 </div>
             </div>
         </div>

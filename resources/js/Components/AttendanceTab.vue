@@ -564,15 +564,9 @@ const submit = () => {
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <!-- Total Hadir Card - Blue Gradient -->
             <div
-                class="relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 shadow-lg shadow-blue-500/25"
+                class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div
-                    class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"
-                ></div>
-                <div
-                    class="absolute bottom-0 left-0 -mb-4 -ml-4 w-20 h-20 bg-white/10 rounded-full blur-xl"
-                ></div>
-                <div class="relative flex items-center gap-4">
+                <div class="flex items-center gap-4">
                     <div
                         class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                     >
@@ -591,27 +585,26 @@ const submit = () => {
                         </svg>
                     </div>
                     <div>
-                        <p class="text-3xl font-bold text-white">
-                            {{ monthlyStats.total }}
-                        </p>
-                        <p class="text-sm text-blue-100 font-medium">
+                        <p class="text-sm font-medium text-white/90">
                             Total Hadir
                         </p>
+                        <h3 class="text-3xl font-bold text-white">
+                            {{ monthlyStats.total }}
+                        </h3>
                     </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">
+                        Total kehadiran bulan ini
+                    </p>
                 </div>
             </div>
 
             <!-- Tepat Waktu Card - Emerald Gradient -->
             <div
-                class="relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-700 shadow-lg shadow-emerald-500/25"
+                class="bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600 rounded-2xl p-5 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div
-                    class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"
-                ></div>
-                <div
-                    class="absolute bottom-0 left-0 -mb-4 -ml-4 w-20 h-20 bg-white/10 rounded-full blur-xl"
-                ></div>
-                <div class="relative flex items-center gap-4">
+                <div class="flex items-center gap-4">
                     <div
                         class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                     >
@@ -630,27 +623,24 @@ const submit = () => {
                         </svg>
                     </div>
                     <div>
-                        <p class="text-3xl font-bold text-white">
-                            {{ monthlyStats.onTime }}
-                        </p>
-                        <p class="text-sm text-emerald-100 font-medium">
+                        <p class="text-sm font-medium text-white/90">
                             Tepat Waktu
                         </p>
+                        <h3 class="text-3xl font-bold text-white">
+                            {{ monthlyStats.onTime }}
+                        </h3>
                     </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Absensi tepat waktu</p>
                 </div>
             </div>
 
             <!-- Terlambat Card - Amber/Orange Gradient -->
             <div
-                class="relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 shadow-lg shadow-amber-500/25"
+                class="bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-600 rounded-2xl p-5 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div
-                    class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"
-                ></div>
-                <div
-                    class="absolute bottom-0 left-0 -mb-4 -ml-4 w-20 h-20 bg-white/10 rounded-full blur-xl"
-                ></div>
-                <div class="relative flex items-center gap-4">
+                <div class="flex items-center gap-4">
                     <div
                         class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                     >
@@ -669,13 +659,16 @@ const submit = () => {
                         </svg>
                     </div>
                     <div>
-                        <p class="text-3xl font-bold text-white">
-                            {{ monthlyStats.late }}
-                        </p>
-                        <p class="text-sm text-amber-100 font-medium">
+                        <p class="text-sm font-medium text-white/90">
                             Terlambat
                         </p>
+                        <h3 class="text-3xl font-bold text-white">
+                            {{ monthlyStats.late }}
+                        </h3>
                     </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Absensi terlambat</p>
                 </div>
             </div>
         </div>

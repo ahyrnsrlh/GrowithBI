@@ -1,427 +1,471 @@
 <template>
     <Head title="Maps - Dashboard Admin" />
 
-    <AdminLayout>
-        <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-blue-900 to-blue-800 shadow-lg">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex items-center justify-between h-20">
-                        <div class="flex items-center space-x-6">
-                            <div class="flex items-center space-x-3">
-                                <div
-                                    class="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center"
+    <AdminLayout title="Maps Real-Time">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div
+                class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+            >
+                <div>
+                    <nav class="flex mb-2" aria-label="Breadcrumb">
+                        <ol
+                            class="inline-flex items-center space-x-1 text-sm text-gray-500"
+                        >
+                            <li class="inline-flex items-center">
+                                <a
+                                    href="/admin/dashboard"
+                                    class="hover:text-blue-600 transition-colors"
                                 >
-                                    <MapIcon class="h-6 w-6 text-blue-900" />
-                                </div>
-                                <div>
-                                    <h1
-                                        class="text-2xl font-bold text-white tracking-tight"
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <div class="flex items-center">
+                                    <svg
+                                        class="w-4 h-4 mx-1"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
                                     >
-                                        Maps Real-Time
-                                    </h1>
-                                    <p class="text-blue-100 text-sm">
-                                        Monitoring Absensi Peserta Magang
-                                    </p>
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                    <span class="text-gray-700 font-medium"
+                                        >Maps Real-Time</span
+                                    >
                                 </div>
-                            </div>
+                            </li>
+                        </ol>
+                    </nav>
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900">
+                        Maps Real-Time
+                    </h1>
+                    <p class="mt-1 text-gray-500">
+                        Monitoring lokasi absensi peserta magang secara
+                        real-time
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <!-- Date Badge -->
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700"
+                    >
+                        <svg
+                            class="w-4 h-4 text-gray-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                        </svg>
+                        {{ formattedCurrentDate }}
+                    </div>
+                    <!-- Live Indicator -->
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-xl"
+                    >
+                        <span class="relative flex h-2.5 w-2.5">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+                            ></span>
+                            <span
+                                class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"
+                            ></span>
+                        </span>
+                        <span class="text-sm font-medium text-emerald-700"
+                            >Live</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div
+            v-if="$page.props.flash.success"
+            class="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-4"
+        >
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0"
+                >
+                    <CheckCircleIcon class="h-5 w-5 text-emerald-600" />
+                </div>
+                <p class="text-emerald-800 font-medium text-sm">
+                    {{ $page.props.flash.success }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            <!-- Total Hadir Card -->
+            <div
+                class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-6 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
+            >
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
+                        <UsersIcon class="h-6 w-6 text-white" />
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-white/90">
+                            Total Hadir
+                        </p>
+                        <h3 class="text-2xl font-bold text-white">
+                            {{ stats.total_attendances }}
+                        </h3>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">
+                        Total peserta hadir hari ini
+                    </p>
+                </div>
+            </div>
+
+            <!-- Absensi Valid Card -->
+            <div
+                class="bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600 rounded-2xl p-6 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/25 hover:-translate-y-1 transition-all duration-300"
+            >
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
+                        <CheckCircleIcon class="h-6 w-6 text-white" />
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-white/90">
+                            Absensi Valid
+                        </p>
+                        <h3 class="text-2xl font-bold text-white">
+                            {{ stats.valid_attendances }}
+                        </h3>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">
+                        Dalam radius lokasi kantor
+                    </p>
+                </div>
+            </div>
+
+            <!-- Absensi Tidak Valid Card -->
+            <div
+                class="bg-gradient-to-br from-rose-500 via-red-500 to-pink-600 rounded-2xl p-6 shadow-lg shadow-rose-500/20 hover:shadow-xl hover:shadow-rose-500/25 hover:-translate-y-1 transition-all duration-300"
+            >
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
+                        <ExclamationTriangleIcon class="h-6 w-6 text-white" />
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-white/90">
+                            Tidak Valid
+                        </p>
+                        <h3 class="text-2xl font-bold text-white">
+                            {{ stats.invalid_attendances }}
+                        </h3>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Di luar radius lokasi</p>
+                </div>
+            </div>
+
+            <!-- Terlambat Card -->
+            <div
+                class="bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-600 rounded-2xl p-6 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/25 hover:-translate-y-1 transition-all duration-300"
+            >
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
+                        <ClockIcon class="h-6 w-6 text-white" />
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-white/90">
+                            Terlambat
+                        </p>
+                        <h3 class="text-2xl font-bold text-white">
+                            {{ stats.late }}
+                        </h3>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Peserta yang terlambat</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6"
+        >
+            <!-- Map Header -->
+            <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600">
+                <div
+                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                >
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                        >
+                            <MapPinIcon class="h-5 w-5 text-white" />
                         </div>
-                        <div class="flex items-center space-x-4">
-                            <div
-                                class="bg-blue-800/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-blue-700"
-                            >
-                                <div class="text-sm text-blue-100 font-medium">
-                                    {{ formattedCurrentDate }}
-                                </div>
-                            </div>
+                        <div>
+                            <h2 class="text-lg font-semibold text-white">
+                                Peta Lokasi Absensi
+                            </h2>
+                            <p class="text-sm text-white/80">
+                                Monitoring real-time lokasi peserta
+                            </p>
                         </div>
+                    </div>
+                    <button
+                        @click="refreshData"
+                        :disabled="isRefreshing"
+                        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white/20 hover:bg-white/30 disabled:bg-white/10 backdrop-blur-sm text-white text-sm font-medium rounded-xl transition-all duration-200 border border-white/20 disabled:cursor-not-allowed"
+                    >
+                        <ArrowPathIcon
+                            :class="[
+                                'h-4 w-4',
+                                isRefreshing ? 'animate-spin' : '',
+                            ]"
+                        />
+                        {{ isRefreshing ? "Memuat..." : "Refresh" }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="px-6 py-3 bg-gray-50/50 border-b border-gray-100">
+                <div class="flex flex-wrap items-center gap-6 text-sm">
+                    <div class="flex items-center gap-2">
+                        <span
+                            class="w-3 h-3 bg-blue-600 rounded-full ring-2 ring-blue-200"
+                        ></span>
+                        <span class="text-gray-600"
+                            >Kantor ({{
+                                officeLocation?.name ||
+                                "Bank Indonesia KPw Lampung"
+                            }})</span
+                        >
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span
+                            class="w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-emerald-200"
+                        ></span>
+                        <span class="text-gray-600">Absensi Valid</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span
+                            class="w-3 h-3 bg-rose-500 rounded-full ring-2 ring-rose-200"
+                        ></span>
+                        <span class="text-gray-600">Absensi Tidak Valid</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Main Content -->
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <!-- Success/Error Messages -->
+            <!-- Map -->
+            <div class="relative">
+                <div id="map" class="w-full h-[450px]"></div>
+
+                <!-- Loading overlay -->
                 <div
-                    v-if="$page.props.flash.success"
-                    class="mb-8 bg-gradient-to-r from-emerald-50 to-emerald-100/50 border-l-4 border-emerald-500 rounded-xl p-6 shadow-lg"
+                    v-if="isLoading"
+                    class="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center"
                 >
-                    <div class="flex items-center">
+                    <div class="text-center">
                         <div
-                            class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0"
-                        >
-                            <CheckCircleIcon class="h-6 w-6 text-white" />
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-emerald-800 font-medium">
-                                {{ $page.props.flash.success }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Statistics Cards -->
-                <div
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-                >
-                    <!-- Total Hadir Card -->
-                    <div
-                        class="bg-gradient-to-br from-blue-500 to-blue-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                    >
-                        <div class="p-6">
-                            <div class="flex items-center">
-                                <div
-                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
-                                >
-                                    <UsersIcon class="h-8 w-8 text-white" />
-                                </div>
-                                <div class="ml-5 w-0 flex-1">
-                                    <dl>
-                                        <dt
-                                            class="text-sm font-medium text-blue-100 truncate"
-                                        >
-                                            Total Hadir
-                                        </dt>
-                                        <dd
-                                            class="text-3xl font-bold text-white mt-1"
-                                        >
-                                            {{ stats.total_attendances }}
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-blue-700/30 px-6 py-2">
-                            <div class="text-xs text-blue-100">
-                                Total peserta hadir hari ini
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Absensi Valid Card -->
-                    <div
-                        class="bg-gradient-to-br from-green-500 to-green-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                    >
-                        <div class="p-6">
-                            <div class="flex items-center">
-                                <div
-                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
-                                >
-                                    <CheckCircleIcon
-                                        class="h-8 w-8 text-white"
-                                    />
-                                </div>
-                                <div class="ml-5 w-0 flex-1">
-                                    <dl>
-                                        <dt
-                                            class="text-sm font-medium text-green-100 truncate"
-                                        >
-                                            Absensi Valid
-                                        </dt>
-                                        <dd
-                                            class="text-3xl font-bold text-white mt-1"
-                                        >
-                                            {{ stats.valid_attendances }}
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-green-700/30 px-6 py-2">
-                            <div class="text-xs text-green-100">
-                                Absensi dalam radius valid
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Absensi Tidak Valid Card -->
-                    <div
-                        class="bg-gradient-to-br from-red-500 to-red-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                    >
-                        <div class="p-6">
-                            <div class="flex items-center">
-                                <div
-                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
-                                >
-                                    <ExclamationTriangleIcon
-                                        class="h-8 w-8 text-white"
-                                    />
-                                </div>
-                                <div class="ml-5 w-0 flex-1">
-                                    <dl>
-                                        <dt
-                                            class="text-sm font-medium text-red-100 truncate"
-                                        >
-                                            Absensi Tidak Valid
-                                        </dt>
-                                        <dd
-                                            class="text-3xl font-bold text-white mt-1"
-                                        >
-                                            {{ stats.invalid_attendances }}
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-red-700/30 px-6 py-2">
-                            <div class="text-xs text-red-100">
-                                Absensi di luar radius
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Terlambat Card -->
-                    <div
-                        class="bg-gradient-to-br from-orange-500 to-orange-600 overflow-hidden shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                    >
-                        <div class="p-6">
-                            <div class="flex items-center">
-                                <div
-                                    class="flex-shrink-0 bg-white/20 p-3 rounded-lg backdrop-blur-sm"
-                                >
-                                    <ClockIcon class="h-8 w-8 text-white" />
-                                </div>
-                                <div class="ml-5 w-0 flex-1">
-                                    <dl>
-                                        <dt
-                                            class="text-sm font-medium text-orange-100 truncate"
-                                        >
-                                            Terlambat
-                                        </dt>
-                                        <dd
-                                            class="text-3xl font-bold text-white mt-1"
-                                        >
-                                            {{ stats.late }}
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-orange-700/30 px-6 py-2">
-                            <div class="text-xs text-orange-100">
-                                Peserta yang terlambat
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Map Container -->
-                <div
-                    class="bg-white/90 rounded-xl shadow-sm border border-blue-100/50 p-6"
-                >
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="flex items-center space-x-3">
-                            <div
-                                class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center"
-                            >
-                                <MapPinIcon class="h-5 w-5 text-white" />
-                            </div>
-                            <div>
-                                <h2 class="text-lg font-semibold text-gray-900">
-                                    Peta Lokasi Absensi Real-Time
-                                </h2>
-                                <p class="text-sm text-gray-600">
-                                    Monitoring lokasi absensi peserta magang
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button
-                                @click="refreshData"
-                                :disabled="isRefreshing"
-                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-                            >
-                                <ArrowPathIcon
-                                    :class="[
-                                        'h-4 w-4 mr-1',
-                                        isRefreshing ? 'animate-spin' : '',
-                                    ]"
-                                />
-                                Refresh
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Legend -->
-                    <div class="mb-4">
-                        <div
-                            class="flex flex-wrap items-center space-x-6 text-sm"
-                        >
-                            <div class="flex items-center space-x-2">
-                                <div
-                                    class="w-3 h-3 bg-blue-600 rounded-full"
-                                ></div>
-                                <span class="text-gray-600"
-                                    >Kantor (Bank Indonesia KPw Lampung)</span
-                                >
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <div
-                                    class="w-3 h-3 bg-emerald-500 rounded-full"
-                                ></div>
-                                <span class="text-gray-600">Absensi Valid</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <div
-                                    class="w-3 h-3 bg-rose-500 rounded-full"
-                                ></div>
-                                <span class="text-gray-600"
-                                    >Absensi Tidak Valid</span
-                                >
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Map -->
-                    <div class="relative">
-                        <div
-                            id="map"
-                            class="w-full h-96 rounded-lg border border-gray-200"
+                            class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto"
                         ></div>
-
-                        <!-- Loading overlay -->
-                        <div
-                            v-if="isLoading"
-                            class="absolute inset-0 bg-white/75 backdrop-blur-sm rounded-lg flex items-center justify-center"
-                        >
-                            <div class="text-center">
-                                <div
-                                    class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"
-                                ></div>
-                                <p class="text-sm text-gray-600 mt-2">
-                                    Memuat peta...
-                                </p>
-                            </div>
-                        </div>
+                        <p class="text-sm text-gray-600 mt-3 font-medium">
+                            Memuat peta...
+                        </p>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Attendance List -->
-                <div
-                    class="mt-8 bg-white/90 rounded-xl shadow-sm border border-blue-100/50 p-6"
-                >
-                    <div class="flex items-center space-x-3 mb-6">
-                        <div
-                            class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center"
-                        >
-                            <ListBulletIcon class="h-5 w-5 text-white" />
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900">
+        <!-- Attendance List -->
+        <div
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+        >
+            <!-- Table Header -->
+            <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
+                        <ListBulletIcon class="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">
                             Daftar Absensi Hari Ini
                         </h3>
-                    </div>
-
-                    <div v-if="attendances.length > 0" class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Peserta
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Divisi
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Waktu Check-in
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Status
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
-                                        Lokasi
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr
-                                    v-for="attendance in attendances"
-                                    :key="attendance.id"
-                                    class="hover:bg-gray-50"
-                                >
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div
-                                            class="text-sm font-medium text-gray-900"
-                                        >
-                                            {{ attendance.user_name }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-600">
-                                            {{ attendance.division }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">
-                                            {{ attendance.check_in_time }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            :class="
-                                                getStatusBadgeClass(
-                                                    attendance.status
-                                                )
-                                            "
-                                            class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
-                                        >
-                                            {{
-                                                getStatusText(attendance.status)
-                                            }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            :class="
-                                                attendance.is_valid_location
-                                                    ? 'text-emerald-600'
-                                                    : 'text-rose-600'
-                                            "
-                                            class="inline-flex items-center text-sm font-medium"
-                                        >
-                                            <div
-                                                :class="
-                                                    attendance.is_valid_location
-                                                        ? 'bg-emerald-500'
-                                                        : 'bg-rose-500'
-                                                "
-                                                class="w-2 h-2 rounded-full mr-2"
-                                            ></div>
-                                            {{
-                                                attendance.is_valid_location
-                                                    ? "Valid"
-                                                    : "Tidak Valid"
-                                            }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div v-else class="text-center py-8">
-                        <div
-                            class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
-                        >
-                            <MapPinIcon class="h-8 w-8 text-gray-400" />
-                        </div>
-                        <p class="text-gray-500 font-medium">
-                            Belum ada absensi hari ini
-                        </p>
-                        <p class="text-sm text-gray-400 mt-1">
-                            Absensi peserta akan muncul secara real-time di sini
+                        <p class="text-sm text-white/80">
+                            {{ attendances.length }} peserta tercatat
                         </p>
                     </div>
                 </div>
+            </div>
+
+            <!-- Table Content -->
+            <div v-if="attendances.length > 0" class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="bg-gray-50/80">
+                            <th
+                                scope="col"
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                                Peserta
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                                Divisi
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                                Waktu Check-in
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                                Status
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                            >
+                                Lokasi
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr
+                            v-for="(attendance, index) in attendances"
+                            :key="attendance.id"
+                            :class="[
+                                'hover:bg-blue-50/50 transition-colors duration-150',
+                                index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30',
+                            ]"
+                        >
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold text-xs shadow-sm"
+                                    >
+                                        {{ getInitials(attendance.user_name) }}
+                                    </div>
+                                    <span
+                                        class="text-sm font-medium text-gray-900"
+                                        >{{ attendance.user_name }}</span
+                                    >
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    class="inline-flex items-center px-2.5 py-1 rounded-lg bg-gray-100 text-xs font-medium text-gray-700"
+                                >
+                                    {{ attendance.division }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div
+                                    class="flex items-center gap-1.5 text-sm text-gray-900"
+                                >
+                                    <svg
+                                        class="w-4 h-4 text-gray-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        />
+                                    </svg>
+                                    {{ attendance.check_in_time }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    :class="
+                                        getStatusBadgeClass(attendance.status)
+                                    "
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
+                                >
+                                    <span
+                                        :class="
+                                            getStatusDotClass(attendance.status)
+                                        "
+                                        class="w-1.5 h-1.5 rounded-full"
+                                    ></span>
+                                    {{ getStatusText(attendance.status) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    :class="[
+                                        'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold',
+                                        attendance.is_valid_location
+                                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                            : 'bg-rose-50 text-rose-700 border border-rose-200',
+                                    ]"
+                                >
+                                    <span
+                                        :class="
+                                            attendance.is_valid_location
+                                                ? 'bg-emerald-500'
+                                                : 'bg-rose-500'
+                                        "
+                                        class="w-1.5 h-1.5 rounded-full"
+                                    ></span>
+                                    {{
+                                        attendance.is_valid_location
+                                            ? "Valid"
+                                            : "Tidak Valid"
+                                    }}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty State -->
+            <div v-else class="text-center py-16">
+                <div
+                    class="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4"
+                >
+                    <MapPinIcon class="h-10 w-10 text-gray-400" />
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-1">
+                    Belum ada absensi hari ini
+                </h3>
+                <p class="text-sm text-gray-500 max-w-sm mx-auto">
+                    Absensi peserta akan muncul secara real-time di sini ketika
+                    mereka melakukan check-in
+                </p>
             </div>
         </div>
     </AdminLayout>
@@ -622,12 +666,22 @@ const refreshData = async () => {
 
 const getStatusBadgeClass = (status) => {
     const classes = {
-        "On-Time": "bg-emerald-100 text-emerald-800",
-        Late: "bg-amber-100 text-amber-800",
-        Absent: "bg-rose-100 text-rose-800",
-        "Not-Checked-Out": "bg-blue-100 text-blue-800",
+        "On-Time": "bg-emerald-50 text-emerald-700 border border-emerald-200",
+        Late: "bg-amber-50 text-amber-700 border border-amber-200",
+        Absent: "bg-rose-50 text-rose-700 border border-rose-200",
+        "Not-Checked-Out": "bg-blue-50 text-blue-700 border border-blue-200",
     };
-    return classes[status] || "bg-gray-100 text-gray-800";
+    return classes[status] || "bg-gray-50 text-gray-700 border border-gray-200";
+};
+
+const getStatusDotClass = (status) => {
+    const dotClasses = {
+        "On-Time": "bg-emerald-500",
+        Late: "bg-amber-500",
+        Absent: "bg-rose-500",
+        "Not-Checked-Out": "bg-blue-500",
+    };
+    return dotClasses[status] || "bg-gray-500";
 };
 
 const getStatusText = (status) => {
@@ -638,6 +692,16 @@ const getStatusText = (status) => {
         "Not-Checked-Out": "Belum Check-out",
     };
     return statusMap[status] || status;
+};
+
+const getInitials = (name) => {
+    if (!name) return "?";
+    return name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
 };
 
 onMounted(() => {
