@@ -7,6 +7,7 @@ use App\Models\Application;
 use App\Models\Division;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -14,7 +15,7 @@ class DashboardController extends Controller
     public function index()
     {
         // Check if user is admin
-        if (!auth()->check() || auth()->user()->role !== 'admin') {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
             abort(403, 'Unauthorized access. Admin role required.');
         }
 

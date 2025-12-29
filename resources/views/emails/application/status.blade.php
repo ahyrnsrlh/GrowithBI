@@ -7,7 +7,11 @@ Kami ingin memberitahukan bahwa status pengajuan magang Anda di **Bank Indonesia
 
 <x-mail::panel>
 <div style="text-align: center; padding: 20px 0;">
-<h2 style="color: {{ $statusColor }}; font-size: 24px; margin: 0;">
+@if($status === 'approved')
+<h2 style="color: #059669; font-size: 24px; margin: 0;">
+@else
+<h2 style="color: #DC2626; font-size: 24px; margin: 0;">
+@endif
 Status: {{ $statusText }}
 </h2>
 <p style="color: #6B7280; margin-top: 10px;">
