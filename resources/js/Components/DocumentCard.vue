@@ -291,7 +291,9 @@
                                 <div
                                     class="flex items-center justify-between p-4 border-b border-gray-200"
                                 >
-                                    <h3 class="text-lg font-semibold text-gray-900">
+                                    <h3
+                                        class="text-lg font-semibold text-gray-900"
+                                    >
                                         {{ documentName }}
                                     </h3>
                                     <button
@@ -373,7 +375,9 @@
                                             <p class="mt-4 text-gray-600">
                                                 Gagal memuat dokumen
                                             </p>
-                                            <p class="mt-1 text-sm text-gray-500">
+                                            <p
+                                                class="mt-1 text-sm text-gray-500"
+                                            >
                                                 {{ previewError }}
                                             </p>
                                             <button
@@ -531,17 +535,20 @@ const previewUrl = ref(null);
  */
 const getDocumentUrl = computed(() => {
     if (!props.documentPath) return null;
-    
+
     // If already a full URL, return as is
-    if (props.documentPath.startsWith('http://') || props.documentPath.startsWith('https://')) {
+    if (
+        props.documentPath.startsWith("http://") ||
+        props.documentPath.startsWith("https://")
+    ) {
         return props.documentPath;
     }
-    
+
     // If starts with /storage, return as is
-    if (props.documentPath.startsWith('/storage/')) {
+    if (props.documentPath.startsWith("/storage/")) {
         return props.documentPath;
     }
-    
+
     // Otherwise, prepend /storage/ for Laravel public disk
     return `/storage/${props.documentPath}`;
 });
@@ -568,16 +575,16 @@ const triggerFileInput = () => {
  */
 const viewDocument = async () => {
     if (!props.documentPath) return;
-    
+
     isLoading.value = true;
     previewLoading.value = true;
     previewError.value = null;
     previewUrl.value = getDocumentUrl.value;
     showPreview.value = true;
-    
+
     // Add keyboard listener for ESC
-    document.addEventListener('keydown', handleKeydown);
-    
+    document.addEventListener("keydown", handleKeydown);
+
     isLoading.value = false;
 };
 
@@ -594,7 +601,7 @@ const onPreviewLoad = () => {
  */
 const onPreviewError = () => {
     previewLoading.value = false;
-    previewError.value = 'File tidak ditemukan atau tidak dapat ditampilkan';
+    previewError.value = "File tidak ditemukan atau tidak dapat ditampilkan";
 };
 
 /**
@@ -614,14 +621,14 @@ const closePreview = () => {
     showPreview.value = false;
     previewUrl.value = null;
     previewError.value = null;
-    document.removeEventListener('keydown', handleKeydown);
+    document.removeEventListener("keydown", handleKeydown);
 };
 
 /**
  * Handle keyboard events
  */
 const handleKeydown = (event) => {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
         closePreview();
     }
 };
@@ -631,7 +638,7 @@ const handleKeydown = (event) => {
  */
 const openInNewTab = () => {
     if (getDocumentUrl.value) {
-        window.open(getDocumentUrl.value, '_blank', 'noopener,noreferrer');
+        window.open(getDocumentUrl.value, "_blank", "noopener,noreferrer");
     }
 };
 
@@ -641,40 +648,41 @@ const openInNewTab = () => {
  */
 const downloadDocument = async () => {
     if (!props.documentPath || isDownloading.value) return;
-    
+
     isDownloading.value = true;
-    
+
     try {
         const url = getDocumentUrl.value;
-        
+
         // Fetch the file as blob
         const response = await fetch(url);
-        
+
         if (!response.ok) {
-            throw new Error('File tidak ditemukan');
+            throw new Error("File tidak ditemukan");
         }
-        
+
         const blob = await response.blob();
-        
+
         // Extract filename from path
-        const filename = props.documentPath.split('/').pop() || `${props.documentType}.pdf`;
-        
+        const filename =
+            props.documentPath.split("/").pop() || `${props.documentType}.pdf`;
+
         // Create download link
         const downloadUrl = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = downloadUrl;
         link.download = filename;
-        link.style.display = 'none';
-        
+        link.style.display = "none";
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         // Cleanup
         window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
-        console.error('Download error:', error);
-        alert('Gagal mengunduh dokumen. ' + error.message);
+        console.error("Download error:", error);
+        alert("Gagal mengunduh dokumen. " + error.message);
     } finally {
         isDownloading.value = false;
     }
@@ -710,7 +718,9 @@ const handleFileChange = (event) => {
 
     // Confirm replacement if file already exists
     if (props.documentPath) {
-        if (!confirm("Apakah Anda yakin ingin mengganti file yang sudah ada?")) {
+        if (
+            !confirm("Apakah Anda yakin ingin mengganti file yang sudah ada?")
+        ) {
             event.target.value = "";
             return;
         }
@@ -725,6 +735,6 @@ const handleFileChange = (event) => {
 
 // Cleanup on unmount
 onUnmounted(() => {
-    document.removeEventListener('keydown', handleKeydown);
+    document.removeEventListener("keydown", handleKeydown);
 });
 </script>
