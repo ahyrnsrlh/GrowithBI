@@ -48,15 +48,14 @@
         >
             <!-- Logo -->
             <div
-                class="flex h-16 items-center justify-center border-b border-blue-700 border-opacity-40 flex-shrink-0"
+                class="flex h-16 items-center justify-start px-6 border-b border-blue-700 border-opacity-40 flex-shrink-0"
             >
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center">
                     <img
-                        src="/logo.png"
-                        alt="GrowithBI Logo"
-                        class="h-8 w-8 object-contain"
+                        src="/storage/logo_web.png"
+                        alt="GrowithBI Bank Indonesia Lampung"
+                        class="h-8 w-auto object-contain"
                     />
-                    <span class="text-xl font-bold text-white">GrowithBI</span>
                 </div>
             </div>
 

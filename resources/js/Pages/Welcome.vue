@@ -233,18 +233,10 @@ onUnmounted(() => {
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
                     <img
-                        src="/logo.png"
-                        alt="Logo"
-                        class="w-8 h-8 object-contain"
+                        src="/storage/logo_web.png"
+                        alt="GrowithBI Bank Indonesia Lampung"
+                        class="h-8 w-auto object-contain"
                     />
-                    <div class="flex flex-col">
-                        <span class="font-bold text-lg leading-none text-white"
-                            >GrowithBI</span
-                        >
-                        <span class="text-xs text-blue-100 leading-none"
-                            >Bank Indonesia Lampung</span
-                        >
-                    </div>
                 </div>
 
                 <!-- Desktop Menu -->

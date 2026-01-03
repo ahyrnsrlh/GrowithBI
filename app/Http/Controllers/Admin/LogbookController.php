@@ -195,10 +195,23 @@ class LogbookController extends Controller
                 $notificationType = match($request->status) {
                     'approved' => 'approved',
                     'rejected' => 'rejected',
-                    'revision' => 'rejected', // Use rejected for revision request
+                    'revision' => 'revision_requested',
                     default => 'submitted'
                 };
-                $logbook->user->notify(new LogbookNotification($logbook->fresh(), $notificationType));
+                
+                // Pass sender info for better notification context
+                $logbook->user->notify(new LogbookNotification(
+                    $logbook->fresh(),
+                    $notificationType,
+                    $user->id,
+                    'user'
+                ));
+                
+                Log::info('Logbook notification sent', [
+                    'to_user_id' => $logbook->user->id,
+                    'type' => $notificationType,
+                    'logbook_id' => $logbook->id
+                ]);
             }
             
             return back()->with('success', $message);

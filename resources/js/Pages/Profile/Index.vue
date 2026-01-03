@@ -49,24 +49,17 @@
             >
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex h-16 justify-between items-center">
-                        <!-- Logo BI + Text -->
-                        <div class="flex items-center space-x-3">
-                            <Link :href="route('home')">
-                                <img
-                                    src="/logo.png"
-                                    alt="Bank Indonesia"
-                                    class="h-10 w-auto"
-                                />
-                            </Link>
-                            <div class="hidden sm:block">
-                                <h1 class="text-white font-bold text-lg">
-                                    GrowithBI
-                                </h1>
-                                <p class="text-blue-200 text-xs">
-                                    Bank Indonesia Lampung
-                                </p>
-                            </div>
-                        </div>
+                        <!-- Logo -->
+                        <Link
+                            :href="route('home')"
+                            class="flex items-center ml-8"
+                        >
+                            <img
+                                src="/storage/logo_web.png"
+                                alt="GrowithBI Bank Indonesia Lampung"
+                                class="h-8 w-auto object-contain"
+                            />
+                        </Link>
 
                         <!-- Right Section: Notification Bell & User Dropdown -->
                         <div class="flex items-center space-x-4">

@@ -255,7 +255,8 @@ onMounted(() => {
 onUnmounted(() => {
     stopPolling();
     if (echoChannel.value) {
-        window.Echo.leave(`App.User.${props.userId}`);
+        // Must match the channel name used in setupEcho
+        window.Echo.leave(`App.Models.User.${props.userId}`);
     }
     // Remove click outside listener
     document.removeEventListener("click", handleClickOutside);
@@ -532,7 +533,11 @@ const setupEcho = () => {
 
     try {
         // Listen to private notification channel
-        echoChannel.value = window.Echo.private(`App.User.${props.userId}`)
+        // IMPORTANT: Laravel's notification system broadcasts to 'App.Models.User.{id}'
+        const channelName = `App.Models.User.${props.userId}`;
+        console.log("📡 Subscribing to channel:", channelName);
+
+        echoChannel.value = window.Echo.private(channelName)
             .notification((notification) => {
                 console.log(
                     "✅ Real-time notification received:",

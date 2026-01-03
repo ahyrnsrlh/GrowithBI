@@ -190,13 +190,23 @@ class LogbookController extends Controller
 
         // Send notification to user when logbook is submitted
         if ($request->status === 'submitted') {
-            $user->notify(new LogbookNotification($logbook, 'submitted'));
+            // Notify the participant that their logbook was submitted
+            $user->notify(new LogbookNotification($logbook, 'submitted', $user->id, 'user'));
             
             // Send notification to all admins
             $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
                 /** @var User $admin */
-                $admin->notify(new LogbookNotification($logbook, 'submitted'));
+                $admin->notify(new LogbookNotification($logbook, 'submitted', $user->id, 'admin'));
+            }
+            
+            // Also notify mentors in the same division
+            $mentors = User::where('role', 'mentor')
+                ->where('division_id', $logbook->division_id)
+                ->get();
+            foreach ($mentors as $mentor) {
+                /** @var User $mentor */
+                $mentor->notify(new LogbookNotification($logbook, 'submitted', $user->id, 'mentor'));
             }
         }
 
