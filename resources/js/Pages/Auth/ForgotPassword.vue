@@ -25,17 +25,12 @@ const submit = () => {
         <div class="w-full max-w-md">
             <!-- Logo and Header -->
             <div class="text-center mb-8">
-                <Link href="/" class="inline-flex items-center mb-6">
+                <Link href="/" class="inline-flex justify-center mb-6">
                     <img
-                        src="/logo.png"
-                        alt="Bank Indonesia Logo"
-                        class="h-12 w-12 mr-3"
+                        src="/storage/logo_scnd.png"
+                        alt="GrowithBI Logo"
+                        class="h-16 w-auto object-contain"
                     />
-                    <h1
-                        class="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
-                    >
-                        GrowithBI
-                    </h1>
                 </Link>
                 <h2 class="text-3xl font-bold text-gray-900 mb-2">
                     Lupa Password?

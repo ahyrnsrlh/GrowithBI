@@ -179,6 +179,12 @@ class DivisionController extends Controller
                 ->with('error', 'Divisi tidak dapat dihapus karena masih memiliki pendaftaran.');
         }
 
+        // Check if division has logbooks
+        if ($division->logbooks()->count() > 0) {
+            return redirect()->back()
+                ->with('error', 'Divisi tidak dapat dihapus karena masih memiliki laporan harian (logbook) yang terkait.');
+        }
+
         $division->delete();
 
         return redirect()->route('admin.divisions.index')
