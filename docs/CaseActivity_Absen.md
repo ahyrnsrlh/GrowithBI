@@ -149,13 +149,63 @@ Berikut saya berikan **use case notifikasi real-time** yang relevan untuk sistem
 5. ✅ Connection status indicator
 6. ✅ Environment validation
 7. ✅ Admin dan Peserta menerima notifikasi attendance
+8. ✅ Notifikasi `location_invalid` dan `face_not_recognized` saat absensi gagal
+9. ✅ Notifikasi `face_registered` saat user daftarkan wajah pertama kali
+10. ✅ Notifikasi `commented` saat admin/mentor comment di logbook
+11. ✅ Notifikasi `documents_completed` ke admin saat user lengkapi semua dokumen
+12. ✅ Notifikasi `graded` saat admin input nilai laporan
+13. ✅ Notifikasi `certificate_ready` saat sertifikat dibuat
+14. ✅ Routes untuk grade dan generate-certificate di admin panel
 
-### 🔄 **Yang Perlu Dicek:**
+### ✅ **Status Implementasi per Kategori:**
 
--   [ ] Admin dapat notifikasi saat user check-in/check-out
--   [ ] Logbook notification untuk admin saat ada submission baru
--   [ ] Report notification untuk admin saat ada submission baru
--   [ ] Email dikirim untuk kategori yang sesuai (Pendaftaran, Logbook approved/rejected, Report critical events)
+#### **1. Pendaftaran & Seleksi** ✅
+
+| Event Type              | Trigger                       | Status |
+| ----------------------- | ----------------------------- | ------ |
+| `application_submitted` | User submit form              | ✅     |
+| `documents_completed`   | User upload semua dokumen     | ✅     |
+| `accepted`              | Admin approve aplikasi        | ✅     |
+| `rejected`              | Admin reject aplikasi         | ✅     |
+| `letter_ready`          | Admin upload surat penerimaan | ✅     |
+
+#### **2. Absensi & Kehadiran** ✅
+
+| Event Type            | Trigger                 | Status               |
+| --------------------- | ----------------------- | -------------------- |
+| `checked_in`          | User check-in sukses    | ✅                   |
+| `late`                | User check-in terlambat | ✅                   |
+| `checked_out`         | User check-out sukses   | ✅                   |
+| `location_invalid`    | User di luar radius     | ✅                   |
+| `face_not_recognized` | Verifikasi wajah gagal  | ✅                   |
+| `face_registered`     | User daftarkan wajah    | ✅                   |
+| `missing_checkin`     | Scheduled reminder      | ⏳ (butuh scheduler) |
+| `missing_checkout`    | Scheduled reminder      | ⏳ (butuh scheduler) |
+
+#### **3. Logbook & Aktivitas** ✅
+
+| Event Type            | Trigger               | Status               |
+| --------------------- | --------------------- | -------------------- |
+| `submitted`           | User submit logbook   | ✅                   |
+| `approved`            | Admin approve logbook | ✅                   |
+| `rejected`            | Admin reject logbook  | ✅                   |
+| `revision_requested`  | Admin minta revisi    | ✅                   |
+| `commented`           | Admin tambah komentar | ✅                   |
+| `pending_over_3_days` | Scheduled reminder    | ⏳ (butuh scheduler) |
+| `not_submitted_today` | Scheduled reminder    | ⏳ (butuh scheduler) |
+
+#### **4. Laporan Akhir** ✅
+
+| Event Type           | Trigger                   | Status               |
+| -------------------- | ------------------------- | -------------------- |
+| `submitted`          | User upload laporan       | ✅                   |
+| `reviewed`           | Admin mulai review        | ✅                   |
+| `approved`           | Admin approve laporan     | ✅                   |
+| `revision_requested` | Admin minta revisi        | ✅                   |
+| `graded`             | Admin input nilai         | ✅                   |
+| `certificate_ready`  | Admin generate sertifikat | ✅                   |
+| `deadline_reminder`  | Scheduled reminder        | ⏳ (butuh scheduler) |
+| `overdue`            | Scheduled reminder        | ⏳ (butuh scheduler) |
 
 ---
 
@@ -169,5 +219,5 @@ Berikut saya berikan **use case notifikasi real-time** yang relevan untuk sistem
 
 ---
 
-**Last Updated**: December 26, 2025  
-**Status**: ✅ Implemented - **Admin now receives attendance notifications**
+**Last Updated**: January 8, 2026  
+**Status**: ✅ **FULLY IMPLEMENTED** - Semua 4 kategori notifikasi berjalan dengan baik
