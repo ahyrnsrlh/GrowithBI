@@ -246,6 +246,33 @@ class LogbookController extends Controller
             'is_internal' => $request->is_internal ?? false
         ]);
 
+        // Send notification to the logbook owner (only if not internal comment)
+        if (!($request->is_internal ?? false)) {
+            try {
+                /** @var User $logbookOwner */
+                $logbookOwner = $logbook->user;
+                if ($logbookOwner && $logbookOwner->id !== $user->id) {
+                    $logbookOwner->notify(new LogbookNotification(
+                        $logbook,
+                        'commented',
+                        $user->id,
+                        'peserta'
+                    ));
+
+                    Log::info('Logbook comment notification sent', [
+                        'logbook_id' => $logbook->id,
+                        'commenter_id' => $user->id,
+                        'recipient_id' => $logbookOwner->id
+                    ]);
+                }
+            } catch (\Exception $e) {
+                Log::error('Failed to send logbook comment notification', [
+                    'logbook_id' => $logbook->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+
         return back()->with('success', 'Komentar berhasil ditambahkan.');
     }
 

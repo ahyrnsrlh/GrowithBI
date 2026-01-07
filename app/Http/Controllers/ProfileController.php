@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Enums\RegistrationEventType;
+use App\Notifications\RegistrationStatusNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
@@ -261,6 +264,9 @@ class ProfileController extends Controller
             'pas_foto' => 'Pas Foto'
         ];
 
+        // Check if all required documents are now complete and notify admins
+        $this->checkAndNotifyDocumentsComplete($user->fresh());
+
         // Return JSON response for AJAX requests
         if ($request->wantsJson() || $request->expectsJson()) {
             return response()->json([
@@ -441,5 +447,83 @@ class ProfileController extends Controller
             'total' => $total,
             'missing' => array_keys(array_filter($fields, fn($value) => empty($value)))
         ];
+    }
+
+    /**
+     * Check if all required documents are complete and notify admins
+     * 
+     * @param User $user
+     */
+    private function checkAndNotifyDocumentsComplete(User $user): void
+    {
+        // Required document fields
+        $requiredDocs = [
+            'surat_pengantar_path',
+            'cv_path',
+            'motivation_letter_path',
+            'transkrip_path',
+            'ktp_path',
+            'buku_rekening_path',
+            'pas_foto_path',
+        ];
+
+        // Check if all required documents are uploaded
+        $allComplete = true;
+        foreach ($requiredDocs as $docField) {
+            if (empty($user->{$docField})) {
+                $allComplete = false;
+                break;
+            }
+        }
+
+        if (!$allComplete) {
+            return;
+        }
+
+        // Get user's active application
+        $application = Application::where('user_id', $user->id)
+            ->whereIn('status', ['menunggu', 'pending', 'in_review'])
+            ->latest()
+            ->first();
+
+        if (!$application) {
+            return;
+        }
+
+        // Check if we already sent this notification (to avoid duplicates)
+        $existingNotification = DB::table('notifications')
+            ->where('notifiable_type', User::class)
+            ->where('type', RegistrationStatusNotification::class)
+            ->whereJsonContains('data->event_type', 'documents_completed')
+            ->whereJsonContains('data->application_id', $application->id)
+            ->exists();
+
+        if ($existingNotification) {
+            return;
+        }
+
+        // Send notification to all admins
+        try {
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                /** @var User $admin */
+                $admin->notify(new RegistrationStatusNotification(
+                    $application,
+                    RegistrationEventType::DOCUMENTS_COMPLETED,
+                    [],
+                    true // isAdminNotification
+                ));
+            }
+
+            Log::info('Documents completed notification sent to admins', [
+                'user_id' => $user->id,
+                'application_id' => $application->id
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to send documents completed notification', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

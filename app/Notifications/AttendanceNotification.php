@@ -86,9 +86,13 @@ class AttendanceNotification extends Notification implements ShouldQueue
             'late' => 'Terlambat Check-in',
             'early_checkout' => 'Check-out Lebih Awal',
             'location_warning' => 'Peringatan Lokasi',
+            'location_invalid' => 'Lokasi Tidak Valid',
             'face_registered' => 'Wajah Terdaftar',
+            'face_not_recognized' => 'Verifikasi Wajah Gagal',
             'reminder_checkin' => 'Reminder Check-in',
             'reminder_checkout' => 'Reminder Check-out',
+            'missing_checkin' => 'Belum Check-in',
+            'missing_checkout' => 'Belum Check-out',
             default => 'Notifikasi Absensi',
         };
     }
@@ -118,15 +122,27 @@ class AttendanceNotification extends Notification implements ShouldQueue
             'location_warning' => $isAdmin
                 ? "Lokasi check-in {$userName} berbeda dari lokasi yang ditetapkan"
                 : "Lokasi check-in Anda berbeda dari lokasi yang ditetapkan.",
+            'location_invalid' => $isAdmin
+                ? "Check-in {$userName} gagal: lokasi di luar radius yang diizinkan"
+                : "Check-in gagal: Anda berada di luar lokasi yang diizinkan.",
             'face_registered' => $isAdmin
                 ? "Wajah {$userName} telah berhasil didaftarkan untuk verifikasi absensi"
                 : "Wajah Anda telah berhasil didaftarkan untuk verifikasi absensi.",
+            'face_not_recognized' => $isAdmin
+                ? "Verifikasi wajah {$userName} gagal saat check-in"
+                : "Verifikasi wajah gagal. Pastikan wajah Anda terlihat jelas di kamera.",
             'reminder_checkin' => $isAdmin
                 ? "{$userName} belum melakukan check-in hari ini"
                 : "Jangan lupa untuk melakukan check-in hari ini.",
             'reminder_checkout' => $isAdmin
                 ? "{$userName} belum melakukan check-out hari ini"
                 : "Jangan lupa untuk melakukan check-out hari ini.",
+            'missing_checkin' => $isAdmin
+                ? "{$userName} belum melakukan check-in hari ini"
+                : "Anda belum melakukan check-in hari ini.",
+            'missing_checkout' => $isAdmin
+                ? "{$userName} belum melakukan check-out hari ini"
+                : "Anda belum melakukan check-out hari ini.",
             default => $isAdmin
                 ? "Absensi {$userName} telah diperbarui"
                 : "Absensi Anda telah diperbarui.",
@@ -144,9 +160,13 @@ class AttendanceNotification extends Notification implements ShouldQueue
             'late' => 'exclamation-triangle',
             'early_checkout' => 'exclamation-circle',
             'location_warning' => 'map-pin',
+            'location_invalid' => 'x-circle',
             'face_registered' => 'user-circle',
+            'face_not_recognized' => 'face-frown',
             'reminder_checkin' => 'bell-alert',
             'reminder_checkout' => 'bell-alert',
+            'missing_checkin' => 'clock',
+            'missing_checkout' => 'clock',
             default => 'calendar',
         };
     }
@@ -162,9 +182,13 @@ class AttendanceNotification extends Notification implements ShouldQueue
             'late' => 'red',
             'early_checkout' => 'orange',
             'location_warning' => 'yellow',
+            'location_invalid' => 'red',
             'face_registered' => 'purple',
+            'face_not_recognized' => 'red',
             'reminder_checkin' => 'indigo',
             'reminder_checkout' => 'indigo',
+            'missing_checkin' => 'amber',
+            'missing_checkout' => 'amber',
             default => 'gray',
         };
     }

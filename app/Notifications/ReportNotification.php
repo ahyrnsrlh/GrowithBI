@@ -135,8 +135,10 @@ class ReportNotification extends Notification implements ShouldQueue
             'reviewed' => 'Laporan Sedang Direview',
             'approved' => 'Laporan Akhir Disetujui',
             'revision_requested' => 'Laporan Perlu Revisi',
+            'graded' => 'Nilai Laporan Tersedia',
             'deadline_reminder' => 'Reminder Deadline Laporan',
             'deadline_passed' => 'Deadline Laporan Terlewati',
+            'overdue' => 'Laporan Overdue',
             'certificate_ready' => 'Sertifikat Magang Tersedia',
             default => 'Notifikasi Laporan',
         };
@@ -164,12 +166,18 @@ class ReportNotification extends Notification implements ShouldQueue
             'revision_requested' => $isAdmin
                 ? "Laporan akhir {$userName} memerlukan revisi"
                 : "Laporan akhir Anda memerlukan revisi. Silakan cek catatan dari supervisor.",
+            'graded' => $isAdmin
+                ? "Nilai laporan akhir {$userName} telah diinput"
+                : "Nilai laporan akhir Anda telah tersedia. Silakan cek di dashboard.",
             'deadline_reminder' => $isAdmin
                 ? "Deadline laporan akhir {$userName} akan berakhir dalam 3 hari"
                 : "Deadline pengumpulan laporan akhir akan berakhir dalam 3 hari. Segera kirimkan laporan Anda.",
             'deadline_passed' => $isAdmin
                 ? "{$userName} melewati deadline laporan akhir"
                 : "Anda telah melewati deadline pengumpulan laporan akhir. Segera hubungi supervisor.",
+            'overdue' => $isAdmin
+                ? "Laporan akhir {$userName} sudah overdue dan perlu segera dikumpulkan"
+                : "Laporan akhir Anda sudah melewati deadline! Segera selesaikan dan kirimkan.",
             'certificate_ready' => $isAdmin
                 ? "Sertifikat magang {$userName} telah siap"
                 : "Sertifikat magang Anda telah siap untuk diunduh. Terima kasih atas partisipasi Anda.",
@@ -189,8 +197,10 @@ class ReportNotification extends Notification implements ShouldQueue
             'reviewed' => 'magnifying-glass',
             'approved' => 'check-badge',
             'revision_requested' => 'arrow-path',
+            'graded' => 'star',
             'deadline_reminder' => 'clock',
             'deadline_passed' => 'exclamation-triangle',
+            'overdue' => 'exclamation-circle',
             'certificate_ready' => 'academic-cap',
             default => 'document-text',
         };
@@ -206,8 +216,10 @@ class ReportNotification extends Notification implements ShouldQueue
             'reviewed' => 'indigo',
             'approved' => 'green',
             'revision_requested' => 'orange',
+            'graded' => 'purple',
             'deadline_reminder' => 'yellow',
             'deadline_passed' => 'red',
+            'overdue' => 'red',
             'certificate_ready' => 'purple',
             default => 'gray',
         };

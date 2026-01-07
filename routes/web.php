@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ApplicationController;
 use App\Http\Controllers\Admin\ParticipantController;
-use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Foundation\Application;
@@ -195,6 +194,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::put('/final-reports/{report}/status', [\App\Http\Controllers\Admin\FinalReportController::class, 'updateStatus'])->name('final-reports.update-status');
     Route::get('/final-reports/{report}/download', [\App\Http\Controllers\Admin\FinalReportController::class, 'download'])->name('final-reports.download');
     Route::post('/final-reports/{report}/feedback', [\App\Http\Controllers\Admin\FinalReportController::class, 'addFeedback'])->name('final-reports.add-feedback');
+    Route::post('/final-reports/{report}/grade', [\App\Http\Controllers\Admin\FinalReportController::class, 'grade'])->name('final-reports.grade');
+    Route::post('/final-reports/{report}/generate-certificate', [\App\Http\Controllers\Admin\FinalReportController::class, 'generateCertificate'])->name('final-reports.generate-certificate');
     
     Route::get('/applications/export', [ApplicationController::class, 'exportApplications'])->name('applications.export');
 });

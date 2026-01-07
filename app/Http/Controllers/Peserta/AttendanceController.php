@@ -71,6 +71,10 @@ class AttendanceController extends Controller
         // 1. FACE VERIFICATION - Must be first!
         $faceVerificationResult = $this->verifyFace($user, $request->face_descriptor);
         if (!$faceVerificationResult['success']) {
+            // Send face_not_recognized notification to user and admins (only if not a first-time registration)
+            if (!empty($user->face_descriptor)) {
+                $this->sendFailedAttendanceNotification($user, 'face_not_recognized');
+            }
             return redirect()->back()->with('error', $faceVerificationResult['message']);
         }
 
@@ -99,6 +103,8 @@ class AttendanceController extends Controller
 
         // Validate location
         if (!$this->isWithinAllowedLocation($request->latitude, $request->longitude)) {
+            // Send location_invalid notification to user and admins
+            $this->sendFailedAttendanceNotification($user, 'location_invalid');
             return redirect()->back()->with('error', 'Absensi hanya dapat dilakukan di lokasi magang Bank Indonesia.');
         }
 
@@ -188,6 +194,8 @@ class AttendanceController extends Controller
         // 1. FACE VERIFICATION - Must be first!
         $faceVerificationResult = $this->verifyFace($user, $request->face_descriptor);
         if (!$faceVerificationResult['success']) {
+            // Send face_not_recognized notification to user and admins
+            $this->sendFailedAttendanceNotification($user, 'face_not_recognized');
             return redirect()->back()->with('error', $faceVerificationResult['message']);
         }
 
@@ -219,6 +227,8 @@ class AttendanceController extends Controller
 
         // Validate location
         if (!$this->isWithinAllowedLocation($request->latitude, $request->longitude)) {
+            // Send location_invalid notification to user and admins
+            $this->sendFailedAttendanceNotification($user, 'location_invalid');
             return redirect()->back()->with('error', 'Check-out hanya dapat dilakukan di lokasi magang Bank Indonesia.');
         }
 
@@ -454,5 +464,50 @@ class AttendanceController extends Controller
         }
 
         return sqrt($sum);
+    }
+
+    /**
+     * Send notification for failed attendance attempt (location invalid or face not recognized)
+     * 
+     * @param User $user The user who attempted the attendance
+     * @param string $type Notification type: 'location_invalid' or 'face_not_recognized'
+     */
+    private function sendFailedAttendanceNotification(User $user, string $type): void
+    {
+        try {
+            // Create a temporary attendance record for the notification
+            $attendance = new Attendance();
+            $attendance->user_id = $user->id;
+            $attendance->date = Carbon::now('Asia/Jakarta')->toDateString();
+            
+            // We need to save temporarily to have an ID for the notification
+            // But we'll use forceFill to avoid required field validation
+            $attendance->forceFill([
+                'user_id' => $user->id,
+                'date' => Carbon::now('Asia/Jakarta')->toDateString(),
+            ]);
+
+            // Send notification to user
+            $user->notify(new AttendanceNotification($attendance, $type));
+
+            // Send notification to all admins
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                /** @var User $admin */
+                $admin->notify(new AttendanceNotification($attendance, $type));
+            }
+
+            Log::info('Failed attendance notification sent', [
+                'user_id' => $user->id,
+                'type' => $type,
+                'timestamp' => now()
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to send attendance notification', [
+                'user_id' => $user->id,
+                'type' => $type,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

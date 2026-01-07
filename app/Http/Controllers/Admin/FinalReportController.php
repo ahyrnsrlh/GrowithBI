@@ -134,6 +134,50 @@ class FinalReportController extends Controller
     }
 
     /**
+     * Grade the report
+     */
+    public function grade(Request $request, Report $report)
+    {
+        $request->validate([
+            'grade' => 'required|numeric|min:0|max:100',
+            'grade_notes' => 'nullable|string|max:1000'
+        ]);
+
+        $report->update([
+            'grade' => $request->grade,
+            'grade_notes' => $request->grade_notes,
+            'graded_by' => Auth::id(),
+            'graded_at' => now()
+        ]);
+
+        // Send notification to peserta
+        $report->user->notify(new ReportNotification($report->fresh(), 'graded'));
+
+        return back()->with('success', 'Nilai laporan berhasil disimpan.');
+    }
+
+    /**
+     * Generate and mark certificate as ready
+     */
+    public function generateCertificate(Request $request, Report $report)
+    {
+        // Validate report is approved and graded
+        if ($report->status !== 'approved') {
+            return back()->with('error', 'Laporan harus disetujui terlebih dahulu.');
+        }
+
+        $report->update([
+            'certificate_generated_at' => now(),
+            'certificate_generated_by' => Auth::id()
+        ]);
+
+        // Send notification to peserta
+        $report->user->notify(new ReportNotification($report->fresh(), 'certificate_ready'));
+
+        return back()->with('success', 'Sertifikat berhasil dibuat dan tersedia untuk diunduh.');
+    }
+
+    /**
      * Export all final reports to CSV
      */
     public function exportAll(Request $request)
