@@ -6,7 +6,7 @@ use App\Enums\RegistrationEventType;
 use App\Enums\RegistrationStatus;
 use App\Models\Application;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -20,7 +20,7 @@ use Illuminate\Notifications\Notification;
  * - Multiple channels: database, broadcast, and email
  * - Clean payload structure with metadata support
  */
-class RegistrationStatusNotification extends Notification implements ShouldQueue
+class RegistrationStatusNotification extends Notification implements ShouldBroadcast
 {
     use Queueable;
 

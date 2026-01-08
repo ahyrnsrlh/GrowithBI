@@ -20,7 +20,7 @@ Berikut saya berikan **use case notifikasi real-time** yang relevan untuk sistem
 -   🆕 Pendaftaran baru masuk
 -   📝 User melengkapi dokumen pendaftaran
 
-**Channel**: Database + Broadcast + **Email**  
+**Channel**: Database + Broadcast  
 **Notification Class**: `RegistrationStatusNotification`
 
 **Event Types:**
@@ -82,16 +82,18 @@ Berikut saya berikan **use case notifikasi real-time** yang relevan untuk sistem
 -   ⏰ Logbook pending review >3 hari
 -   ⚠️ User belum submit logbook hari ini
 
-**Channel**: Database + Broadcast + **Email** (hanya untuk approved/rejected)  
+**Channel**: Database + Broadcast  
 **Notification Class**: `LogbookNotification`
 
 **Event Types:**
 
 -   `submitted` - Logbook baru disubmit
--   `approved` - Logbook disetujui (+ email)
--   `rejected` - Logbook ditolak (+ email)
+-   `approved` - Logbook disetujui
+-   `rejected` - Logbook ditolak
 -   `revision_requested` - Perlu revisi
 -   `commented` - Ada komentar baru
+-   `pending_overdue` - Pending review > 3 hari (scheduler)
+-   `not_submitted_today` - Belum submit hari ini (scheduler)
 
 ---
 
@@ -103,38 +105,39 @@ Berikut saya berikan **use case notifikasi real-time** yang relevan untuk sistem
 -   ✅ Laporan disetujui
 -   ❌ Laporan perlu revisi
 -   ⏰ Tenggat pengumpulan mendekat (3 hari)
--   🎓 Nilai dan sertifikat tersedia
 
 #### **Untuk Admin:**
 
 -   📄 Laporan akhir baru submitted
 -   ⏰ Deadline laporan 3 hari lagi
 -   🚨 User OVERDUE laporan akhir
--   ✅ Laporan direvisi oleh pembimbing
+-   ✅ Laporan direvisi oleh user
 
-**Channel**: Database + Broadcast + **Email** (untuk status kritis)  
+**Channel**: Database + Broadcast  
 **Notification Class**: `ReportNotification`
 
 **Event Types:**
 
 -   `submitted` - Laporan baru diupload
 -   `under_review` - Sedang direview
--   `approved` - Laporan disetujui (+ email)
--   `revision_required` - Perlu revisi (+ email)
--   `graded` - Nilai keluar (+ email)
--   `certificate_ready` - Sertifikat siap (+ email)
--   `deadline_approaching` - Deadline 3 hari lagi
+-   `approved` - Laporan disetujui
+-   `revision_required` - Perlu revisi
+-   `deadline_approaching` - Deadline 3 hari lagi (scheduler)
+-   `overdue` - Laporan melewati deadline (scheduler)
+-   `resubmitted` - Laporan direvisi ulang
 
 ---
 
 ## 📊 **Summary Matrix**
 
-| Kategori                  | Peserta | Admin | Email     | Real-Time |
-| ------------------------- | ------- | ----- | --------- | --------- |
-| **Pendaftaran & Seleksi** | ✅      | ✅    | ✅        | ✅        |
-| **Absensi & Kehadiran**   | ✅      | ✅    | ❌        | ✅        |
-| **Logbook & Aktivitas**   | ✅      | ✅    | Selective | ✅        |
-| **Laporan Akhir**         | ✅      | ✅    | Selective | ✅        |
+| Kategori                  | Peserta | Admin | Email | Real-Time |
+| ------------------------- | ------- | ----- | ----- | --------- |
+| **Pendaftaran & Seleksi** | ✅      | ✅    | ❌    | ✅        |
+| **Absensi & Kehadiran**   | ✅      | ✅    | ❌    | ✅        |
+| **Logbook & Aktivitas**   | ✅      | ✅    | ❌    | ✅        |
+| **Laporan Akhir**         | ✅      | ✅    | ❌    | ✅        |
+
+> **Note**: Semua notifikasi hanya menggunakan **database + broadcast** (real-time). Tidak ada email notifications.
 
 ---
 
@@ -153,9 +156,7 @@ Berikut saya berikan **use case notifikasi real-time** yang relevan untuk sistem
 9. ✅ Notifikasi `face_registered` saat user daftarkan wajah pertama kali
 10. ✅ Notifikasi `commented` saat admin/mentor comment di logbook
 11. ✅ Notifikasi `documents_completed` ke admin saat user lengkapi semua dokumen
-12. ✅ Notifikasi `graded` saat admin input nilai laporan
-13. ✅ Notifikasi `certificate_ready` saat sertifikat dibuat
-14. ✅ Routes untuk grade dan generate-certificate di admin panel
+12. ✅ Scheduled Commands untuk reminder notifications
 
 ### ✅ **Status Implementasi per Kategori:**
 
@@ -171,53 +172,112 @@ Berikut saya berikan **use case notifikasi real-time** yang relevan untuk sistem
 
 #### **2. Absensi & Kehadiran** ✅
 
-| Event Type            | Trigger                 | Status               |
-| --------------------- | ----------------------- | -------------------- |
-| `checked_in`          | User check-in sukses    | ✅                   |
-| `late`                | User check-in terlambat | ✅                   |
-| `checked_out`         | User check-out sukses   | ✅                   |
-| `location_invalid`    | User di luar radius     | ✅                   |
-| `face_not_recognized` | Verifikasi wajah gagal  | ✅                   |
-| `face_registered`     | User daftarkan wajah    | ✅                   |
-| `missing_checkin`     | Scheduled reminder      | ⏳ (butuh scheduler) |
-| `missing_checkout`    | Scheduled reminder      | ⏳ (butuh scheduler) |
+| Event Type            | Trigger                 | Status |
+| --------------------- | ----------------------- | ------ |
+| `checked_in`          | User check-in sukses    | ✅     |
+| `late`                | User check-in terlambat | ✅     |
+| `checked_out`         | User check-out sukses   | ✅     |
+| `location_invalid`    | User di luar radius     | ✅     |
+| `face_not_recognized` | Verifikasi wajah gagal  | ✅     |
+| `face_registered`     | User daftarkan wajah    | ✅     |
 
 #### **3. Logbook & Aktivitas** ✅
 
-| Event Type            | Trigger               | Status               |
-| --------------------- | --------------------- | -------------------- |
-| `submitted`           | User submit logbook   | ✅                   |
-| `approved`            | Admin approve logbook | ✅                   |
-| `rejected`            | Admin reject logbook  | ✅                   |
-| `revision_requested`  | Admin minta revisi    | ✅                   |
-| `commented`           | Admin tambah komentar | ✅                   |
-| `pending_over_3_days` | Scheduled reminder    | ⏳ (butuh scheduler) |
-| `not_submitted_today` | Scheduled reminder    | ⏳ (butuh scheduler) |
+| Event Type            | Trigger                          | Status |
+| --------------------- | -------------------------------- | ------ |
+| `submitted`           | User submit logbook              | ✅     |
+| `approved`            | Admin approve logbook            | ✅     |
+| `rejected`            | Admin reject logbook             | ✅     |
+| `revision_requested`  | Admin minta revisi               | ✅     |
+| `commented`           | Admin tambah komentar            | ✅     |
+| `pending_overdue`     | Scheduler: pending > 3 hari      | ✅     |
+| `not_submitted_today` | Scheduler: belum submit hari ini | ✅     |
 
 #### **4. Laporan Akhir** ✅
 
-| Event Type           | Trigger                   | Status               |
-| -------------------- | ------------------------- | -------------------- |
-| `submitted`          | User upload laporan       | ✅                   |
-| `reviewed`           | Admin mulai review        | ✅                   |
-| `approved`           | Admin approve laporan     | ✅                   |
-| `revision_requested` | Admin minta revisi        | ✅                   |
-| `graded`             | Admin input nilai         | ✅                   |
-| `certificate_ready`  | Admin generate sertifikat | ✅                   |
-| `deadline_reminder`  | Scheduled reminder        | ⏳ (butuh scheduler) |
-| `overdue`            | Scheduled reminder        | ⏳ (butuh scheduler) |
+| Event Type             | Trigger                         | Status |
+| ---------------------- | ------------------------------- | ------ |
+| `submitted`            | User upload laporan             | ✅     |
+| `under_review`         | Admin mulai review              | ✅     |
+| `approved`             | Admin approve laporan           | ✅     |
+| `revision_required`    | Admin minta revisi              | ✅     |
+| `resubmitted`          | User upload revisi              | ✅     |
+| `deadline_approaching` | Scheduler: deadline 3 hari lagi | ✅     |
+| `overdue`              | Scheduler: melewati deadline    | ✅     |
+
+---
+
+## ⏰ **Scheduled Commands**
+
+### Logbook Reminders
+
+```bash
+# Run daily at 16:00
+php artisan notifications:logbook-reminders
+
+# Options:
+--type=all|pending_overdue|not_submitted_today
+--dry-run  # Test tanpa kirim notifikasi
+```
+
+### Report Reminders
+
+```bash
+# Run daily at 09:00
+php artisan notifications:report-reminders
+
+# Options:
+--type=all|deadline_approaching|overdue
+--days=3   # Days before deadline
+--dry-run  # Test tanpa kirim notifikasi
+```
+
+### Cron Setup (Production)
+
+```bash
+* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+### Local Development
+
+```bash
+php artisan schedule:work
+```
+
+---
+
+## � **Development Setup (Real-time)**
+
+Untuk real-time notifications, jalankan **3 server** di terminal terpisah:
+
+```bash
+# Terminal 1: Laravel Dev Server (atau gunakan Laragon)
+php artisan serve
+
+# Terminal 2: Reverb WebSocket Server (WAJIB untuk real-time)
+php artisan reverb:start
+
+# Terminal 3: Queue Worker (WAJIB untuk broadcast)
+php artisan queue:work
+```
+
+**Tanpa queue worker**, broadcast notifications tidak akan terkirim ke WebSocket!
 
 ---
 
 ## 💡 **Catatan Penting**
 
-> **Notifikasi Attendance**: Tidak menggunakan email, **HANYA database + broadcast** untuk menghindari spam email. Admin melihat real-time di dashboard.
+> **NO EMAIL NOTIFICATIONS**: Semua notifikasi menggunakan **database + broadcast** saja untuk real-time updates di web UI.
 
-> **Real-time via WebSocket**: Menggunakan Laravel Reverb/Pusher dengan **fallback polling** (30 detik) jika WebSocket gagal.
+> **Database Synchronous**: Notifikasi database disimpan secara **sinkron** (langsung tersimpan), broadcast di-queue.
 
-> **Email Selective**: Hanya untuk event penting (pendaftaran, logbook approved/rejected, report critical status) untuk menghindari information overload.
+> **Broadcast via Queue**: Broadcast notifications di-queue dan butuh `php artisan queue:work` untuk diproses.
+
+> **Real-time via WebSocket**: Menggunakan Laravel Reverb dengan **fallback polling** (30 detik) jika WebSocket gagal.
+
+> **Scheduler Required**: Untuk reminder notifications (logbook not submitted, report deadline), scheduler harus berjalan via cron atau `schedule:work`.
 
 ---
 
 **Last Updated**: January 8, 2026  
-**Status**: ✅ **FULLY IMPLEMENTED** - Semua 4 kategori notifikasi berjalan dengan baik
+**Status**: ✅ **FULLY IMPLEMENTED** - Semua 4 kategori notifikasi berjalan dengan baik (NO EMAIL, database sync)

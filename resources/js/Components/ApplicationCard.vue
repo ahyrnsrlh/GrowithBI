@@ -293,8 +293,16 @@
                                     v-if="isStepComplete(3) || isStepActive(3)"
                                     class="text-[10px] text-gray-500 text-center mt-0.5"
                                 >
-                                    {{ formatShortDate(application.interview_date || application.created_at) }}
-                                    <span v-if="application.interview_time" class="block">
+                                    {{
+                                        formatShortDate(
+                                            application.interview_date ||
+                                                application.created_at
+                                        )
+                                    }}
+                                    <span
+                                        v-if="application.interview_time"
+                                        class="block"
+                                    >
                                         {{ application.interview_time }}
                                     </span>
                                 </span>
@@ -713,7 +721,9 @@
                                         v-if="application.interview_date"
                                         class="bg-purple-50 rounded-xl p-4 border border-purple-100"
                                     >
-                                        <div class="flex items-center gap-2 mb-3">
+                                        <div
+                                            class="flex items-center gap-2 mb-3"
+                                        >
                                             <svg
                                                 class="w-5 h-5 text-purple-600"
                                                 fill="none"
@@ -732,7 +742,7 @@
                                                 >Jadwal Wawancara</label
                                             >
                                         </div>
-                                        
+
                                         <div class="space-y-2">
                                             <!-- Tanggal -->
                                             <div class="flex items-start gap-2">
@@ -748,16 +758,28 @@
                                                     />
                                                 </svg>
                                                 <div>
-                                                    <p class="text-xs text-purple-600 font-medium">Tanggal</p>
-                                                    <p class="text-sm font-semibold text-purple-900">
-                                                        {{ formatDate(application.interview_date) }}
+                                                    <p
+                                                        class="text-xs text-purple-600 font-medium"
+                                                    >
+                                                        Tanggal
+                                                    </p>
+                                                    <p
+                                                        class="text-sm font-semibold text-purple-900"
+                                                    >
+                                                        {{
+                                                            formatDate(
+                                                                application.interview_date
+                                                            )
+                                                        }}
                                                     </p>
                                                 </div>
                                             </div>
 
                                             <!-- Waktu -->
                                             <div
-                                                v-if="application.interview_time"
+                                                v-if="
+                                                    application.interview_time
+                                                "
                                                 class="flex items-start gap-2"
                                             >
                                                 <svg
@@ -772,16 +794,27 @@
                                                     />
                                                 </svg>
                                                 <div>
-                                                    <p class="text-xs text-purple-600 font-medium">Jam</p>
-                                                    <p class="text-sm font-semibold text-purple-900">
-                                                        {{ application.interview_time }} WIB
+                                                    <p
+                                                        class="text-xs text-purple-600 font-medium"
+                                                    >
+                                                        Jam
+                                                    </p>
+                                                    <p
+                                                        class="text-sm font-semibold text-purple-900"
+                                                    >
+                                                        {{
+                                                            application.interview_time
+                                                        }}
+                                                        WIB
                                                     </p>
                                                 </div>
                                             </div>
 
                                             <!-- Lokasi -->
                                             <div
-                                                v-if="application.interview_location"
+                                                v-if="
+                                                    application.interview_location
+                                                "
                                                 class="flex items-start gap-2"
                                             >
                                                 <svg
@@ -796,15 +829,27 @@
                                                     />
                                                 </svg>
                                                 <div class="flex-1">
-                                                    <p class="text-xs text-purple-600 font-medium">Lokasi</p>
-                                                    <p class="text-sm font-semibold text-purple-900">
-                                                        {{ application.interview_location }}
+                                                    <p
+                                                        class="text-xs text-purple-600 font-medium"
+                                                    >
+                                                        Lokasi
                                                     </p>
                                                     <p
-                                                        v-if="application.interview_location_detail"
+                                                        class="text-sm font-semibold text-purple-900"
+                                                    >
+                                                        {{
+                                                            application.interview_location
+                                                        }}
+                                                    </p>
+                                                    <p
+                                                        v-if="
+                                                            application.interview_location_detail
+                                                        "
                                                         class="text-xs text-purple-700 mt-1 leading-relaxed"
                                                     >
-                                                        {{ application.interview_location_detail }}
+                                                        {{
+                                                            application.interview_location_detail
+                                                        }}
                                                     </p>
                                                 </div>
                                             </div>

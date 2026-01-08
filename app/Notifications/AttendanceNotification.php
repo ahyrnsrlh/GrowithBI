@@ -4,11 +4,11 @@ namespace App\Notifications;
 
 use App\Models\Attendance;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 
-class AttendanceNotification extends Notification implements ShouldQueue
+class AttendanceNotification extends Notification implements ShouldBroadcast
 {
     use Queueable;
 

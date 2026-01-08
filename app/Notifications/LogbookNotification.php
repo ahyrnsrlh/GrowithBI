@@ -4,19 +4,17 @@ namespace App\Notifications;
 
 use App\Models\Logbook;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Support\Facades\Auth;
 
-class LogbookNotification extends Notification implements ShouldQueue
+class LogbookNotification extends Notification implements ShouldBroadcast
 {
     use Queueable;
 
     public Logbook $logbook;
-    public string $type; // 'submitted', 'approved', 'rejected', 'revision_requested', 'commented', 'reminder'
+    public string $type; // 'submitted', 'approved', 'rejected', 'revision_requested', 'commented', 'pending_overdue', 'not_submitted_today'
     public ?int $senderId;
     public ?string $receiverRole;
 
@@ -43,69 +41,13 @@ class LogbookNotification extends Notification implements ShouldQueue
 
     /**
      * Get the notification's delivery channels.
+     * Only database + broadcast (NO email per requirements)
      *
      * @return array<int, string>
      */
     public function via(object $notifiable): array
     {
-        // Email hanya untuk approved dan rejected
-        $channels = ['database', 'broadcast'];
-        
-        if (in_array($this->type, ['approved', 'rejected'])) {
-            $channels[] = 'mail';
-        }
-        
-        return $channels;
-    }
-
-    /**
-     * Get the channels the event should broadcast on.
-     * This ensures the notification is sent to the correct private channel.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
-    public function broadcastOn(): array
-    {
-        return [
-            new PrivateChannel('App.Models.User.' . $this->logbook->user_id),
-        ];
-    }
-
-    /**
-     * Get the type of the notification being broadcast.
-     * This determines the event name on the frontend.
-     */
-    public function broadcastType(): string
-    {
-        return 'logbook.notification';
-    }
-
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
-    {
-        $message = (new MailMessage)
-            ->subject($this->getTitle());
-
-        switch ($this->type) {
-            case 'approved':
-                return $message
-                    ->greeting('Logbook Disetujui')
-                    ->line('Logbook Anda untuk tanggal ' . $this->logbook->date->format('d F Y') . ' telah disetujui oleh supervisor.')
-                    ->line('Aktivitas: ' . $this->logbook->activity)
-                    ->action('Lihat Detail', url('/peserta/logbook/' . $this->logbook->id));
-
-            case 'rejected':
-                return $message
-                    ->greeting('Logbook Perlu Revisi')
-                    ->line('Logbook Anda untuk tanggal ' . $this->logbook->date->format('d F Y') . ' perlu direvisi.')
-                    ->line('Catatan: ' . ($this->logbook->supervisor_notes ?? 'Tidak ada catatan'))
-                    ->action('Revisi Logbook', url('/peserta/logbook/' . $this->logbook->id));
-
-            default:
-                return $message->line('Status logbook Anda telah diperbarui.');
-        }
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -186,9 +128,8 @@ class LogbookNotification extends Notification implements ShouldQueue
             'rejected' => 'Logbook Ditolak',
             'revision_requested' => 'Permintaan Revisi Logbook',
             'commented' => 'Komentar Baru di Logbook',
-            'reminder' => 'Reminder Pengisian Logbook',
-            'pending_over_3_days' => 'Logbook Pending > 3 Hari',
-            'not_submitted_today' => 'User Belum Submit Logbook',
+            'pending_overdue' => 'Logbook Pending > 3 Hari',
+            'not_submitted_today' => 'Belum Submit Logbook Hari Ini',
             default => 'Notifikasi Logbook',
         };
     }
@@ -219,11 +160,10 @@ class LogbookNotification extends Notification implements ShouldQueue
             'commented' => $isAdmin
                 ? "Komentar baru pada logbook {$userName} tanggal {$dateFormatted}"
                 : "Supervisor memberikan komentar pada logbook Anda tanggal {$dateFormatted}.",
-            'reminder' => $isAdmin
-                ? "{$userName} belum mengisi logbook hari ini"
+            'pending_overdue' => "Logbook {$userName} tanggal {$dateFormatted} pending review lebih dari 3 hari.",
+            'not_submitted_today' => $isAdmin
+                ? "{$userName} belum submit logbook hari ini."
                 : "Jangan lupa mengisi logbook untuk hari ini.",
-            'pending_over_3_days' => "Logbook {$userName} tanggal {$dateFormatted} pending lebih dari 3 hari.",
-            'not_submitted_today' => "{$userName} belum submit logbook hari ini.",
             default => $isAdmin
                 ? "Logbook {$userName} telah diperbarui"
                 : "Logbook Anda telah diperbarui.",
@@ -241,8 +181,7 @@ class LogbookNotification extends Notification implements ShouldQueue
             'rejected' => 'x-circle',
             'revision_requested' => 'arrow-path',
             'commented' => 'chat-bubble-left-right',
-            'reminder' => 'bell-alert',
-            'pending_over_3_days' => 'clock',
+            'pending_overdue' => 'clock',
             'not_submitted_today' => 'exclamation-triangle',
             default => 'book-open',
         };
@@ -259,8 +198,7 @@ class LogbookNotification extends Notification implements ShouldQueue
             'rejected' => 'red',
             'revision_requested' => 'orange',
             'commented' => 'purple',
-            'reminder' => 'yellow',
-            'pending_over_3_days' => 'amber',
+            'pending_overdue' => 'amber',
             'not_submitted_today' => 'red',
             default => 'gray',
         };
