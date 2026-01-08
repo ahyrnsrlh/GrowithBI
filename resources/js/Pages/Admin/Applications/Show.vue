@@ -1035,6 +1035,83 @@
                                 <option value="expired">Kedaluwarsa</option>
                             </select>
                         </div>
+
+                        <!-- Interview Fields - tampil jika status wawancara -->
+                        <div
+                            v-if="statusForm.status === 'interview_scheduled'"
+                            class="space-y-4 mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200"
+                        >
+                            <h4 class="text-sm font-semibold text-blue-900">
+                                Detail Jadwal Wawancara
+                            </h4>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                    >Tanggal Wawancara</label
+                                >
+                                <input
+                                    type="date"
+                                    v-model="statusForm.interview_date"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                    >Jam Wawancara</label
+                                >
+                                <input
+                                    type="time"
+                                    v-model="statusForm.interview_time"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                    >Lokasi</label
+                                >
+                                <input
+                                    type="text"
+                                    v-model="statusForm.interview_location"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2"
+                                    placeholder="Contoh: Kantor Pusat, Ruang Meeting A"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                    >Detail Lokasi / Instruksi</label
+                                >
+                                <textarea
+                                    v-model="statusForm.interview_location_detail"
+                                    rows="3"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2"
+                                    placeholder="Contoh: Jl. Contoh No. 123, Jakarta. Silakan lapor ke resepsionis lantai 3"
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Rejection Reason - tampil jika ditolak -->
+                        <div
+                            v-if="statusForm.status === 'rejected'"
+                            class="mb-4"
+                        >
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                                >Alasan Penolakan</label
+                            >
+                            <textarea
+                                v-model="statusForm.rejection_reason"
+                                rows="3"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2"
+                                placeholder="Jelaskan alasan penolakan (opsional)"
+                            ></textarea>
+                        </div>
+
                         <div class="mb-4">
                             <label
                                 class="block text-sm font-medium text-gray-700 mb-2"
@@ -1328,13 +1405,17 @@ const isUploading = ref(false);
 const uploadError = ref("");
 const fileInput = ref(null);
 
-// Watch for flash messages
+// Watch for flash messages - hanya tampilkan modal untuk upload surat penerimaan
 watch(
     () => page.props.flash,
     (flash) => {
         if (flash?.success) {
-            successMessage.value = flash.success;
-            showSuccessModal.value = true;
+            // Hanya tampilkan modal success jika pesan berkaitan dengan surat penerimaan
+            const isLetterRelated = flash.success.toLowerCase().includes('surat penerimaan');
+            if (isLetterRelated) {
+                successMessage.value = flash.success;
+                showSuccessModal.value = true;
+            }
         }
     },
     { immediate: true }
@@ -1343,6 +1424,13 @@ watch(
 const statusForm = reactive({
     status: props.application.status,
     admin_notes: props.application.admin_notes || "",
+    rejection_reason: props.application.rejection_reason || "",
+    interview_date: props.application.interview_date
+        ? new Date(props.application.interview_date).toISOString().split("T")[0]
+        : "",
+    interview_time: props.application.interview_time || "",
+    interview_location: props.application.interview_location || "",
+    interview_location_detail: props.application.interview_location_detail || "",
 });
 
 const formatDate = (dateString) => {

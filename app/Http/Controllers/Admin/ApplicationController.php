@@ -132,7 +132,9 @@ class ApplicationController extends Controller
             'admin_notes' => 'nullable|string|max:1000',
             'rejection_reason' => 'nullable|string|max:1000',
             'interview_date' => 'nullable|date',
+            'interview_time' => 'nullable|date_format:H:i',
             'interview_location' => 'nullable|string|max:255',
+            'interview_location_detail' => 'nullable|string|max:500',
         ]);
 
         try {
@@ -144,7 +146,9 @@ class ApplicationController extends Controller
                 'admin_notes' => $request->admin_notes,
                 'rejection_reason' => $request->rejection_reason,
                 'interview_date' => $request->interview_date,
+                'interview_time' => $request->interview_time,
                 'interview_location' => $request->interview_location,
+                'interview_location_detail' => $request->interview_location_detail,
             ]);
 
             // Use the model's transitionTo method (handles events & notifications)

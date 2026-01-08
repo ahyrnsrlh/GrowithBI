@@ -90,7 +90,12 @@ class RegistrationStatusNotification extends Notification implements ShouldQueue
                 ->line('Selamat! Anda telah lolos tahap seleksi dokumen.')
                 ->line('Jadwal wawancara Anda telah ditentukan:')
                 ->line('**Tanggal:** ' . ($this->metadata['interview_date'] ?? 'Akan dikonfirmasi'))
+                ->line('**Jam:** ' . ($this->metadata['interview_time'] ?? 'Akan dikonfirmasi'))
                 ->line('**Lokasi:** ' . ($this->metadata['interview_location'] ?? 'Akan dikonfirmasi'))
+                ->when(
+                    isset($this->metadata['interview_location_detail']),
+                    fn ($m) => $m->line('**Detail Lokasi:** ' . $this->metadata['interview_location_detail'])
+                )
                 ->action('Lihat Detail Wawancara', url('/profile'))
                 ->line('Silakan hadir tepat waktu dan persiapkan diri dengan baik.'),
 
@@ -99,7 +104,12 @@ class RegistrationStatusNotification extends Notification implements ShouldQueue
                 ->line('Jadwal wawancara Anda telah diubah.')
                 ->line('**Jadwal Baru:**')
                 ->line('**Tanggal:** ' . ($this->metadata['interview_date'] ?? 'Akan dikonfirmasi'))
+                ->line('**Jam:** ' . ($this->metadata['interview_time'] ?? 'Akan dikonfirmasi'))
                 ->line('**Lokasi:** ' . ($this->metadata['interview_location'] ?? 'Akan dikonfirmasi'))
+                ->when(
+                    isset($this->metadata['interview_location_detail']),
+                    fn ($m) => $m->line('**Detail Lokasi:** ' . $this->metadata['interview_location_detail'])
+                )
                 ->action('Lihat Detail', url('/profile'))
                 ->line('Mohon maaf atas ketidaknyamanan ini.'),
 

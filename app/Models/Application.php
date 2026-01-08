@@ -32,7 +32,9 @@ class Application extends Model
         'transkrip_path',
         'ktp_path',
         'interview_date',
+        'interview_time',
         'interview_location',
+        'interview_location_detail',
         'notes',
         'admin_notes',
         'rejection_reason',
@@ -111,8 +113,14 @@ class Application extends Model
                 if (isset($metadata['interview_date'])) {
                     $updateData['interview_date'] = $metadata['interview_date'];
                 }
+                if (isset($metadata['interview_time'])) {
+                    $updateData['interview_time'] = $metadata['interview_time'];
+                }
                 if (isset($metadata['interview_location'])) {
                     $updateData['interview_location'] = $metadata['interview_location'];
+                }
+                if (isset($metadata['interview_location_detail'])) {
+                    $updateData['interview_location_detail'] = $metadata['interview_location_detail'];
                 }
             }
 
@@ -137,6 +145,19 @@ class Application extends Model
             $eventType = RegistrationEventType::fromStatusChange($oldStatus, $newStatus);
 
             if ($eventType) {
+                // Format metadata untuk notifikasi
+                $formattedMetadata = $metadata;
+                
+                // Format tanggal dan waktu untuk notifikasi email
+                if (isset($metadata['interview_date'])) {
+                    $date = \Carbon\Carbon::parse($metadata['interview_date']);
+                    $formattedMetadata['interview_date'] = $date->isoFormat('dddd, D MMMM Y');
+                }
+                
+                if (isset($metadata['interview_time'])) {
+                    $formattedMetadata['interview_time'] = \Carbon\Carbon::parse($metadata['interview_time'])->format('H:i') . ' WIB';
+                }
+                
                 // Dispatch the event
                 ApplicationStatusChanged::dispatch(
                     $this->fresh(['user', 'division']),
@@ -144,7 +165,7 @@ class Application extends Model
                     $oldStatus,
                     $newStatus,
                     $changedBy,
-                    $metadata
+                    $formattedMetadata
                 );
 
                 // Track last notification
