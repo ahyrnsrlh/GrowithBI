@@ -47,6 +47,8 @@ class User extends Authenticatable
         'pas_foto_path',
         'face_descriptor',
         'face_registered_at',
+        'two_factor_enabled',
+        'two_factor_verified_at',
     ];
 
     /**
@@ -74,6 +76,8 @@ class User extends Authenticatable
             'semester' => 'integer',
             'preferences' => 'array',
             'face_registered_at' => 'datetime',
+            'two_factor_enabled' => 'boolean',
+            'two_factor_verified_at' => 'datetime',
         ];
     }
 
@@ -285,5 +289,65 @@ class User extends Authenticatable
             'absent' => $attendances->where('status', 'Absent')->count(),
             'not_checked_out' => $attendances->where('status', 'Not-Checked-Out')->count(),
         ];
+    }
+
+    // =========================================================================
+    // TWO-FACTOR AUTHENTICATION METHODS
+    // =========================================================================
+
+    /**
+     * Get the two-factor authentication codes for the user.
+     */
+    public function twoFactorCodes()
+    {
+        return $this->hasMany(TwoFactorCode::class);
+    }
+
+    /**
+     * Get the trusted devices for the user.
+     */
+    public function trustedDevices()
+    {
+        return $this->hasMany(TrustedDevice::class);
+    }
+
+    /**
+     * Get the two-factor audit logs for the user.
+     */
+    public function twoFactorAuditLogs()
+    {
+        return $this->hasMany(TwoFactorAuditLog::class);
+    }
+
+    /**
+     * Check if two-factor authentication is enabled for this user.
+     */
+    public function hasTwoFactorEnabled(): bool
+    {
+        return $this->two_factor_enabled ?? true;
+    }
+
+    /**
+     * Check if the user's role requires two-factor authentication.
+     */
+    public function requiresTwoFactor(): bool
+    {
+        return in_array($this->role, ['admin', 'pembimbing']);
+    }
+
+    /**
+     * Get the active trusted devices count.
+     */
+    public function getActiveTrustedDevicesCount(): int
+    {
+        return $this->trustedDevices()->where('expires_at', '>', now())->count();
+    }
+
+    /**
+     * Revoke all trusted devices (e.g., on password change).
+     */
+    public function revokeAllTrustedDevices(): int
+    {
+        return $this->trustedDevices()->delete();
     }
 }

@@ -32,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register role middleware
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
+            '2fa' => \App\Http\Middleware\EnsureTwoFactorVerified::class,
         ]);
         
         // Configure trusted proxies for production (load balancers, CloudFlare, etc.)

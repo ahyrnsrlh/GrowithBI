@@ -80,6 +80,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/create-application', [ProfileController::class, 'createApplication'])->name('profile.create-application');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
+    // Two-Factor Authentication - Trusted Devices Management
+    Route::prefix('profile/security')->name('profile.security.')->group(function () {
+        Route::get('/trusted-devices', [App\Http\Controllers\Auth\TrustedDeviceController::class, 'index'])->name('trusted-devices.index');
+        Route::delete('/trusted-devices/{deviceId}', [App\Http\Controllers\Auth\TrustedDeviceController::class, 'destroy'])->name('trusted-devices.destroy');
+        Route::delete('/trusted-devices', [App\Http\Controllers\Auth\TrustedDeviceController::class, 'destroyAll'])->name('trusted-devices.destroy-all');
+    });
+    
     // Logbook routes (accessible from profile page)
     Route::get('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'index'])->name('profile.logbooks.index');
     Route::get('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'show'])->name('profile.logbooks.show');

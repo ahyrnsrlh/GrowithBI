@@ -39,3 +39,18 @@ Schedule::command('notifications:report-reminders')
     ->description('Send report deadline reminder notifications')
     ->withoutOverlapping()
     ->runInBackground();
+
+/*
+|--------------------------------------------------------------------------
+| Two-Factor Authentication Cleanup
+|--------------------------------------------------------------------------
+|
+| Clean up expired OTP codes, trusted devices, and old audit logs.
+| Runs daily at 2 AM to minimize impact on users.
+|
+*/
+Schedule::command('twofactor:cleanup')
+    ->dailyAt('02:00')
+    ->description('Clean up expired 2FA data')
+    ->withoutOverlapping()
+    ->runInBackground();
