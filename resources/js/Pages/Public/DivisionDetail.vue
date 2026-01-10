@@ -1,291 +1,92 @@
 <template>
-    <Head :title="division.name" />
-    <GuestLayout variant="public">
-        <!-- Modal Notification Overlay -->
-        <div
-            v-if="notification.show"
-            class="fixed inset-0 z-50 overflow-y-auto"
-        >
-            <div
-                class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
-            >
-                <!-- Background overlay -->
-                <div
-                    class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-                ></div>
+    <Head :title="division.name || 'Detail Program'" />
 
-                <!-- Modal panel -->
-                <div
-                    class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-                >
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div
-                                class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10"
-                                :class="
-                                    notification.type === 'success'
-                                        ? 'bg-green-100'
-                                        : 'bg-red-100'
-                                "
-                            >
-                                <svg
-                                    v-if="notification.type === 'success'"
-                                    class="h-6 w-6 text-green-600"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M5 13l4 4L19 7"
-                                    />
-                                </svg>
-                                <svg
-                                    v-else
-                                    class="h-6 w-6 text-red-600"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </div>
-                            <div
-                                class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left"
-                            >
-                                <h3
-                                    class="text-lg leading-6 font-medium text-gray-900"
-                                >
-                                    {{ notification.title }}
-                                </h3>
-                                <div class="mt-2">
-                                    <div
-                                        class="text-sm text-gray-500 whitespace-pre-line max-h-60 overflow-y-auto"
-                                    >
-                                        {{ notification.message }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"
-                    >
-                        <button
-                            @click="closeNotification"
-                            type="button"
-                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                            :class="
-                                notification.type === 'success'
-                                    ? 'bg-green-600 hover:bg-green-700 focus:ring-green-500'
-                                    : 'bg-red-600 hover:bg-red-700 focus:ring-red-500'
-                            "
-                        >
-                            OK
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Navbar Component - Consistent with Landing Page -->
+    <PublicNavbar :auth="auth" />
 
-        <!-- Main Content with Optimized Size -->
-        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-6">
-                <!-- Compact Back Navigation -->
-                <div class="mb-6">
+    <!-- Main Content -->
+    <div class="min-h-screen bg-gray-50 pt-24">
+        <!-- Hero Section with Breadcrumb -->
+        <div class="bg-white border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <!-- Breadcrumb Navigation -->
+                <nav class="flex items-center space-x-2 text-sm mb-6">
                     <Link
-                        href="/#divisi"
-                        class="group inline-flex items-center text-gray-600 hover:text-blue-600 transition-all duration-200 bg-white px-3 py-2 rounded-lg shadow-sm hover:shadow-md"
+                        href="/"
+                        class="text-gray-500 hover:text-blue-600 transition-colors"
                     >
-                        <svg
-                            class="w-4 h-4 mr-2 group-hover:-translate-x-0.5 transition-transform duration-200"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15 19l-7-7 7-7"
-                            ></path>
-                        </svg>
-                        <span class="text-sm font-semibold"
-                            >Kembali ke Daftar Divisi</span
-                        >
+                        Beranda
                     </Link>
-                </div>
+                    <svg
+                        class="w-4 h-4 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"
+                        />
+                    </svg>
+                    <Link
+                        href="/#divisions"
+                        class="text-gray-500 hover:text-blue-600 transition-colors"
+                    >
+                        Divisi
+                    </Link>
+                    <svg
+                        class="w-4 h-4 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"
+                        />
+                    </svg>
+                    <span class="text-gray-900 font-medium">{{
+                        division.name || "Detail Program"
+                    }}</span>
+                </nav>
 
-                <!-- Compact Main Content Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                    <!-- Compact Left Sidebar -->
-                    <div class="lg:col-span-1">
+                <!-- Program Header -->
+                <div
+                    class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6"
+                >
+                    <div class="flex items-start gap-5">
+                        <!-- Institution Logo -->
                         <div
-                            class="bg-white rounded-2xl border border-gray-100 shadow-lg p-6 sticky top-4"
+                            class="w-16 h-16 sm:w-20 sm:h-20 bg-white border-2 border-gray-100 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0"
                         >
-                            <!-- Compact Company Logo and Info -->
-                            <div class="text-center mb-6">
-                                <div
-                                    class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg"
-                                    style="
-                                        background: linear-gradient(
-                                            135deg,
-                                            #002f6c 0%,
-                                            #1e40af 100%
-                                        );
-                                    "
-                                >
-                                    <img
-                                        src="/logo2.png"
-                                        alt="Bank Indonesia Logo"
-                                        class="w-10 h-10 object-contain"
-                                    />
-                                </div>
-                                <h3
-                                    class="text-base font-bold text-gray-900 mb-1"
-                                    style="color: #002f6c"
-                                >
-                                    Bank Indonesia
-                                </h3>
-                                <p class="text-xs text-gray-600">
-                                    Bank Sentral RI
-                                </p>
-                            </div>
-
-                            <!-- Compact Job Title Section -->
-                            <div class="mb-6">
-                                <h1
-                                    class="text-xl font-bold text-gray-900 mb-3 leading-tight"
-                                    style="color: #002f6c"
-                                >
-                                    Program Magang {{ division.name }}
-                                </h1>
-
-                                <!-- Compact Location -->
-                                <div
-                                    class="flex items-center text-gray-600 mb-4 bg-gray-50 p-3 rounded-xl"
-                                >
-                                    <div
-                                        class="w-7 h-7 bg-blue-100 rounded-lg flex items-center justify-center mr-2"
-                                    >
-                                        <svg
-                                            class="w-4 h-4 text-blue-600"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                                            />
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <span class="text-sm font-medium"
-                                        >Bandar Lampung, Indonesia</span
-                                    >
-                                </div>
-
-                                <!-- Quick Program Info -->
-                                <div
-                                    class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mb-6"
-                                >
-                                    <h4
-                                        class="text-sm font-bold text-blue-800 mb-3"
-                                    >
-                                        Info Program
-                                    </h4>
-                                    <div class="space-y-2">
-                                        <div
-                                            class="flex justify-between items-center"
-                                        >
-                                            <span class="text-xs text-gray-600"
-                                                >Durasi</span
-                                            >
-                                            <span
-                                                class="text-xs font-semibold text-blue-700"
-                                                >{{
-                                                    formatDuration(
-                                                        division.start_date,
-                                                        division.end_date
-                                                    )
-                                                }}</span
-                                            >
-                                        </div>
-                                        <div
-                                            class="flex justify-between items-center"
-                                        >
-                                            <span class="text-xs text-gray-600"
-                                                >Kuota</span
-                                            >
-                                            <span
-                                                class="text-xs font-semibold text-blue-700"
-                                                >{{
-                                                    division.quota
-                                                }}
-                                                orang</span
-                                            >
-                                        </div>
-                                        <div
-                                            class="flex justify-between items-center"
-                                        >
-                                            <span class="text-xs text-gray-600"
-                                                >Deadline</span
-                                            >
-                                            <span
-                                                class="text-xs font-semibold text-blue-700"
-                                                >{{
-                                                    formatDate(
-                                                        division.application_deadline
-                                                    )
-                                                }}</span
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Compact Apply Button -->
-                            <button
-                                v-if="!auth.user"
-                                @click="handleApply"
-                                :disabled="
-                                    division.available_slots <= 0 || isLoading
-                                "
-                                class="w-full group relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold text-base px-5 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:transform-none disabled:cursor-not-allowed overflow-hidden mb-4"
-                                style="
-                                    background: linear-gradient(
-                                        135deg,
-                                        #002f6c 0%,
-                                        #1e40af 100%
-                                    );
-                                "
+                            <img
+                                :src="division.logo || '/logo2.png'"
+                                :alt="division.institution || 'Bank Indonesia'"
+                                class="w-12 h-12 sm:w-14 sm:h-14 object-contain"
+                            />
+                        </div>
+                        <div>
+                            <h1
+                                class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2"
                             >
-                                <!-- Gradient overlay on hover -->
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                ></div>
-
-                                <span
-                                    v-if="!isLoading"
-                                    class="relative flex items-center justify-center space-x-2"
+                                {{ division.name || "Program Magang" }}
+                            </h1>
+                            <div
+                                class="flex flex-wrap items-center gap-3 text-gray-600"
+                            >
+                                <span class="font-medium">{{
+                                    division.institution || "Bank Indonesia"
+                                }}</span>
+                                <span class="hidden sm:inline text-gray-300"
+                                    >•</span
                                 >
+                                <div class="flex items-center gap-1.5">
                                     <svg
-                                        class="w-5 h-5 group-hover:scale-110 transition-transform duration-300"
+                                        class="w-4 h-4 text-gray-400"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -294,51 +95,171 @@
                                             stroke-linecap="round"
                                             stroke-linejoin="round"
                                             stroke-width="2"
-                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                        ></path>
+                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                        />
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                        />
                                     </svg>
                                     <span>{{
-                                        division.available_slots <= 0
-                                            ? "Kuota Penuh"
-                                            : "Daftar Sekarang"
+                                        division.location ||
+                                        "Bandar Lampung, Indonesia"
                                     }}</span>
-                                </span>
-                                <span
-                                    v-else
-                                    class="relative flex items-center justify-center space-x-2"
-                                >
-                                    <svg
-                                        class="animate-spin h-5 w-5 text-white"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle
-                                            class="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            stroke-width="4"
-                                        ></circle>
-                                        <path
-                                            class="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                        ></path>
-                                    </svg>
-                                    <span>Processing...</span>
-                                </span>
-                            </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                            <div
-                                v-else
-                                class="text-center bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-4 border border-green-200 shadow-lg mb-4"
+                    <!-- Registration Status Badge -->
+                    <div class="flex-shrink-0">
+                        <span
+                            :class="[
+                                'inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold',
+                                registrationStatus.class,
+                            ]"
+                        >
+                            <span
+                                :class="[
+                                    'w-2 h-2 rounded-full mr-2',
+                                    registrationStatus.dotClass,
+                                ]"
+                            ></span>
+                            {{ registrationStatus.label }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column: Program Details -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Description Section -->
+                    <section
+                        class="bg-white rounded-xl border border-gray-200 overflow-hidden"
+                    >
+                        <div class="px-6 py-4 border-b border-gray-100">
+                            <h2
+                                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
                             >
-                                <div
-                                    class="w-12 h-12 bg-green-500 rounded-full mx-auto mb-3 flex items-center justify-center shadow-lg"
+                                <svg
+                                    class="w-5 h-5 text-blue-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                    />
+                                </svg>
+                                Deskripsi Program
+                            </h2>
+                        </div>
+                        <div class="p-6">
+                            <p
+                                v-if="division.description"
+                                class="text-gray-700 leading-relaxed whitespace-pre-line"
+                            >
+                                {{ division.description }}
+                            </p>
+                            <p v-else class="text-gray-400 italic">
+                                Deskripsi belum tersedia
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Job Description / Tasks Section -->
+                    <section
+                        v-if="hasJobDescription"
+                        class="bg-white rounded-xl border border-gray-200 overflow-hidden"
+                    >
+                        <div class="px-6 py-4 border-b border-gray-100">
+                            <h2
+                                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
+                            >
+                                <svg
+                                    class="w-5 h-5 text-blue-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                                    />
+                                </svg>
+                                Tugas & Tanggung Jawab
+                            </h2>
+                        </div>
+                        <div class="p-6">
+                            <ul class="space-y-3">
+                                <li
+                                    v-for="(
+                                        task, index
+                                    ) in normalizedJobDescription"
+                                    :key="index"
+                                    class="flex items-start gap-3"
+                                >
+                                    <span
+                                        class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-semibold"
+                                    >
+                                        {{ index + 1 }}
+                                    </span>
+                                    <span
+                                        class="text-gray-700 leading-relaxed"
+                                        >{{ cleanTaskText(task) }}</span
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- Requirements Section -->
+                    <section
+                        v-if="hasRequirements"
+                        class="bg-white rounded-xl border border-gray-200 overflow-hidden"
+                    >
+                        <div class="px-6 py-4 border-b border-gray-100">
+                            <h2
+                                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
+                            >
+                                <svg
+                                    class="w-5 h-5 text-amber-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                                Persyaratan
+                            </h2>
+                        </div>
+                        <div class="p-6">
+                            <ul class="space-y-3">
+                                <li
+                                    v-for="(
+                                        req, index
+                                    ) in normalizedRequirements"
+                                    :key="index"
+                                    class="flex items-start gap-3"
                                 >
                                     <svg
-                                        class="w-6 h-6 text-white"
+                                        class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -350,20 +271,51 @@
                                             d="M5 13l4 4L19 7"
                                         />
                                     </svg>
-                                </div>
-                                <p class="text-gray-600 mb-3 text-sm">
-                                    Login sebagai
-                                    <span class="font-bold text-gray-900">{{
-                                        auth.user.name
-                                    }}</span>
-                                </p>
-                                <Link
-                                    href="/dashboard"
-                                    class="inline-flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-sm"
+                                    <span
+                                        class="text-gray-700 leading-relaxed"
+                                        >{{ req }}</span
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- Criteria Section (if available) -->
+                    <section
+                        v-if="hasCriteria"
+                        class="bg-white rounded-xl border border-gray-200 overflow-hidden"
+                    >
+                        <div class="px-6 py-4 border-b border-gray-100">
+                            <h2
+                                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
+                            >
+                                <svg
+                                    class="w-5 h-5 text-purple-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                 >
-                                    <span>Dashboard</span>
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                    />
+                                </svg>
+                                Kriteria Peserta
+                            </h2>
+                        </div>
+                        <div class="p-6">
+                            <ul class="space-y-3">
+                                <li
+                                    v-for="(
+                                        criteria, index
+                                    ) in normalizedCriteria"
+                                    :key="index"
+                                    class="flex items-start gap-3"
+                                >
                                     <svg
-                                        class="w-4 h-4"
+                                        class="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -372,274 +324,601 @@
                                             stroke-linecap="round"
                                             stroke-linejoin="round"
                                             stroke-width="2"
-                                            d="M13 7l5 5-5 5M6 12h12"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                                         />
                                     </svg>
-                                </Link>
+                                    <span
+                                        class="text-gray-700 leading-relaxed"
+                                        >{{ criteria }}</span
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- Benefits Section (if available) -->
+                    <section
+                        v-if="hasBenefits"
+                        class="bg-white rounded-xl border border-gray-200 overflow-hidden"
+                    >
+                        <div class="px-6 py-4 border-b border-gray-100">
+                            <h2
+                                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
+                            >
+                                <svg
+                                    class="w-5 h-5 text-green-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                                Benefit Program
+                            </h2>
+                        </div>
+                        <div class="p-6">
+                            <ul class="space-y-3">
+                                <li
+                                    v-for="(
+                                        benefit, index
+                                    ) in normalizedBenefits"
+                                    :key="index"
+                                    class="flex items-start gap-3"
+                                >
+                                    <svg
+                                        class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                                        />
+                                    </svg>
+                                    <span
+                                        class="text-gray-700 leading-relaxed"
+                                        >{{ benefit }}</span
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Column: Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="sticky top-28 space-y-6">
+                        <!-- Program Info Card -->
+                        <div
+                            class="bg-white rounded-xl border border-gray-200 overflow-hidden"
+                        >
+                            <div
+                                class="px-6 py-4 border-b border-gray-100 bg-gray-50"
+                            >
+                                <h3 class="font-semibold text-gray-900">
+                                    Informasi Program
+                                </h3>
+                            </div>
+                            <div class="p-6 space-y-4">
+                                <!-- Duration -->
+                                <div
+                                    class="flex items-center justify-between py-3 border-b border-gray-100"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center"
+                                        >
+                                            <svg
+                                                class="w-5 h-5 text-blue-600"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <span class="text-gray-600 text-sm"
+                                            >Durasi</span
+                                        >
+                                    </div>
+                                    <span class="font-semibold text-gray-900">{{
+                                        formattedDuration
+                                    }}</span>
+                                </div>
+
+                                <!-- Quota -->
+                                <div
+                                    class="flex items-center justify-between py-3 border-b border-gray-100"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center"
+                                        >
+                                            <svg
+                                                class="w-5 h-5 text-green-600"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <span class="text-gray-600 text-sm"
+                                            >Kuota</span
+                                        >
+                                    </div>
+                                    <span class="font-semibold text-gray-900">{{
+                                        formatQuota
+                                    }}</span>
+                                </div>
+
+                                <!-- Available Slots -->
+                                <div
+                                    class="flex items-center justify-between py-3 border-b border-gray-100"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center"
+                                        >
+                                            <svg
+                                                class="w-5 h-5 text-purple-600"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <span class="text-gray-600 text-sm"
+                                            >Slot Tersedia</span
+                                        >
+                                    </div>
+                                    <span
+                                        :class="[
+                                            'font-semibold',
+                                            availableSlots > 0
+                                                ? 'text-green-600'
+                                                : 'text-red-600',
+                                        ]"
+                                    >
+                                        {{ formatAvailableSlots }}
+                                    </span>
+                                </div>
+
+                                <!-- Deadline -->
+                                <div
+                                    class="flex items-center justify-between py-3"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center"
+                                        >
+                                            <svg
+                                                class="w-5 h-5 text-amber-600"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <span class="text-gray-600 text-sm"
+                                            >Deadline</span
+                                        >
+                                    </div>
+                                    <span class="font-semibold text-gray-900">{{
+                                        formatDate(
+                                            division.application_deadline
+                                        )
+                                    }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Right Content Area - Simplified -->
-                    <div class="lg:col-span-3">
-                        <!-- Main Content Container -->
+                        <!-- Schedule Card -->
                         <div
-                            class="bg-white rounded-2xl border border-gray-100 shadow-lg p-6"
+                            class="bg-white rounded-xl border border-gray-200 overflow-hidden"
                         >
-                            <!-- Job Description -->
-                            <div class="mb-8">
-                                <div class="flex items-center space-x-3 mb-6">
-                                    <div
-                                        class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg"
-                                        style="
-                                            background: linear-gradient(
-                                                135deg,
-                                                #002f6c 0%,
-                                                #1e40af 100%
-                                            );
-                                        "
-                                    >
-                                        <svg
-                                            class="w-5 h-5 text-white"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <h3
-                                        class="text-xl font-bold text-gray-900"
-                                        style="color: #002f6c"
-                                    >
-                                        Deskripsi Program
-                                    </h3>
-                                </div>
-                                <div
-                                    class="bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-xl p-6 border border-gray-100"
-                                >
-                                    <p
-                                        class="text-gray-700 leading-relaxed mb-6 text-base"
-                                    >
-                                        {{ division.description }}
-                                    </p>
-                                    <div
-                                        class="space-y-4"
-                                        v-if="
-                                            division.job_description &&
-                                            division.job_description.length > 0
-                                        "
-                                    >
-                                        <h4
-                                            class="text-base font-bold text-gray-800"
-                                        >
-                                            Tugas dan Tanggung Jawab:
-                                        </h4>
-                                        <div class="space-y-3">
-                                            <div
-                                                v-for="(
-                                                    desc, index
-                                                ) in division.job_description"
-                                                :key="index"
-                                                class="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300"
-                                            >
-                                                <div
-                                                    class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0"
-                                                >
-                                                    {{ index + 1 }}
-                                                </div>
-                                                <p
-                                                    class="text-gray-700 text-sm leading-relaxed flex-1"
-                                                >
-                                                    {{
-                                                        desc.replace(
-                                                            /^\d+\.\s*/,
-                                                            ""
-                                                        )
-                                                    }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Compact Requirements Section -->
                             <div
-                                class="mb-8"
-                                v-if="
-                                    division.requirements &&
-                                    division.requirements.length > 0
-                                "
+                                class="px-6 py-4 border-b border-gray-100 bg-gray-50"
                             >
-                                <div class="flex items-center space-x-3 mb-6">
-                                    <div
-                                        class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg"
-                                    >
-                                        <svg
-                                            class="w-5 h-5 text-white"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <h3
-                                        class="text-xl font-bold text-gray-900"
-                                        style="color: #002f6c"
-                                    >
-                                        Persyaratan
-                                    </h3>
-                                </div>
-                                <div
-                                    class="bg-white rounded-xl border border-gray-200 p-6"
-                                >
-                                    <div class="space-y-3">
-                                        <div
-                                            v-for="(
-                                                requirement, index
-                                            ) in division.requirements"
-                                            :key="index"
-                                            class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200"
-                                        >
-                                            <div
-                                                class="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold mt-0.5 flex-shrink-0"
-                                            >
-                                                {{ index + 1 }}
-                                            </div>
-                                            <p
-                                                class="text-gray-700 text-sm leading-relaxed flex-1"
-                                            >
-                                                {{ requirement }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h3 class="font-semibold text-gray-900">
+                                    Jadwal Program
+                                </h3>
                             </div>
+                            <div class="p-6 space-y-4">
+                                <!-- Start Date -->
+                                <div
+                                    class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-100"
+                                >
+                                    <svg
+                                        class="w-5 h-5 text-blue-600"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                        />
+                                    </svg>
+                                    <div>
+                                        <p
+                                            class="text-xs text-blue-600 font-medium"
+                                        >
+                                            Mulai Program
+                                        </p>
+                                        <p class="font-semibold text-gray-900">
+                                            {{
+                                                formatDate(division.start_date)
+                                            }}
+                                        </p>
+                                    </div>
+                                </div>
 
-                            <!-- Compact Schedule Section -->
-                            <div class="mb-8">
-                                <div class="flex items-center space-x-3 mb-6">
-                                    <div
-                                        class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg"
-                                    >
-                                        <svg
-                                            class="w-5 h-5 text-white"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <h3
-                                        class="text-xl font-bold text-gray-900"
-                                        style="color: #002f6c"
-                                    >
-                                        Jadwal Program
-                                    </h3>
-                                </div>
+                                <!-- End Date -->
                                 <div
-                                    class="bg-white rounded-xl border border-gray-200 p-6"
+                                    class="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-100"
                                 >
-                                    <div
-                                        class="grid grid-cols-1 md:grid-cols-2 gap-6"
+                                    <svg
+                                        class="w-5 h-5 text-green-600"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                     >
-                                        <div
-                                            class="flex justify-between items-center p-4 bg-blue-50 rounded-lg border border-blue-200"
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        />
+                                    </svg>
+                                    <div>
+                                        <p
+                                            class="text-xs text-green-600 font-medium"
                                         >
-                                            <span
-                                                class="text-gray-700 text-sm font-medium"
-                                                >Mulai Program</span
-                                            >
-                                            <span
-                                                class="font-bold text-blue-700"
-                                                >{{
-                                                    formatDate(
-                                                        division.start_date
-                                                    )
-                                                }}</span
-                                            >
-                                        </div>
-                                        <div
-                                            class="flex justify-between items-center p-4 bg-green-50 rounded-lg border border-green-200"
+                                            Selesai Program
+                                        </p>
+                                        <p class="font-semibold text-gray-900">
+                                            {{ formatDate(division.end_date) }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Announcement Date -->
+                                <div
+                                    class="flex items-center gap-3 p-3 bg-purple-50 rounded-lg border border-purple-100"
+                                >
+                                    <svg
+                                        class="w-5 h-5 text-purple-600"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"
+                                        />
+                                    </svg>
+                                    <div>
+                                        <p
+                                            class="text-xs text-purple-600 font-medium"
                                         >
-                                            <span
-                                                class="text-gray-700 text-sm font-medium"
-                                                >Selesai Program</span
-                                            >
-                                            <span
-                                                class="font-bold text-green-700"
-                                                >{{
-                                                    formatDate(
-                                                        division.end_date
-                                                    )
-                                                }}</span
-                                            >
-                                        </div>
-                                        <div
-                                            class="flex justify-between items-center p-4 bg-orange-50 rounded-lg border border-orange-200"
-                                        >
-                                            <span
-                                                class="text-gray-700 text-sm font-medium"
-                                                >Deadline Lamaran</span
-                                            >
-                                            <span
-                                                class="font-bold text-orange-700"
-                                                >{{
-                                                    formatDate(
-                                                        division.application_deadline
-                                                    )
-                                                }}</span
-                                            >
-                                        </div>
-                                        <div
-                                            class="flex justify-between items-center p-4 bg-purple-50 rounded-lg border border-purple-200"
-                                        >
-                                            <span
-                                                class="text-gray-700 text-sm font-medium"
-                                                >Pengumuman Seleksi</span
-                                            >
-                                            <span
-                                                class="font-bold text-purple-700"
-                                                >{{
-                                                    formatDate(
-                                                        division.selection_announcement
-                                                    )
-                                                }}</span
-                                            >
-                                        </div>
+                                            Pengumuman
+                                        </p>
+                                        <p class="font-semibold text-gray-900">
+                                            {{
+                                                formatDate(
+                                                    division.selection_announcement
+                                                )
+                                            }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- CTA Card -->
+                        <div
+                            class="bg-white rounded-xl border border-gray-200 overflow-hidden"
+                        >
+                            <div class="p-6">
+                                <!-- Not Logged In -->
+                                <template v-if="!auth?.user">
+                                    <button
+                                        @click="handleApply"
+                                        :disabled="
+                                            availableSlots <= 0 || isLoading
+                                        "
+                                        class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                    >
+                                        <template v-if="!isLoading">
+                                            <svg
+                                                class="w-5 h-5"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                />
+                                            </svg>
+                                            <span>{{
+                                                availableSlots <= 0
+                                                    ? "Kuota Penuh"
+                                                    : "Daftar Sekarang"
+                                            }}</span>
+                                        </template>
+                                        <template v-else>
+                                            <svg
+                                                class="animate-spin w-5 h-5"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <circle
+                                                    class="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    stroke-width="4"
+                                                ></circle>
+                                                <path
+                                                    class="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                ></path>
+                                            </svg>
+                                            <span>Memproses...</span>
+                                        </template>
+                                    </button>
+                                    <p
+                                        class="text-center text-sm text-gray-500 mt-3"
+                                    >
+                                        Belum punya akun?
+                                        <Link
+                                            href="/register"
+                                            class="text-blue-600 hover:underline font-medium"
+                                            >Daftar gratis</Link
+                                        >
+                                    </p>
+                                </template>
+
+                                <!-- Logged In -->
+                                <template v-else>
+                                    <div class="text-center mb-4">
+                                        <div
+                                            class="w-12 h-12 bg-green-100 rounded-full mx-auto mb-3 flex items-center justify-center"
+                                        >
+                                            <svg
+                                                class="w-6 h-6 text-green-600"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M5 13l4 4L19 7"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <p class="text-gray-600 text-sm">
+                                            Login sebagai
+                                            <span
+                                                class="font-semibold text-gray-900"
+                                                >{{ auth.user.name }}</span
+                                            >
+                                        </p>
+                                    </div>
+                                    <button
+                                        @click="handleApply"
+                                        :disabled="
+                                            availableSlots <= 0 || isLoading
+                                        "
+                                        class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2 mb-3"
+                                    >
+                                        <template v-if="!isLoading">
+                                            <svg
+                                                class="w-5 h-5"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                />
+                                            </svg>
+                                            <span>{{
+                                                availableSlots <= 0
+                                                    ? "Kuota Penuh"
+                                                    : "Ajukan Lamaran"
+                                            }}</span>
+                                        </template>
+                                        <template v-else>
+                                            <svg
+                                                class="animate-spin w-5 h-5"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <circle
+                                                    class="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    stroke-width="4"
+                                                ></circle>
+                                                <path
+                                                    class="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                ></path>
+                                            </svg>
+                                            <span>Memproses...</span>
+                                        </template>
+                                    </button>
+                                    <Link
+                                        href="/dashboard"
+                                        class="w-full block text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2.5 px-6 rounded-xl transition-colors"
+                                    >
+                                        Ke Dashboard
+                                    </Link>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Contact Card -->
+                        <div
+                            class="bg-gray-50 rounded-xl border border-gray-200 p-4"
+                        >
+                            <p class="text-sm text-gray-600 text-center">
+                                Butuh bantuan?
+                                <Link
+                                    href="/#contact"
+                                    class="text-blue-600 hover:underline font-medium"
+                                    >Hubungi kami</Link
+                                >
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </GuestLayout>
+    </div>
+
+    <!-- Notification Modal -->
+    <Teleport to="body">
+        <div
+            v-if="notification.show"
+            class="fixed inset-0 z-50 overflow-y-auto"
+        >
+            <div
+                class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+            >
+                <!-- Backdrop -->
+                <div
+                    class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity"
+                    @click="closeNotification"
+                ></div>
+
+                <!-- Modal Panel -->
+                <div
+                    class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+                >
+                    <div class="p-6">
+                        <div class="flex items-start gap-4">
+                            <div
+                                :class="[
+                                    'flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center',
+                                    notification.type === 'success'
+                                        ? 'bg-green-100'
+                                        : 'bg-red-100',
+                                ]"
+                            >
+                                <svg
+                                    v-if="notification.type === 'success'"
+                                    class="w-6 h-6 text-green-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M5 13l4 4L19 7"
+                                    />
+                                </svg>
+                                <svg
+                                    v-else
+                                    class="w-6 h-6 text-red-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                                    />
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold text-gray-900">
+                                    {{ notification.title }}
+                                </h3>
+                                <p
+                                    class="mt-2 text-gray-600 whitespace-pre-line"
+                                >
+                                    {{ notification.message }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-6 py-4 flex justify-end">
+                        <button
+                            @click="closeNotification"
+                            :class="[
+                                'px-6 py-2.5 rounded-lg font-medium transition-colors',
+                                notification.type === 'success'
+                                    ? 'bg-green-600 hover:bg-green-700 text-white'
+                                    : 'bg-red-600 hover:bg-red-700 text-white',
+                            ]"
+                        >
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Teleport>
 </template>
 
 <script setup>
 import { Head, Link, router } from "@inertiajs/vue3";
-import { ref } from "vue";
-import GuestLayout from "@/Layouts/GuestLayout.vue";
+import { ref, computed } from "vue";
+import PublicNavbar from "@/Components/PublicNavbar.vue";
 
 const props = defineProps({
     division: {
@@ -654,17 +933,180 @@ const props = defineProps({
 
 // Reactive data
 const isLoading = ref(false);
-const activeTab = ref("description");
 const notification = ref({
     show: false,
-    type: "success", // 'success' or 'error'
+    type: "success",
     title: "",
     message: "",
 });
 
+// Computed properties for data normalization
+const hasJobDescription = computed(() => {
+    const jd = props.division.job_description;
+    return jd && (Array.isArray(jd) ? jd.length > 0 : !!jd);
+});
+
+const normalizedJobDescription = computed(() => {
+    const jd = props.division.job_description;
+    if (!jd) return [];
+    if (Array.isArray(jd)) return jd.filter((item) => item && item.trim());
+    if (typeof jd === "string")
+        return jd.split("\n").filter((item) => item.trim());
+    return [];
+});
+
+const hasRequirements = computed(() => {
+    const req = props.division.requirements;
+    return req && (Array.isArray(req) ? req.length > 0 : !!req);
+});
+
+const normalizedRequirements = computed(() => {
+    const req = props.division.requirements;
+    if (!req) return [];
+    if (Array.isArray(req)) return req.filter((item) => item && item.trim());
+    if (typeof req === "string")
+        return req.split("\n").filter((item) => item.trim());
+    return [];
+});
+
+const hasCriteria = computed(() => {
+    const criteria = props.division.criteria;
+    return (
+        criteria && (Array.isArray(criteria) ? criteria.length > 0 : !!criteria)
+    );
+});
+
+const normalizedCriteria = computed(() => {
+    const criteria = props.division.criteria;
+    if (!criteria) return [];
+    if (Array.isArray(criteria))
+        return criteria.filter((item) => item && item.trim());
+    if (typeof criteria === "string")
+        return criteria.split("\n").filter((item) => item.trim());
+    return [];
+});
+
+const hasBenefits = computed(() => {
+    const benefits = props.division.benefit || props.division.benefits;
+    return (
+        benefits && (Array.isArray(benefits) ? benefits.length > 0 : !!benefits)
+    );
+});
+
+const normalizedBenefits = computed(() => {
+    const benefits = props.division.benefit || props.division.benefits;
+    if (!benefits) return [];
+    if (Array.isArray(benefits))
+        return benefits.filter((item) => item && item.trim());
+    if (typeof benefits === "string")
+        return benefits.split("\n").filter((item) => item.trim());
+    return [];
+});
+
+const availableSlots = computed(() => {
+    return (
+        props.division.available_slots ??
+        props.division.available_quota ??
+        props.division.quota ??
+        0
+    );
+});
+
+const formattedDuration = computed(() => {
+    const start = props.division.start_date;
+    const end = props.division.end_date;
+
+    if (!start || !end) return "-";
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const diffTime = Math.abs(endDate - startDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffMonths = Math.round(diffDays / 30);
+
+    if (diffMonths >= 1) {
+        return `${diffMonths} bulan`;
+    }
+    return `${diffDays} hari`;
+});
+
+const formatQuota = computed(() => {
+    const quota = props.division.quota ?? props.division.max_interns;
+    return quota ? `${quota} orang` : "-";
+});
+
+const formatAvailableSlots = computed(() => {
+    if (availableSlots.value === 0) return "Penuh";
+    return availableSlots.value > 0 ? `${availableSlots.value} tersisa` : "-";
+});
+
+const registrationStatus = computed(() => {
+    const deadline = props.division.application_deadline;
+    const startDate = props.division.start_date;
+    const now = new Date();
+
+    if (!deadline) {
+        return {
+            label: "Belum Ditentukan",
+            class: "bg-gray-100 text-gray-700",
+            dotClass: "bg-gray-400",
+        };
+    }
+
+    const deadlineDate = new Date(deadline);
+    const start = startDate ? new Date(startDate) : null;
+
+    if (now > deadlineDate) {
+        return {
+            label: "Pendaftaran Ditutup",
+            class: "bg-red-100 text-red-700",
+            dotClass: "bg-red-500",
+        };
+    }
+
+    if (start && now < start) {
+        const daysLeft = Math.ceil(
+            (deadlineDate - now) / (1000 * 60 * 60 * 24)
+        );
+        if (daysLeft <= 7) {
+            return {
+                label: `Segera Ditutup (${daysLeft} hari)`,
+                class: "bg-amber-100 text-amber-700",
+                dotClass: "bg-amber-500",
+            };
+        }
+    }
+
+    if (availableSlots.value <= 0) {
+        return {
+            label: "Kuota Penuh",
+            class: "bg-red-100 text-red-700",
+            dotClass: "bg-red-500",
+        };
+    }
+
+    return {
+        label: "Pendaftaran Dibuka",
+        class: "bg-green-100 text-green-700",
+        dotClass: "bg-green-500",
+    };
+});
+
+// Helper functions
+const formatDate = (date) => {
+    if (!date) return "-";
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(date).toLocaleDateString("id-ID", options);
+};
+
+const cleanTaskText = (text) => {
+    if (!text) return "";
+    return text.replace(/^\d+\.\s*/, "").trim();
+};
+
 // Methods
 const handleApply = async () => {
-    if (props.division.available_slots <= 0) {
+    if (availableSlots.value <= 0) {
         showNotification(
             "error",
             "Maaf",
@@ -673,14 +1115,12 @@ const handleApply = async () => {
         return;
     }
 
-    // Check if user is logged in
-    if (!props.auth.user) {
+    if (!props.auth?.user) {
         showNotification(
             "error",
-            "Login Required",
+            "Login Diperlukan",
             "Silakan login terlebih dahulu untuk mendaftar magang."
         );
-        // Redirect to login with return URL
         setTimeout(() => {
             router.visit("/login", {
                 method: "get",
@@ -694,7 +1134,6 @@ const handleApply = async () => {
     isLoading.value = true;
 
     try {
-        // Check user profile completeness and documents
         const response = await fetch(
             `/applications/check/${props.division.id}`,
             {
@@ -709,7 +1148,6 @@ const handleApply = async () => {
         const result = await response.json();
 
         if (response.ok && result.canApply) {
-            // All data complete, proceed with application
             const applyResponse = await fetch("/profile/create-application", {
                 method: "POST",
                 headers: {
@@ -720,9 +1158,7 @@ const handleApply = async () => {
                             .querySelector('meta[name="csrf-token"]')
                             ?.getAttribute("content") || "",
                 },
-                body: JSON.stringify({
-                    division_id: props.division.id,
-                }),
+                body: JSON.stringify({ division_id: props.division.id }),
             });
 
             const applyResult = await applyResponse.json();
@@ -733,11 +1169,7 @@ const handleApply = async () => {
                     "Pendaftaran Berhasil!",
                     `Anda telah berhasil mendaftar untuk divisi ${props.division.name}. Silakan tunggu konfirmasi dari admin.`
                 );
-
-                // Refresh page to update UI
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
+                setTimeout(() => window.location.reload(), 3000);
             } else {
                 showNotification(
                     "error",
@@ -746,19 +1178,13 @@ const handleApply = async () => {
                 );
             }
         } else {
-            // Show what's missing
             const missingItems = [];
-
-            if (
-                result.missingPersonalData &&
-                result.missingPersonalData.length > 0
-            ) {
+            if (result.missingPersonalData?.length > 0) {
                 missingItems.push(
                     `Data Pribadi: ${result.missingPersonalData.join(", ")}`
                 );
             }
-
-            if (result.missingDocuments && result.missingDocuments.length > 0) {
+            if (result.missingDocuments?.length > 0) {
                 missingItems.push(
                     `Dokumen: ${result.missingDocuments.join(", ")}`
                 );
@@ -772,14 +1198,14 @@ const handleApply = async () => {
                     : "Harap lengkapi profil Anda terlebih dahulu.";
 
             showNotification("error", "Data Belum Lengkap", missingMessage);
-
-            // Redirect to profile after 3 seconds
-            setTimeout(() => {
-                router.visit("/profile", {
-                    method: "get",
-                    preserveState: false,
-                });
-            }, 4000);
+            setTimeout(
+                () =>
+                    router.visit("/profile", {
+                        method: "get",
+                        preserveState: false,
+                    }),
+                4000
+            );
         }
     } catch (error) {
         console.error("Application error:", error);
@@ -794,44 +1220,10 @@ const handleApply = async () => {
 };
 
 const showNotification = (type, title, message) => {
-    notification.value = {
-        show: true,
-        type,
-        title,
-        message,
-    };
+    notification.value = { show: true, type, title, message };
 };
 
 const closeNotification = () => {
     notification.value.show = false;
-};
-
-// Helper functions
-const formatDate = (date) => {
-    if (!date) return "-";
-
-    const options = {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    };
-
-    return new Date(date).toLocaleDateString("id-ID", options);
-};
-
-const formatDuration = (startDate, endDate) => {
-    if (!startDate || !endDate) return "-";
-
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const diffTime = Math.abs(end - start);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    const diffMonths = Math.round(diffDays / 30);
-
-    if (diffMonths >= 1) {
-        return `${diffMonths} bulan`;
-    } else {
-        return `${diffDays} hari`;
-    }
 };
 </script>

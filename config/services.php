@@ -35,4 +35,19 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google reCAPTCHA v3
+    |--------------------------------------------------------------------------
+    |
+    | Google reCAPTCHA v3 credentials for bot protection.
+    | Get keys from: https://www.google.com/recaptcha/admin
+    | Applied only to peserta role (admin/pembimbing excluded)
+    |
+    */
+    'recaptcha' => [
+        'site_key' => env('RECAPTCHA_SITE_KEY', ''),
+        'secret_key' => env('RECAPTCHA_SECRET_KEY', ''),
+    ],
+
 ];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Services\CaptchaVerificationService;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+            'captcha_token' => ['nullable', 'string'],
         ];
     }
 
@@ -41,6 +43,9 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        // Verify captcha before authentication (for peserta role only)
+        $this->verifyCaptcha();
+
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
@@ -50,6 +55,41 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+    }
+
+    /**
+     * Verify reCAPTCHA token for peserta role.
+     * Admin and pembimbing roles are excluded.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function verifyCaptcha(): void
+    {
+        $captchaService = app(CaptchaVerificationService::class);
+
+        // Skip if captcha is not enabled
+        if (!$captchaService->isEnabled()) {
+            return;
+        }
+
+        // Check if captcha should be required for this email
+        if (!$captchaService->shouldRequireForEmail($this->input('email'))) {
+            return;
+        }
+
+        $result = $captchaService->verify(
+            $this->input('captcha_token'),
+            'login',
+            $this->input('email')
+        );
+
+        if (!$result['success']) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => 'Login gagal. Silakan coba kembali.',
+            ]);
+        }
     }
 
     /**

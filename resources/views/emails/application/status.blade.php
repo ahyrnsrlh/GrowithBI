@@ -41,13 +41,19 @@
                             </p>
 
                             <!-- Status Box -->
+                            @php
+                                $borderColor = $status === 'approved' ? '#16A34A' : '#DC2626';
+                                $statusColor = $status === 'approved' ? '#16A34A' : '#DC2626';
+                                $tdStyle = "background-color: #F8FAFC; border: 2px solid {$borderColor}; border-radius: 8px; padding: 32px; text-align: center;";
+                                $h2Style = "margin: 0 0 16px 0; font-size: 28px; font-weight: 700; color: {$statusColor};";
+                            @endphp
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 0 0 32px 0;">
                                 <tr>
-                                    <td style="background-color: #F8FAFC; border: 2px solid {{ $status === 'approved' ? '#16A34A' : '#DC2626' }}; border-radius: 8px; padding: 32px; text-align: center;">
+                                    <td style="{{ $tdStyle }}">
                                         <p style="margin: 0 0 8px 0; font-size: 14px; color: #64748B; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">
                                             Status Pengajuan
                                         </p>
-                                        <h2 style="margin: 0 0 16px 0; font-size: 28px; font-weight: 700; color: {{ $status === 'approved' ? '#16A34A' : '#DC2626' }};">
+                                        <h2 style="{{ $h2Style }}">
                                             {{ $statusText }}
                                         </h2>
                                         <p style="margin: 0 0 8px 0; font-size: 15px; color: #475569;">

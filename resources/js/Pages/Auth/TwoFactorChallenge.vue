@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { useRecaptcha } from "@/Composables/useRecaptcha";
 
 const props = defineProps({
     email: {
@@ -31,12 +32,27 @@ const props = defineProps({
         type: Number,
         default: 5,
     },
+    recaptchaSiteKey: {
+        type: String,
+        default: null,
+    },
+    recaptchaEnabled: {
+        type: Boolean,
+        default: false,
+    },
 });
+
+// Initialize reCAPTCHA
+const { executeRecaptcha, isReady: recaptchaReady } = useRecaptcha(
+    props.recaptchaSiteKey,
+    props.recaptchaEnabled
+);
 
 // Form state
 const form = useForm({
     code: "",
     trust_device: false,
+    captcha_token: null,
 });
 
 // OTP input refs
@@ -173,26 +189,43 @@ const handlePaste = (event) => {
     otpInputs.value[focusIndex]?.focus();
 };
 
-const submit = () => {
+const submit = async () => {
     form.code = fullCode.value;
+
+    // Execute reCAPTCHA before submitting (for peserta only)
+    if (props.recaptchaEnabled && props.recaptchaSiteKey) {
+        const token = await executeRecaptcha("otp_verification");
+        form.captcha_token = token;
+    }
+
     form.post(route("two-factor.verify"), {
         preserveScroll: true,
         onError: () => {
             // Clear inputs on error
             otpDigits.value = ["", "", "", "", "", ""];
             otpInputs.value[0]?.focus();
+            form.captcha_token = null;
+        },
+        onFinish: () => {
+            form.captcha_token = null;
         },
     });
 };
 
-const resendCode = () => {
+const resendCode = async () => {
     if (!canResendNow.value || isResending.value) return;
 
     isResending.value = true;
 
+    // Get captcha token for resend action
+    let captchaToken = null;
+    if (props.recaptchaEnabled && props.recaptchaSiteKey) {
+        captchaToken = await executeRecaptcha("otp_resend");
+    }
+
     router.post(
         route("two-factor.resend"),
-        {},
+        { captcha_token: captchaToken },
         {
             preserveScroll: true,
             onSuccess: (page) => {

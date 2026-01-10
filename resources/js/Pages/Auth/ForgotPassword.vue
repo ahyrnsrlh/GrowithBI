@@ -1,18 +1,44 @@
 <script setup>
 import { Head, Link, useForm } from "@inertiajs/vue3";
+import { useRecaptcha } from "@/Composables/useRecaptcha";
 
-defineProps({
+const props = defineProps({
     status: {
         type: String,
     },
+    recaptchaSiteKey: {
+        type: String,
+        default: null,
+    },
+    recaptchaEnabled: {
+        type: Boolean,
+        default: false,
+    },
 });
+
+// Initialize reCAPTCHA
+const { executeRecaptcha, isReady: recaptchaReady } = useRecaptcha(
+    props.recaptchaSiteKey,
+    props.recaptchaEnabled
+);
 
 const form = useForm({
     email: "",
+    captcha_token: null,
 });
 
-const submit = () => {
-    form.post(route("password.email"));
+const submit = async () => {
+    // Execute reCAPTCHA before submitting
+    if (props.recaptchaEnabled && props.recaptchaSiteKey) {
+        const token = await executeRecaptcha("forgot_password");
+        form.captcha_token = token;
+    }
+
+    form.post(route("password.email"), {
+        onFinish: () => {
+            form.captcha_token = null;
+        },
+    });
 };
 </script>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Services\CaptchaVerificationService;
 use App\Services\TwoFactorService;
 use App\Services\TrustedDeviceService;
 use Illuminate\Http\RedirectResponse;
@@ -30,13 +31,16 @@ class AuthenticatedSessionController extends Controller
 {
     protected TwoFactorService $twoFactorService;
     protected TrustedDeviceService $trustedDeviceService;
+    protected CaptchaVerificationService $captchaService;
 
     public function __construct(
         TwoFactorService $twoFactorService,
-        TrustedDeviceService $trustedDeviceService
+        TrustedDeviceService $trustedDeviceService,
+        CaptchaVerificationService $captchaService
     ) {
         $this->twoFactorService = $twoFactorService;
         $this->trustedDeviceService = $trustedDeviceService;
+        $this->captchaService = $captchaService;
     }
 
     /**
@@ -48,6 +52,8 @@ class AuthenticatedSessionController extends Controller
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
             'success' => session('success'),
+            'recaptchaSiteKey' => $this->captchaService->getSiteKey(),
+            'recaptchaEnabled' => $this->captchaService->isEnabled(),
         ]);
     }
 

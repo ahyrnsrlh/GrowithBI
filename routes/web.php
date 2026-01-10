@@ -206,3 +206,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     
     Route::get('/applications/export', [ApplicationController::class, 'exportApplications'])->name('applications.export');
 });
+
+// Debug routes (DEVELOPMENT ONLY - remove in production)
+if (app()->environment('local', 'development')) {
+    require __DIR__.'/captcha-debug.php';
+}

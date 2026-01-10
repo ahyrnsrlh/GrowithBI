@@ -1,27 +1,82 @@
 <script setup>
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
+import { useRecaptcha } from "@/Composables/useRecaptcha";
 
-defineProps({
+const props = defineProps({
     canResetPassword: {
         type: Boolean,
     },
     status: {
         type: String,
     },
+    recaptchaSiteKey: {
+        type: String,
+        default: null,
+    },
+    recaptchaEnabled: {
+        type: Boolean,
+        default: false,
+    },
 });
+
+// Debug logging - REMOVE AFTER TESTING
+console.log("🔐 reCAPTCHA Config:", {
+    siteKey: props.recaptchaSiteKey,
+    enabled: props.recaptchaEnabled,
+});
+
+// Initialize reCAPTCHA
+const { executeRecaptcha, isReady: recaptchaReady } = useRecaptcha(
+    props.recaptchaSiteKey,
+    props.recaptchaEnabled
+);
 
 const form = useForm({
     email: "",
     password: "",
     remember: false,
+    captcha_token: null,
 });
 
 const showPassword = ref(false);
 
-const submit = () => {
+const submit = async () => {
+    console.log("🚀 Submit triggered");
+
+    // Execute reCAPTCHA before submitting
+    if (props.recaptchaEnabled && props.recaptchaSiteKey) {
+        console.log("✅ reCAPTCHA enabled, executing...");
+        console.log("📊 reCAPTCHA ready status:", recaptchaReady.value);
+
+        const token = await executeRecaptcha("login");
+
+        console.log(
+            "🎫 reCAPTCHA token:",
+            token ? "✅ Generated" : "❌ Failed"
+        );
+        console.log("Token length:", token?.length || 0);
+
+        form.captcha_token = token;
+    } else {
+        console.log(
+            "⚠️ reCAPTCHA skipped - enabled:",
+            props.recaptchaEnabled,
+            "siteKey:",
+            props.recaptchaSiteKey
+        );
+    }
+
+    console.log("📤 Form data:", {
+        email: form.email,
+        hasCaptchaToken: !!form.captcha_token,
+    });
+
     form.post(route("login"), {
-        onFinish: () => form.reset("password"),
+        onFinish: () => {
+            form.reset("password");
+            form.captcha_token = null;
+        },
     });
 };
 </script>

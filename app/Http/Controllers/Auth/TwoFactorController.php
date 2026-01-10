@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\CaptchaVerificationService;
 use App\Services\TwoFactorService;
 use App\Services\TrustedDeviceService;
 use Illuminate\Http\Request;
@@ -23,13 +24,16 @@ class TwoFactorController extends Controller
 {
     protected TwoFactorService $twoFactorService;
     protected TrustedDeviceService $trustedDeviceService;
+    protected CaptchaVerificationService $captchaService;
 
     public function __construct(
         TwoFactorService $twoFactorService,
-        TrustedDeviceService $trustedDeviceService
+        TrustedDeviceService $trustedDeviceService,
+        CaptchaVerificationService $captchaService
     ) {
         $this->twoFactorService = $twoFactorService;
         $this->trustedDeviceService = $trustedDeviceService;
+        $this->captchaService = $captchaService;
     }
 
     /**
@@ -65,6 +69,8 @@ class TwoFactorController extends Controller
             'trustedDeviceEnabled' => $this->trustedDeviceService->isTrustedDeviceEnabled($user),
             'expiresInMinutes' => \App\Models\TwoFactorCode::EXPIRES_IN_MINUTES,
             'maxAttempts' => \App\Models\TwoFactorCode::MAX_ATTEMPTS,
+            'recaptchaSiteKey' => $this->captchaService->getSiteKey(),
+            'recaptchaEnabled' => $this->captchaService->isEnabled() && $this->captchaService->shouldEnforceForRole($user->role),
         ]);
     }
 
