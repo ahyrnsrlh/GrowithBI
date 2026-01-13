@@ -504,7 +504,7 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section id="features" class="py-20 bg-gray-50 relative z-10">
+        <section id="features" class="py-20 bg-white/50 relative z-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     class="text-center mb-16"
@@ -512,158 +512,226 @@ onUnmounted(() => {
                     data-aos-duration="800"
                 >
                     <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                        <span class="text-gray-900">Benefit Magang </span>
-                        <span class="text-gray-400">di Bank Indonesia</span>
+                        <span
+                            class="text-blue-600 inline-block border-b-4 border-blue-600 pb-2"
+                            >Benefit Magang di Bank Indonesia</span
+                        >
                     </h2>
                 </div>
 
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Benefit 1 -->
                     <div
-                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden"
+                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="100"
                     >
-                        <!-- Grid Background -->
-                        <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px); background-size: 20px 20px;"></div>
-                        
-                        <div class="relative z-10">
-                            <div class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-lg mb-5">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
-                            </svg>
+                        <div>
+                            <div
+                                class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-lg mb-5"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                                    />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">
+                                Pengalaman Kerja Nyata
+                            </h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Terlibat langsung dalam proyek-proyek riil Bank
+                                Indonesia dan rasakan atmosfer kerja profesional
+                                yang sesungguhnya.
+                            </p>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Pengalaman Kerja Nyata
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Terlibat langsung dalam proyek-proyek riil Bank Indonesia dan rasakan atmosfer kerja profesional yang sesungguhnya.
-                        </p>
                     </div>
 
                     <!-- Benefit 2 -->
                     <div
-                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden"
+                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="200"
                     >
-                        <!-- Grid Background -->
-                        <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px); background-size: 20px 20px;"></div>
-                        
-                        <div class="relative z-10">
-                        <div class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-full mb-5">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Pengembangan Skill & Kompetensi
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Kembangkan keahlian teknis dan soft skill melalui pelatihan berkualitas dari para ekspert industri perbankan.
-                        </p>
+                        <div>
+                            <div
+                                class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-full mb-5"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">
+                                Pengembangan Skill & Kompetensi
+                            </h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Kembangkan keahlian teknis dan soft skill
+                                melalui pelatihan berkualitas dari para ekspert
+                                industri perbankan.
+                            </p>
                         </div>
                     </div>
 
                     <!-- Benefit 3 -->
                     <div
-                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden"
+                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="300"
                     >
-                        <!-- Grid Background -->
-                        <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px); background-size: 20px 20px;"></div>
-                        
-                        <div class="relative z-10">
-                        <div class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-lg mb-5">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Bimbingan dari Mentor Berpengalaman
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Dapatkan mentoring personal dari senior banker berpengalaman untuk mengoptimalkan potensi karier Anda.
-                        </p>
+                        <div>
+                            <div
+                                class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-lg mb-5"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                                    />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">
+                                Bimbingan dari Mentor Berpengalaman
+                            </h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Dapatkan mentoring personal dari senior banker
+                                berpengalaman untuk mengoptimalkan potensi
+                                karier Anda.
+                            </p>
                         </div>
                     </div>
 
                     <!-- Benefit 4 -->
                     <div
-                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden"
+                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="400"
                     >
-                        <!-- Grid Background -->
-                        <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px); background-size: 20px 20px;"></div>
-                        
-                        <div class="relative z-10">
-                        <div class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-lg mb-5">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Jaringan & Relasi Profesional
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Bangun networking yang kuat dengan profesional perbankan dan buka peluang karier di masa depan.
-                        </p>
+                        <div>
+                            <div
+                                class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-lg mb-5"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                                    />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">
+                                Jaringan & Relasi Profesional
+                            </h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Bangun networking yang kuat dengan profesional
+                                perbankan dan buka peluang karier di masa depan.
+                            </p>
                         </div>
                     </div>
 
                     <!-- Benefit 5 -->
                     <div
-                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden"
+                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="500"
                     >
-                        <!-- Grid Background -->
-                        <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px); background-size: 20px 20px;"></div>
-                        
-                        <div class="relative z-10">
-                        <div class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-lg mb-5">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Sertifikat Magang Resmi
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Raih sertifikat resmi sebagai bukti pengalaman magang di institusi keuangan terpercaya di Indonesia.
-                        </p>
+                        <div>
+                            <div
+                                class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-lg mb-5"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                                    />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">
+                                Sertifikat Magang Resmi
+                            </h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Raih sertifikat resmi sebagai bukti pengalaman
+                                magang di institusi keuangan terpercaya di
+                                Indonesia.
+                            </p>
                         </div>
                     </div>
 
                     <!-- Benefit 6 -->
                     <div
-                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden"
+                        class="bg-white rounded-lg p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="600"
                     >
-                        <!-- Grid Background -->
-                        <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px); background-size: 20px 20px;"></div>
-                        
-                        <div class="relative z-10">
-                        <div class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-full mb-5">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">
-                            Uang Saku Magang
-                        </h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Dapatkan dukungan finansial berupa uang saku selama program magang untuk membantu kebutuhan harian Anda.
-                        </p>
+                        <div>
+                            <div
+                                class="flex items-center justify-center w-12 h-12 bg-blue-600 rounded-full mb-5"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">
+                                Uang Saku Magang
+                            </h3>
+                            <p class="text-gray-600 leading-relaxed">
+                                Dapatkan dukungan finansial berupa uang saku
+                                selama program magang untuk membantu kebutuhan
+                                harian Anda.
+                            </p>
                         </div>
                     </div>
                 </div>
