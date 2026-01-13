@@ -71,35 +71,27 @@ const closeModalAndRedirect = () => {
 <template>
     <Head title="Daftar - GrowithBI" />
 
-    <div
-        class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4"
-    >
+    <div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div class="w-full max-w-2xl">
-            <!-- Logo and Header -->
-            <div class="text-center mb-8">
-                <Link href="/" class="inline-flex justify-center mb-6">
-                    <img
-                        src="/storage/logo_web2.png"
-                        alt="GrowithBI Logo"
-                        class="h-16 w-auto object-contain"
-                    />
-                </Link>
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">
-                    Bergabung dengan GrowithBI
-                </h2>
-                <p class="text-gray-600">
-                    Program magang eksklusif Bank Indonesia KPW Lampung untuk
-                    mahasiswa
-                </p>
-            </div>
+            <!-- Register Card -->
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <!-- Logo and Header -->
+                <div class="text-center mb-8">
+                    <Link href="/" class="inline-flex justify-center mb-4">
+                        <img
+                            src="/storage/logo_web2.png"
+                            alt="GrowithBI Logo"
+                            class="h-12 w-auto object-contain"
+                        />
+                    </Link>
+                    <p class="text-gray-600 text-sm">
+                        Program Magang Bank Indonesia Provinsi Lampung
+                    </p>
+                </div>
 
-            <!-- Register Form -->
-            <div
-                class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 p-8"
-            >
-                <form @submit.prevent="submit" class="space-y-6">
+                <form @submit.prevent="submit" class="space-y-5">
                     <!-- Name and Email Row -->
-                    <div class="grid md:grid-cols-2 gap-6">
+                    <div class="grid md:grid-cols-2 gap-5">
                         <!-- Name Field -->
                         <div>
                             <label
@@ -108,48 +100,20 @@ const closeModalAndRedirect = () => {
                             >
                                 Nama Lengkap *
                             </label>
-                            <div class="relative">
-                                <div
-                                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                                >
-                                    <svg
-                                        class="h-5 w-5 text-gray-400"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                            clip-rule="evenodd"
-                                        />
-                                    </svg>
-                                </div>
-                                <input
-                                    id="name"
-                                    type="text"
-                                    v-model="form.name"
-                                    required
-                                    autofocus
-                                    autocomplete="name"
-                                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white/50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                    placeholder="Masukkan nama lengkap"
-                                />
-                            </div>
+                            <input
+                                id="name"
+                                type="text"
+                                v-model="form.name"
+                                required
+                                autofocus
+                                autocomplete="name"
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                placeholder=""
+                            />
                             <div
                                 v-if="form.errors.name"
-                                class="mt-2 text-sm text-red-600 flex items-center"
+                                class="mt-2 text-sm text-red-600"
                             >
-                                <svg
-                                    class="w-4 h-4 mr-1"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
                                 {{ form.errors.name }}
                             </div>
                         </div>
@@ -162,48 +126,19 @@ const closeModalAndRedirect = () => {
                             >
                                 Email Address *
                             </label>
-                            <div class="relative">
-                                <div
-                                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                                >
-                                    <svg
-                                        class="h-5 w-5 text-gray-400"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                    >
-                                        <path
-                                            d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-                                        />
-                                        <path
-                                            d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
-                                        />
-                                    </svg>
-                                </div>
-                                <input
-                                    id="email"
-                                    type="email"
-                                    v-model="form.email"
-                                    required
-                                    autocomplete="username"
-                                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white/50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                    placeholder="Masukkan email Anda"
-                                />
-                            </div>
+                            <input
+                                id="email"
+                                type="email"
+                                v-model="form.email"
+                                required
+                                autocomplete="username"
+                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                placeholder=""
+                            />
                             <div
                                 v-if="form.errors.email"
-                                class="mt-2 text-sm text-red-600 flex items-center"
+                                class="mt-2 text-sm text-red-600"
                             >
-                                <svg
-                                    class="w-4 h-4 mr-1"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
                                 {{ form.errors.email }}
                             </div>
                         </div>
@@ -217,44 +152,18 @@ const closeModalAndRedirect = () => {
                         >
                             Nomor Telepon
                         </label>
-                        <div class="relative">
-                            <div
-                                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                            >
-                                <svg
-                                    class="h-5 w-5 text-gray-400"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
-                                    />
-                                </svg>
-                            </div>
-                            <input
-                                id="phone"
-                                type="tel"
-                                v-model="form.phone"
-                                autocomplete="tel"
-                                class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white/50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                placeholder="081234567890"
-                            />
-                        </div>
+                        <input
+                            id="phone"
+                            type="tel"
+                            v-model="form.phone"
+                            autocomplete="tel"
+                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                            placeholder="081234567890"
+                        />
                         <div
                             v-if="form.errors.phone"
-                            class="mt-2 text-sm text-red-600 flex items-center"
+                            class="mt-2 text-sm text-red-600"
                         >
-                            <svg
-                                class="w-4 h-4 mr-1"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
                             {{ form.errors.phone }}
                         </div>
                     </div>
@@ -267,51 +176,23 @@ const closeModalAndRedirect = () => {
                         >
                             Alamat
                         </label>
-                        <div class="relative">
-                            <div
-                                class="absolute top-3 left-0 pl-3 flex items-start pointer-events-none"
-                            >
-                                <svg
-                                    class="h-5 w-5 text-gray-400"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
-                            </div>
-                            <textarea
-                                id="address"
-                                v-model="form.address"
-                                rows="3"
-                                class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white/50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
-                                placeholder="Alamat lengkap Anda (opsional)"
-                            ></textarea>
-                        </div>
+                        <textarea
+                            id="address"
+                            v-model="form.address"
+                            rows="3"
+                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
+                            placeholder="Alamat lengkap Anda (opsional)"
+                        ></textarea>
                         <div
                             v-if="form.errors.address"
-                            class="mt-2 text-sm text-red-600 flex items-center"
+                            class="mt-2 text-sm text-red-600"
                         >
-                            <svg
-                                class="w-4 h-4 mr-1"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
                             {{ form.errors.address }}
                         </div>
                     </div>
 
                     <!-- Password Fields Row -->
-                    <div class="grid md:grid-cols-2 gap-6">
+                    <div class="grid md:grid-cols-2 gap-5">
                         <!-- Password Field -->
                         <div>
                             <label
@@ -502,7 +383,7 @@ const closeModalAndRedirect = () => {
                     <button
                         type="submit"
                         :disabled="form.processing"
-                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                     >
                         <svg
                             v-if="form.processing"
@@ -526,7 +407,9 @@ const closeModalAndRedirect = () => {
                             ></path>
                         </svg>
                         {{
-                            form.processing ? "Memproses..." : "Daftar Sekarang"
+                            form.processing
+                                ? "Processing..."
+                                : "Create an account"
                         }}
                     </button>
                 </form>
@@ -534,24 +417,14 @@ const closeModalAndRedirect = () => {
                 <!-- Login Link -->
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-600">
-                        Sudah punya akun?
+                        Already have an account?
                         <Link
                             :href="route('login')"
-                            class="font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                            class="font-medium text-blue-600 hover:text-blue-700"
                         >
-                            Masuk di sini
+                            Sign in
                         </Link>
                     </p>
-                </div>
-
-                <!-- Back to Home -->
-                <div class="mt-4 text-center">
-                    <Link
-                        href="/"
-                        class="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-                    >
-                        ← Kembali ke Beranda
-                    </Link>
                 </div>
             </div>
         </div>

@@ -45,40 +45,35 @@ const submit = async () => {
 <template>
     <Head title="Lupa Password - GrowithBI" />
 
-    <div
-        class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4"
-    >
+    <div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div class="w-full max-w-md">
-            <!-- Logo and Header -->
-            <div class="text-center mb-8">
-                <Link href="/" class="inline-flex justify-center mb-6">
-                    <img
-                        src="/storage/logo_web2.png"
-                        alt="GrowithBI Logo"
-                        class="h-16 w-auto object-contain"
-                    />
-                </Link>
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">
-                    Lupa Password?
-                </h2>
-                <p class="text-gray-600">
-                    Tidak masalah! Masukkan email Anda dan kami akan mengirimkan
-                    link untuk reset password.
-                </p>
-            </div>
+            <!-- Forgot Password Card -->
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <!-- Logo and Header -->
+                <div class="text-center mb-8">
+                    <Link href="/" class="inline-flex justify-center mb-4">
+                        <img
+                            src="/storage/logo_web2.png"
+                            alt="GrowithBI Logo"
+                            class="h-12 w-auto object-contain"
+                        />
+                    </Link>
+                    <h2 class="text-xl font-bold text-gray-900 mb-2">
+                        Forgot Password?
+                    </h2>
+                    <p class="text-gray-600 text-sm">
+                        Enter your email and we'll send you a reset link.
+                    </p>
+                </div>
 
-            <!-- Form -->
-            <div
-                class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 p-8"
-            >
                 <!-- Status Message -->
                 <div
                     v-if="status"
-                    class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl"
+                    class="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg"
                 >
                     <div class="flex items-center">
                         <svg
-                            class="w-5 h-5 text-green-600 mr-2"
+                            class="w-4 h-4 text-green-600 mr-2"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                         >
@@ -88,13 +83,11 @@ const submit = async () => {
                                 clip-rule="evenodd"
                             />
                         </svg>
-                        <span class="text-sm font-medium text-green-800">{{
-                            status
-                        }}</span>
+                        <span class="text-sm text-green-800">{{ status }}</span>
                     </div>
                 </div>
 
-                <form @submit.prevent="submit" class="space-y-6">
+                <form @submit.prevent="submit" class="space-y-5">
                     <!-- Email Field -->
                     <div>
                         <label
@@ -103,49 +96,20 @@ const submit = async () => {
                         >
                             Email Address
                         </label>
-                        <div class="relative">
-                            <div
-                                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                            >
-                                <svg
-                                    class="h-5 w-5 text-gray-400"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-                                    />
-                                    <path
-                                        d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
-                                    />
-                                </svg>
-                            </div>
-                            <input
-                                id="email"
-                                type="email"
-                                v-model="form.email"
-                                required
-                                autofocus
-                                autocomplete="username"
-                                class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white/50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                placeholder="Masukkan email Anda"
-                            />
-                        </div>
+                        <input
+                            id="email"
+                            type="email"
+                            v-model="form.email"
+                            required
+                            autofocus
+                            autocomplete="username"
+                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                            placeholder=""
+                        />
                         <div
                             v-if="form.errors.email"
-                            class="mt-2 text-sm text-red-600 flex items-center"
+                            class="mt-2 text-sm text-red-600"
                         >
-                            <svg
-                                class="w-4 h-4 mr-1"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
                             {{ form.errors.email }}
                         </div>
                     </div>
@@ -154,11 +118,11 @@ const submit = async () => {
                     <button
                         type="submit"
                         :disabled="form.processing"
-                        class="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-xl shadow-sm text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                     >
                         <svg
                             v-if="form.processing"
-                            class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-700"
+                            class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
@@ -179,8 +143,8 @@ const submit = async () => {
                         </svg>
                         {{
                             form.processing
-                                ? "Mengirim..."
-                                : "📧 Kirim Link Reset Password"
+                                ? "Processing..."
+                                : "Email Password Reset Link"
                         }}
                     </button>
                 </form>
@@ -189,19 +153,9 @@ const submit = async () => {
                 <div class="mt-6 text-center">
                     <Link
                         :href="route('login')"
-                        class="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                        class="text-sm text-blue-600 hover:text-blue-700 font-medium"
                     >
-                        ← Kembali ke Halaman Login
-                    </Link>
-                </div>
-
-                <!-- Back to Home -->
-                <div class="mt-4 text-center">
-                    <Link
-                        href="/"
-                        class="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-                    >
-                        Kembali ke Beranda
+                        ← Back to login
                     </Link>
                 </div>
             </div>

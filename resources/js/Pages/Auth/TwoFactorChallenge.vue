@@ -267,40 +267,36 @@ const resendCode = async () => {
 <template>
     <Head title="Verifikasi Dua Faktor - GrowithBI" />
 
-    <div
-        class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4"
-    >
+    <div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div class="w-full max-w-md">
-            <!-- Logo and Header -->
-            <div class="text-center mb-8">
-                <Link href="/" class="inline-flex justify-center mb-6">
-                    <img
-                        src="/storage/logo_web2.png"
-                        alt="GrowithBI Logo"
-                        class="h-16 w-auto object-contain"
-                    />
-                </Link>
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">
-                    Verifikasi Dua Faktor
-                </h2>
-                <p class="text-gray-600">
-                    Masukkan kode 6 digit yang telah dikirim ke
-                </p>
-                <p class="text-blue-600 font-medium mt-1">{{ email }}</p>
-            </div>
+            <!-- Verification Card -->
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <!-- Logo and Header -->
+                <div class="text-center mb-8">
+                    <Link href="/" class="inline-flex justify-center mb-4">
+                        <img
+                            src="/storage/logo_web2.png"
+                            alt="GrowithBI Logo"
+                            class="h-12 w-auto object-contain"
+                        />
+                    </Link>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                        Verifikasi Dua Faktor
+                    </h2>
+                    <p class="text-sm text-gray-600">
+                        Masukkan kode 6 digit yang telah dikirim ke
+                    </p>
+                    <p class="text-blue-600 font-semibold mt-1">{{ email }}</p>
+                </div>
 
-            <!-- Verification Form -->
-            <div
-                class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 p-8"
-            >
                 <!-- Timer -->
                 <div class="text-center mb-6">
                     <div
                         v-if="!isExpired"
-                        class="inline-flex items-center px-4 py-2 bg-blue-50 rounded-full"
+                        class="inline-flex items-center px-3 py-2 bg-blue-50 rounded-lg text-sm text-blue-700"
                     >
                         <svg
-                            class="w-5 h-5 text-blue-600 mr-2"
+                            class="w-4 h-4 mr-2"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -312,19 +308,17 @@ const resendCode = async () => {
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                             />
                         </svg>
-                        <span class="text-sm font-medium text-blue-700">
-                            Kode berlaku
-                            <span class="font-bold">{{
-                                formattedCountdown
-                            }}</span>
-                        </span>
+                        Kode berlaku
+                        <span class="font-semibold ml-1">{{
+                            formattedCountdown
+                        }}</span>
                     </div>
                     <div
                         v-else
-                        class="inline-flex items-center px-4 py-2 bg-red-50 rounded-full"
+                        class="inline-flex items-center px-3 py-2 bg-red-50 rounded-lg text-sm text-red-700"
                     >
                         <svg
-                            class="w-5 h-5 text-red-600 mr-2"
+                            class="w-4 h-4 mr-2"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -336,20 +330,18 @@ const resendCode = async () => {
                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                             />
                         </svg>
-                        <span class="text-sm font-medium text-red-700">
-                            Kode sudah kadaluarsa
-                        </span>
+                        Kode sudah kadaluarsa
                     </div>
                 </div>
 
                 <!-- Error Message -->
                 <div
                     v-if="form.errors.code"
-                    class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl"
+                    class="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg"
                 >
                     <div class="flex items-center">
                         <svg
-                            class="w-5 h-5 text-red-600 mr-2 flex-shrink-0"
+                            class="w-4 h-4 text-red-600 mr-2"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                         >
@@ -359,22 +351,22 @@ const resendCode = async () => {
                                 clip-rule="evenodd"
                             />
                         </svg>
-                        <span class="text-sm font-medium text-red-800">{{
+                        <span class="text-sm text-red-800">{{
                             form.errors.code
                         }}</span>
                     </div>
                 </div>
 
-                <form @submit.prevent="submit" class="space-y-6">
+                <form @submit.prevent="submit" class="space-y-5">
                     <!-- OTP Input -->
                     <div>
                         <label
-                            class="block text-sm font-semibold text-gray-700 mb-4 text-center"
+                            class="block text-sm font-semibold text-gray-700 mb-3 text-center"
                         >
                             Kode Verifikasi
                         </label>
                         <div
-                            class="flex justify-center gap-2 sm:gap-3"
+                            class="flex justify-center gap-2"
                             @paste="handlePaste"
                         >
                             <input
@@ -388,7 +380,7 @@ const resendCode = async () => {
                                 @input="handleOtpInput(index, $event)"
                                 @keydown="handleOtpKeydown(index, $event)"
                                 :disabled="form.processing"
-                                class="w-12 h-14 sm:w-14 sm:h-16 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl bg-white/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                class="w-12 h-14 text-center text-xl font-bold border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 :class="{
                                     'border-red-500 focus:border-red-500 focus:ring-red-500':
                                         form.errors.code,
@@ -400,22 +392,19 @@ const resendCode = async () => {
                     <!-- Trust Device Checkbox -->
                     <div
                         v-if="trustedDeviceEnabled"
-                        class="flex items-start space-x-3"
+                        class="flex items-start space-x-2"
                     >
                         <input
                             id="trust_device"
                             type="checkbox"
                             v-model="form.trust_device"
-                            class="h-5 w-5 mt-0.5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            class="h-4 w-4 mt-0.5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                         />
-                        <label for="trust_device" class="text-sm text-gray-600">
-                            <span class="font-medium text-gray-700"
-                                >Percaya perangkat ini</span
-                            >
-                            <br />
-                            <span class="text-xs text-gray-500">
+                        <label for="trust_device" class="text-sm text-gray-700">
+                            Percaya perangkat ini
+                            <span class="text-xs text-gray-500 block mt-0.5">
                                 Anda tidak akan diminta kode verifikasi selama
-                                30 hari pada perangkat ini
+                                30 hari
                             </span>
                         </label>
                     </div>
@@ -428,7 +417,7 @@ const resendCode = async () => {
                             fullCode.length !== 6 ||
                             isExpired
                         "
-                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                     >
                         <svg
                             v-if="form.processing"
@@ -458,7 +447,7 @@ const resendCode = async () => {
                 </form>
 
                 <!-- Resend Code -->
-                <div class="mt-6 text-center">
+                <div class="mt-5 text-center">
                     <p class="text-sm text-gray-600 mb-2">
                         Tidak menerima kode?
                     </p>
@@ -466,7 +455,7 @@ const resendCode = async () => {
                         type="button"
                         @click="resendCode"
                         :disabled="!canResendNow || isResending"
-                        class="text-sm font-semibold text-blue-600 hover:text-blue-800 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+                        class="text-sm font-medium text-blue-600 hover:text-blue-700 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
                     >
                         <span v-if="isResending">
                             <svg
@@ -500,11 +489,11 @@ const resendCode = async () => {
 
                 <!-- Security Notice -->
                 <div
-                    class="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl"
+                    class="mt-5 p-3 bg-amber-50 border border-amber-200 rounded-lg"
                 >
                     <div class="flex items-start">
                         <svg
-                            class="w-5 h-5 text-amber-600 mr-2 mt-0.5 flex-shrink-0"
+                            class="w-4 h-4 text-amber-600 mr-2 mt-0.5"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                         >
@@ -515,7 +504,7 @@ const resendCode = async () => {
                             />
                         </svg>
                         <div>
-                            <p class="text-sm font-medium text-amber-800">
+                            <p class="text-sm font-semibold text-amber-800">
                                 Peringatan Keamanan
                             </p>
                             <p class="text-xs text-amber-700 mt-1">
@@ -528,12 +517,12 @@ const resendCode = async () => {
                 </div>
 
                 <!-- Back to Login -->
-                <div class="mt-6 text-center">
+                <div class="mt-5 text-center">
                     <Link
                         :href="route('logout')"
                         method="post"
                         as="button"
-                        class="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                        class="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                     >
                         ← Kembali ke Login
                     </Link>
