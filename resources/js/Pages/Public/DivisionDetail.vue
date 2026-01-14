@@ -64,7 +64,7 @@
                             class="w-16 h-16 sm:w-20 sm:h-20 bg-white border-2 border-gray-100 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0"
                         >
                             <img
-                                :src="division.logo || '/logo2.png'"
+                                :src="division.logo || '/logo.png'"
                                 :alt="division.institution || 'Bank Indonesia'"
                                 class="w-12 h-12 sm:w-14 sm:h-14 object-contain"
                             />
@@ -134,18 +134,207 @@
             </div>
         </div>
 
-        <!-- Main Content Grid -->
+        <!-- Main Content Grid - Bento Layout -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Left Column: Program Details -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Description Section -->
-                    <section
-                        class="bg-white rounded-xl border border-gray-200 overflow-hidden"
+            <!-- Bento Grid Container -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                <!-- Row 1: Info Cards -->
+                <div
+                    class="lg:col-span-3 bg-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
+                >
+                    <div class="flex items-center gap-3 mb-3">
+                        <div
+                            class="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold">Durasi Program</h3>
+                    </div>
+                    <div class="h-px bg-white/30 my-4"></div>
+                    <p class="text-3xl font-bold mb-1">
+                        {{ formattedDuration }}
+                    </p>
+                    <p class="text-blue-100 text-sm">Waktu magang</p>
+                </div>
+
+                <div
+                    class="lg:col-span-3 bg-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
+                >
+                    <div class="flex items-center gap-3 mb-3">
+                        <div
+                            class="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                                />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold">Total Kuota</h3>
+                    </div>
+                    <div class="h-px bg-white/30 my-4"></div>
+                    <p class="text-3xl font-bold mb-1">{{ formatQuota }}</p>
+                    <p class="text-blue-100 text-sm">Peserta diterima</p>
+                </div>
+
+                <div
+                    class="lg:col-span-3 bg-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
+                >
+                    <div class="flex items-center gap-3 mb-3">
+                        <div
+                            class="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold">Slot Tersedia</h3>
+                    </div>
+                    <div class="h-px bg-white/30 my-4"></div>
+                    <p class="text-3xl font-bold mb-1">
+                        {{ formatAvailableSlots }}
+                    </p>
+                    <p
+                        :class="
+                            availableSlots > 0
+                                ? 'text-blue-100'
+                                : 'text-red-200'
+                        "
+                        class="text-sm"
                     >
-                        <div class="px-6 py-4 border-b border-gray-100">
-                            <h2
-                                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
+                        {{
+                            availableSlots > 0
+                                ? "Masih tersedia"
+                                : "Kuota penuh"
+                        }}
+                    </p>
+                </div>
+
+                <div
+                    class="lg:col-span-3 bg-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
+                >
+                    <div class="flex items-center gap-3 mb-3">
+                        <div
+                            class="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold">Deadline</h3>
+                    </div>
+                    <div class="h-px bg-white/30 my-4"></div>
+                    <p class="text-2xl font-bold mb-1">
+                        {{ formatDate(division.application_deadline) }}
+                    </p>
+                    <p class="text-blue-100 text-sm">Batas pendaftaran</p>
+                </div>
+
+                <!-- Row 2: Description (Large) -->
+                <div
+                    class="lg:col-span-8 bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+                >
+                    <div class="flex items-center gap-3 mb-6">
+                        <div
+                            class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-6 h-6 text-blue-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900">
+                            Deskripsi Program
+                        </h2>
+                    </div>
+                    <p
+                        v-if="division.description"
+                        class="text-gray-700 leading-relaxed whitespace-pre-line"
+                    >
+                        {{ division.description }}
+                    </p>
+                    <p v-else class="text-gray-400 italic">
+                        Deskripsi belum tersedia
+                    </p>
+                </div>
+
+                <!-- Row 2: Schedule (Medium) -->
+                <div
+                    class="lg:col-span-4 bg-blue-50 rounded-2xl p-6 shadow-lg border border-blue-100"
+                >
+                    <h3
+                        class="font-bold text-gray-900 mb-6 flex items-center gap-2"
+                    >
+                        <svg
+                            class="w-5 h-5 text-blue-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                        </svg>
+                        Jadwal Program
+                    </h3>
+                    <div class="space-y-4">
+                        <div
+                            class="flex items-center gap-3 p-4 bg-white rounded-xl border border-blue-100"
+                        >
+                            <div
+                                class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0"
                             >
                                 <svg
                                     class="w-5 h-5 text-blue-600"
@@ -157,193 +346,24 @@
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                         stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                        d="M14 5l7 7m0 0l-7 7m7-7H3"
                                     />
                                 </svg>
-                                Deskripsi Program
-                            </h2>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 font-medium">
+                                    Mulai Program
+                                </p>
+                                <p class="font-bold text-gray-900">
+                                    {{ formatDate(division.start_date) }}
+                                </p>
+                            </div>
                         </div>
-                        <div class="p-6">
-                            <p
-                                v-if="division.description"
-                                class="text-gray-700 leading-relaxed whitespace-pre-line"
-                            >
-                                {{ division.description }}
-                            </p>
-                            <p v-else class="text-gray-400 italic">
-                                Deskripsi belum tersedia
-                            </p>
-                        </div>
-                    </section>
-
-                    <!-- Job Description / Tasks Section -->
-                    <section
-                        v-if="hasJobDescription"
-                        class="bg-white rounded-xl border border-gray-200 overflow-hidden"
-                    >
-                        <div class="px-6 py-4 border-b border-gray-100">
-                            <h2
-                                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
-                            >
-                                <svg
-                                    class="w-5 h-5 text-blue-600"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                                    />
-                                </svg>
-                                Tugas & Tanggung Jawab
-                            </h2>
-                        </div>
-                        <div class="p-6">
-                            <ul class="space-y-3">
-                                <li
-                                    v-for="(
-                                        task, index
-                                    ) in normalizedJobDescription"
-                                    :key="index"
-                                    class="flex items-start gap-3"
-                                >
-                                    <span
-                                        class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-semibold"
-                                    >
-                                        {{ index + 1 }}
-                                    </span>
-                                    <span
-                                        class="text-gray-700 leading-relaxed"
-                                        >{{ cleanTaskText(task) }}</span
-                                    >
-                                </li>
-                            </ul>
-                        </div>
-                    </section>
-
-                    <!-- Requirements Section -->
-                    <section
-                        v-if="hasRequirements"
-                        class="bg-white rounded-xl border border-gray-200 overflow-hidden"
-                    >
-                        <div class="px-6 py-4 border-b border-gray-100">
-                            <h2
-                                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
-                            >
-                                <svg
-                                    class="w-5 h-5 text-amber-600"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                    />
-                                </svg>
-                                Persyaratan
-                            </h2>
-                        </div>
-                        <div class="p-6">
-                            <ul class="space-y-3">
-                                <li
-                                    v-for="(
-                                        req, index
-                                    ) in normalizedRequirements"
-                                    :key="index"
-                                    class="flex items-start gap-3"
-                                >
-                                    <svg
-                                        class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M5 13l4 4L19 7"
-                                        />
-                                    </svg>
-                                    <span
-                                        class="text-gray-700 leading-relaxed"
-                                        >{{ req }}</span
-                                    >
-                                </li>
-                            </ul>
-                        </div>
-                    </section>
-
-                    <!-- Criteria Section (if available) -->
-                    <section
-                        v-if="hasCriteria"
-                        class="bg-white rounded-xl border border-gray-200 overflow-hidden"
-                    >
-                        <div class="px-6 py-4 border-b border-gray-100">
-                            <h2
-                                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
-                            >
-                                <svg
-                                    class="w-5 h-5 text-purple-600"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                                    />
-                                </svg>
-                                Kriteria Peserta
-                            </h2>
-                        </div>
-                        <div class="p-6">
-                            <ul class="space-y-3">
-                                <li
-                                    v-for="(
-                                        criteria, index
-                                    ) in normalizedCriteria"
-                                    :key="index"
-                                    class="flex items-start gap-3"
-                                >
-                                    <svg
-                                        class="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                        />
-                                    </svg>
-                                    <span
-                                        class="text-gray-700 leading-relaxed"
-                                        >{{ criteria }}</span
-                                    >
-                                </li>
-                            </ul>
-                        </div>
-                    </section>
-
-                    <!-- Benefits Section (if available) -->
-                    <section
-                        v-if="hasBenefits"
-                        class="bg-white rounded-xl border border-gray-200 overflow-hidden"
-                    >
-                        <div class="px-6 py-4 border-b border-gray-100">
-                            <h2
-                                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
+                        <div
+                            class="flex items-center gap-3 p-4 bg-white rounded-xl border border-green-100"
+                        >
+                            <div
+                                class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0"
                             >
                                 <svg
                                     class="w-5 h-5 text-green-600"
@@ -355,472 +375,229 @@
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                         stroke-width="2"
-                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                                     />
                                 </svg>
-                                Benefit Program
-                            </h2>
-                        </div>
-                        <div class="p-6">
-                            <ul class="space-y-3">
-                                <li
-                                    v-for="(
-                                        benefit, index
-                                    ) in normalizedBenefits"
-                                    :key="index"
-                                    class="flex items-start gap-3"
-                                >
-                                    <svg
-                                        class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                                        />
-                                    </svg>
-                                    <span
-                                        class="text-gray-700 leading-relaxed"
-                                        >{{ benefit }}</span
-                                    >
-                                </li>
-                            </ul>
-                        </div>
-                    </section>
-                </div>
-
-                <!-- Right Column: Sidebar -->
-                <div class="lg:col-span-1">
-                    <div class="sticky top-28 space-y-6">
-                        <!-- Program Info Card -->
-                        <div
-                            class="bg-white rounded-xl border border-gray-200 overflow-hidden"
-                        >
-                            <div
-                                class="px-6 py-4 border-b border-gray-100 bg-gray-50"
-                            >
-                                <h3 class="font-semibold text-gray-900">
-                                    Informasi Program
-                                </h3>
                             </div>
-                            <div class="p-6 space-y-4">
-                                <!-- Duration -->
-                                <div
-                                    class="flex items-center justify-between py-3 border-b border-gray-100"
-                                >
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center"
-                                        >
-                                            <svg
-                                                class="w-5 h-5 text-blue-600"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <span class="text-gray-600 text-sm"
-                                            >Durasi</span
-                                        >
-                                    </div>
-                                    <span class="font-semibold text-gray-900">{{
-                                        formattedDuration
-                                    }}</span>
-                                </div>
-
-                                <!-- Quota -->
-                                <div
-                                    class="flex items-center justify-between py-3 border-b border-gray-100"
-                                >
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center"
-                                        >
-                                            <svg
-                                                class="w-5 h-5 text-green-600"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <span class="text-gray-600 text-sm"
-                                            >Kuota</span
-                                        >
-                                    </div>
-                                    <span class="font-semibold text-gray-900">{{
-                                        formatQuota
-                                    }}</span>
-                                </div>
-
-                                <!-- Available Slots -->
-                                <div
-                                    class="flex items-center justify-between py-3 border-b border-gray-100"
-                                >
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center"
-                                        >
-                                            <svg
-                                                class="w-5 h-5 text-purple-600"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <span class="text-gray-600 text-sm"
-                                            >Slot Tersedia</span
-                                        >
-                                    </div>
-                                    <span
-                                        :class="[
-                                            'font-semibold',
-                                            availableSlots > 0
-                                                ? 'text-green-600'
-                                                : 'text-red-600',
-                                        ]"
-                                    >
-                                        {{ formatAvailableSlots }}
-                                    </span>
-                                </div>
-
-                                <!-- Deadline -->
-                                <div
-                                    class="flex items-center justify-between py-3"
-                                >
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center"
-                                        >
-                                            <svg
-                                                class="w-5 h-5 text-amber-600"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <span class="text-gray-600 text-sm"
-                                            >Deadline</span
-                                        >
-                                    </div>
-                                    <span class="font-semibold text-gray-900">{{
-                                        formatDate(
-                                            division.application_deadline
-                                        )
-                                    }}</span>
-                                </div>
+                            <div>
+                                <p class="text-xs text-gray-500 font-medium">
+                                    Selesai Program
+                                </p>
+                                <p class="font-bold text-gray-900">
+                                    {{ formatDate(division.end_date) }}
+                                </p>
                             </div>
-                        </div>
-
-                        <!-- Schedule Card -->
-                        <div
-                            class="bg-white rounded-xl border border-gray-200 overflow-hidden"
-                        >
-                            <div
-                                class="px-6 py-4 border-b border-gray-100 bg-gray-50"
-                            >
-                                <h3 class="font-semibold text-gray-900">
-                                    Jadwal Program
-                                </h3>
-                            </div>
-                            <div class="p-6 space-y-4">
-                                <!-- Start Date -->
-                                <div
-                                    class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-100"
-                                >
-                                    <svg
-                                        class="w-5 h-5 text-blue-600"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                        />
-                                    </svg>
-                                    <div>
-                                        <p
-                                            class="text-xs text-blue-600 font-medium"
-                                        >
-                                            Mulai Program
-                                        </p>
-                                        <p class="font-semibold text-gray-900">
-                                            {{
-                                                formatDate(division.start_date)
-                                            }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <!-- End Date -->
-                                <div
-                                    class="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-100"
-                                >
-                                    <svg
-                                        class="w-5 h-5 text-green-600"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                        />
-                                    </svg>
-                                    <div>
-                                        <p
-                                            class="text-xs text-green-600 font-medium"
-                                        >
-                                            Selesai Program
-                                        </p>
-                                        <p class="font-semibold text-gray-900">
-                                            {{ formatDate(division.end_date) }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <!-- Announcement Date -->
-                                <div
-                                    class="flex items-center gap-3 p-3 bg-purple-50 rounded-lg border border-purple-100"
-                                >
-                                    <svg
-                                        class="w-5 h-5 text-purple-600"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"
-                                        />
-                                    </svg>
-                                    <div>
-                                        <p
-                                            class="text-xs text-purple-600 font-medium"
-                                        >
-                                            Pengumuman
-                                        </p>
-                                        <p class="font-semibold text-gray-900">
-                                            {{
-                                                formatDate(
-                                                    division.selection_announcement
-                                                )
-                                            }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- CTA Card -->
-                        <div
-                            class="bg-white rounded-xl border border-gray-200 overflow-hidden"
-                        >
-                            <div class="p-6">
-                                <!-- Not Logged In -->
-                                <template v-if="!auth?.user">
-                                    <button
-                                        @click="handleApply"
-                                        :disabled="
-                                            availableSlots <= 0 || isLoading
-                                        "
-                                        class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                                    >
-                                        <template v-if="!isLoading">
-                                            <svg
-                                                class="w-5 h-5"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                />
-                                            </svg>
-                                            <span>{{
-                                                availableSlots <= 0
-                                                    ? "Kuota Penuh"
-                                                    : "Daftar Sekarang"
-                                            }}</span>
-                                        </template>
-                                        <template v-else>
-                                            <svg
-                                                class="animate-spin w-5 h-5"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <circle
-                                                    class="opacity-25"
-                                                    cx="12"
-                                                    cy="12"
-                                                    r="10"
-                                                    stroke="currentColor"
-                                                    stroke-width="4"
-                                                ></circle>
-                                                <path
-                                                    class="opacity-75"
-                                                    fill="currentColor"
-                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                                ></path>
-                                            </svg>
-                                            <span>Memproses...</span>
-                                        </template>
-                                    </button>
-                                    <p
-                                        class="text-center text-sm text-gray-500 mt-3"
-                                    >
-                                        Belum punya akun?
-                                        <Link
-                                            href="/register"
-                                            class="text-blue-600 hover:underline font-medium"
-                                            >Daftar gratis</Link
-                                        >
-                                    </p>
-                                </template>
-
-                                <!-- Logged In -->
-                                <template v-else>
-                                    <div class="text-center mb-4">
-                                        <div
-                                            class="w-12 h-12 bg-green-100 rounded-full mx-auto mb-3 flex items-center justify-center"
-                                        >
-                                            <svg
-                                                class="w-6 h-6 text-green-600"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M5 13l4 4L19 7"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <p class="text-gray-600 text-sm">
-                                            Login sebagai
-                                            <span
-                                                class="font-semibold text-gray-900"
-                                                >{{ auth.user.name }}</span
-                                            >
-                                        </p>
-                                    </div>
-                                    <button
-                                        @click="handleApply"
-                                        :disabled="
-                                            availableSlots <= 0 || isLoading
-                                        "
-                                        class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2 mb-3"
-                                    >
-                                        <template v-if="!isLoading">
-                                            <svg
-                                                class="w-5 h-5"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                                />
-                                            </svg>
-                                            <span>{{
-                                                availableSlots <= 0
-                                                    ? "Kuota Penuh"
-                                                    : "Ajukan Lamaran"
-                                            }}</span>
-                                        </template>
-                                        <template v-else>
-                                            <svg
-                                                class="animate-spin w-5 h-5"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <circle
-                                                    class="opacity-25"
-                                                    cx="12"
-                                                    cy="12"
-                                                    r="10"
-                                                    stroke="currentColor"
-                                                    stroke-width="4"
-                                                ></circle>
-                                                <path
-                                                    class="opacity-75"
-                                                    fill="currentColor"
-                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                                ></path>
-                                            </svg>
-                                            <span>Memproses...</span>
-                                        </template>
-                                    </button>
-                                    <Link
-                                        href="/dashboard"
-                                        class="w-full block text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2.5 px-6 rounded-xl transition-colors"
-                                    >
-                                        Ke Dashboard
-                                    </Link>
-                                </template>
-                            </div>
-                        </div>
-
-                        <!-- Contact Card -->
-                        <div
-                            class="bg-gray-50 rounded-xl border border-gray-200 p-4"
-                        >
-                            <p class="text-sm text-gray-600 text-center">
-                                Butuh bantuan?
-                                <Link
-                                    href="/#contact"
-                                    class="text-blue-600 hover:underline font-medium"
-                                    >Hubungi kami</Link
-                                >
-                            </p>
                         </div>
                     </div>
+                </div>
+
+                <!-- Row 3: Job Description -->
+                <div
+                    v-if="hasJobDescription"
+                    class="lg:col-span-6 bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+                >
+                    <div class="flex items-center gap-3 mb-6">
+                        <div
+                            class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-6 h-6 text-indigo-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                                />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900">
+                            Tugas & Tanggung Jawab
+                        </h2>
+                    </div>
+                    <ul class="space-y-3">
+                        <li
+                            v-for="(task, index) in normalizedJobDescription"
+                            :key="index"
+                            class="flex items-start gap-3"
+                        >
+                            <span
+                                class="flex-shrink-0 w-7 h-7 bg-indigo-100 text-indigo-700 rounded-lg flex items-center justify-center text-xs font-bold"
+                            >
+                                {{ index + 1 }}
+                            </span>
+                            <span class="text-gray-700 leading-relaxed">{{
+                                cleanTaskText(task)
+                            }}</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Row 3: Requirements -->
+                <div
+                    v-if="hasRequirements"
+                    class="lg:col-span-6 bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+                >
+                    <div class="flex items-center gap-3 mb-6">
+                        <div
+                            class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-6 h-6 text-amber-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900">
+                            Persyaratan
+                        </h2>
+                    </div>
+                    <ul class="space-y-3">
+                        <li
+                            v-for="(req, index) in normalizedRequirements"
+                            :key="index"
+                            class="flex items-start gap-3"
+                        >
+                            <svg
+                                class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M5 13l4 4L19 7"
+                                />
+                            </svg>
+                            <span class="text-gray-700 leading-relaxed">{{
+                                req
+                            }}</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Row 4: Criteria (if available) -->
+                <div
+                    v-if="hasCriteria"
+                    class="lg:col-span-6 bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+                >
+                    <div class="flex items-center gap-3 mb-6">
+                        <div
+                            class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center"
+                        >
+                            <svg
+                                class="w-6 h-6 text-purple-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900">
+                            Kriteria Peserta
+                        </h2>
+                    </div>
+                    <ul class="space-y-3">
+                        <li
+                            v-for="(criteria, index) in normalizedCriteria"
+                            :key="index"
+                            class="flex items-start gap-3"
+                        >
+                            <svg
+                                class="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                            <span class="text-gray-700 leading-relaxed">{{
+                                criteria
+                            }}</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Row 4: Benefits (if available) -->
+                <div
+                    v-if="hasBenefits"
+                    class="lg:col-span-6 bg-blue-50 rounded-2xl p-8 shadow-lg border border-blue-100"
+                >
+                    <div class="flex items-center gap-3 mb-6">
+                        <div
+                            class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shadow-sm"
+                        >
+                            <svg
+                                class="w-6 h-6 text-blue-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900">
+                            Benefit Program
+                        </h2>
+                    </div>
+                    <ul class="space-y-3">
+                        <li
+                            v-for="(benefit, index) in normalizedBenefits"
+                            :key="index"
+                            class="flex items-start gap-3"
+                        >
+                            <div
+                                class="flex-shrink-0 w-7 h-7 bg-blue-100 rounded-lg flex items-center justify-center"
+                            >
+                                <svg
+                                    class="w-4 h-4 text-blue-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                                    />
+                                </svg>
+                            </div>
+                            <span
+                                class="text-gray-700 leading-relaxed font-medium"
+                                >{{ benefit }}</span
+                            >
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
