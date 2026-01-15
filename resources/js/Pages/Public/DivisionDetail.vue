@@ -113,22 +113,56 @@
                         </div>
                     </div>
 
-                    <!-- Registration Status Badge -->
+                    <!-- Apply Button -->
                     <div class="flex-shrink-0">
-                        <span
-                            :class="[
-                                'inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold',
-                                registrationStatus.class,
-                            ]"
+                        <button
+                            @click="handleApply"
+                            :disabled="availableSlots <= 0 || isLoading"
+                            class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none disabled:cursor-not-allowed flex items-center gap-2"
                         >
-                            <span
-                                :class="[
-                                    'w-2 h-2 rounded-full mr-2',
-                                    registrationStatus.dotClass,
-                                ]"
-                            ></span>
-                            {{ registrationStatus.label }}
-                        </span>
+                            <template v-if="!isLoading">
+                                <svg
+                                    class="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                    />
+                                </svg>
+                                <span>{{
+                                    availableSlots <= 0
+                                        ? "Kuota Penuh"
+                                        : "Daftar Sekarang"
+                                }}</span>
+                            </template>
+                            <template v-else>
+                                <svg
+                                    class="animate-spin w-5 h-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        class="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        stroke-width="4"
+                                    ></circle>
+                                    <path
+                                        class="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
+                                </svg>
+                                <span>Memproses...</span>
+                            </template>
+                        </button>
                     </div>
                 </div>
             </div>
