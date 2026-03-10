@@ -786,16 +786,35 @@
                                 <div
                                     class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
                                 >
-                                    <div>
-                                        <h2
-                                            class="text-2xl font-bold text-blue-600"
+                                    <div class="flex items-start gap-4">
+                                        <div
+                                            class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
                                         >
-                                            Logbook Harian
-                                        </h2>
-                                        <p class="text-gray-600 mt-1 text-sm">
-                                            Catat perkembangan dan kegiatan
-                                            harian selama masa magang
-                                        </p>
+                                            <svg
+                                                class="w-7 h-7 text-white"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h2
+                                                class="text-2xl font-bold text-blue-600"
+                                            >
+                                                Logbook Harian
+                                            </h2>
+                                            <p class="text-gray-600 mt-1 text-sm">
+                                                Catat perkembangan dan kegiatan
+                                                harian selama masa magang
+                                            </p>
+                                        </div>
                                     </div>
                                     <button
                                         @click="showCreateLogbookModal = true"
@@ -825,31 +844,14 @@
                                     class="grid grid-cols-2 md:grid-cols-4 gap-4"
                                 >
                                     <div
-                                        class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md p-5 text-white"
+                                        class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
                                     >
-                                        <div
-                                            class="flex items-center justify-between"
-                                        >
-                                            <div>
-                                                <p
-                                                    class="text-blue-100 text-xs font-medium uppercase tracking-wide"
-                                                >
-                                                    Total
-                                                </p>
-                                                <p
-                                                    class="text-3xl font-bold mt-1"
-                                                >
-                                                    {{
-                                                        logbookStats?.total_logbooks ||
-                                                        0
-                                                    }}
-                                                </p>
-                                            </div>
+                                        <div class="flex items-center gap-4">
                                             <div
-                                                class="bg-white bg-opacity-20 rounded-lg p-2.5"
+                                                class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                                             >
                                                 <svg
-                                                    class="w-8 h-8"
+                                                    class="w-6 h-6 text-white"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -862,32 +864,26 @@
                                                     />
                                                 </svg>
                                             </div>
+                                            <div>
+                                                <p class="text-sm font-medium text-white/90">Total</p>
+                                                <h3 class="text-3xl font-bold text-white">
+                                                    {{ logbookStats?.total_logbooks || 0 }}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 pt-4 border-t border-white/20">
+                                            <p class="text-xs text-white/70">Total logbook bulan ini</p>
                                         </div>
                                     </div>
                                     <div
-                                        class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl shadow-lg p-6 text-white"
+                                        class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
                                     >
-                                        <div
-                                            class="flex items-center justify-between"
-                                        >
-                                            <div>
-                                                <p
-                                                    class="text-orange-100 text-sm font-medium"
-                                                >
-                                                    Pending
-                                                </p>
-                                                <p class="text-3xl font-bold">
-                                                    {{
-                                                        logbookStats?.pending_logbooks ||
-                                                        0
-                                                    }}
-                                                </p>
-                                            </div>
+                                        <div class="flex items-center gap-4">
                                             <div
-                                                class="bg-orange-400 bg-opacity-30 rounded-full p-3"
+                                                class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                                             >
                                                 <svg
-                                                    class="w-8 h-8"
+                                                    class="w-6 h-6 text-white"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -900,29 +896,26 @@
                                                     />
                                                 </svg>
                                             </div>
+                                            <div>
+                                                <p class="text-sm font-medium text-white/90">Pending</p>
+                                                <h3 class="text-3xl font-bold text-white">
+                                                    {{ logbookStats?.pending_logbooks || 0 }}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 pt-4 border-t border-white/20">
+                                            <p class="text-xs text-white/70">Menunggu persetujuan</p>
                                         </div>
                                     </div>
                                     <div
-                                        class="bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
+                                        class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
                                     >
-                                        <div
-                                            class="flex items-center justify-between"
-                                        >
-                                            <div>
-                                                <p
-                                                    class="text-green-100 text-sm font-medium"
-                                                >
-                                                    Disetujui
-                                                </p>
-                                                <p class="text-3xl font-bold">
-                                                    0
-                                                </p>
-                                            </div>
+                                        <div class="flex items-center gap-4">
                                             <div
-                                                class="bg-green-400 bg-opacity-30 rounded-full p-3"
+                                                class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                                             >
                                                 <svg
-                                                    class="w-8 h-8"
+                                                    class="w-6 h-6 text-white"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -935,32 +928,24 @@
                                                     />
                                                 </svg>
                                             </div>
+                                            <div>
+                                                <p class="text-sm font-medium text-white/90">Disetujui</p>
+                                                <h3 class="text-3xl font-bold text-white">0</h3>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 pt-4 border-t border-white/20">
+                                            <p class="text-xs text-white/70">Telah disetujui</p>
                                         </div>
                                     </div>
                                     <div
-                                        class="bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl shadow-lg p-6 text-white"
+                                        class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
                                     >
-                                        <div
-                                            class="flex items-center justify-between"
-                                        >
-                                            <div>
-                                                <p
-                                                    class="text-purple-100 text-sm font-medium"
-                                                >
-                                                    Revisi
-                                                </p>
-                                                <p class="text-3xl font-bold">
-                                                    {{
-                                                        logbookStats?.revision_logbooks ||
-                                                        0
-                                                    }}
-                                                </p>
-                                            </div>
+                                        <div class="flex items-center gap-4">
                                             <div
-                                                class="bg-purple-400 bg-opacity-30 rounded-full p-3"
+                                                class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                                             >
                                                 <svg
-                                                    class="w-8 h-8"
+                                                    class="w-6 h-6 text-white"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -973,6 +958,15 @@
                                                     />
                                                 </svg>
                                             </div>
+                                            <div>
+                                                <p class="text-sm font-medium text-white/90">Revisi</p>
+                                                <h3 class="text-3xl font-bold text-white">
+                                                    {{ logbookStats?.revision_logbooks || 0 }}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 pt-4 border-t border-white/20">
+                                            <p class="text-xs text-white/70">Perlu perbaikan</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1300,7 +1294,7 @@
                                 >
                                     <div class="flex items-start gap-4">
                                         <div
-                                            class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
+                                            class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
                                         >
                                             <svg
                                                 class="w-7 h-7 text-white"
@@ -1332,7 +1326,7 @@
                                     </div>
                                     <button
                                         @click="showCreateReportModal = true"
-                                        class="inline-flex items-center px-5 py-2.5 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                                        class="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                                     >
                                         <svg
                                             class="w-5 h-5 mr-2"
@@ -1354,40 +1348,19 @@
 
                             <!-- Statistics - Compact Modern Cards -->
                             <div class="p-6 border-b border-gray-100 bg-white">
-                                <h3
-                                    class="text-lg font-semibold text-blue-600 mb-4"
-                                >
-                                    Statistik Laporan Akhir
-                                </h3>
+                                
                                 <div
                                     class="grid grid-cols-2 md:grid-cols-4 gap-4"
                                 >
                                     <div
-                                        class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-md p-5 text-white"
+                                        class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
                                     >
-                                        <div
-                                            class="flex items-center justify-between"
-                                        >
-                                            <div>
-                                                <p
-                                                    class="text-emerald-100 text-xs font-medium uppercase tracking-wide"
-                                                >
-                                                    Total Laporan
-                                                </p>
-                                                <p
-                                                    class="text-3xl font-bold mt-1"
-                                                >
-                                                    {{
-                                                        reportStats?.total_reports ||
-                                                        0
-                                                    }}
-                                                </p>
-                                            </div>
+                                        <div class="flex items-center gap-4">
                                             <div
-                                                class="bg-white bg-opacity-20 rounded-lg p-2.5"
+                                                class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                                             >
                                                 <svg
-                                                    class="w-8 h-8"
+                                                    class="w-6 h-6 text-white"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -1400,32 +1373,26 @@
                                                     />
                                                 </svg>
                                             </div>
+                                            <div>
+                                                <p class="text-sm font-medium text-white/90">Total Laporan</p>
+                                                <h3 class="text-3xl font-bold text-white">
+                                                    {{ reportStats?.total_reports || 0 }}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 pt-4 border-t border-white/20">
+                                            <p class="text-xs text-white/70">Total laporan akhir</p>
                                         </div>
                                     </div>
                                     <div
-                                        class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl shadow-lg p-6 text-white"
+                                        class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
                                     >
-                                        <div
-                                            class="flex items-center justify-between"
-                                        >
-                                            <div>
-                                                <p
-                                                    class="text-orange-100 text-sm font-medium"
-                                                >
-                                                    Pending
-                                                </p>
-                                                <p class="text-3xl font-bold">
-                                                    {{
-                                                        reportStats?.pending_reports ||
-                                                        0
-                                                    }}
-                                                </p>
-                                            </div>
+                                        <div class="flex items-center gap-4">
                                             <div
-                                                class="bg-orange-400 bg-opacity-30 rounded-full p-3"
+                                                class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                                             >
                                                 <svg
-                                                    class="w-8 h-8"
+                                                    class="w-6 h-6 text-white"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -1438,32 +1405,26 @@
                                                     />
                                                 </svg>
                                             </div>
+                                            <div>
+                                                <p class="text-sm font-medium text-white/90">Pending</p>
+                                                <h3 class="text-3xl font-bold text-white">
+                                                    {{ reportStats?.pending_reports || 0 }}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 pt-4 border-t border-white/20">
+                                            <p class="text-xs text-white/70">Menunggu persetujuan</p>
                                         </div>
                                     </div>
                                     <div
-                                        class="bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
+                                        class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
                                     >
-                                        <div
-                                            class="flex items-center justify-between"
-                                        >
-                                            <div>
-                                                <p
-                                                    class="text-green-100 text-sm font-medium"
-                                                >
-                                                    Disetujui
-                                                </p>
-                                                <p class="text-3xl font-bold">
-                                                    {{
-                                                        reportStats?.approved_reports ||
-                                                        0
-                                                    }}
-                                                </p>
-                                            </div>
+                                        <div class="flex items-center gap-4">
                                             <div
-                                                class="bg-green-400 bg-opacity-30 rounded-full p-3"
+                                                class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                                             >
                                                 <svg
-                                                    class="w-8 h-8"
+                                                    class="w-6 h-6 text-white"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -1476,32 +1437,26 @@
                                                     />
                                                 </svg>
                                             </div>
+                                            <div>
+                                                <p class="text-sm font-medium text-white/90">Disetujui</p>
+                                                <h3 class="text-3xl font-bold text-white">
+                                                    {{ reportStats?.approved_reports || 0 }}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 pt-4 border-t border-white/20">
+                                            <p class="text-xs text-white/70">Telah disetujui</p>
                                         </div>
                                     </div>
                                     <div
-                                        class="bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl shadow-lg p-6 text-white"
+                                        class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
                                     >
-                                        <div
-                                            class="flex items-center justify-between"
-                                        >
-                                            <div>
-                                                <p
-                                                    class="text-purple-100 text-sm font-medium"
-                                                >
-                                                    Perlu Revisi
-                                                </p>
-                                                <p class="text-3xl font-bold">
-                                                    {{
-                                                        reportStats?.revision_reports ||
-                                                        0
-                                                    }}
-                                                </p>
-                                            </div>
+                                        <div class="flex items-center gap-4">
                                             <div
-                                                class="bg-purple-400 bg-opacity-30 rounded-full p-3"
+                                                class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
                                             >
                                                 <svg
-                                                    class="w-8 h-8"
+                                                    class="w-6 h-6 text-white"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -1514,6 +1469,15 @@
                                                     />
                                                 </svg>
                                             </div>
+                                            <div>
+                                                <p class="text-sm font-medium text-white/90">Perlu Revisi</p>
+                                                <h3 class="text-3xl font-bold text-white">
+                                                    {{ reportStats?.revision_reports || 0 }}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 pt-4 border-t border-white/20">
+                                            <p class="text-xs text-white/70">Perlu perbaikan</p>
                                         </div>
                                     </div>
                                 </div>

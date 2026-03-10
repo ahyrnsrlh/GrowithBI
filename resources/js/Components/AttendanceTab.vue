@@ -26,7 +26,7 @@ const page = usePage();
 
 // Use attendanceHistory if available, fallback to attendances
 const attendanceList = computed(
-    () => props.attendanceHistory || props.attendances || []
+    () => props.attendanceHistory || props.attendances || [],
 );
 
 const showCamera = ref(false);
@@ -63,7 +63,7 @@ const currentPage = ref(1);
 const perPage = 5;
 
 const cameraTitle = computed(() =>
-    actionType.value === "check-in" ? "Foto Check-in" : "Foto Check-out"
+    actionType.value === "check-in" ? "Foto Check-in" : "Foto Check-out",
 );
 
 // Filtered attendance based on status
@@ -72,7 +72,7 @@ const filteredAttendance = computed(() => {
         return attendanceList.value;
     }
     return attendanceList.value.filter(
-        (att) => att.status === filterStatus.value
+        (att) => att.status === filterStatus.value,
     );
 });
 
@@ -92,10 +92,10 @@ const totalPages = computed(() => {
 const monthlyStats = computed(() => {
     const total = attendanceList.value.length;
     const onTime = attendanceList.value.filter(
-        (att) => att.status === "On-Time"
+        (att) => att.status === "On-Time",
     ).length;
     const late = attendanceList.value.filter(
-        (att) => att.status === "Late"
+        (att) => att.status === "Late",
     ).length;
     return { total, onTime, late };
 });
@@ -223,7 +223,7 @@ const updateClockDisplay = () => {
 
     const formattedDate = `${dayName}, ${now.day} ${monthName} ${now.year}`;
     const formattedTime = `${String(now.hours).padStart(2, "0")}:${String(
-        now.minutes
+        now.minutes,
     ).padStart(2, "0")}:${String(now.seconds).padStart(2, "0")}`;
 
     currentTime.value = `${formattedDate} ${formattedTime} WIB`;
@@ -433,7 +433,7 @@ const getLocation = async () => {
         emit(
             "show-toast",
             "error",
-            "Gagal mendapatkan lokasi. Pastikan GPS aktif dan izinkan akses lokasi."
+            "Gagal mendapatkan lokasi. Pastikan GPS aktif dan izinkan akses lokasi.",
         );
     }
 };
@@ -458,7 +458,7 @@ const submit = () => {
         emit(
             "show-toast",
             "error",
-            "Face descriptor tidak valid. Silakan ambil foto ulang."
+            "Face descriptor tidak valid. Silakan ambil foto ulang.",
         );
         return;
     }
@@ -502,13 +502,13 @@ const submit = () => {
                     errors.error ||
                         errors.photo ||
                         errors.face_descriptor ||
-                        "Gagal menyimpan absensi"
+                        "Gagal menyimpan absensi",
                 );
             },
             onFinish: () => {
                 isProcessing.value = false;
             },
-        }
+        },
     );
 };
 </script>
@@ -602,7 +602,7 @@ const submit = () => {
 
             <!-- Tepat Waktu Card - Emerald Gradient -->
             <div
-                class="bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600 rounded-2xl p-5 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/25 hover:-translate-y-1 transition-all duration-300"
+                class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
             >
                 <div class="flex items-center gap-4">
                     <div
@@ -638,7 +638,7 @@ const submit = () => {
 
             <!-- Terlambat Card - Amber/Orange Gradient -->
             <div
-                class="bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-600 rounded-2xl p-5 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/25 hover:-translate-y-1 transition-all duration-300"
+                class="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
             >
                 <div class="flex items-center gap-4">
                     <div
@@ -764,7 +764,7 @@ const submit = () => {
                                     {{
                                         todayAttendance?.check_in
                                             ? formatTime(
-                                                  todayAttendance.check_in
+                                                  todayAttendance.check_in,
                                               )
                                             : "--:--"
                                     }}
@@ -870,7 +870,7 @@ const submit = () => {
                                     {{
                                         todayAttendance?.check_out
                                             ? formatTime(
-                                                  todayAttendance.check_out
+                                                  todayAttendance.check_out,
                                               )
                                             : "--:--"
                                     }}
@@ -971,8 +971,8 @@ const submit = () => {
                                 isProcessing && actionType === "check-in"
                                     ? "Memproses..."
                                     : todayAttendance?.check_in
-                                    ? "Sudah Check-in"
-                                    : "Check-in Sekarang"
+                                      ? "Sudah Check-in"
+                                      : "Check-in Sekarang"
                             }}</span>
                         </button>
                         <div
@@ -1017,8 +1017,8 @@ const submit = () => {
                                 todayAttendance?.check_out
                                     ? 'bg-gray-300 text-gray-500'
                                     : !todayAttendance?.check_in
-                                    ? 'bg-gray-100 text-gray-400 border-2 border-dashed border-gray-300'
-                                    : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40'
+                                      ? 'bg-gray-100 text-gray-400 border-2 border-dashed border-gray-300'
+                                      : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40'
                             "
                         >
                             <svg
@@ -1061,8 +1061,8 @@ const submit = () => {
                                 isProcessing && actionType === "check-out"
                                     ? "Memproses..."
                                     : todayAttendance?.check_out
-                                    ? "Sudah Check-out"
-                                    : "Check-out Sekarang"
+                                      ? "Sudah Check-out"
+                                      : "Check-out Sekarang"
                             }}</span>
                         </button>
                         <div
@@ -1348,7 +1348,7 @@ const submit = () => {
                         {{
                             Math.min(
                                 currentPage * perPage,
-                                filteredAttendance.length
+                                filteredAttendance.length,
                             )
                         }}
                         dari {{ filteredAttendance.length }}
