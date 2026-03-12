@@ -64,6 +64,10 @@ Route::get('/dashboard', function () {
     switch ($user->role) {
         case 'admin':
             return redirect()->route('admin.dashboard');
+        case 'pembimbing':
+            // Pembimbing (supervisors) redirect to admin dashboard
+            // If you need separate pembimbing dashboard, create it in admin routes
+            return redirect()->route('admin.dashboard');
         case 'peserta':
             return redirect()->route('profile.edit');
         default:
@@ -74,14 +78,14 @@ Route::get('/dashboard', function () {
 // Profile routes (accessible by all authenticated users)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::post('/profile/upload-photo', [ProfileController::class, 'uploadPhoto'])->name('profile.upload-photo');
-    Route::post('/profile/upload-document', [ProfileController::class, 'uploadDocument'])->name('profile.upload-document');
-    Route::post('/profile/create-application', [ProfileController::class, 'createApplication'])->name('profile.create-application');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware('throttle:10,1');
+    Route::post('/profile/upload-photo', [ProfileController::class, 'uploadPhoto'])->name('profile.upload-photo')->middleware('throttle:5,1');
+    Route::post('/profile/upload-document', [ProfileController::class, 'uploadDocument'])->name('profile.upload-document')->middleware('throttle:10,1');
+    Route::post('/profile/create-application', [ProfileController::class, 'createApplication'])->name('profile.create-application')->middleware('throttle:3,1');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy')->middleware('throttle:3,10');
     
     // Two-Factor Authentication - Trusted Devices Management
-    Route::prefix('profile/security')->name('profile.security.')->group(function () {
+    Route::prefix('profile/security')->name('profile.security.')->middleware('throttle:20,1')->group(function () {
         Route::get('/trusted-devices', [App\Http\Controllers\Auth\TrustedDeviceController::class, 'index'])->name('trusted-devices.index');
         Route::delete('/trusted-devices/{deviceId}', [App\Http\Controllers\Auth\TrustedDeviceController::class, 'destroy'])->name('trusted-devices.destroy');
         Route::delete('/trusted-devices', [App\Http\Controllers\Auth\TrustedDeviceController::class, 'destroyAll'])->name('trusted-devices.destroy-all');
@@ -89,53 +93,68 @@ Route::middleware('auth')->group(function () {
     
     // Logbook routes (accessible from profile page)
     Route::get('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'index'])->name('profile.logbooks.index');
-    Route::get('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'show'])->name('profile.logbooks.show');
-    Route::post('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'store'])->name('profile.logbooks.store');
+    Route::get('/profile/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'show'])->name('profile.logbooks.show')->middleware('ownership:logbook');
+    Route::post('/profile/logbooks', [App\Http\Controllers\LogbookController::class, 'store'])->name('profile.logbooks.store')->middleware('throttle:20,1');
     
     // Attendance routes (accessible from profile page for participants)
     Route::prefix('profile/attendance')->name('profile.attendance.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Peserta\AttendanceController::class, 'index'])->name('index');
-        Route::post('/check-in', [\App\Http\Controllers\Peserta\AttendanceController::class, 'checkIn'])->name('check-in');
-        Route::post('/check-out', [\App\Http\Controllers\Peserta\AttendanceController::class, 'checkOut'])->name('check-out');
+        Route::post('/check-in', [\App\Http\Controllers\Peserta\AttendanceController::class, 'checkIn'])->name('check-in')->middleware('throttle:5,1');
+        Route::post('/check-out', [\App\Http\Controllers\Peserta\AttendanceController::class, 'checkOut'])->name('check-out')->middleware('throttle:5,1');
         Route::get('/stats', [\App\Http\Controllers\Peserta\AttendanceController::class, 'stats'])->name('stats');
     });
     
     // Reports routes (accessible from profile page)
-    Route::post('/profile/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'store'])->name('profile.reports.store');
-    Route::delete('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'destroy'])->name('profile.reports.destroy');
+    Route::post('/profile/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'store'])->name('profile.reports.store')->middleware('throttle:10,1');
+    Route::delete('/profile/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'destroy'])->name('profile.reports.destroy')->middleware('ownership:report');
     
     // Acceptance Letter routes
-    Route::post('/applications/{application}/acceptance-letter/upload', [App\Http\Controllers\AcceptanceLetterController::class, 'upload'])->name('acceptance-letter.upload');
-    Route::get('/applications/{application}/acceptance-letter/download', [App\Http\Controllers\AcceptanceLetterController::class, 'download'])->name('acceptance-letter.download');
-    Route::get('/applications/{application}/acceptance-letter/check', [App\Http\Controllers\AcceptanceLetterController::class, 'check'])->name('acceptance-letter.check');
+    Route::post('/applications/{application}/acceptance-letter/upload', [App\Http\Controllers\AcceptanceLetterController::class, 'upload'])->name('acceptance-letter.upload')->middleware(['ownership:application', 'throttle:5,1']);
+    Route::get('/applications/{application}/acceptance-letter/download', [App\Http\Controllers\AcceptanceLetterController::class, 'download'])->name('acceptance-letter.download')->middleware('ownership:application');
+    Route::get('/applications/{application}/acceptance-letter/check', [App\Http\Controllers\AcceptanceLetterController::class, 'check'])->name('acceptance-letter.check')->middleware('ownership:application');
     
     // Cancel application (global route for applications management)
-    Route::delete('/applications/{application}', [ProfileController::class, 'cancelApplication'])->name('applications.cancel');
+    Route::delete('/applications/{application}', [ProfileController::class, 'cancelApplication'])->name('applications.cancel')->middleware('ownership:application');
 });
 
 // Peserta Routes (require peserta role)
-Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'verified', 'role:peserta'])->group(function () {
     // Dashboard is now in profile index tab, no separate dashboard route needed
     
     // Logbook routes for participants
-    Route::resource('logbooks', App\Http\Controllers\LogbookController::class);
-    Route::post('/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbooks.comments.store');
+    Route::get('/logbooks', [App\Http\Controllers\LogbookController::class, 'index'])->name('logbooks.index');
+    Route::post('/logbooks', [App\Http\Controllers\LogbookController::class, 'store'])->name('logbooks.store')->middleware('throttle:20,1');
+    Route::get('/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'show'])->name('logbooks.show')->middleware('ownership:logbook');
+    Route::put('/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'update'])->name('logbooks.update')->middleware(['ownership:logbook', 'throttle:20,1']);
+    Route::delete('/logbooks/{logbook}', [App\Http\Controllers\LogbookController::class, 'destroy'])->name('logbooks.destroy')->middleware('ownership:logbook');
+    Route::post('/logbooks/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbooks.comments.store')->middleware(['ownership:logbook', 'throttle:30,1']);
     
     // Reports management for participants
-    Route::resource('reports', App\Http\Controllers\Peserta\PesertaReportController::class);
+    Route::get('/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'index'])->name('reports.index');
+    Route::post('/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'store'])->name('reports.store')->middleware('throttle:10,1');
+    Route::get('/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'show'])->name('reports.show')->middleware('ownership:report');
+    Route::put('/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'update'])->name('reports.update')->middleware(['ownership:report', 'throttle:10,1']);
+    Route::delete('/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'destroy'])->name('reports.destroy')->middleware('ownership:report');
     
     // Application management for participants
-    Route::delete('/applications/{application}', [App\Http\Controllers\ProfileController::class, 'cancelApplication'])->name('applications.cancel');
+    Route::delete('/applications/{application}', [App\Http\Controllers\ProfileController::class, 'cancelApplication'])->name('applications.cancel')->middleware('ownership:application');
 });
 
 // Logbook routes (accessible by accepted participants only) - Legacy support
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::resource('logbook', App\Http\Controllers\LogbookController::class);
-    Route::post('/logbook/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbook.comments.store');
+// DEPRECATED: Use /peserta/logbooks instead
+// These routes are kept for backward compatibility only
+Route::middleware(['auth', 'verified', 'role:peserta'])->group(function () {
+    Route::get('/logbook', [App\Http\Controllers\LogbookController::class, 'index'])->name('logbook.index');
+    Route::post('/logbook', [App\Http\Controllers\LogbookController::class, 'store'])->name('logbook.store')->middleware('throttle:20,1');
+    Route::get('/logbook/{logbook}', [App\Http\Controllers\LogbookController::class, 'show'])->name('logbook.show')->middleware('ownership:logbook');
+    Route::put('/logbook/{logbook}', [App\Http\Controllers\LogbookController::class, 'update'])->name('logbook.update')->middleware(['ownership:logbook', 'throttle:20,1']);
+    Route::delete('/logbook/{logbook}', [App\Http\Controllers\LogbookController::class, 'destroy'])->name('logbook.destroy')->middleware('ownership:logbook');
+    Route::post('/logbook/{logbook}/comments', [App\Http\Controllers\LogbookController::class, 'addComment'])->name('logbook.comments.store')->middleware(['ownership:logbook', 'throttle:30,1']);
 });
 
-// Admin Routes (require admin role)
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
+// Admin Routes (require admin or pembimbing role + 2FA)
+// Pembimbing (supervisors) have access to admin features
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'role:admin,pembimbing', '2fa'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Profile Management

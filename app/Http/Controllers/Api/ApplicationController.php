@@ -19,16 +19,22 @@ class ApplicationController extends Controller
             ]);
         }
         
-        // Check if user already has an active application
-        $hasApplication = Application::where('user_id', $user->id)
+        // Optimized: Check existing application with indexed fields and specific columns
+        $existingApplication = Application::select('id', 'status', 'division_id', 'created_at')
+            ->where('user_id', $user->id)
             ->where('division_id', $divisionId)
             ->whereIn('status', ['menunggu', 'dalam_review', 'wawancara'])
-            ->exists();
+            ->first();
 
-        if ($hasApplication) {
+        if ($existingApplication) {
             return response()->json([
                 'canApply' => false,
-                'message' => 'Anda sudah memiliki aplikasi yang sedang diproses untuk divisi ini.'
+                'message' => 'Anda sudah memiliki aplikasi yang sedang diproses untuk divisi ini.',
+                'existingApplication' => [
+                    'id' => $existingApplication->id,
+                    'status' => $existingApplication->status,
+                    'created_at' => $existingApplication->created_at
+                ]
             ]);
         }
             

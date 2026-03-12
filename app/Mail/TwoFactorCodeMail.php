@@ -19,8 +19,12 @@ use Illuminate\Queue\SerializesModels;
  * - Contains clear expiration warning
  * - Includes security notice not to share the code
  * - Provides context about the login attempt
+ * 
+ * IMPORTANT: This Mailable does NOT implement ShouldQueue because
+ * it's already sent via SendTwoFactorOtpJob which is queued.
+ * Double queueing causes email delivery issues.
  */
-class TwoFactorCodeMail extends Mailable implements ShouldQueue
+class TwoFactorCodeMail extends Mailable
 {
     use Queueable, SerializesModels;
 

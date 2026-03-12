@@ -327,20 +327,40 @@ class ProfileController extends Controller
             
             Log::info('Application created successfully:', $application->toArray());
             
-            // Send notification to user
-            $user->notify(new \App\Notifications\RegistrationStatusNotification($application, \App\Enums\RegistrationEventType::APPLICATION_SUBMITTED));
+            // Send notification to user (dispatch asynchronously for better performance)
+            dispatch(function () use ($user, $application) {
+                $user->notify(new \App\Notifications\RegistrationStatusNotification(
+                    $application, 
+                    \App\Enums\RegistrationEventType::APPLICATION_SUBMITTED
+                ));
+            })->afterResponse();
             
-            // Send notification to all admins about new application
-            $admins = User::where('role', 'admin')->get();
-            foreach ($admins as $admin) {
-                $admin->notify(new \App\Notifications\RegistrationStatusNotification($application, \App\Enums\RegistrationEventType::NEW_REGISTRATION, [], true));
-            }
+            // Send notification to admins (optimized: only select necessary fields)
+            dispatch(function () use ($application) {
+                $admins = User::select('id', 'name', 'email')
+                    ->where('role', 'admin')
+                    ->get();
+                    
+                foreach ($admins as $admin) {
+                    $admin->notify(new \App\Notifications\RegistrationStatusNotification(
+                        $application, 
+                        \App\Enums\RegistrationEventType::NEW_REGISTRATION, 
+                        [], 
+                        true
+                    ));
+                }
+            })->afterResponse();
 
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Lamaran berhasil dikirim!'
-                ]);
+                    'message' => 'Lamaran berhasil dikirim!',
+                    'application' => [
+                        'id' => $application->id,
+                        'status' => $application->status,
+                        'division_id' => $application->division_id
+                    ]
+                ], 200);
             }
 
             return Redirect::route('profile.edit')->with('success', 'Lamaran berhasil dikirim!');

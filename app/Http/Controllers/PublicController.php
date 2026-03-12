@@ -61,11 +61,20 @@ class PublicController extends Controller
             // Check if user already has a pending or accepted application
             $existingApplication = null;
             if (Auth::check()) {
-                $existingApplication = Application::where('email', Auth::user()->email)
+                // Optimized query with specific columns and indexed fields
+                $existingApplication = Application::select('id', 'user_id', 'division_id', 'status', 'created_at', 'email')
+                    ->where('user_id', Auth::id()) // Using user_id index instead of email
                     ->whereIn('status', ['menunggu', 'diterima'])
-                    ->with('division')
+                    ->with('division:id,name') // Only load necessary fields
                     ->first();
             }
+
+            // Optimized: Use single query with count aggregate
+            $acceptedCount = $division->applications()
+                ->where('status', 'diterima')
+                ->count();
+            
+            $quota = $division->quota ?? $division->max_interns;
 
             // Ensure division data is complete
             $divisionData = [
@@ -74,14 +83,16 @@ class PublicController extends Controller
                 'description' => $division->description,
                 'job_description' => $division->job_description,
                 'requirements' => $division->requirements,
-                'quota' => $division->quota ?? $division->max_interns,
-                'current_interns' => $division->applications()->where('status', 'diterima')->count(),
-                'available_slots' => ($division->quota ?? $division->max_interns) - $division->applications()->where('status', 'diterima')->count(),
+                'quota' => $quota,
+                'current_interns' => $acceptedCount,
+                'available_slots' => max(0, $quota - $acceptedCount), // Prevent negative slots
                 'start_date' => $division->start_date,
                 'end_date' => $division->end_date,
                 'application_deadline' => $division->application_deadline,
                 'selection_announcement' => $division->selection_announcement,
                 'is_active' => $division->is_active,
+                'benefit' => $division->benefit,
+                'criteria' => $division->criteria,
             ];
 
             return Inertia::render('Public/DivisionDetail', [

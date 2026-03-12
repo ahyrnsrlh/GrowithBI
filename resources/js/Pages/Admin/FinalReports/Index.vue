@@ -13,7 +13,8 @@
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Laporan -->
             <div
                 class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white"
             >
@@ -24,6 +25,9 @@
                         </p>
                         <p class="text-3xl font-bold">
                             {{ stats?.total || 0 }}
+                        </p>
+                        <p class="text-blue-100 text-xs mt-1">
+                            Semua laporan akhir
                         </p>
                     </div>
                     <div class="bg-blue-400 bg-opacity-30 rounded-full p-3">
@@ -44,19 +48,23 @@
                 </div>
             </div>
 
+            <!-- Menunggu Review -->
             <div
-                class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl shadow-lg p-6 text-white"
+                class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6 text-white"
             >
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-orange-100 text-sm font-medium">
+                        <p class="text-yellow-100 text-sm font-medium">
                             Menunggu Review
                         </p>
                         <p class="text-3xl font-bold">
                             {{ stats?.submitted || 0 }}
                         </p>
+                        <p class="text-yellow-100 text-xs mt-1">
+                            Perlu ditinjau
+                        </p>
                     </div>
-                    <div class="bg-orange-400 bg-opacity-30 rounded-full p-3">
+                    <div class="bg-yellow-400 bg-opacity-30 rounded-full p-3">
                         <svg
                             class="w-8 h-8"
                             fill="none"
@@ -74,8 +82,9 @@
                 </div>
             </div>
 
+            <!-- Disetujui -->
             <div
-                class="bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
             >
                 <div class="flex items-center justify-between">
                     <div>
@@ -85,6 +94,7 @@
                         <p class="text-3xl font-bold">
                             {{ stats?.approved || 0 }}
                         </p>
+                        <p class="text-green-100 text-xs mt-1">Lolos review</p>
                     </div>
                     <div class="bg-green-400 bg-opacity-30 rounded-full p-3">
                         <svg
@@ -104,6 +114,7 @@
                 </div>
             </div>
 
+            <!-- Perlu Revisi -->
             <div
                 class="bg-gradient-to-r from-red-500 to-red-600 rounded-xl shadow-lg p-6 text-white"
             >
@@ -115,6 +126,7 @@
                         <p class="text-3xl font-bold">
                             {{ stats?.revision || 0 }}
                         </p>
+                        <p class="text-red-100 text-xs mt-1">Butuh perbaikan</p>
                     </div>
                     <div class="bg-red-400 bg-opacity-30 rounded-full p-3">
                         <svg
@@ -311,7 +323,7 @@
                                         :href="
                                             route(
                                                 'admin.final-reports.show',
-                                                report.id
+                                                report.id,
                                             )
                                         "
                                         class="text-blue-600 hover:text-blue-900 text-sm font-medium"
@@ -322,7 +334,7 @@
                                         :href="
                                             route(
                                                 'admin.final-reports.download',
-                                                report.id
+                                                report.id,
                                             )
                                         "
                                         class="text-green-600 hover:text-green-900 text-sm font-medium"
@@ -441,7 +453,7 @@ const exportReports = () => {
 
     window.open(
         `${route("admin.final-reports.export.all")}?${params.toString()}`,
-        "_blank"
+        "_blank",
     );
 };
 

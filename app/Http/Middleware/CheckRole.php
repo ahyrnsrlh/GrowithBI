@@ -13,8 +13,9 @@ class CheckRole
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  string  ...$roles  One or more roles to check
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         // Check if user is authenticated
         if (!Auth::check()) {
@@ -31,9 +32,9 @@ class CheckRole
             ]);
         }
 
-        // Check if user has the required role
-        if ($user->role !== $role) {
-            abort(403, 'Unauthorized access. Required role: ' . $role . ', Your role: ' . $user->role);
+        // Check if user has any of the required roles
+        if (!in_array($user->role, $roles)) {
+            abort(403, 'Unauthorized access. Required role(s): ' . implode(', ', $roles) . '. Your role: ' . $user->role);
         }
 
         return $next($request);

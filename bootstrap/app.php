@@ -33,6 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
             '2fa' => \App\Http\Middleware\EnsureTwoFactorVerified::class,
+            'ownership' => \App\Http\Middleware\VerifyResourceOwnership::class,
         ]);
         
         // Configure trusted proxies for production (load balancers, CloudFlare, etc.)

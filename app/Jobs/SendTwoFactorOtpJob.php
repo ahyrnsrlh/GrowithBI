@@ -58,6 +58,14 @@ class SendTwoFactorOtpJob implements ShouldQueue
     public function handle(): void
     {
         try {
+            Log::info('Attempting to send two-factor OTP email', [
+                'user_id' => $this->user->id,
+                'email' => $this->user->email,
+                'otp_length' => strlen($this->otpCode),
+                'mail_driver' => config('mail.default'),
+                'smtp_host' => config('mail.mailers.smtp.host'),
+            ]);
+
             Mail::to($this->user->email)->send(
                 new TwoFactorCodeMail(
                     $this->user,
@@ -66,15 +74,17 @@ class SendTwoFactorOtpJob implements ShouldQueue
                 )
             );
 
-            Log::info('Two-factor OTP email sent', [
+            Log::info('Two-factor OTP email sent successfully', [
                 'user_id' => $this->user->id,
                 'email' => $this->user->email,
+                'mail_driver' => config('mail.default'),
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to send two-factor OTP email', [
                 'user_id' => $this->user->id,
                 'email' => $this->user->email,
                 'error' => $e->getMessage(),
+                'error_class' => get_class($e),
             ]);
 
             throw $e;

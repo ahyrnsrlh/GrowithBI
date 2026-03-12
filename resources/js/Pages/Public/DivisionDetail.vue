@@ -114,8 +114,32 @@
                     </div>
 
                     <!-- Apply Button -->
-                    <div class="flex-shrink-0">
+                    <div class="flex-shrink-0 flex gap-3">
+                        <!-- Check Status Button (if user has existing application) -->
+                        <Link
+                            v-if="auth?.user && existingApplication"
+                            :href="route('profile.edit')"
+                            class="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
+                        >
+                            <svg
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                />
+                            </svg>
+                            <span>Cek Status</span>
+                        </Link>
+
+                        <!-- Apply Button -->
                         <button
+                            v-if="!existingApplication"
                             @click="handleApply"
                             :disabled="availableSlots <= 0 || isLoading"
                             class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none disabled:cursor-not-allowed flex items-center gap-2"
@@ -704,10 +728,33 @@
                                 >
                                     {{ notification.message }}
                                 </p>
+                                <p
+                                    v-if="
+                                        notification.type === 'success' &&
+                                        shouldRedirectToProfile
+                                    "
+                                    class="mt-3 text-sm text-gray-500 italic flex items-center gap-2"
+                                >
+                                    <svg
+                                        class="w-4 h-4 animate-spin"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                        />
+                                    </svg>
+                                    Redirect otomatis dalam
+                                    {{ redirectCountdown }} detik...
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-gray-50 px-6 py-4 flex justify-end">
+                    <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
                         <button
                             @click="closeNotification"
                             :class="[
@@ -717,7 +764,12 @@
                                     : 'bg-red-600 hover:bg-red-700 text-white',
                             ]"
                         >
-                            Tutup
+                            {{
+                                notification.type === "success" &&
+                                shouldRedirectToProfile
+                                    ? "Lihat Profil Sekarang"
+                                    : "Tutup"
+                            }}
                         </button>
                     </div>
                 </div>
@@ -736,6 +788,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    existingApplication: {
+        type: Object,
+        default: null,
+    },
     auth: {
         type: Object,
         default: () => ({ user: null }),
@@ -750,6 +806,8 @@ const notification = ref({
     title: "",
     message: "",
 });
+const shouldRedirectToProfile = ref(false);
+const redirectCountdown = ref(5);
 
 // Computed properties for data normalization
 const hasJobDescription = computed(() => {
@@ -877,7 +935,7 @@ const registrationStatus = computed(() => {
 
     if (start && now < start) {
         const daysLeft = Math.ceil(
-            (deadlineDate - now) / (1000 * 60 * 60 * 24)
+            (deadlineDate - now) / (1000 * 60 * 60 * 24),
         );
         if (daysLeft <= 7) {
             return {
@@ -921,7 +979,7 @@ const handleApply = async () => {
         showNotification(
             "error",
             "Maaf",
-            "Kuota untuk divisi ini sudah penuh."
+            "Kuota untuk divisi ini sudah penuh.",
         );
         return;
     }
@@ -930,7 +988,7 @@ const handleApply = async () => {
         showNotification(
             "error",
             "Login Diperlukan",
-            "Silakan login terlebih dahulu untuk mendaftar magang."
+            "Silakan login terlebih dahulu untuk mendaftar magang.",
         );
         setTimeout(() => {
             router.visit("/login", {
@@ -945,6 +1003,7 @@ const handleApply = async () => {
     isLoading.value = true;
 
     try {
+        // Check profile completeness first
         const response = await fetch(
             `/applications/check/${props.division.id}`,
             {
@@ -953,58 +1012,63 @@ const handleApply = async () => {
                     "Content-Type": "application/json",
                     "X-Requested-With": "XMLHttpRequest",
                 },
-            }
+            },
         );
 
         const result = await response.json();
 
         if (response.ok && result.canApply) {
-            const applyResponse = await fetch("/profile/create-application", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRF-TOKEN":
-                        document
-                            .querySelector('meta[name="csrf-token"]')
-                            ?.getAttribute("content") || "",
+            // Use Inertia router for faster, optimized submission
+            router.post(
+                "/profile/create-application",
+                { division_id: props.division.id },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    onSuccess: (page) => {
+                        isLoading.value = false;
+                        shouldRedirectToProfile.value = true;
+                        showNotification(
+                            "success",
+                            "Pendaftaran Berhasil!",
+                            `Anda telah berhasil mendaftar untuk divisi ${props.division.name}. Silakan tunggu konfirmasi dari admin.`,
+                        );
+                    },
+                    onError: (errors) => {
+                        isLoading.value = false;
+                        console.error("Application errors:", errors);
+                        const errorMessage =
+                            errors.division_id ||
+                            errors.message ||
+                            "Terjadi kesalahan saat mendaftar.";
+                        showNotification(
+                            "error",
+                            "Gagal Mendaftar",
+                            errorMessage,
+                        );
+                    },
                 },
-                body: JSON.stringify({ division_id: props.division.id }),
-            });
-
-            const applyResult = await applyResponse.json();
-
-            if (applyResponse.ok) {
-                showNotification(
-                    "success",
-                    "Pendaftaran Berhasil!",
-                    `Anda telah berhasil mendaftar untuk divisi ${props.division.name}. Silakan tunggu konfirmasi dari admin.`
-                );
-                setTimeout(() => window.location.reload(), 3000);
-            } else {
-                showNotification(
-                    "error",
-                    "Gagal Mendaftar",
-                    applyResult.message || "Terjadi kesalahan saat mendaftar."
-                );
-            }
+            );
+            // Don't set isLoading to false here, let onFinish handle it
+            return;
         } else {
+            // Profile incomplete
             const missingItems = [];
             if (result.missingPersonalData?.length > 0) {
                 missingItems.push(
-                    `Data Pribadi: ${result.missingPersonalData.join(", ")}`
+                    `Data Pribadi: ${result.missingPersonalData.join(", ")}`,
                 );
             }
             if (result.missingDocuments?.length > 0) {
                 missingItems.push(
-                    `Dokumen: ${result.missingDocuments.join(", ")}`
+                    `Dokumen: ${result.missingDocuments.join(", ")}`,
                 );
             }
 
             const missingMessage =
                 missingItems.length > 0
                     ? `Harap lengkapi terlebih dahulu:\n\n${missingItems.join(
-                          "\n\n"
+                          "\n\n",
                       )}`
                     : "Harap lengkapi profil Anda terlebih dahulu.";
 
@@ -1015,7 +1079,7 @@ const handleApply = async () => {
                         method: "get",
                         preserveState: false,
                     }),
-                4000
+                3000,
             );
         }
     } catch (error) {
@@ -1023,7 +1087,7 @@ const handleApply = async () => {
         showNotification(
             "error",
             "Error",
-            "Terjadi kesalahan saat memproses lamaran Anda. Silakan coba lagi."
+            "Terjadi kesalahan saat memproses lamaran Anda. Silakan coba lagi.",
         );
     } finally {
         isLoading.value = false;
@@ -1032,9 +1096,36 @@ const handleApply = async () => {
 
 const showNotification = (type, title, message) => {
     notification.value = { show: true, type, title, message };
+
+    // Auto-close modal and redirect after 5 seconds for success
+    if (type === "success" && shouldRedirectToProfile.value) {
+        redirectCountdown.value = 5;
+
+        // Countdown timer
+        const countdownInterval = setInterval(() => {
+            redirectCountdown.value--;
+            if (redirectCountdown.value <= 0) {
+                clearInterval(countdownInterval);
+                if (notification.value.show) {
+                    closeNotification();
+                }
+            }
+        }, 1000);
+    }
 };
 
 const closeNotification = () => {
     notification.value.show = false;
+
+    // Redirect to profile if registration was successful
+    if (shouldRedirectToProfile.value) {
+        shouldRedirectToProfile.value = false;
+        setTimeout(() => {
+            router.visit("/profile", {
+                preserveScroll: false,
+                preserveState: false,
+            });
+        }, 300);
+    }
 };
 </script>
