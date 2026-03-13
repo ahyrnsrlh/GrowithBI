@@ -810,7 +810,9 @@
                                             >
                                                 Logbook Harian
                                             </h2>
-                                            <p class="text-gray-600 mt-1 text-sm">
+                                            <p
+                                                class="text-gray-600 mt-1 text-sm"
+                                            >
                                                 Catat perkembangan dan kegiatan
                                                 harian selama masa magang
                                             </p>
@@ -865,14 +867,27 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-white/90">Total</p>
-                                                <h3 class="text-3xl font-bold text-white">
-                                                    {{ logbookStats?.total_logbooks || 0 }}
+                                                <p
+                                                    class="text-sm font-medium text-white/90"
+                                                >
+                                                    Total
+                                                </p>
+                                                <h3
+                                                    class="text-3xl font-bold text-white"
+                                                >
+                                                    {{
+                                                        logbookStats?.total_logbooks ||
+                                                        0
+                                                    }}
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div class="mt-4 pt-4 border-t border-white/20">
-                                            <p class="text-xs text-white/70">Total logbook bulan ini</p>
+                                        <div
+                                            class="mt-4 pt-4 border-t border-white/20"
+                                        >
+                                            <p class="text-xs text-white/70">
+                                                Total logbook bulan ini
+                                            </p>
                                         </div>
                                     </div>
                                     <div
@@ -897,14 +912,27 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-white/90">Pending</p>
-                                                <h3 class="text-3xl font-bold text-white">
-                                                    {{ logbookStats?.pending_logbooks || 0 }}
+                                                <p
+                                                    class="text-sm font-medium text-white/90"
+                                                >
+                                                    Pending
+                                                </p>
+                                                <h3
+                                                    class="text-3xl font-bold text-white"
+                                                >
+                                                    {{
+                                                        logbookStats?.pending_logbooks ||
+                                                        0
+                                                    }}
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div class="mt-4 pt-4 border-t border-white/20">
-                                            <p class="text-xs text-white/70">Menunggu persetujuan</p>
+                                        <div
+                                            class="mt-4 pt-4 border-t border-white/20"
+                                        >
+                                            <p class="text-xs text-white/70">
+                                                Menunggu persetujuan
+                                            </p>
                                         </div>
                                     </div>
                                     <div
@@ -929,12 +957,24 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-white/90">Disetujui</p>
-                                                <h3 class="text-3xl font-bold text-white">0</h3>
+                                                <p
+                                                    class="text-sm font-medium text-white/90"
+                                                >
+                                                    Disetujui
+                                                </p>
+                                                <h3
+                                                    class="text-3xl font-bold text-white"
+                                                >
+                                                    0
+                                                </h3>
                                             </div>
                                         </div>
-                                        <div class="mt-4 pt-4 border-t border-white/20">
-                                            <p class="text-xs text-white/70">Telah disetujui</p>
+                                        <div
+                                            class="mt-4 pt-4 border-t border-white/20"
+                                        >
+                                            <p class="text-xs text-white/70">
+                                                Telah disetujui
+                                            </p>
                                         </div>
                                     </div>
                                     <div
@@ -959,14 +999,27 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-white/90">Revisi</p>
-                                                <h3 class="text-3xl font-bold text-white">
-                                                    {{ logbookStats?.revision_logbooks || 0 }}
+                                                <p
+                                                    class="text-sm font-medium text-white/90"
+                                                >
+                                                    Revisi
+                                                </p>
+                                                <h3
+                                                    class="text-3xl font-bold text-white"
+                                                >
+                                                    {{
+                                                        logbookStats?.revision_logbooks ||
+                                                        0
+                                                    }}
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div class="mt-4 pt-4 border-t border-white/20">
-                                            <p class="text-xs text-white/70">Perlu perbaikan</p>
+                                        <div
+                                            class="mt-4 pt-4 border-t border-white/20"
+                                        >
+                                            <p class="text-xs text-white/70">
+                                                Perlu perbaikan
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -1071,7 +1124,7 @@
                                                                     class="font-medium truncate"
                                                                     >{{
                                                                         formatDate(
-                                                                            logbook?.date
+                                                                            logbook?.date,
                                                                         )
                                                                     }}</span
                                                                 >
@@ -1123,12 +1176,12 @@
                                                                 "submitted"
                                                                     ? "Pending"
                                                                     : logbook?.status ===
-                                                                      "approved"
-                                                                    ? "Disetujui"
-                                                                    : logbook?.status ===
-                                                                      "revision"
-                                                                    ? "Revisi"
-                                                                    : "Draft"
+                                                                        "approved"
+                                                                      ? "Disetujui"
+                                                                      : logbook?.status ===
+                                                                          "revision"
+                                                                        ? "Revisi"
+                                                                        : "Draft"
                                                             }}
                                                         </span>
                                                     </div>
@@ -1206,7 +1259,7 @@
                                                         <button
                                                             @click="
                                                                 viewLogbookDetail(
-                                                                    logbook.id
+                                                                    logbook.id,
                                                                 )
                                                             "
                                                             class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
@@ -1239,7 +1292,7 @@
                                                             "
                                                             @click="
                                                                 editLogbook(
-                                                                    logbook.id
+                                                                    logbook.id,
                                                                 )
                                                             "
                                                             class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all duration-200"
@@ -1348,7 +1401,6 @@
 
                             <!-- Statistics - Compact Modern Cards -->
                             <div class="p-6 border-b border-gray-100 bg-white">
-                                
                                 <div
                                     class="grid grid-cols-2 md:grid-cols-4 gap-4"
                                 >
@@ -1374,14 +1426,27 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-white/90">Total Laporan</p>
-                                                <h3 class="text-3xl font-bold text-white">
-                                                    {{ reportStats?.total_reports || 0 }}
+                                                <p
+                                                    class="text-sm font-medium text-white/90"
+                                                >
+                                                    Total Laporan
+                                                </p>
+                                                <h3
+                                                    class="text-3xl font-bold text-white"
+                                                >
+                                                    {{
+                                                        reportStats?.total_reports ||
+                                                        0
+                                                    }}
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div class="mt-4 pt-4 border-t border-white/20">
-                                            <p class="text-xs text-white/70">Total laporan akhir</p>
+                                        <div
+                                            class="mt-4 pt-4 border-t border-white/20"
+                                        >
+                                            <p class="text-xs text-white/70">
+                                                Total laporan akhir
+                                            </p>
                                         </div>
                                     </div>
                                     <div
@@ -1406,14 +1471,27 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-white/90">Pending</p>
-                                                <h3 class="text-3xl font-bold text-white">
-                                                    {{ reportStats?.pending_reports || 0 }}
+                                                <p
+                                                    class="text-sm font-medium text-white/90"
+                                                >
+                                                    Pending
+                                                </p>
+                                                <h3
+                                                    class="text-3xl font-bold text-white"
+                                                >
+                                                    {{
+                                                        reportStats?.pending_reports ||
+                                                        0
+                                                    }}
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div class="mt-4 pt-4 border-t border-white/20">
-                                            <p class="text-xs text-white/70">Menunggu persetujuan</p>
+                                        <div
+                                            class="mt-4 pt-4 border-t border-white/20"
+                                        >
+                                            <p class="text-xs text-white/70">
+                                                Menunggu persetujuan
+                                            </p>
                                         </div>
                                     </div>
                                     <div
@@ -1438,14 +1516,27 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-white/90">Disetujui</p>
-                                                <h3 class="text-3xl font-bold text-white">
-                                                    {{ reportStats?.approved_reports || 0 }}
+                                                <p
+                                                    class="text-sm font-medium text-white/90"
+                                                >
+                                                    Disetujui
+                                                </p>
+                                                <h3
+                                                    class="text-3xl font-bold text-white"
+                                                >
+                                                    {{
+                                                        reportStats?.approved_reports ||
+                                                        0
+                                                    }}
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div class="mt-4 pt-4 border-t border-white/20">
-                                            <p class="text-xs text-white/70">Telah disetujui</p>
+                                        <div
+                                            class="mt-4 pt-4 border-t border-white/20"
+                                        >
+                                            <p class="text-xs text-white/70">
+                                                Telah disetujui
+                                            </p>
                                         </div>
                                     </div>
                                     <div
@@ -1470,14 +1561,27 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <p class="text-sm font-medium text-white/90">Perlu Revisi</p>
-                                                <h3 class="text-3xl font-bold text-white">
-                                                    {{ reportStats?.revision_reports || 0 }}
+                                                <p
+                                                    class="text-sm font-medium text-white/90"
+                                                >
+                                                    Perlu Revisi
+                                                </p>
+                                                <h3
+                                                    class="text-3xl font-bold text-white"
+                                                >
+                                                    {{
+                                                        reportStats?.revision_reports ||
+                                                        0
+                                                    }}
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div class="mt-4 pt-4 border-t border-white/20">
-                                            <p class="text-xs text-white/70">Perlu perbaikan</p>
+                                        <div
+                                            class="mt-4 pt-4 border-t border-white/20"
+                                        >
+                                            <p class="text-xs text-white/70">
+                                                Perlu perbaikan
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -1713,7 +1817,7 @@
                                                     {{
                                                         report?.created_at
                                                             ? formatDate(
-                                                                  report.created_at
+                                                                  report.created_at,
                                                               )
                                                             : "N/A"
                                                     }}
@@ -1782,14 +1886,14 @@
                 @click.self="showCreateLogbookModal = false"
             >
                 <div
-                    class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center"
+                    class="flex items-start sm:items-center justify-center min-h-screen px-2 sm:px-4 py-4 text-center"
                 >
                     <div
                         class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
                     ></div>
 
                     <div
-                        class="relative inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                        class="relative inline-block w-full max-w-4xl max-h-[92vh] p-4 sm:p-6 my-2 sm:my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
                     >
                         <!-- Modal Header -->
                         <div
@@ -1824,7 +1928,10 @@
                         </div>
 
                         <!-- Modal Form -->
-                        <form @submit.prevent="submitLogbook" class="space-y-6">
+                        <form
+                            @submit.prevent="submitLogbook"
+                            class="space-y-6 max-h-[calc(92vh-120px)] overflow-y-auto pr-1"
+                        >
                             <!-- Date and Hours Row -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
@@ -1980,7 +2087,7 @@
 
                             <!-- Modal Actions -->
                             <div
-                                class="flex justify-end space-x-3 pt-4 border-t"
+                                class="flex justify-end space-x-3 pt-5 mt-2 border-t sticky bottom-2 bg-white pb-3 z-10"
                             >
                                 <button
                                     type="button"
@@ -2205,14 +2312,14 @@ const acceptedStatuses = ["accepted", "letter_ready", "diterima"];
 // Computed property to check if user has accepted application
 const hasAcceptedApplication = computed(() => {
     return props.applications.some((app) =>
-        acceptedStatuses.includes(app.status)
+        acceptedStatuses.includes(app.status),
     );
 });
 
 // Computed property to get accepted application details
 const acceptedApplication = computed(() => {
     return props.applications.find((app) =>
-        acceptedStatuses.includes(app.status)
+        acceptedStatuses.includes(app.status),
     );
 });
 
@@ -2366,7 +2473,7 @@ const submitLogbook = () => {
             } else {
                 showToast(
                     "error",
-                    "Gagal menambahkan logbook! Periksa semua field yang wajib diisi."
+                    "Gagal menambahkan logbook! Periksa semua field yang wajib diisi.",
                 );
             }
         },
@@ -2396,7 +2503,7 @@ const submitReport = () => {
             } else {
                 showToast(
                     "error",
-                    "Gagal upload laporan! Periksa semua field yang wajib diisi."
+                    "Gagal upload laporan! Periksa semua field yang wajib diisi.",
                 );
             }
         },
@@ -2429,7 +2536,7 @@ const uploadDocument = (type, file) => {
             }
             showToast(
                 "success",
-                response.data.message || "Dokumen berhasil diunggah!"
+                response.data.message || "Dokumen berhasil diunggah!",
             );
         })
         .catch((error) => {
@@ -2517,7 +2624,7 @@ onMounted(() => {
         activeTab.value = "applications";
         showToast(
             "success",
-            "Selamat! Lamaran Anda telah berhasil dikirim. Anda dapat memantau statusnya di sini."
+            "Selamat! Lamaran Anda telah berhasil dikirim. Anda dapat memantau statusnya di sini.",
         );
     }
 
@@ -2535,8 +2642,8 @@ onMounted(() => {
                 showToast(
                     "info",
                     `Status lamaran terbaru: ${getStatusText(
-                        latestApplication.status
-                    )}`
+                        latestApplication.status,
+                    )}`,
                 );
             }, 1000);
         }
