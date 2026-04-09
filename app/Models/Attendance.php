@@ -68,12 +68,19 @@ class Attendance extends Model
      */
     public function getWorkingDuration(): ?int
     {
-        if (!$this->check_in || !$this->check_out) return null;
-        
+        if (!$this->check_in || !$this->check_out) {
+            return null;
+        }
+
         $checkIn = Carbon::parse($this->check_in);
         $checkOut = Carbon::parse($this->check_out);
-        
-        return $checkOut->diffInMinutes($checkIn);
+
+        // Guard against inconsistent data (checkout recorded earlier than checkin).
+        if ($checkOut->lt($checkIn)) {
+            return null;
+        }
+
+        return $checkIn->diffInMinutes($checkOut);
     }
 
     /**

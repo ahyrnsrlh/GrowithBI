@@ -638,7 +638,7 @@
                                                 openPhotoModal(
                                                     attendance.photos.checkin,
                                                     'Check-in - ' +
-                                                        attendance.user?.name
+                                                        attendance.user?.name,
                                                 )
                                             "
                                         />
@@ -680,7 +680,7 @@
                                                 openPhotoModal(
                                                     attendance.photos.checkout,
                                                     'Check-out - ' +
-                                                        attendance.user?.name
+                                                        attendance.user?.name,
                                                 )
                                             "
                                         />
@@ -699,7 +699,7 @@
                                     <span
                                         :class="
                                             getStatusBadgeClass(
-                                                attendance.status
+                                                attendance.status,
                                             )
                                         "
                                         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
@@ -707,7 +707,7 @@
                                         <span
                                             :class="
                                                 getStatusDotClass(
-                                                    attendance.status
+                                                    attendance.status,
                                                 )
                                             "
                                             class="w-1.5 h-1.5 rounded-full"
@@ -730,7 +730,7 @@
                                 <span class="text-sm font-medium text-gray-700">
                                     {{
                                         formatDuration(
-                                            attendance.working_duration
+                                            attendance.working_duration,
                                         )
                                     }}
                                 </span>
@@ -742,7 +742,7 @@
                                     :href="
                                         route(
                                             'admin.attendance.show',
-                                            attendance.id
+                                            attendance.id,
                                         )
                                     "
                                     class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
@@ -1103,9 +1103,15 @@ const getStatusDotClass = (status) => {
 };
 
 const formatDuration = (minutes) => {
-    if (!minutes) return "-";
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+    const totalMinutes = Number(minutes);
+
+    if (!Number.isFinite(totalMinutes) || totalMinutes <= 0) {
+        return "-";
+    }
+
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+
     if (hours === 0) return `${mins}m`;
     return `${hours}j ${mins}m`;
 };

@@ -41,11 +41,15 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping, Wit
 
     public function map($attendance): array
     {
+        $divisionName = $attendance->user->division?->name
+            ?? $attendance->user->acceptedApplication?->division?->name
+            ?? '-';
+
         return [
             $attendance->date->format('d/m/Y'),
             $attendance->user->name,
             $attendance->user->email,
-            $attendance->user->division ? $attendance->user->division->name : '-',
+            $divisionName,
             $attendance->check_in ? $attendance->check_in->format('H:i:s') : '-',
             $attendance->check_out ? $attendance->check_out->format('H:i:s') : '-',
             $attendance->status,

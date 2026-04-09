@@ -15,6 +15,8 @@ use App\Exports\AttendanceExport;
 
 class AttendanceController extends Controller
 {
+    private const ACCEPTED_APPLICATION_STATUSES = ['accepted', 'letter_ready', 'diterima'];
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -31,7 +33,10 @@ class AttendanceController extends Controller
      */
     public function index(Request $request): Response
     {
-        $query = Attendance::with(['user', 'user.division'])
+        $query = Attendance::with([
+            'user.division',
+            'user.acceptedApplication.division:id,name',
+        ])
             ->whereHas('user', function ($q) {
                 $q->where('role', 'peserta');
             });
@@ -47,7 +52,11 @@ class AttendanceController extends Controller
 
         if ($request->division_id) {
             $query->whereHas('user', function ($q) use ($request) {
-                $q->where('division_id', $request->division_id);
+                $q->where('division_id', $request->division_id)
+                    ->orWhereHas('applications', function ($subQuery) use ($request) {
+                        $subQuery->whereIn('status', self::ACCEPTED_APPLICATION_STATUSES)
+                            ->where('division_id', $request->division_id);
+                    });
             });
         }
 
@@ -70,6 +79,8 @@ class AttendanceController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(20)
             ->through(function ($attendance) {
+                $division = $this->resolveParticipantDivision($attendance->user);
+
                 return [
                     'id' => $attendance->id,
                     'date' => $attendance->date->format('Y-m-d'),
@@ -82,9 +93,9 @@ class AttendanceController extends Controller
                         'id' => $attendance->user->id,
                         'name' => $attendance->user->name,
                         'email' => $attendance->user->email,
-                        'division' => $attendance->user->division ? [
-                            'id' => $attendance->user->division->id,
-                            'name' => $attendance->user->division->name,
+                        'division' => $division ? [
+                            'id' => $division->id,
+                            'name' => $division->name,
                         ] : null,
                     ],
                     'location' => [
@@ -107,16 +118,21 @@ class AttendanceController extends Controller
         $participants = User::where('role', 'peserta')
             ->where('is_active', true)
             ->whereHas('applications', function ($q) {
-                $q->where('status', 'diterima');
+                $q->whereIn('status', self::ACCEPTED_APPLICATION_STATUSES);
             })
-            ->with('division:id,name')
+            ->with([
+                'division:id,name',
+                'acceptedApplication.division:id,name',
+            ])
             ->orderBy('name')
             ->get(['id', 'name', 'division_id'])
             ->map(function ($user) {
+                $division = $this->resolveParticipantDivision($user);
+
                 return [
                     'id' => $user->id,
                     'name' => $user->name,
-                    'division' => $user->division ? $user->division->name : '-',
+                    'division' => $division?->name ?? '-',
                 ];
             });
 
@@ -142,7 +158,12 @@ class AttendanceController extends Controller
      */
     public function show(Attendance $attendance): Response
     {
-        $attendance->load(['user', 'user.division']);
+        $attendance->load([
+            'user.division',
+            'user.acceptedApplication.division:id,name',
+        ]);
+
+        $division = $this->resolveParticipantDivision($attendance->user);
 
         return Inertia::render('Admin/Attendance/Show', [
             'attendance' => [
@@ -158,9 +179,9 @@ class AttendanceController extends Controller
                     'id' => $attendance->user->id,
                     'name' => $attendance->user->name,
                     'email' => $attendance->user->email,
-                    'division' => $attendance->user->division ? [
-                        'id' => $attendance->user->division->id,
-                        'name' => $attendance->user->division->name,
+                    'division' => $division ? [
+                        'id' => $division->id,
+                        'name' => $division->name,
                     ] : null,
                 ],
                 'location' => [
@@ -186,7 +207,10 @@ class AttendanceController extends Controller
      */
     public function export(Request $request)
     {
-        $query = Attendance::with(['user', 'user.division'])
+        $query = Attendance::with([
+            'user.division',
+            'user.acceptedApplication.division:id,name',
+        ])
             ->whereHas('user', function ($q) {
                 $q->where('role', 'peserta');
             });
@@ -202,7 +226,11 @@ class AttendanceController extends Controller
 
         if ($request->division_id) {
             $query->whereHas('user', function ($q) use ($request) {
-                $q->where('division_id', $request->division_id);
+                $q->where('division_id', $request->division_id)
+                    ->orWhereHas('applications', function ($subQuery) use ($request) {
+                        $subQuery->whereIn('status', self::ACCEPTED_APPLICATION_STATUSES)
+                            ->where('division_id', $request->division_id);
+                    });
             });
         }
 
@@ -298,7 +326,10 @@ class AttendanceController extends Controller
         $today = Carbon::now()->format('Y-m-d');
         
         // Get today's attendances with location data
-        $attendances = Attendance::with(['user', 'user.division'])
+        $attendances = Attendance::with([
+            'user.division',
+            'user.acceptedApplication.division:id,name',
+        ])
             ->whereHas('user', function ($q) {
                 $q->where('role', 'peserta');
             })
@@ -307,11 +338,13 @@ class AttendanceController extends Controller
             ->whereNotNull('longitude')
             ->get()
             ->map(function ($attendance) {
+                $division = $this->resolveParticipantDivision($attendance->user);
+
                 return [
                     'id' => $attendance->id,
                     'user_id' => $attendance->user_id,
                     'user_name' => $attendance->user->name,
-                    'division' => $attendance->user->division->name ?? 'N/A',
+                    'division' => $division?->name ?? 'N/A',
                     'check_in_time' => $attendance->check_in,
                     'check_out_time' => $attendance->check_out,
                     'latitude' => $attendance->latitude,
@@ -350,13 +383,30 @@ class AttendanceController extends Controller
     }
 
     /**
+     * Resolve participant division with fallback to accepted application.
+     */
+    private function resolveParticipantDivision(User $user): ?Division
+    {
+        if ($user->division) {
+            return $user->division;
+        }
+
+        $acceptedApplication = $user->acceptedApplication;
+
+        return $acceptedApplication?->division;
+    }
+
+    /**
      * API endpoint to get real-time attendance data for maps
      */
     public function getAttendanceLocations(Request $request)
     {
         $date = $request->get('date', Carbon::now()->format('Y-m-d'));
         
-        $attendances = Attendance::with(['user', 'user.division'])
+        $attendances = Attendance::with([
+            'user.division',
+            'user.acceptedApplication.division:id,name',
+        ])
             ->whereHas('user', function ($q) {
                 $q->where('role', 'peserta');
             })
@@ -365,11 +415,13 @@ class AttendanceController extends Controller
             ->whereNotNull('longitude')
             ->get()
             ->map(function ($attendance) {
+                $division = $this->resolveParticipantDivision($attendance->user);
+
                 return [
                     'id' => $attendance->id,
                     'user_id' => $attendance->user_id,
                     'user_name' => $attendance->user->name,
-                    'division' => $attendance->user->division->name ?? 'N/A',
+                    'division' => $division?->name ?? 'N/A',
                     'check_in_time' => $attendance->check_in,
                     'check_out_time' => $attendance->check_out,
                     'latitude' => (float) $attendance->latitude,

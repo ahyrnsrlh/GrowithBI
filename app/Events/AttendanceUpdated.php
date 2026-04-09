@@ -22,7 +22,10 @@ class AttendanceUpdated implements ShouldBroadcast
      */
     public function __construct(Attendance $attendance)
     {
-        $this->attendance = $attendance->load(['user', 'user.division']);
+        $this->attendance = $attendance->load([
+            'user.division',
+            'user.acceptedApplication.division:id,name',
+        ]);
     }
 
     /**
@@ -50,20 +53,24 @@ class AttendanceUpdated implements ShouldBroadcast
      */
     public function broadcastWith(): array
     {
+        $divisionName = $this->attendance->user->division?->name
+            ?? $this->attendance->user->acceptedApplication?->division?->name
+            ?? 'N/A';
+
         return [
             'attendance' => [
                 'id' => $this->attendance->id,
                 'user_id' => $this->attendance->user_id,
                 'user_name' => $this->attendance->user->name,
-                'division' => $this->attendance->user->division->name ?? 'N/A',
+                'division' => $divisionName,
                 'check_in_time' => $this->attendance->check_in,
                 'check_out_time' => $this->attendance->check_out,
-                'latitude' => (float) $this->attendance->check_in_latitude,
-                'longitude' => (float) $this->attendance->check_in_longitude,
+                'latitude' => (float) $this->attendance->latitude,
+                'longitude' => (float) $this->attendance->longitude,
                 'status' => $this->attendance->status,
                 'is_valid_location' => $this->calculateIsValidLocation(
-                    $this->attendance->check_in_latitude,
-                    $this->attendance->check_in_longitude
+                    $this->attendance->latitude,
+                    $this->attendance->longitude
                 ),
                 'updated_at' => $this->attendance->updated_at->toISOString(),
             ]
