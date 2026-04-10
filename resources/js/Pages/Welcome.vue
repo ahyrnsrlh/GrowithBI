@@ -609,20 +609,19 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <section
-            id="features"
-            class="py-20 bg-gradient-to-br from-blue-800 via-blue-900 to-indigo-900 relative z-10"
-        >
+        <section id="features" class="py-20 bg-slate-50 relative z-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     class="text-center mb-16"
                     data-aos="fade-up"
                     data-aos-duration="800"
                 >
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">
+                    <h2
+                        class="text-3xl md:text-4xl font-bold mb-4 text-blue-800"
+                    >
                         Benefit Magang di Bank Indonesia
                     </h2>
-                    <p class="text-blue-100 text-lg max-w-2xl mx-auto">
+                    <p class="text-blue-700 text-lg max-w-2xl mx-auto">
                         Belajar, berkembang, dan berkontribusi bersama bank
                         indonesia provinsi lampung
                     </p>
@@ -631,17 +630,17 @@ onUnmounted(() => {
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Benefit 1 -->
                     <div
-                        class="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer"
+                        class="group bg-white rounded-2xl p-8 border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-300 cursor-pointer"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="100"
                     >
                         <div class="flex items-start justify-between mb-6">
                             <div
-                                class="w-12 h-12 rounded-lg bg-blue-400/30 flex items-center justify-center group-hover:bg-blue-300/40 transition-colors"
+                                class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center transition-colors"
                             >
                                 <svg
-                                    class="w-6 h-6 text-blue-100"
+                                    class="w-6 h-6 text-blue-700"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -655,7 +654,7 @@ onUnmounted(() => {
                                 </svg>
                             </div>
                             <svg
-                                class="w-5 h-5 text-blue-100 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 translate-y-0 group-hover:-translate-y-1 transition-all duration-300"
+                                class="w-5 h-5 text-blue-500 opacity-60 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -668,10 +667,10 @@ onUnmounted(() => {
                                 />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-3">
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">
                             Pengalaman Kerja Nyata
                         </h3>
-                        <p class="text-blue-100/90 leading-relaxed text-sm">
+                        <p class="text-slate-600 leading-relaxed text-sm">
                             Terlibat langsung dalam proyek-proyek riil Bank
                             Indonesia dan rasakan atmosfer kerja profesional
                             yang sesungguhnya.
@@ -680,17 +679,17 @@ onUnmounted(() => {
 
                     <!-- Benefit 2 -->
                     <div
-                        class="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer"
+                        class="group bg-white rounded-2xl p-8 border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-300 cursor-pointer"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="200"
                     >
                         <div class="flex items-start justify-between mb-6">
                             <div
-                                class="w-12 h-12 rounded-lg bg-blue-400/30 flex items-center justify-center group-hover:bg-blue-300/40 transition-colors"
+                                class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center transition-colors"
                             >
                                 <svg
-                                    class="w-6 h-6 text-blue-100"
+                                    class="w-6 h-6 text-blue-700"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -704,7 +703,7 @@ onUnmounted(() => {
                                 </svg>
                             </div>
                             <svg
-                                class="w-5 h-5 text-blue-100 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 translate-y-0 group-hover:-translate-y-1 transition-all duration-300"
+                                class="w-5 h-5 text-blue-500 opacity-60 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -717,10 +716,10 @@ onUnmounted(() => {
                                 />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-3">
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">
                             Pengembangan Skill & Kompetensi
                         </h3>
-                        <p class="text-blue-100/90 leading-relaxed text-sm">
+                        <p class="text-slate-600 leading-relaxed text-sm">
                             Kembangkan keahlian teknis dan soft skill melalui
                             pelatihan berkualitas dari para ekspert industri
                             perbankan.
@@ -729,17 +728,17 @@ onUnmounted(() => {
 
                     <!-- Benefit 3 -->
                     <div
-                        class="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer"
+                        class="group bg-white rounded-2xl p-8 border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-300 cursor-pointer"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="300"
                     >
                         <div class="flex items-start justify-between mb-6">
                             <div
-                                class="w-12 h-12 rounded-lg bg-blue-400/30 flex items-center justify-center group-hover:bg-blue-300/40 transition-colors"
+                                class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center transition-colors"
                             >
                                 <svg
-                                    class="w-6 h-6 text-blue-100"
+                                    class="w-6 h-6 text-blue-700"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -753,7 +752,7 @@ onUnmounted(() => {
                                 </svg>
                             </div>
                             <svg
-                                class="w-5 h-5 text-blue-100 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 translate-y-0 group-hover:-translate-y-1 transition-all duration-300"
+                                class="w-5 h-5 text-blue-500 opacity-60 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -766,10 +765,10 @@ onUnmounted(() => {
                                 />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-3">
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">
                             Bimbingan dari Mentor Berpengalaman
                         </h3>
-                        <p class="text-blue-100/90 leading-relaxed text-sm">
+                        <p class="text-slate-600 leading-relaxed text-sm">
                             Dapatkan mentoring personal dari senior banker
                             berpengalaman untuk mengoptimalkan potensi karier
                             Anda.
@@ -778,17 +777,17 @@ onUnmounted(() => {
 
                     <!-- Benefit 4 -->
                     <div
-                        class="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer"
+                        class="group bg-white rounded-2xl p-8 border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-300 cursor-pointer"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="400"
                     >
                         <div class="flex items-start justify-between mb-6">
                             <div
-                                class="w-12 h-12 rounded-lg bg-blue-400/30 flex items-center justify-center group-hover:bg-blue-300/40 transition-colors"
+                                class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center transition-colors"
                             >
                                 <svg
-                                    class="w-6 h-6 text-blue-100"
+                                    class="w-6 h-6 text-blue-700"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -802,7 +801,7 @@ onUnmounted(() => {
                                 </svg>
                             </div>
                             <svg
-                                class="w-5 h-5 text-blue-100 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 translate-y-0 group-hover:-translate-y-1 transition-all duration-300"
+                                class="w-5 h-5 text-blue-500 opacity-60 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -815,10 +814,10 @@ onUnmounted(() => {
                                 />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-3">
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">
                             Jaringan & Relasi Profesional
                         </h3>
-                        <p class="text-blue-100/90 leading-relaxed text-sm">
+                        <p class="text-slate-600 leading-relaxed text-sm">
                             Bangun networking yang kuat dengan profesional
                             perbankan dan buka peluang karier di masa depan.
                         </p>
@@ -826,17 +825,17 @@ onUnmounted(() => {
 
                     <!-- Benefit 5 -->
                     <div
-                        class="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer"
+                        class="group bg-white rounded-2xl p-8 border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-300 cursor-pointer"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="500"
                     >
                         <div class="flex items-start justify-between mb-6">
                             <div
-                                class="w-12 h-12 rounded-lg bg-blue-400/30 flex items-center justify-center group-hover:bg-blue-300/40 transition-colors"
+                                class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center transition-colors"
                             >
                                 <svg
-                                    class="w-6 h-6 text-blue-100"
+                                    class="w-6 h-6 text-blue-700"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -850,7 +849,7 @@ onUnmounted(() => {
                                 </svg>
                             </div>
                             <svg
-                                class="w-5 h-5 text-blue-100 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 translate-y-0 group-hover:-translate-y-1 transition-all duration-300"
+                                class="w-5 h-5 text-blue-500 opacity-60 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -863,10 +862,10 @@ onUnmounted(() => {
                                 />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-3">
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">
                             Sertifikat Magang Resmi
                         </h3>
-                        <p class="text-blue-100/90 leading-relaxed text-sm">
+                        <p class="text-slate-600 leading-relaxed text-sm">
                             Raih sertifikat resmi sebagai bukti pengalaman
                             magang di institusi keuangan terpercaya di
                             Indonesia.
@@ -875,17 +874,17 @@ onUnmounted(() => {
 
                     <!-- Benefit 6 -->
                     <div
-                        class="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer"
+                        class="group bg-white rounded-2xl p-8 border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-300 cursor-pointer"
                         data-aos="fade-up"
                         data-aos-duration="600"
                         data-aos-delay="600"
                     >
                         <div class="flex items-start justify-between mb-6">
                             <div
-                                class="w-12 h-12 rounded-lg bg-blue-400/30 flex items-center justify-center group-hover:bg-blue-300/40 transition-colors"
+                                class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center transition-colors"
                             >
                                 <svg
-                                    class="w-6 h-6 text-blue-100"
+                                    class="w-6 h-6 text-blue-700"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -899,7 +898,7 @@ onUnmounted(() => {
                                 </svg>
                             </div>
                             <svg
-                                class="w-5 h-5 text-blue-100 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 translate-y-0 group-hover:-translate-y-1 transition-all duration-300"
+                                class="w-5 h-5 text-blue-500 opacity-60 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -912,10 +911,10 @@ onUnmounted(() => {
                                 />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-3">
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">
                             Uang Saku Magang
                         </h3>
-                        <p class="text-blue-100/90 leading-relaxed text-sm">
+                        <p class="text-slate-600 leading-relaxed text-sm">
                             Dapatkan dukungan finansial berupa uang saku selama
                             program magang untuk membantu kebutuhan harian Anda.
                         </p>
@@ -949,7 +948,7 @@ onUnmounted(() => {
                     <div
                         v-for="(division, index) in divisions"
                         :key="division.id"
-                        class="group bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2 border border-blue-500/20 overflow-hidden flex flex-col"
+                        class="group bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1 border border-blue-500/20 overflow-hidden flex flex-col"
                         data-aos="zoom-in"
                         data-aos-duration="600"
                         :data-aos-delay="index * 100"

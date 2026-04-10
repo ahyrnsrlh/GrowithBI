@@ -58,22 +58,16 @@
         </div>
 
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
             <div
-                class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-blue-600 rounded-2xl p-6 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-blue-100 text-sm font-medium">
-                            Total Logbook
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ stats.total_logbooks || 0 }}
-                        </p>
-                    </div>
-                    <div class="bg-blue-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -86,24 +80,29 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Total Logbook
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.total_logbooks || 0 }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Total laporan harian</p>
                 </div>
             </div>
 
             <div
-                class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl shadow-lg p-6 text-white"
+                class="bg-amber-500 rounded-2xl p-6 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-orange-100 text-sm font-medium">
-                            Perlu Review
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ stats.pending_logbooks || 0 }}
-                        </p>
-                    </div>
-                    <div class="bg-orange-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -116,24 +115,31 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Perlu Review
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.pending_logbooks || 0 }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">
+                        Menunggu persetujuan admin
+                    </p>
                 </div>
             </div>
 
             <div
-                class="bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-emerald-600 rounded-2xl p-6 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-green-100 text-sm font-medium">
-                            Disetujui
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ stats.approved_logbooks || 0 }}
-                        </p>
-                    </div>
-                    <div class="bg-green-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -146,24 +152,29 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Disetujui
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.approved_logbooks || 0 }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Laporan sudah valid</p>
                 </div>
             </div>
 
             <div
-                class="bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-rose-600 rounded-2xl p-6 shadow-lg shadow-rose-500/20 hover:shadow-xl hover:shadow-rose-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-purple-100 text-sm font-medium">
-                            Rata-rata Jam/Hari
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ stats.average_hours || 0 }}
-                        </p>
-                    </div>
-                    <div class="bg-purple-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -176,6 +187,17 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Rata-rata Jam/Hari
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.average_hours || 0 }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Durasi kerja rata-rata</p>
                 </div>
             </div>
         </div>
@@ -444,7 +466,7 @@
                                         :href="
                                             route(
                                                 'admin.logbooks.show',
-                                                logbook.id
+                                                logbook.id,
                                             )
                                         "
                                         class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 text-sm font-medium rounded-md hover:bg-blue-100 transition-colors"
@@ -740,7 +762,7 @@ const toggleSelectAll = () => {
         selectedLogbooks.value = [];
     } else {
         selectedLogbooks.value = paginatedLogbooks.value.map(
-            (logbook) => logbook.id
+            (logbook) => logbook.id,
         );
     }
 };
@@ -800,10 +822,10 @@ const quickApprove = (logbookId) => {
             onSuccess: () => {
                 // Remove from selected if it was selected
                 selectedLogbooks.value = selectedLogbooks.value.filter(
-                    (id) => id !== logbookId
+                    (id) => id !== logbookId,
                 );
             },
-        }
+        },
     );
 };
 
@@ -821,7 +843,7 @@ const bulkAction = (action) => {
             onSuccess: () => {
                 selectedLogbooks.value = [];
             },
-        }
+        },
     );
 };
 </script>

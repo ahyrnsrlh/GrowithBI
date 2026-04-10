@@ -4,26 +4,17 @@
         subtitle="Kelola divisi magang dan kuota"
     >
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
             <!-- Total Divisi -->
             <div
-                class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-blue-600 rounded-2xl p-6 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-blue-100 text-sm font-medium">
-                            Total Divisi
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ stats.total_divisions }}
-                        </p>
-                        <p class="text-blue-100 text-xs mt-1">
-                            Divisi yang tersedia
-                        </p>
-                    </div>
-                    <div class="bg-blue-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -36,28 +27,30 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Total Divisi
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.total_divisions }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Divisi yang tersedia</p>
                 </div>
             </div>
 
             <!-- Divisi Aktif -->
             <div
-                class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-emerald-600 rounded-2xl p-6 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-green-100 text-sm font-medium">
-                            Divisi Aktif
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ stats.active_divisions }}
-                        </p>
-                        <p class="text-green-100 text-xs mt-1">
-                            Sedang berjalan
-                        </p>
-                    </div>
-                    <div class="bg-green-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -70,28 +63,30 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Divisi Aktif
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.active_divisions }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Sedang berjalan</p>
                 </div>
             </div>
 
             <!-- Total Kuota -->
             <div
-                class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-violet-600 rounded-2xl p-6 shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-purple-100 text-sm font-medium">
-                            Total Kuota
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ stats.total_quota }}
-                        </p>
-                        <p class="text-purple-100 text-xs mt-1">
-                            Kapasitas tersedia
-                        </p>
-                    </div>
-                    <div class="bg-purple-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -104,28 +99,30 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Total Kuota
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.total_quota }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Kapasitas tersedia</p>
                 </div>
             </div>
 
             <!-- Total Aplikasi -->
             <div
-                class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-amber-500 rounded-2xl p-6 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-orange-100 text-sm font-medium">
-                            Total Aplikasi
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ stats.total_applications }}
-                        </p>
-                        <p class="text-orange-100 text-xs mt-1">
-                            Pendaftaran masuk
-                        </p>
-                    </div>
-                    <div class="bg-orange-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -138,6 +135,17 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Total Aplikasi
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.total_applications }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Pendaftaran masuk</p>
                 </div>
             </div>
         </div>
@@ -240,7 +248,7 @@
                                     Math.round(
                                         (division.accepted_count /
                                             division.quota) *
-                                            100
+                                            100,
                                     )
                                 }}%</span
                             >
@@ -251,7 +259,7 @@
                                 :style="`width: ${Math.min(
                                     (division.accepted_count / division.quota) *
                                         100,
-                                    100
+                                    100,
                                 )}%`"
                             ></div>
                         </div>

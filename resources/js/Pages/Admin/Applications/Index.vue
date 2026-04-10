@@ -6,24 +6,17 @@
         :notificationCount="stats.pending"
     >
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
             <!-- Total Aplikasi -->
             <div
-                class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-blue-600 rounded-2xl p-6 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-blue-100 text-sm font-medium">
-                            Total Aplikasi
-                        </p>
-                        <p class="text-3xl font-bold">{{ stats.total }}</p>
-                        <p class="text-blue-100 text-xs mt-1">
-                            Semua pendaftaran
-                        </p>
-                    </div>
-                    <div class="bg-blue-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -36,26 +29,30 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Total Aplikasi
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.total }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Semua pendaftaran</p>
                 </div>
             </div>
 
             <!-- Menunggu Review -->
             <div
-                class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-amber-500 rounded-2xl p-6 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-yellow-100 text-sm font-medium">
-                            Menunggu Review
-                        </p>
-                        <p class="text-3xl font-bold">{{ stats.pending }}</p>
-                        <p class="text-yellow-100 text-xs mt-1">
-                            Perlu ditinjau
-                        </p>
-                    </div>
-                    <div class="bg-yellow-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -68,24 +65,30 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Menunggu Review
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.pending }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Perlu ditinjau</p>
                 </div>
             </div>
 
             <!-- Diterima -->
             <div
-                class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-emerald-600 rounded-2xl p-6 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-green-100 text-sm font-medium">
-                            Diterima
-                        </p>
-                        <p class="text-3xl font-bold">{{ stats.accepted }}</p>
-                        <p class="text-green-100 text-xs mt-1">Lolos seleksi</p>
-                    </div>
-                    <div class="bg-green-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -98,24 +101,30 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Diterima
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.accepted }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Lolos seleksi</p>
                 </div>
             </div>
 
             <!-- Ditolak -->
             <div
-                class="bg-gradient-to-r from-red-500 to-red-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-rose-600 rounded-2xl p-6 shadow-lg shadow-rose-500/20 hover:shadow-xl hover:shadow-rose-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-red-100 text-sm font-medium">Ditolak</p>
-                        <p class="text-3xl font-bold">{{ stats.rejected }}</p>
-                        <p class="text-red-100 text-xs mt-1">
-                            Tidak memenuhi syarat
-                        </p>
-                    </div>
-                    <div class="bg-red-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -128,6 +137,15 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">Ditolak</p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ stats.rejected }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Tidak memenuhi syarat</p>
                 </div>
             </div>
         </div>
@@ -286,7 +304,7 @@
                                             class="text-white font-medium text-sm"
                                             >{{
                                                 application.user?.name?.charAt(
-                                                    0
+                                                    0,
                                                 ) || "N"
                                             }}</span
                                         >
@@ -684,7 +702,7 @@ const search = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -699,7 +717,7 @@ const filterByStatus = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -714,7 +732,7 @@ const filterByDivision = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -723,7 +741,7 @@ const toggleAllApplications = () => {
         selectedApplications.value = [];
     } else {
         selectedApplications.value = props.applications.data.map(
-            (app) => app.id
+            (app) => app.id,
         );
     }
 };
@@ -790,7 +808,7 @@ const bulkUpdateStatus = () => {
                 bulkForm.status = "";
                 bulkForm.admin_notes = "";
             },
-        }
+        },
     );
 };
 </script>

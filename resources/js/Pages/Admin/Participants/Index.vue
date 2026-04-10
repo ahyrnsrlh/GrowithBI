@@ -4,26 +4,17 @@
         subtitle="Kelola data peserta magang yang telah diterima"
     >
         <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
             <!-- Total Peserta -->
             <div
-                class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-blue-600 rounded-2xl p-6 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-blue-100 text-sm font-medium">
-                            Total Peserta
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ safeStats.total_participants || 0 }}
-                        </p>
-                        <p class="text-blue-100 text-xs mt-1">
-                            Terdaftar di sistem
-                        </p>
-                    </div>
-                    <div class="bg-blue-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -36,26 +27,30 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Total Peserta
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ safeStats.total_participants || 0 }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Terdaftar di sistem</p>
                 </div>
             </div>
 
             <!-- Peserta Aktif -->
             <div
-                class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-emerald-600 rounded-2xl p-6 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-green-100 text-sm font-medium">
-                            Peserta Aktif
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ safeStats.active_participants || 0 }}
-                        </p>
-                        <p class="text-green-100 text-xs mt-1">Sedang magang</p>
-                    </div>
-                    <div class="bg-green-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -68,28 +63,30 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Peserta Aktif
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ safeStats.active_participants || 0 }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Sedang magang</p>
                 </div>
             </div>
 
             <!-- Total Aplikasi -->
             <div
-                class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-violet-600 rounded-2xl p-6 shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-purple-100 text-sm font-medium">
-                            Total Aplikasi
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ safeStats.total_applications || 0 }}
-                        </p>
-                        <p class="text-purple-100 text-xs mt-1">
-                            Pendaftaran masuk
-                        </p>
-                    </div>
-                    <div class="bg-purple-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -102,28 +99,30 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Total Aplikasi
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ safeStats.total_applications || 0 }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Pendaftaran masuk</p>
                 </div>
             </div>
 
             <!-- Selesai Magang -->
             <div
-                class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white"
+                class="bg-amber-500 rounded-2xl p-6 shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/25 hover:-translate-y-1 transition-all duration-300"
             >
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-orange-100 text-sm font-medium">
-                            Selesai Magang
-                        </p>
-                        <p class="text-3xl font-bold">
-                            {{ safeStats.completed_participants || 0 }}
-                        </p>
-                        <p class="text-orange-100 text-xs mt-1">
-                            Lulus program
-                        </p>
-                    </div>
-                    <div class="bg-orange-400 bg-opacity-30 rounded-full p-3">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center"
+                    >
                         <svg
-                            class="w-8 h-8"
+                            class="w-6 h-6 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -136,6 +135,17 @@
                             />
                         </svg>
                     </div>
+                    <div>
+                        <p class="text-sm font-medium text-white/90">
+                            Selesai Magang
+                        </p>
+                        <p class="text-3xl font-bold text-white">
+                            {{ safeStats.completed_participants || 0 }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-white/20">
+                    <p class="text-xs text-white/70">Lulus program</p>
                 </div>
             </div>
         </div>
@@ -381,13 +391,13 @@
                                         class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
                                         :class="
                                             getLastApplicationStatusClass(
-                                                participant
+                                                participant,
                                             )
                                         "
                                     >
                                         {{
                                             getLastApplicationStatusText(
-                                                participant
+                                                participant,
                                             )
                                         }}
                                     </span>
@@ -444,7 +454,7 @@
                                     :href="
                                         safeRoute(
                                             'admin.participants.show',
-                                            participant.id
+                                            participant.id,
                                         )
                                     "
                                     class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
@@ -543,8 +553,8 @@
                                 link.active
                                     ? 'bg-blue-600 text-white border-blue-600'
                                     : link.url
-                                    ? 'text-gray-700 border-gray-300 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50'
-                                    : 'text-gray-400 border-gray-200 cursor-not-allowed',
+                                      ? 'text-gray-700 border-gray-300 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50'
+                                      : 'text-gray-400 border-gray-200 cursor-not-allowed',
                             ]"
                             v-html="link.label"
                         >
@@ -665,7 +675,7 @@ const search = () => {
             {
                 preserveState: true,
                 replace: true,
-            }
+            },
         );
     }, 300);
 };
@@ -681,7 +691,7 @@ const filter = () => {
         {
             preserveState: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -702,7 +712,7 @@ const getAcceptedApplication = (participant) => {
     if (!participant?.applications || !Array.isArray(participant.applications))
         return null;
     return participant.applications.find((app) =>
-        ["accepted", "letter_ready", "diterima"].includes(app?.status)
+        ["accepted", "letter_ready", "diterima"].includes(app?.status),
     );
 };
 
@@ -762,7 +772,7 @@ const toggleStatus = (participant) => {
         },
         {
             preserveState: true,
-        }
+        },
     );
 };
 
