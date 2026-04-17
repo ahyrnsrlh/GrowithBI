@@ -363,7 +363,6 @@
 </template>
 
 <script setup>
-import { ref, watch, onBeforeUnmount, onMounted } from "vue";
 import {
     Dialog,
     DialogPanel,
@@ -371,7 +370,7 @@ import {
     TransitionChild,
     TransitionRoot,
 } from "@headlessui/vue";
-import * as faceapi from "face-api.js";
+import { useSimpleCameraModal } from "@/Composables/useSimpleCameraModal";
 
 const props = defineProps({
     show: {
@@ -386,227 +385,19 @@ const props = defineProps({
 
 const emit = defineEmits(["close", "photo-captured"]);
 
-const videoElement = ref(null);
-const capturedPhoto = ref(null);
-const cameraReady = ref(false);
-const errorMessage = ref("");
-const modelsLoaded = ref(false);
-const faceDetected = ref(false);
-const faceDescriptor = ref(null);
-const loadingModels = ref(true);
-let stream = null;
-let detectionInterval = null;
-
-// Load face-api.js models on component mount
-onMounted(async () => {
-    try {
-        loadingModels.value = true;
-        console.log("Loading face-api.js models...");
-
-        await Promise.all([
-            faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
-            faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-            faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-        ]);
-
-        modelsLoaded.value = true;
-        loadingModels.value = false;
-        console.log("✓ All face-api.js models loaded successfully");
-    } catch (error) {
-        console.error("Failed to load face-api.js models:", error);
-        errorMessage.value =
-            "Gagal memuat model face recognition. Silakan refresh halaman.";
-        loadingModels.value = false;
-    }
-});
-
-// Watch for modal open/close
-watch(
-    () => props.show,
-    (newVal) => {
-        if (newVal) {
-            startCamera();
-        } else {
-            stopCamera();
-        }
-    }
-);
-
-// Start camera
-const startCamera = async () => {
-    try {
-        errorMessage.value = "";
-        cameraReady.value = false;
-
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: "user",
-                width: { ideal: 1280 },
-                height: { ideal: 720 },
-            },
-            audio: false,
-        });
-
-        if (videoElement.value) {
-            videoElement.value.srcObject = stream;
-            await videoElement.value.play();
-            cameraReady.value = true;
-
-            // Start face detection loop
-            if (modelsLoaded.value) {
-                startFaceDetection();
-            }
-        }
-    } catch (error) {
-        console.error("Camera error:", error);
-        errorMessage.value =
-            "Gagal mengakses kamera. Pastikan Anda memberikan izin akses kamera.";
-        cameraReady.value = false;
-    }
-};
-
-// Real-time face detection loop
-const startFaceDetection = () => {
-    if (detectionInterval) {
-        clearInterval(detectionInterval);
-    }
-
-    detectionInterval = setInterval(async () => {
-        if (!videoElement.value || !cameraReady.value || capturedPhoto.value) {
-            return;
-        }
-
-        try {
-            const detections = await faceapi
-                .detectSingleFace(
-                    videoElement.value,
-                    new faceapi.TinyFaceDetectorOptions({
-                        inputSize: 224,
-                        scoreThreshold: 0.5,
-                    })
-                )
-                .withFaceLandmarks()
-                .withFaceDescriptor();
-
-            if (detections && detections.descriptor) {
-                faceDetected.value = true;
-                faceDescriptor.value = Array.from(detections.descriptor);
-            } else {
-                faceDetected.value = false;
-                faceDescriptor.value = null;
-            }
-        } catch (error) {
-            console.error("Face detection error:", error);
-            faceDetected.value = false;
-        }
-    }, 300); // Check every 300ms for better performance
-};
-
-// Stop camera
-const stopCamera = () => {
-    if (detectionInterval) {
-        clearInterval(detectionInterval);
-        detectionInterval = null;
-    }
-
-    if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-        stream = null;
-    }
-    if (videoElement.value) {
-        videoElement.value.srcObject = null;
-    }
-    cameraReady.value = false;
-    capturedPhoto.value = null;
-    errorMessage.value = "";
-    faceDetected.value = false;
-    faceDescriptor.value = null;
-};
-
-// Capture photo
-const capturePhoto = () => {
-    if (!videoElement.value || !cameraReady.value) {
-        errorMessage.value = "Kamera belum siap";
-        return;
-    }
-
-    if (!faceDetected.value) {
-        errorMessage.value =
-            "❌ Wajah tidak terdeteksi! Posisikan wajah Anda di dalam frame dengan pencahayaan yang cukup.";
-        return;
-    }
-
-    const canvas = document.createElement("canvas");
-    canvas.width = videoElement.value.videoWidth;
-    canvas.height = videoElement.value.videoHeight;
-
-    const context = canvas.getContext("2d");
-
-    // Flip horizontal for mirror effect
-    context.translate(canvas.width, 0);
-    context.scale(-1, 1);
-
-    context.drawImage(videoElement.value, 0, 0);
-
-    // Convert to base64
-    capturedPhoto.value = canvas.toDataURL("image/jpeg", 0.85);
-
-    // Stop detection when photo captured
-    if (detectionInterval) {
-        clearInterval(detectionInterval);
-        detectionInterval = null;
-    }
-
-    console.log(
-        "Photo captured with face descriptor, base64 length:",
-        capturedPhoto.value.length
-    );
-    console.log("Face descriptor length:", faceDescriptor.value?.length);
-};
-
-// Retake photo
-const retakePhoto = () => {
-    capturedPhoto.value = null;
-    faceDetected.value = false;
-    faceDescriptor.value = null;
-
-    // Restart face detection
-    if (modelsLoaded.value && cameraReady.value) {
-        startFaceDetection();
-    }
-};
-
-// Confirm photo
-const confirmPhoto = () => {
-    if (!capturedPhoto.value) {
-        errorMessage.value = "Tidak ada foto yang diambil";
-        return;
-    }
-
-    if (!faceDescriptor.value || faceDescriptor.value.length !== 128) {
-        errorMessage.value =
-            "Face descriptor tidak valid. Silakan ambil foto ulang.";
-        return;
-    }
-
-    console.log("Emitting photo-captured event with photo and face descriptor");
-    emit("photo-captured", {
-        photo: capturedPhoto.value,
-        faceDescriptor: faceDescriptor.value,
-    });
-    close();
-};
-
-// Close modal
-const close = () => {
-    stopCamera();
-    emit("close");
-};
-
-// Cleanup on unmount
-onBeforeUnmount(() => {
-    stopCamera();
-});
+const {
+    videoElement,
+    capturedPhoto,
+    cameraReady,
+    errorMessage,
+    modelsLoaded,
+    faceDetected,
+    loadingModels,
+    capturePhoto,
+    retakePhoto,
+    confirmPhoto,
+    close,
+} = useSimpleCameraModal(props, emit);
 </script>
 
 <style scoped>
