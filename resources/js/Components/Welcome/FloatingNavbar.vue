@@ -193,9 +193,7 @@
                                 >
                                     <img
                                         v-if="auth.user.profile_photo_path"
-                                        :src="
-                                            `/storage/${auth.user.profile_photo_path}`
-                                        "
+                                        :src="`/storage/${auth.user.profile_photo_path}`"
                                         :alt="auth.user.name || 'User'"
                                         class="h-full w-full object-cover"
                                     />

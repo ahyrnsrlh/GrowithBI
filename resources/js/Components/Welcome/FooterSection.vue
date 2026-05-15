@@ -65,7 +65,9 @@
                     </div>
                 </div>
                 <div>
-                    <h4 class="text-base sm:text-lg font-semibold mb-5 text-white">
+                    <h4
+                        class="text-base sm:text-lg font-semibold mb-5 text-white"
+                    >
                         Program
                     </h4>
                     <ul class="space-y-3 text-blue-100 text-sm sm:text-base">
@@ -100,7 +102,9 @@
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-base sm:text-lg font-semibold mb-5 text-white">
+                    <h4
+                        class="text-base sm:text-lg font-semibold mb-5 text-white"
+                    >
                         Kontak
                     </h4>
                     <ul class="space-y-3 text-blue-100 text-sm sm:text-base">

@@ -30,7 +30,9 @@
                             </span>
                         </span>
                     </h1>
-                    <p class="text-base sm:text-lg text-gray-600 mb-7 sm:mb-8 max-w-xl">
+                    <p
+                        class="text-base sm:text-lg text-gray-600 mb-7 sm:mb-8 max-w-xl"
+                    >
                         Bank Indonesia Provinsi Lampung membuka peluang bagi
                         mahasiswa dan fresh graduate untuk terlibat dalam proyek
                         nyata di bidang ekonomi, keuangan, dan transformasi

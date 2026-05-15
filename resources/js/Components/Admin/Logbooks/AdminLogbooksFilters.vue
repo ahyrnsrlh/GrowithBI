@@ -1,9 +1,13 @@
 <template>
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
+        <div
+            class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4"
+        >
             <div>
                 <h3 class="text-lg font-semibold text-gray-900">Filter Data</h3>
-                <p class="text-sm text-gray-500">Gunakan filter untuk mempersempit laporan harian.</p>
+                <p class="text-sm text-gray-500">
+                    Gunakan filter untuk mempersempit laporan harian.
+                </p>
             </div>
 
             <Link

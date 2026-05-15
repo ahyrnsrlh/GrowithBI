@@ -45,9 +45,12 @@
             </button>
         </div>
 
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4"
+        >
             <div class="text-sm text-gray-500">
-                Atur rentang tanggal, divisi, dan status sebelum mengekspor data.
+                Atur rentang tanggal, divisi, dan status sebelum mengekspor
+                data.
             </div>
             <button
                 @click="$emit('export')"

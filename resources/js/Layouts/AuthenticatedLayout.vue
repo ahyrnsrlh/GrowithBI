@@ -57,11 +57,16 @@ const showingNavigationDropdown = ref(false);
                                                     class="h-8 w-8 rounded-full overflow-hidden border border-white/20 bg-blue-700"
                                                 >
                                                     <img
-                                                        v-if="$page.props.auth.user.profile_photo_path"
+                                                        v-if="
+                                                            $page.props.auth
+                                                                .user
+                                                                .profile_photo_path
+                                                        "
                                                         :src="`/storage/${$page.props.auth.user.profile_photo_path}`"
                                                         :alt="
-                                                            $page.props.auth.user
-                                                                .name || 'User'
+                                                            $page.props.auth
+                                                                .user.name ||
+                                                            'User'
                                                         "
                                                         class="h-full w-full object-cover"
                                                     />
@@ -70,9 +75,9 @@ const showingNavigationDropdown = ref(false);
                                                         class="flex h-full w-full items-center justify-center text-xs font-semibold text-white"
                                                     >
                                                         {{
-                                                            $page.props.auth.user
-                                                                .name?.charAt(0) ||
-                                                            "U"
+                                                            $page.props.auth.user.name?.charAt(
+                                                                0,
+                                                            ) || "U"
                                                         }}
                                                     </span>
                                                 </span>

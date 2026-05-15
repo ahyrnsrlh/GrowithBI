@@ -74,7 +74,9 @@ const tips = [
                                     <DivisionListFields
                                         :form="form"
                                         @add-job-description="addJobDescription"
-                                        @remove-job-description="removeJobDescription"
+                                        @remove-job-description="
+                                            removeJobDescription
+                                        "
                                         @add-requirement="addRequirement"
                                         @remove-requirement="removeRequirement"
                                     />
@@ -108,7 +110,8 @@ const tips = [
                                         Status
                                     </h2>
                                     <p class="text-xs text-gray-500">
-                                        Tentukan divisi bisa menerima pendaftaran.
+                                        Tentukan divisi bisa menerima
+                                        pendaftaran.
                                     </p>
                                 </div>
                                 <div class="pt-4 border-t border-gray-100">
