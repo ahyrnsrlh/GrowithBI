@@ -45,6 +45,31 @@
             </button>
         </div>
 
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+            <div class="text-sm text-gray-500">
+                Atur rentang tanggal, divisi, dan status sebelum mengekspor data.
+            </div>
+            <button
+                @click="$emit('export')"
+                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-blue-600 text-blue-600 font-medium rounded-xl hover:bg-blue-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+                <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                </svg>
+                Export Excel
+            </button>
+        </div>
+
         <div
             :class="[
                 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4',
@@ -192,5 +217,6 @@ defineEmits([
     "apply-filters",
     "debounce-search",
     "clear-filters",
+    "export",
 ]);
 </script>

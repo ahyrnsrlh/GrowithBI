@@ -28,7 +28,7 @@ defineProps({
                 id="name"
                 type="text"
                 v-model="form.name"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 placeholder="Masukkan nama divisi"
                 required
             />
@@ -49,7 +49,7 @@ defineProps({
                 id="description"
                 v-model="form.description"
                 rows="4"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 placeholder="Deskripsi divisi dan tugas-tugas yang akan dikerjakan"
                 :required="descriptionRequired"
             ></textarea>
@@ -74,7 +74,7 @@ defineProps({
                 v-model="form.quota"
                 min="1"
                 :max="quotaMax"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 placeholder="Maksimal peserta yang dapat diterima"
                 required
             />

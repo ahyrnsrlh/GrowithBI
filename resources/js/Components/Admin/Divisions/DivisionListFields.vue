@@ -24,12 +24,12 @@ const emit = defineEmits([
                 <div
                     v-for="(job, index) in form.job_description"
                     :key="`job-${index}`"
-                    class="flex items-center space-x-2"
+                    class="flex items-center gap-2"
                 >
                     <input
                         type="text"
                         v-model="form.job_description[index]"
-                        class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                         :placeholder="`Deskripsi pekerjaan ${index + 1}`"
                     />
                     <button
@@ -90,12 +90,12 @@ const emit = defineEmits([
                 <div
                     v-for="(req, index) in form.requirements"
                     :key="`req-${index}`"
-                    class="flex items-center space-x-2"
+                    class="flex items-center gap-2"
                 >
                     <input
                         type="text"
                         v-model="form.requirements[index]"
-                        class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                         :placeholder="`Persyaratan ${index + 1}`"
                     />
                     <button

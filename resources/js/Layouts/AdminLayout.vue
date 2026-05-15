@@ -15,6 +15,10 @@
                 sidebarOpen
                     ? 'translate-x-0 w-64'
                     : '-translate-x-full w-64 lg:translate-x-0',
+                isMobile && !sidebarOpen
+                    ? 'pointer-events-none'
+                    : 'pointer-events-auto',
+                isDesktopCollapsed && !isMobile ? 'sidebar-collapsed' : '',
             ]"
         >
             <!-- Logo -->
@@ -47,7 +51,7 @@
                             href="/admin/dashboard"
                             :title="isDesktopCollapsed ? 'Dashboard' : ''"
                             :class="[
-                                'group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                'menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url === '/admin/dashboard'
                                     ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
@@ -56,7 +60,7 @@
                         >
                             <svg
                                 :class="[
-                                    'h-5 w-5',
+                                    'menu-icon h-5 w-5',
                                     showSidebarLabels ? 'mr-3' : 'mr-0',
                                 ]"
                                 fill="none"
@@ -76,7 +80,12 @@
                                     d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"
                                 />
                             </svg>
-                            <span v-show="showSidebarLabels">Dashboard</span>
+                            <span
+                                v-show="showSidebarLabels"
+                                class="menu-label"
+                            >
+                                Dashboard
+                            </span>
                         </Link>
 
                         <!-- Pendaftaran -->
@@ -84,7 +93,7 @@
                             href="/admin/applications"
                             :title="isDesktopCollapsed ? 'Pendaftaran' : ''"
                             :class="[
-                                'group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                'menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url.startsWith('/admin/applications')
                                     ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
@@ -93,7 +102,7 @@
                         >
                             <svg
                                 :class="[
-                                    'h-5 w-5',
+                                    'menu-icon h-5 w-5',
                                     showSidebarLabels ? 'mr-3' : 'mr-0',
                                 ]"
                                 fill="none"
@@ -107,10 +116,15 @@
                                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                 />
                             </svg>
-                            <span v-show="showSidebarLabels">Pendaftaran</span>
+                            <span
+                                v-show="showSidebarLabels"
+                                class="menu-label"
+                            >
+                                Pendaftaran
+                            </span>
                             <span
                                 v-if="pendingCount > 0 && showSidebarLabels"
-                                class="ml-auto bg-red-100 text-red-600 text-xs font-medium px-2.5 py-0.5 rounded-full"
+                                class="menu-badge ml-auto bg-red-100 text-red-600 text-xs font-medium px-2.5 py-0.5 rounded-full"
                             >
                                 {{ pendingCount }}
                             </span>
@@ -121,7 +135,7 @@
                             href="/admin/divisions"
                             :title="isDesktopCollapsed ? 'Divisi' : ''"
                             :class="[
-                                'group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                'menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url.startsWith('/admin/divisions')
                                     ? 'bg-blue-500 bg-opacity-30 text-white border-r-2 border-blue-300'
@@ -130,7 +144,7 @@
                         >
                             <svg
                                 :class="[
-                                    'h-5 w-5',
+                                    'menu-icon h-5 w-5',
                                     showSidebarLabels ? 'mr-3' : 'mr-0',
                                 ]"
                                 fill="none"
@@ -144,7 +158,9 @@
                                     d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                                 />
                             </svg>
-                            <span v-show="showSidebarLabels">Divisi</span>
+                            <span v-show="showSidebarLabels" class="menu-label">
+                                Divisi
+                            </span>
                         </Link>
 
                         <!-- Peserta -->
@@ -154,7 +170,7 @@
                                 isDesktopCollapsed ? 'Manajemen Peserta' : ''
                             "
                             :class="[
-                                'group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                'menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url.startsWith('/admin/participants')
                                     ? 'bg-blue-500 bg-opacity-30 text-white border-r-2 border-blue-300'
@@ -163,7 +179,7 @@
                         >
                             <svg
                                 :class="[
-                                    'h-5 w-5',
+                                    'menu-icon h-5 w-5',
                                     showSidebarLabels ? 'mr-3' : 'mr-0',
                                 ]"
                                 fill="none"
@@ -177,9 +193,12 @@
                                     d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
                                 />
                             </svg>
-                            <span v-show="showSidebarLabels"
-                                >Manajemen Peserta</span
+                            <span
+                                v-show="showSidebarLabels"
+                                class="menu-label"
                             >
+                                Manajemen Peserta
+                            </span>
                         </Link>
 
                         <!-- Logbook/Laporan Harian -->
@@ -187,7 +206,7 @@
                             href="/admin/logbooks"
                             :title="isDesktopCollapsed ? 'Laporan Harian' : ''"
                             :class="[
-                                'group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                'menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url.startsWith('/admin/logbooks')
                                     ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
@@ -196,7 +215,7 @@
                         >
                             <svg
                                 :class="[
-                                    'h-5 w-5',
+                                    'menu-icon h-5 w-5',
                                     showSidebarLabels ? 'mr-3' : 'mr-0',
                                 ]"
                                 fill="none"
@@ -210,9 +229,12 @@
                                     d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                                 />
                             </svg>
-                            <span v-show="showSidebarLabels"
-                                >Laporan Harian</span
+                            <span
+                                v-show="showSidebarLabels"
+                                class="menu-label"
                             >
+                                Laporan Harian
+                            </span>
                         </Link>
 
                         <!-- Attendance Management -->
@@ -223,7 +245,7 @@
                                     isDesktopCollapsed ? 'Absensi Peserta' : ''
                                 "
                                 :class="[
-                                    'group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                    'menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                     showSidebarLabels
                                         ? ''
                                         : 'justify-center px-2',
@@ -235,7 +257,7 @@
                             >
                                 <svg
                                     :class="[
-                                        'h-5 w-5',
+                                        'menu-icon h-5 w-5',
                                         showSidebarLabels ? 'mr-3' : 'mr-0',
                                     ]"
                                     fill="none"
@@ -249,9 +271,12 @@
                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                                     />
                                 </svg>
-                                <span v-show="showSidebarLabels"
-                                    >Absensi Peserta</span
+                                <span
+                                    v-show="showSidebarLabels"
+                                    class="menu-label"
                                 >
+                                    Absensi Peserta
+                                </span>
                             </Link>
 
                             <!-- Maps Real-Time Sub-menu -->
@@ -260,16 +285,21 @@
                                 :title="
                                     isDesktopCollapsed ? 'Maps Real-Time' : ''
                                 "
-                                v-show="showSidebarLabels"
                                 :class="[
-                                    'flex items-center px-4 py-2 ml-4 text-sm font-medium rounded-lg transition-colors duration-200',
+                                    'menu-item flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200',
+                                    showSidebarLabels
+                                        ? 'ml-4'
+                                        : 'justify-center px-2',
                                     $page.url.includes('/admin/attendance/maps')
                                         ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
                                         : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                                 ]"
                             >
                                 <svg
-                                    class="mr-3 h-4 w-4"
+                                    :class="[
+                                        'menu-icon h-4 w-4',
+                                        showSidebarLabels ? 'mr-3' : 'mr-0',
+                                    ]"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -281,7 +311,12 @@
                                         d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
                                     />
                                 </svg>
-                                Maps Real-Time
+                                <span
+                                    v-show="showSidebarLabels"
+                                    class="menu-label"
+                                >
+                                    Maps Real-Time
+                                </span>
                             </Link>
                         </div>
 
@@ -290,7 +325,7 @@
                             href="/admin/final-reports"
                             :title="isDesktopCollapsed ? 'Laporan Akhir' : ''"
                             :class="[
-                                'group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
+                                'menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200',
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url.startsWith('/admin/final-reports')
                                     ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
@@ -299,7 +334,7 @@
                         >
                             <svg
                                 :class="[
-                                    'h-5 w-5',
+                                    'menu-icon h-5 w-5',
                                     showSidebarLabels ? 'mr-3' : 'mr-0',
                                 ]"
                                 fill="none"
@@ -313,9 +348,12 @@
                                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                 />
                             </svg>
-                            <span v-show="showSidebarLabels"
-                                >Laporan Akhir</span
+                            <span
+                                v-show="showSidebarLabels"
+                                class="menu-label"
                             >
+                                Laporan Akhir
+                            </span>
                         </Link>
                     </div>
                 </nav>
@@ -357,15 +395,7 @@
                         </svg>
                     </button>
 
-                    <!-- Page Title -->
-                    <div class="flex-1 lg:flex-none">
-                        <h1 class="text-xl font-semibold text-gray-900">
-                            {{ title }}
-                        </h1>
-                        <p v-if="subtitle" class="text-sm text-gray-500">
-                            {{ subtitle }}
-                        </p>
-                    </div>
+                    <div class="flex-1"></div>
 
                     <!-- User Menu -->
                     <div class="flex items-center space-x-4">
@@ -532,7 +562,7 @@ import NotificationBell from "@/Components/NotificationBell.vue";
 const page = usePage();
 const auth = computed(() => page.props.auth || { user: null });
 
-const props = defineProps({
+defineProps({
     title: {
         type: String,
         default: "Dashboard",
@@ -738,16 +768,20 @@ const logout = () => {
     overflow-y: auto;
 }
 
-/* Smooth transitions for mobile sidebar */
-@media (max-width: 1023px) {
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease-in-out;
-    }
+.sidebar-collapsed .menu-item {
+    justify-content: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
 
-    .sidebar.open {
-        transform: translateX(0);
-    }
+.sidebar-collapsed .menu-icon {
+    margin-right: 0;
+}
+
+.sidebar-collapsed .menu-label,
+.sidebar-collapsed .menu-badge,
+.sidebar-collapsed .menu-section {
+    display: none;
 }
 
 /* Hide scrollbar for sidebar navigation while keeping functionality */

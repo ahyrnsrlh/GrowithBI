@@ -15,6 +15,7 @@ export function useAdminApplicationsPage(props) {
         admin_notes: "",
         rejection_reason: "",
         interview_date: "",
+        interview_time: "",
         interview_location: "",
     });
 
@@ -99,7 +100,19 @@ export function useAdminApplicationsPage(props) {
         currentApplication.value = application;
         statusForm.status = application.status;
         statusForm.admin_notes = application.admin_notes || "";
-        statusForm.interview_date = application.interview_date || "";
+        const interviewDateRaw = application.interview_date || "";
+        const interviewTimeRaw = application.interview_time || "";
+
+        // Keep datetime-local input format consistent: YYYY-MM-DDTHH:mm
+        if (interviewDateRaw && interviewTimeRaw) {
+            const datePart = String(interviewDateRaw).slice(0, 10);
+            const timePart = String(interviewTimeRaw).slice(0, 5);
+            statusForm.interview_date = `${datePart}T${timePart}`;
+        } else {
+            statusForm.interview_date = interviewDateRaw || "";
+        }
+
+        statusForm.interview_time = interviewTimeRaw || "";
         statusForm.interview_location = application.interview_location || "";
         statusForm.rejection_reason = application.rejection_reason || "";
         showStatusModal.value = true;
@@ -110,6 +123,7 @@ export function useAdminApplicationsPage(props) {
         statusForm.status = "";
         statusForm.admin_notes = "";
         statusForm.interview_date = "";
+        statusForm.interview_time = "";
         statusForm.interview_location = "";
         statusForm.rejection_reason = "";
         currentApplication.value = null;
@@ -122,7 +136,18 @@ export function useAdminApplicationsPage(props) {
         };
 
         if (statusForm.status === "interview_scheduled") {
-            formData.interview_date = statusForm.interview_date;
+            if (statusForm.interview_date) {
+                const [datePart, timePart] = String(
+                    statusForm.interview_date,
+                ).split("T");
+
+                formData.interview_date = datePart || statusForm.interview_date;
+                formData.interview_time =
+                    timePart && timePart.length >= 5
+                        ? timePart.slice(0, 5)
+                        : statusForm.interview_time;
+            }
+
             formData.interview_location = statusForm.interview_location;
         }
 

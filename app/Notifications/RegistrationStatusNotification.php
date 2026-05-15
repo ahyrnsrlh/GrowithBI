@@ -10,6 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Carbon\Carbon;
 
 /**
  * Unified notification class for all registration-related events.
@@ -90,7 +91,7 @@ class RegistrationStatusNotification extends Notification implements ShouldBroad
                 ->line('Selamat! Anda telah lolos tahap seleksi dokumen.')
                 ->line('Jadwal wawancara Anda telah ditentukan:')
                 ->line('**Tanggal:** ' . ($this->metadata['interview_date'] ?? 'Akan dikonfirmasi'))
-                ->line('**Jam:** ' . ($this->metadata['interview_time'] ?? 'Akan dikonfirmasi'))
+                ->line('**Jam:** ' . $this->resolveInterviewTime())
                 ->line('**Lokasi:** ' . ($this->metadata['interview_location'] ?? 'Akan dikonfirmasi'))
                 ->when(
                     isset($this->metadata['interview_location_detail']),
@@ -104,7 +105,7 @@ class RegistrationStatusNotification extends Notification implements ShouldBroad
                 ->line('Jadwal wawancara Anda telah diubah.')
                 ->line('**Jadwal Baru:**')
                 ->line('**Tanggal:** ' . ($this->metadata['interview_date'] ?? 'Akan dikonfirmasi'))
-                ->line('**Jam:** ' . ($this->metadata['interview_time'] ?? 'Akan dikonfirmasi'))
+                ->line('**Jam:** ' . $this->resolveInterviewTime())
                 ->line('**Lokasi:** ' . ($this->metadata['interview_location'] ?? 'Akan dikonfirmasi'))
                 ->when(
                     isset($this->metadata['interview_location_detail']),
@@ -163,6 +164,19 @@ class RegistrationStatusNotification extends Notification implements ShouldBroad
                 ->line('Status pendaftaran Anda telah diperbarui.')
                 ->action('Lihat Detail', url('/profile')),
         };
+    }
+
+    private function resolveInterviewTime(): string
+    {
+        if (!empty($this->metadata['interview_time'])) {
+            return (string) $this->metadata['interview_time'];
+        }
+
+        if (!empty($this->application?->interview_time)) {
+            return Carbon::parse($this->application->interview_time)->format('H:i') . ' WIB';
+        }
+
+        return 'Akan dikonfirmasi';
     }
 
     /**

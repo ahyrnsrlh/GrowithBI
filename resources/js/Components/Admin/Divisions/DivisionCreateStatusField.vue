@@ -8,16 +8,16 @@ defineProps({
 </script>
 
 <template>
-    <div class="mb-8">
-        <label class="flex items-center">
+    <div>
+        <label class="flex items-center gap-3">
             <input
                 v-model="form.is_active"
                 type="checkbox"
-                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
+                class="h-4 w-4 rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
             />
-            <span class="ml-2 text-sm text-gray-700"
-                >Aktif (dapat menerima pendaftaran)</span
-            >
+            <span class="text-sm text-gray-700">
+                Aktif (dapat menerima pendaftaran)
+            </span>
         </label>
     </div>
 </template>

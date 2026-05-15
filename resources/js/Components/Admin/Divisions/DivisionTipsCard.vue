@@ -12,10 +12,10 @@ defineProps({
 </script>
 
 <template>
-    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
         <div class="flex">
             <svg
-                class="flex-shrink-0 w-5 h-5 text-blue-400"
+                class="flex-shrink-0 w-5 h-5 text-blue-500"
                 fill="currentColor"
                 viewBox="0 0 20 20"
             >
@@ -26,8 +26,8 @@ defineProps({
                 />
             </svg>
             <div class="ml-3">
-                <h3 class="text-sm font-medium text-blue-800">{{ title }}</h3>
-                <div class="mt-2 text-sm text-blue-700">
+                <h3 class="text-sm font-medium text-gray-900">{{ title }}</h3>
+                <div class="mt-2 text-sm text-gray-600">
                     <ul class="list-disc pl-5 space-y-1">
                         <li v-for="(tip, index) in tips" :key="index">
                             {{ tip }}

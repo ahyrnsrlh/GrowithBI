@@ -1,5 +1,5 @@
 <template>
-    <section id="divisions" class="py-16 bg-white/50 relative z-10">
+    <section id="divisions" class="py-16 sm:py-20 bg-white/50 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div
                 class="text-center mb-12"
@@ -13,7 +13,7 @@
                         ✨ Bidang Magang di Bank Indonesia Provinsi Lampung
                     </span>
                 </h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
                     Temukan Divisi yang Sesuai dengan Minat dan Keahlianmu
                 </p>
             </div>
@@ -32,7 +32,7 @@
                     <div class="p-6 flex-1 flex flex-col">
                         <div class="flex items-center justify-center mb-4">
                             <div
-                                class="w-32 h-32 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                                class="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
                             >
                                 <img
                                     src="/BI WHITE.png"

@@ -1,12 +1,51 @@
 <template>
     <div class="lg:col-span-1">
         <div class="lg:sticky lg:top-24">
+            <div class="flex items-center justify-between mb-4 lg:hidden">
+                <div class="text-sm font-semibold text-gray-800">
+                    Dashboard
+                </div>
+                <button
+                    type="button"
+                    class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white shadow-sm shadow-blue-600/30"
+                    @click="toggleMenu"
+                    :aria-expanded="isOpen"
+                    aria-controls="profile-sidebar"
+                >
+                    <svg
+                        class="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+                    </svg>
+                    Menu
+                </button>
+            </div>
+
+            <div
+                v-if="isOpen"
+                class="fixed inset-0 z-40 bg-black/40 lg:hidden"
+                @click="isOpen = false"
+            ></div>
+
             <nav
-                class="bg-gradient-to-b from-blue-800 to-indigo-900 rounded-lg shadow-lg border border-blue-700 p-6 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar"
+                id="profile-sidebar"
+                :class="[
+                    'bg-gradient-to-b from-blue-800 to-indigo-900 rounded-lg shadow-lg border border-blue-700 p-6 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar transition-transform duration-300',
+                    isOpen ? 'translate-x-0' : '-translate-x-full',
+                    'fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] lg:static lg:w-auto lg:max-w-none lg:translate-x-0',
+                ]"
             >
                 <div class="space-y-2">
                     <button
-                        @click="$emit('update:activeTab', 'profile')"
+                        @click="selectTab('profile')"
                         :class="[
                             'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                             activeTab === 'profile'
@@ -18,7 +57,7 @@
                         Informasi Pribadi
                     </button>
                     <button
-                        @click="$emit('update:activeTab', 'documents')"
+                        @click="selectTab('documents')"
                         :class="[
                             'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                             activeTab === 'documents'
@@ -30,7 +69,7 @@
                         Dokumen Persyaratan
                     </button>
                     <button
-                        @click="$emit('update:activeTab', 'applications')"
+                        @click="selectTab('applications')"
                         :class="[
                             'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                             activeTab === 'applications'
@@ -49,6 +88,7 @@
                     </button>
                     <a
                         :href="route('home') + '#divisions'"
+                        @click="isOpen = false"
                         class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors text-blue-100 hover:bg-blue-700 hover:bg-opacity-30 block"
                     >
                         <i class="fas fa-external-link-alt mr-3"></i>
@@ -65,7 +105,7 @@
                     </h3>
                     <div class="space-y-1">
                         <button
-                            @click="$emit('update:activeTab', 'attendance')"
+                            @click="selectTab('attendance')"
                             :class="[
                                 'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                                 activeTab === 'attendance'
@@ -77,7 +117,7 @@
                             Absensi Online
                         </button>
                         <button
-                            @click="$emit('update:activeTab', 'logbook')"
+                            @click="selectTab('logbook')"
                             :class="[
                                 'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                                 activeTab === 'logbook'
@@ -89,7 +129,7 @@
                             Logbook Harian
                         </button>
                         <button
-                            @click="$emit('update:activeTab', 'reports')"
+                            @click="selectTab('reports')"
                             :class="[
                                 'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                                 activeTab === 'reports'
@@ -110,6 +150,7 @@
                         :href="route('logout')"
                         method="post"
                         as="button"
+                        @click="isOpen = false"
                         class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors text-red-200 hover:bg-red-700 hover:bg-opacity-30 hover:text-white flex items-center"
                     >
                         <i class="fas fa-sign-out-alt mr-3"></i>
@@ -123,6 +164,7 @@
 
 <script setup>
 import { Link } from "@inertiajs/vue3";
+import { ref } from "vue";
 
 defineProps({
     activeTab: { type: String, required: true },
@@ -130,7 +172,18 @@ defineProps({
     hasAcceptedApplication: { type: Boolean, default: false },
 });
 
-defineEmits(["update:activeTab"]);
+const emit = defineEmits(["update:activeTab"]);
+
+const isOpen = ref(false);
+
+const toggleMenu = () => {
+    isOpen.value = !isOpen.value;
+};
+
+const selectTab = (tab) => {
+    emit("update:activeTab", tab);
+    isOpen.value = false;
+};
 </script>
 
 <style scoped>

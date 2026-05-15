@@ -2,7 +2,7 @@
     <Head title="Manajemen Absensi Peserta" />
 
     <AdminLayout title="Manajemen Absensi">
-        <AttendancePageHeader @export="exportData" />
+        <AttendancePageHeader />
 
         <AttendanceStatsCards :stats="props.stats" />
 
@@ -15,6 +15,7 @@
             @apply-filters="applyFilters"
             @debounce-search="debounceSearch"
             @clear-filters="clearFilters"
+            @export="exportData"
         />
 
         <AttendanceDataTableCard

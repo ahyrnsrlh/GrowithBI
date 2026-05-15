@@ -18,7 +18,12 @@ class ParticipantController extends Controller
     public function index(Request $request)
     {
         try {
+            $acceptedStatuses = ['accepted', 'letter_ready', 'diterima'];
+
             $query = User::where('role', 'peserta')
+                ->whereHas('applications', function ($q) use ($acceptedStatuses) {
+                    $q->whereIn('status', $acceptedStatuses);
+                })
                 ->with(['applications.division']);
 
             // Search
@@ -38,8 +43,8 @@ class ParticipantController extends Controller
             // Filter by division
             if ($request->division) {
                 $query->whereHas('applications', function ($q) use ($request) {
-                    $q->where('division_id', $request->division)
-                      ->where('status', 'diterima');
+                                        $q->where('division_id', $request->division)
+                                            ->whereIn('status', ['accepted', 'letter_ready', 'diterima']);
                 });
             }
 
@@ -53,9 +58,18 @@ class ParticipantController extends Controller
             });
 
             $stats = [
-                'total_participants' => User::where('role', 'peserta')->count(),
-                'active_participants' => Application::where('status', 'diterima')->distinct('user_id')->count(),
-                'total_applications' => Application::count(),
+                'total_participants' => User::where('role', 'peserta')
+                    ->whereHas('applications', function ($q) use ($acceptedStatuses) {
+                        $q->whereIn('status', $acceptedStatuses);
+                    })
+                    ->count(),
+                'active_participants' => User::where('role', 'peserta')
+                    ->where('is_active', true)
+                    ->whereHas('applications', function ($q) use ($acceptedStatuses) {
+                        $q->whereIn('status', $acceptedStatuses);
+                    })
+                    ->count(),
+                'total_applications' => Application::whereIn('status', $acceptedStatuses)->count(),
                 'completed_participants' => 0, // Will be calculated based on logbooks completion later
             ];
 

@@ -39,9 +39,6 @@
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900">
                     Maps Real-Time
                 </h1>
-                <p class="mt-1 text-gray-500">
-                    Monitoring lokasi absensi peserta magang secara real-time
-                </p>
             </div>
             <div class="flex items-center gap-3">
                 <div

@@ -104,10 +104,32 @@ const hasAcceptedApplication = computed(() => {
                                         <span class="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                                class="inline-flex items-center px-2 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                                aria-label="Open profile menu"
                                             >
-                                                {{ $page.props.auth.user.name }}
-
+                                                <span
+                                                    class="h-8 w-8 rounded-full overflow-hidden border border-gray-200 bg-blue-600"
+                                                >
+                                                    <img
+                                                        v-if="$page.props.auth.user.profile_photo_path"
+                                                        :src="`/storage/${$page.props.auth.user.profile_photo_path}`"
+                                                        :alt="
+                                                            $page.props.auth.user
+                                                                .name || 'User'
+                                                        "
+                                                        class="h-full w-full object-cover"
+                                                    />
+                                                    <span
+                                                        v-else
+                                                        class="flex h-full w-full items-center justify-center text-xs font-semibold text-white"
+                                                    >
+                                                        {{
+                                                            $page.props.auth.user
+                                                                .name?.charAt(0) ||
+                                                            "U"
+                                                        }}
+                                                    </span>
+                                                </span>
                                                 <svg
                                                     class="ms-2 -me-0.5 h-4 w-4"
                                                     xmlns="http://www.w3.org/2000/svg"

@@ -20,10 +20,25 @@
                             <span class="inline-flex rounded-md">
                                 <button
                                     type="button"
-                                    class="inline-flex items-center rounded-md border border-transparent bg-transparent px-3 py-2 text-sm font-medium leading-4 text-blue-100 transition duration-150 ease-in-out hover:text-white focus:outline-none"
+                                    class="inline-flex items-center rounded-md border border-transparent bg-transparent px-2 py-2 text-sm font-medium leading-4 text-blue-100 transition duration-150 ease-in-out hover:text-white focus:outline-none"
+                                    aria-label="Open profile menu"
                                 >
-                                    {{ user.name }}
-
+                                    <span
+                                        class="h-8 w-8 rounded-full overflow-hidden border border-white/20 bg-blue-700"
+                                    >
+                                        <img
+                                            v-if="user?.profile_photo_path"
+                                            :src="`/storage/${user.profile_photo_path}`"
+                                            :alt="user?.name || 'User'"
+                                            class="h-full w-full object-cover"
+                                        />
+                                        <span
+                                            v-else
+                                            class="flex h-full w-full items-center justify-center text-xs font-semibold text-white"
+                                        >
+                                            {{ user?.name?.charAt(0) || "U" }}
+                                        </span>
+                                    </span>
                                     <svg
                                         class="-me-0.5 ms-2 h-4 w-4"
                                         xmlns="http://www.w3.org/2000/svg"

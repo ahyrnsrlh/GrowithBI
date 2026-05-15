@@ -3,13 +3,13 @@
         class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-8"
     >
         <div
-            class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-gray-50"
+            class="px-6 py-4 border-b border-[#274089] bg-[#2F4C9E]"
         >
             <h2
-                class="text-lg font-semibold text-gray-900 flex items-center gap-2"
+                class="text-lg font-semibold text-white flex items-center gap-2"
             >
                 <svg
-                    class="w-5 h-5 text-blue-600"
+                    class="w-5 h-5 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

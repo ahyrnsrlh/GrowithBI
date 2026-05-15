@@ -87,6 +87,27 @@ export function useAdminProfilePage(auth) {
             photoPreview.value = readerEvent.target.result;
         };
         reader.readAsDataURL(file);
+
+        if (editMode.value || profileForm.processing) {
+            return;
+        }
+
+        profileForm.profile_photo = file;
+        profileForm.post("/admin/profile", {
+            forceFormData: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                photoPreview.value = null;
+                selectedPhoto.value = null;
+
+                if (page.props.auth && page.props.auth.user) {
+                    Object.assign(auth.user, page.props.auth.user);
+                }
+            },
+            onError: (errors) => {
+                console.error("Photo upload errors:", errors);
+            },
+        });
     };
 
     const removePhoto = () => {

@@ -1,7 +1,7 @@
 <template>
     <footer
         id="contact"
-        class="bg-gradient-to-br from-blue-800 via-blue-900 to-indigo-900 text-white py-16 relative z-10"
+        class="bg-gradient-to-br from-blue-800 via-blue-900 to-indigo-900 text-white py-14 sm:py-16 relative z-10"
     >
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -16,9 +16,11 @@
                             alt="GrowithBI Logo"
                             class="w-12 h-12 mr-3"
                         />
-                        <h3 class="text-2xl font-bold text-white">GrowithBI</h3>
+                        <h3 class="text-xl sm:text-2xl font-bold text-white">
+                            GrowithBI
+                        </h3>
                     </div>
-                    <p class="text-blue-100 mb-6 max-w-md">
+                    <p class="text-blue-100 text-sm sm:text-base mb-6 max-w-md">
                         Program magang Bank Indonesia KPW Lampung untuk
                         mengembangkan talenta Business Intelligence & Data
                         Analytics.
@@ -63,10 +65,10 @@
                     </div>
                 </div>
                 <div>
-                    <h4 class="text-lg font-semibold mb-6 text-white">
+                    <h4 class="text-base sm:text-lg font-semibold mb-5 text-white">
                         Program
                     </h4>
-                    <ul class="space-y-3 text-blue-100">
+                    <ul class="space-y-3 text-blue-100 text-sm sm:text-base">
                         <li>
                             <a
                                 href="#"
@@ -98,10 +100,10 @@
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-lg font-semibold mb-6 text-white">
+                    <h4 class="text-base sm:text-lg font-semibold mb-5 text-white">
                         Kontak
                     </h4>
-                    <ul class="space-y-3 text-blue-100 text-sm">
+                    <ul class="space-y-3 text-blue-100 text-sm sm:text-base">
                         <li class="flex items-center">
                             <svg
                                 class="w-5 h-5 mr-3 text-blue-200"

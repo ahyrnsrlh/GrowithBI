@@ -10,7 +10,7 @@
         <div
             v-if="isOpen"
             data-notification-dropdown
-            class="absolute right-0 mt-2 w-96 bg-white rounded-2xl shadow-2xl ring-1 ring-black ring-opacity-5 z-50 max-h-[600px] flex flex-col"
+            class="fixed inset-x-3 top-16 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 w-auto sm:w-96 bg-white rounded-xl sm:rounded-2xl shadow-2xl ring-1 ring-black ring-opacity-5 z-50 max-h-[70vh] sm:max-h-[600px] flex flex-col"
         >
             <div
                 class="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-blue-50 to-blue-100 rounded-t-2xl"

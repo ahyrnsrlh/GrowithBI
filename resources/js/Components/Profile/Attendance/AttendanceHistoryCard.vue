@@ -3,14 +3,14 @@
         class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
     >
         <div
-            class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-slate-50 to-gray-50"
+            class="px-6 py-4 border-b border-[#274089] bg-[#2F4C9E]"
         >
             <div class="flex items-center justify-between">
                 <h2
-                    class="text-lg font-semibold text-gray-900 flex items-center gap-2"
+                    class="text-lg font-semibold text-white flex items-center gap-2"
                 >
                     <svg
-                        class="w-5 h-5 text-blue-600"
+                        class="w-5 h-5 text-white"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -28,11 +28,11 @@
                 <select
                     :value="filterStatus"
                     @change="$emit('update:filterStatus', $event.target.value)"
-                    class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    class="text-sm border border-white/30 rounded-lg px-3 py-2 bg-white/10 text-white focus:ring-2 focus:ring-white/50 focus:border-white backdrop-blur-sm transition-colors"
                 >
-                    <option value="all">Semua Status</option>
-                    <option value="On-Time">Tepat Waktu</option>
-                    <option value="Late">Terlambat</option>
+                    <option value="all" class="text-gray-900">Semua Status</option>
+                    <option value="On-Time" class="text-gray-900">Tepat Waktu</option>
+                    <option value="Late" class="text-gray-900">Terlambat</option>
                 </select>
             </div>
         </div>

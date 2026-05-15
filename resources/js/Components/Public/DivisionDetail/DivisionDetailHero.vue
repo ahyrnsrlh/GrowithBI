@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <nav class="flex items-center space-x-2 text-sm mb-6">
+            <nav class="flex flex-wrap items-center gap-2 text-xs sm:text-sm mb-6">
                 <Link
                     href="/"
                     class="text-gray-500 hover:text-blue-600 transition-colors"
@@ -102,11 +102,11 @@
                     </div>
                 </div>
 
-                <div class="flex-shrink-0 flex gap-3">
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                     <Link
                         v-if="auth?.user && existingApplication"
                         :href="route('profile.edit')"
-                        class="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
+                        class="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                     >
                         <svg
                             class="w-5 h-5"
@@ -127,7 +127,7 @@
                     <button
                         v-if="!existingApplication"
                         :disabled="availableSlots <= 0 || isLoading"
-                        class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none disabled:cursor-not-allowed flex items-center gap-2"
+                        class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         @click="handleApply"
                     >
                         <template v-if="!isLoading">

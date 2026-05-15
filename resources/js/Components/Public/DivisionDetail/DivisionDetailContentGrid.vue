@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
             <div
-                class="lg:col-span-3 bg-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
+                class="lg:col-span-3 bg-blue-600 rounded-2xl p-5 sm:p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
             >
                 <div class="flex items-center gap-3 mb-3">
                     <div
@@ -25,12 +25,14 @@
                     <h3 class="font-semibold">Durasi Program</h3>
                 </div>
                 <div class="h-px bg-white/30 my-4"></div>
-                <p class="text-3xl font-bold mb-1">{{ formattedDuration }}</p>
+                <p class="text-2xl sm:text-3xl font-bold mb-1">
+                    {{ formattedDuration }}
+                </p>
                 <p class="text-blue-100 text-sm">Waktu magang</p>
             </div>
 
             <div
-                class="lg:col-span-3 bg-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
+                class="lg:col-span-3 bg-blue-600 rounded-2xl p-5 sm:p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
             >
                 <div class="flex items-center gap-3 mb-3">
                     <div
@@ -53,12 +55,14 @@
                     <h3 class="font-semibold">Total Kuota</h3>
                 </div>
                 <div class="h-px bg-white/30 my-4"></div>
-                <p class="text-3xl font-bold mb-1">{{ formatQuota }}</p>
+                <p class="text-2xl sm:text-3xl font-bold mb-1">
+                    {{ formatQuota }}
+                </p>
                 <p class="text-blue-100 text-sm">Peserta diterima</p>
             </div>
 
             <div
-                class="lg:col-span-3 bg-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
+                class="lg:col-span-3 bg-blue-600 rounded-2xl p-5 sm:p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
             >
                 <div class="flex items-center gap-3 mb-3">
                     <div
@@ -81,7 +85,7 @@
                     <h3 class="font-semibold">Slot Tersedia</h3>
                 </div>
                 <div class="h-px bg-white/30 my-4"></div>
-                <p class="text-3xl font-bold mb-1">
+                <p class="text-2xl sm:text-3xl font-bold mb-1">
                     {{ formatAvailableSlots }}
                 </p>
                 <p
@@ -95,7 +99,7 @@
             </div>
 
             <div
-                class="lg:col-span-3 bg-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
+                class="lg:col-span-3 bg-blue-600 rounded-2xl p-5 sm:p-6 text-white shadow-lg hover:shadow-xl transition-shadow"
             >
                 <div class="flex items-center gap-3 mb-3">
                     <div
@@ -118,7 +122,7 @@
                     <h3 class="font-semibold">Deadline</h3>
                 </div>
                 <div class="h-px bg-white/30 my-4"></div>
-                <p class="text-2xl font-bold mb-1">
+                <p class="text-xl sm:text-2xl font-bold mb-1">
                     {{ formatDate(division.application_deadline) }}
                 </p>
                 <p class="text-blue-100 text-sm">Batas pendaftaran</p>

@@ -15,10 +15,12 @@ class DivisionController extends Controller
      */
     public function index()
     {
+        $acceptedStatuses = ['accepted', 'letter_ready', 'diterima'];
+
         $divisions = Division::withCount([
                 'applications',
-                'applications as accepted_count' => function ($query) {
-                    $query->where('status', 'diterima');
+                'applications as accepted_count' => function ($query) use ($acceptedStatuses) {
+                    $query->whereIn('status', $acceptedStatuses);
                 }
             ])
             ->latest()

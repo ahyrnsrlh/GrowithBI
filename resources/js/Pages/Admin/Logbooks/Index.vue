@@ -1,8 +1,5 @@
 <template>
-    <AdminLayout
-        title="Laporan Harian Peserta"
-        subtitle="Review dan kelola laporan harian dari peserta magang"
-    >
+    <AdminLayout title="Laporan Harian Peserta">
         <AdminLogbooksHeader
             :selected-count="selectedLogbooks.length"
             @bulk-approve="bulkAction('approve')"

@@ -1,8 +1,8 @@
 <template>
-    <section id="testimonials" class="py-24 relative z-10">
+    <section id="testimonials" class="py-16 sm:py-20 lg:py-24 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div
-                class="relative overflow-hidden rounded-[2rem] border border-blue-200/60 bg-gradient-to-br from-blue-50 via-white to-indigo-50 px-5 py-10 sm:px-10 lg:px-14 lg:py-14 shadow-[0_30px_80px_rgba(30,64,175,0.12)]"
+                class="relative overflow-hidden rounded-[2rem] border border-blue-200/60 bg-gradient-to-br from-blue-50 via-white to-indigo-50 px-4 py-10 sm:px-10 lg:px-14 lg:py-14 shadow-[0_30px_80px_rgba(30,64,175,0.12)]"
                 data-aos="fade-up"
                 data-aos-duration="900"
             >

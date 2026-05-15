@@ -23,18 +23,18 @@ defineProps({
 
 <template>
     <div
-        class="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200"
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 pt-6 border-t border-gray-200"
     >
         <Link
             :href="cancelHref"
-            class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+            class="px-6 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200 text-center"
         >
             Batal
         </Link>
         <button
             type="submit"
             :disabled="processing"
-            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center"
+            class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center"
         >
             <svg
                 v-if="processing"

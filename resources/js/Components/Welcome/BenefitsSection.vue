@@ -1,15 +1,17 @@
 <template>
-    <section id="features" class="py-20 bg-slate-50 relative z-10">
+    <section id="features" class="py-16 sm:py-20 bg-slate-50 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div
                 class="text-center mb-16"
                 data-aos="fade-up"
                 data-aos-duration="800"
             >
-                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-blue-800">
+                <h2
+                    class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-blue-800"
+                >
                     Benefit Magang di Bank Indonesia
                 </h2>
-                <p class="text-blue-700 text-lg max-w-2xl mx-auto">
+                <p class="text-blue-700 text-base sm:text-lg max-w-2xl mx-auto">
                     Belajar, berkembang, dan berkontribusi bersama bank
                     indonesia provinsi lampung
                 </p>
@@ -19,7 +21,7 @@
                 <div
                     v-for="benefit in benefits"
                     :key="benefit.title"
-                    class="group bg-white rounded-2xl p-8 border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-300 cursor-pointer"
+                    class="group bg-white rounded-2xl p-5 sm:p-6 lg:p-8 border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-300 cursor-pointer"
                     data-aos="fade-up"
                     data-aos-duration="600"
                     :data-aos-delay="benefit.delay"

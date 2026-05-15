@@ -10,46 +10,46 @@
                 :class="[
                     'flex items-center justify-between rounded-2xl transition-all duration-300 ease-in-out',
                     isScrolled
-                        ? 'bg-gradient-to-r from-blue-800 via-blue-700 to-indigo-800 shadow-lg shadow-black/10 border border-blue-600/20 px-6 py-3'
-                        : 'bg-gradient-to-r from-blue-800 via-blue-700 to-indigo-800 shadow-md shadow-black/5 border border-blue-600/30 px-8 py-4',
+                        ? 'bg-gradient-to-r from-blue-800 via-blue-700 to-indigo-800 shadow-lg shadow-black/10 border border-blue-600/20 px-4 sm:px-6 py-3'
+                        : 'bg-gradient-to-r from-blue-800 via-blue-700 to-indigo-800 shadow-md shadow-black/5 border border-blue-600/30 px-4 sm:px-6 lg:px-8 py-3 sm:py-4',
                 ]"
             >
                 <div class="flex items-center space-x-3">
                     <img
                         src="/storage/logo_web.png"
                         alt="GrowithBI Bank Indonesia Lampung"
-                        class="h-8 w-auto object-contain"
+                        class="h-7 w-auto object-contain sm:h-8"
                     />
                 </div>
 
                 <div class="hidden md:flex items-center space-x-8">
                     <a
                         href="#features"
-                        class="text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
                     >
                         Program
                     </a>
                     <a
                         href="#testimonials"
-                        class="text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
                     >
                         Testimoni
                     </a>
                     <a
                         href="#divisions"
-                        class="text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
                     >
                         Divisi
                     </a>
                     <a
                         href="#faq"
-                        class="text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
                     >
                         FAQ
                     </a>
                     <a
                         href="#contact"
-                        class="text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
                     >
                         Kontak
                     </a>
@@ -59,24 +59,37 @@
                     <Link
                         v-if="canLogin && !auth?.user"
                         :href="route('login')"
-                        class="text-white hover:text-blue-200 font-semibold transition-colors duration-200"
+                        class="text-sm text-white hover:text-blue-200 font-semibold transition-colors duration-200"
                     >
                         Masuk
                     </Link>
                     <Link
                         v-if="canRegister && !auth?.user"
                         :href="route('register')"
-                        class="px-6 py-2.5 bg-white hover:bg-gray-100 text-blue-800 font-semibold rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105"
+                        class="px-6 py-2.5 bg-white hover:bg-gray-100 text-blue-800 text-sm font-semibold rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105"
                     >
                         Daftar
                     </Link>
                     <div v-if="auth?.user" class="flex items-center space-x-3">
-                        <span class="text-white font-medium">
-                            {{ auth.user.name }}
+                        <span
+                            class="h-8 w-8 rounded-full overflow-hidden border border-white/20 bg-blue-700"
+                        >
+                            <img
+                                v-if="auth.user.profile_photo_path"
+                                :src="`/storage/${auth.user.profile_photo_path}`"
+                                :alt="auth.user.name || 'User'"
+                                class="h-full w-full object-cover"
+                            />
+                            <span
+                                v-else
+                                class="flex h-full w-full items-center justify-center text-xs font-semibold text-white"
+                            >
+                                {{ auth.user.name?.charAt(0) || "U" }}
+                            </span>
                         </span>
                         <Link
                             :href="route('dashboard')"
-                            class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 transform hover:scale-105"
+                            class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 transform hover:scale-105"
                         >
                             Dashboard
                         </Link>
@@ -86,6 +99,9 @@
                 <button
                     @click="$emit('update:mobileMenuOpen', !mobileMenuOpen)"
                     class="md:hidden p-2 rounded-lg text-white hover:text-blue-200 hover:bg-blue-700/50 transition-all duration-200"
+                    aria-label="Toggle navigation"
+                    :aria-expanded="mobileMenuOpen"
+                    aria-controls="mobile-nav"
                 >
                     <svg
                         class="w-6 h-6"
@@ -113,41 +129,42 @@
 
             <div
                 v-if="mobileMenuOpen"
-                class="md:hidden mt-4 p-6 bg-white/95 rounded-2xl shadow-lg shadow-black/10 border border-white/20"
+                id="mobile-nav"
+                class="md:hidden mt-3 sm:mt-4 p-4 sm:p-6 bg-white/95 rounded-2xl shadow-lg shadow-black/10 border border-white/20"
             >
                 <div class="flex flex-col space-y-4">
                     <a
                         href="#features"
                         @click="$emit('update:mobileMenuOpen', false)"
-                        class="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
+                        class="text-sm text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
                     >
                         Program
                     </a>
                     <a
                         href="#testimonials"
                         @click="$emit('update:mobileMenuOpen', false)"
-                        class="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
+                        class="text-sm text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
                     >
                         Testimoni
                     </a>
                     <a
                         href="#divisions"
                         @click="$emit('update:mobileMenuOpen', false)"
-                        class="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
+                        class="text-sm text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
                     >
                         Divisi
                     </a>
                     <a
                         href="#faq"
                         @click="$emit('update:mobileMenuOpen', false)"
-                        class="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
+                        class="text-sm text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
                     >
                         FAQ
                     </a>
                     <a
                         href="#contact"
                         @click="$emit('update:mobileMenuOpen', false)"
-                        class="text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
+                        class="text-sm text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors duration-200"
                     >
                         Kontak
                     </a>
@@ -157,7 +174,7 @@
                             v-if="canLogin && !auth?.user"
                             :href="route('login')"
                             @click="$emit('update:mobileMenuOpen', false)"
-                            class="block text-center py-3 text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200"
+                            class="block text-center py-3 text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200"
                         >
                             Masuk
                         </Link>
@@ -165,18 +182,35 @@
                             v-if="canRegister && !auth?.user"
                             :href="route('register')"
                             @click="$emit('update:mobileMenuOpen', false)"
-                            class="block text-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200"
+                            class="block text-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200"
                         >
                             Daftar Sekarang
                         </Link>
                         <div v-if="auth?.user" class="space-y-3">
-                            <div class="text-center text-gray-700 font-medium">
-                                {{ auth.user.name }}
+                            <div class="flex justify-center">
+                                <span
+                                    class="h-10 w-10 rounded-full overflow-hidden border border-blue-200 bg-blue-600"
+                                >
+                                    <img
+                                        v-if="auth.user.profile_photo_path"
+                                        :src="
+                                            `/storage/${auth.user.profile_photo_path}`
+                                        "
+                                        :alt="auth.user.name || 'User'"
+                                        class="h-full w-full object-cover"
+                                    />
+                                    <span
+                                        v-else
+                                        class="flex h-full w-full items-center justify-center text-xs font-semibold text-white"
+                                    >
+                                        {{ auth.user.name?.charAt(0) || "U" }}
+                                    </span>
+                                </span>
                             </div>
                             <Link
                                 :href="route('dashboard')"
                                 @click="$emit('update:mobileMenuOpen', false)"
-                                class="block text-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200"
+                                class="block text-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200"
                             >
                                 Dashboard
                             </Link>

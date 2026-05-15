@@ -25,7 +25,7 @@ defineProps({
                 id="start_date"
                 type="date"
                 v-model="form.start_date"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 :required="requiredFields"
             />
             <div
@@ -48,7 +48,7 @@ defineProps({
                 id="end_date"
                 type="date"
                 v-model="form.end_date"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 :required="requiredFields"
             />
             <div v-if="form.errors.end_date" class="mt-1 text-sm text-red-600">
@@ -68,7 +68,7 @@ defineProps({
                 id="application_deadline"
                 type="date"
                 v-model="form.application_deadline"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 :required="requiredFields"
             />
             <div
@@ -91,7 +91,7 @@ defineProps({
                 id="selection_announcement"
                 type="date"
                 v-model="form.selection_announcement"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 :required="requiredFields"
             />
             <div
