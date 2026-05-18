@@ -43,7 +43,7 @@ const emit = defineEmits(["change-page"]);
                 @click="emit('change-page', pagination.current_page + 1)"
                 class="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-                Selanjutnya
+                Berikutnya
             </button>
         </div>
     </div>

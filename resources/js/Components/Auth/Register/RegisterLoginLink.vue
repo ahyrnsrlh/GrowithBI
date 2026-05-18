@@ -11,13 +11,13 @@ defineProps({
 
 <template>
     <div class="mt-6 text-center">
-        <p class="text-sm text-gray-600">
-            Already have an account?
+        <p class="text-sm text-slate-500">
+            Sudah punya akun?
             <Link
                 :href="href"
-                class="font-medium text-blue-600 hover:text-blue-700"
+                class="font-semibold text-blue-600 hover:text-blue-700"
             >
-                Sign in
+                Masuk sekarang
             </Link>
         </p>
     </div>

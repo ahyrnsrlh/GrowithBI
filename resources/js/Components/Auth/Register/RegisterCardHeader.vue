@@ -4,15 +4,21 @@ import { Link } from "@inertiajs/vue3";
 
 <template>
     <div class="text-center mb-8">
-        <Link href="/" class="inline-flex justify-center mb-4">
+        <Link
+            href="/"
+            class="inline-flex items-center justify-center gap-3 mb-4"
+        >
             <img
                 src="/storage/logo_web2.png"
                 alt="GrowithBI Logo"
-                class="h-12 w-auto object-contain"
+                class="h-10 w-auto object-contain"
             />
+            <span class="text-sm font-semibold tracking-wide text-slate-700">
+                GrowithBI
+            </span>
         </Link>
-        <p class="text-gray-600 text-sm">
-            Program Magang Bank Indonesia Provinsi Lampung
+        <p class="text-slate-500 text-sm">
+            Pendaftaran peserta magang berbasis data dan kolaborasi.
         </p>
     </div>
 </template>

@@ -144,14 +144,14 @@
                         :href="applications.prev_page_url"
                         class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                     >
-                        Previous
+                        Sebelumnya
                     </Link>
                     <Link
                         v-if="applications.next_page_url"
                         :href="applications.next_page_url"
                         class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                     >
-                        Next
+                        Berikutnya
                     </Link>
                 </div>
                 <div

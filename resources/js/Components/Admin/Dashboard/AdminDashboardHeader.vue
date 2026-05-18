@@ -4,8 +4,8 @@
             class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
         >
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-900">
-                    Selamat Datang di Dashboard 👋
+                <h1 class="text-2xl md:text-3xl font-bold text-blue-900">
+                    Dashboard
                 </h1>
             </div>
             <div class="mt-4 md:mt-0 flex items-center gap-3">
@@ -24,7 +24,7 @@
                         >Sistem Aktif</span
                     >
                 </div>
-                <div class="text-sm text-gray-500">{{ currentDate }}</div>
+                <div class="text-sm text-blue-900">{{ currentDate }}</div>
             </div>
         </div>
     </div>

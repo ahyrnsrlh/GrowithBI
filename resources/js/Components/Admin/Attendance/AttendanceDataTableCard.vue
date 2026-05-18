@@ -416,16 +416,15 @@
                                 d="M15 19l-7-7 7-7"
                             />
                         </svg>
-                        Prev
+                        Sebelumnya
                     </Link>
 
-                    <template v-for="link in paginationLinks" :key="link.label">
+                    <template
+                        v-for="link in paginationLinks.slice(1, -1)"
+                        :key="link.label"
+                    >
                         <Link
-                            v-if="
-                                link.url &&
-                                !link.label.includes('Previous') &&
-                                !link.label.includes('Next')
-                            "
+                            v-if="link.url"
                             :href="link.url"
                             preserve-scroll
                             preserve-state
@@ -438,12 +437,7 @@
                             v-html="link.label"
                         />
                         <span
-                            v-else-if="
-                                !link.url &&
-                                !link.label.includes('Previous') &&
-                                !link.label.includes('Next') &&
-                                link.label === '...'
-                            "
+                            v-else-if="link.label === '...'"
                             class="inline-flex items-center justify-center w-10 h-10 text-sm text-gray-400"
                         >
                             ...
@@ -457,7 +451,7 @@
                         preserve-state
                         class="inline-flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                     >
-                        Next
+                        Berikutnya
                         <svg
                             class="w-4 h-4"
                             fill="none"

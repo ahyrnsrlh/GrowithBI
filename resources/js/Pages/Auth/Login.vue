@@ -2,6 +2,9 @@
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { useRecaptcha } from "@/Composables/useRecaptcha";
+import AuthSplitLayout from "@/Components/Auth/AuthSplitLayout.vue";
+import AuthFormHeader from "@/Components/Auth/AuthFormHeader.vue";
+import AuthSegmentedToggle from "@/Components/Auth/AuthSegmentedToggle.vue";
 
 const props = defineProps({
     canResetPassword: {
@@ -29,7 +32,7 @@ console.log("🔐 reCAPTCHA Config:", {
 // Initialize reCAPTCHA
 const { executeRecaptcha, isReady: recaptchaReady } = useRecaptcha(
     props.recaptchaSiteKey,
-    props.recaptchaEnabled
+    props.recaptchaEnabled,
 );
 
 const form = useForm({
@@ -53,7 +56,7 @@ const submit = async () => {
 
         console.log(
             "🎫 reCAPTCHA token:",
-            token ? "✅ Generated" : "❌ Failed"
+            token ? "✅ Generated" : "❌ Failed",
         );
         console.log("Token length:", token?.length || 0);
 
@@ -63,7 +66,7 @@ const submit = async () => {
             "⚠️ reCAPTCHA skipped - enabled:",
             props.recaptchaEnabled,
             "siteKey:",
-            props.recaptchaSiteKey
+            props.recaptchaSiteKey,
         );
     }
 
@@ -84,32 +87,25 @@ const submit = async () => {
 <template>
     <Head title="Login - GrowithBI" />
 
-    <div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div class="w-full max-w-md">
-            <!-- Login Card -->
-            <div class="bg-white rounded-lg shadow-lg p-8">
-                <!-- Logo and Header -->
-                <div class="text-center mb-8">
-                    <Link href="/" class="inline-flex justify-center mb-4">
-                        <img
-                            src="/storage/logo_web2.png"
-                            alt="GrowithBI Logo"
-                            class="h-12 w-auto object-contain"
-                        />
-                    </Link>
-                    <p class="text-gray-600 text-sm">
-                        Program Magang Bank Indonesia Provinsi Lampung
-                    </p>
-                </div>
+    <AuthSplitLayout>
+        <div class="flex flex-col gap-6">
+            <AuthFormHeader
+                title="Selamat datang"
+                subtitle="Masuk ke GrowithBI untuk pengalaman magang yang lebih terintegrasi dan efisien."
+            />
 
-                <!-- Status Message -->
-                <div
-                    v-if="status"
-                    class="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg"
-                >
-                    <div class="flex items-center">
+            <AuthSegmentedToggle active="login" />
+
+            <div
+                v-if="status"
+                class="rounded-2xl border border-emerald-100 bg-emerald-50/70 px-4 py-3"
+            >
+                <div class="flex items-center gap-2 text-sm text-emerald-700">
+                    <span
+                        class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white"
+                    >
                         <svg
-                            class="w-4 h-4 text-green-600 mr-2"
+                            class="h-3 w-3"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                         >
@@ -119,29 +115,49 @@ const submit = async () => {
                                 clip-rule="evenodd"
                             />
                         </svg>
-                        <span class="text-sm text-green-800">{{ status }}</span>
-                    </div>
+                    </span>
+                    {{ status }}
                 </div>
+            </div>
 
-                <form @submit.prevent="submit" class="space-y-5">
-                    <!-- Email Field -->
+            <form @submit.prevent="submit" class="space-y-5">
+                <div class="space-y-4">
                     <div>
                         <label
                             for="email"
-                            class="block text-sm font-semibold text-gray-700 mb-2"
+                            class="block text-sm font-semibold text-slate-700 mb-2"
                         >
-                            Username
+                            Email
                         </label>
-                        <input
-                            id="email"
-                            type="email"
-                            v-model="form.email"
-                            required
-                            autofocus
-                            autocomplete="username"
-                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                            placeholder=""
-                        />
+                        <div class="relative">
+                            <span
+                                class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                            >
+                                <svg
+                                    class="h-5 w-5 text-slate-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                    />
+                                </svg>
+                            </span>
+                            <input
+                                id="email"
+                                type="email"
+                                v-model="form.email"
+                                required
+                                autofocus
+                                autocomplete="username"
+                                class="block w-full rounded-xl border border-slate-200 bg-white/70 py-3 pl-10 pr-4 text-sm text-slate-700 shadow-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                placeholder="nama@email.com"
+                            />
+                        </div>
                         <div
                             v-if="form.errors.email"
                             class="mt-2 text-sm text-red-600"
@@ -150,32 +166,55 @@ const submit = async () => {
                         </div>
                     </div>
 
-                    <!-- Password Field -->
                     <div>
                         <label
                             for="password"
-                            class="block text-sm font-semibold text-gray-700 mb-2"
+                            class="block text-sm font-semibold text-slate-700 mb-2"
                         >
                             Password
                         </label>
                         <div class="relative">
+                            <span
+                                class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                            >
+                                <svg
+                                    class="h-5 w-5 text-slate-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 11c1.105 0 2-.895 2-2V7a2 2 0 10-4 0v2c0 1.105.895 2 2 2z"
+                                    />
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M5 11h14v8H5z"
+                                    />
+                                </svg>
+                            </span>
                             <input
                                 id="password"
                                 :type="showPassword ? 'text' : 'password'"
                                 v-model="form.password"
                                 required
                                 autocomplete="current-password"
-                                class="block w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                placeholder=""
+                                class="block w-full rounded-xl border border-slate-200 bg-white/70 py-3 pl-10 pr-12 text-sm text-slate-700 shadow-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                placeholder="Masukkan password"
                             />
                             <button
                                 type="button"
                                 @click="showPassword = !showPassword"
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 transition hover:text-slate-600"
+                                aria-label="Toggle password"
                             >
                                 <svg
                                     v-if="!showPassword"
-                                    class="h-5 w-5 text-gray-400 hover:text-gray-600"
+                                    class="h-5 w-5"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -195,7 +234,7 @@ const submit = async () => {
                                 </svg>
                                 <svg
                                     v-else
-                                    class="h-5 w-5 text-gray-400 hover:text-gray-600"
+                                    class="h-5 w-5"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -216,72 +255,69 @@ const submit = async () => {
                             {{ form.errors.password }}
                         </div>
                     </div>
-
-                    <!-- Remember Me & Forgot Password -->
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center">
-                            <input
-                                type="checkbox"
-                                v-model="form.remember"
-                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                            />
-                            <span class="ml-2 text-sm text-gray-700"
-                                >Remember this Device</span
-                            >
-                        </label>
-                        <Link
-                            v-if="canResetPassword"
-                            :href="route('password.request')"
-                            class="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                        >
-                            Forgot Password ?
-                        </Link>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button
-                        type="submit"
-                        :disabled="form.processing"
-                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                    >
-                        <svg
-                            v-if="form.processing"
-                            class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                class="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                stroke-width="4"
-                            ></circle>
-                            <path
-                                class="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                        </svg>
-                        {{ form.processing ? "Processing..." : "Sign In" }}
-                    </button>
-                </form>
-
-                <!-- Register Link -->
-                <div class="mt-6 text-center">
-                    <p class="text-sm text-gray-600">
-                        New to GrowithBI?
-                        <Link
-                            :href="route('register')"
-                            class="font-medium text-blue-600 hover:text-blue-700"
-                        >
-                            Create an account
-                        </Link>
-                    </p>
                 </div>
+
+                <div
+                    class="flex flex-wrap items-center justify-between gap-3 text-sm"
+                >
+                    <label
+                        class="inline-flex items-center gap-2 text-slate-600"
+                    >
+                        <input
+                            type="checkbox"
+                            v-model="form.remember"
+                            class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        Ingat perangkat ini
+                    </label>
+                    <Link
+                        v-if="canResetPassword"
+                        :href="route('password.request')"
+                        class="font-medium text-blue-600 transition hover:text-blue-700"
+                    >
+                        Lupa password?
+                    </Link>
+                </div>
+
+                <button
+                    type="submit"
+                    :disabled="form.processing"
+                    class="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-blue-500 to-blue-700 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <svg
+                        v-if="form.processing"
+                        class="h-5 w-5 animate-spin"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                    >
+                        <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                        ></circle>
+                        <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                    </svg>
+                    {{ form.processing ? "Memproses..." : "Masuk" }}
+                </button>
+            </form>
+
+            <div class="text-center text-sm text-slate-500">
+                Belum punya akun?
+                <Link
+                    :href="route('register')"
+                    class="font-semibold text-blue-600 hover:text-blue-700"
+                >
+                    Daftar sekarang
+                </Link>
             </div>
         </div>
-    </div>
+    </AuthSplitLayout>
 </template>

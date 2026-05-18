@@ -159,15 +159,17 @@ const emit = defineEmits(["edit-user", "toggle-user-status"]);
                         v-if="users.prev_page_url"
                         :href="users.prev_page_url"
                         class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                        aria-label="Sebelumnya"
                     >
-                        Previous
+                        Sebelumnya
                     </Link>
                     <Link
                         v-if="users.next_page_url"
                         :href="users.next_page_url"
                         class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                        aria-label="Berikutnya"
                     >
-                        Next
+                        Berikutnya
                     </Link>
                 </div>
                 <div
@@ -191,6 +193,7 @@ const emit = defineEmits(["edit-user", "toggle-user-status"]);
                                 v-if="users.prev_page_url"
                                 :href="users.prev_page_url"
                                 class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                                aria-label="Sebelumnya"
                             >
                                 <ChevronLeftIcon class="h-5 w-5" />
                             </Link>
@@ -217,6 +220,7 @@ const emit = defineEmits(["edit-user", "toggle-user-status"]);
                                 v-if="users.next_page_url"
                                 :href="users.next_page_url"
                                 class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                                aria-label="Berikutnya"
                             >
                                 <ChevronRightIcon class="h-5 w-5" />
                             </Link>

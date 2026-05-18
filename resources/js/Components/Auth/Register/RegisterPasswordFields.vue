@@ -18,11 +18,11 @@ const emit = defineEmits(["toggle-password", "toggle-password-confirmation"]);
 </script>
 
 <template>
-    <div class="grid md:grid-cols-2 gap-5">
+    <div class="grid md:grid-cols-2 gap-4">
         <div>
             <label
                 for="password"
-                class="block text-sm font-semibold text-gray-700 mb-2"
+                class="block text-sm font-semibold text-slate-700 mb-2"
             >
                 Password *
             </label>
@@ -31,7 +31,7 @@ const emit = defineEmits(["toggle-password", "toggle-password-confirmation"]);
                     class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                 >
                     <svg
-                        class="h-5 w-5 text-gray-400"
+                        class="h-5 w-5 text-slate-400"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                     >
@@ -48,17 +48,17 @@ const emit = defineEmits(["toggle-password", "toggle-password-confirmation"]);
                     v-model="form.password"
                     required
                     autocomplete="new-password"
-                    class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl leading-5 bg-white/50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    class="block w-full rounded-xl border border-slate-200 bg-white/70 py-3 pl-10 pr-12 text-sm text-slate-700 shadow-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200"
                     placeholder="Minimal 8 karakter"
                 />
                 <button
                     type="button"
                     @click="emit('toggle-password')"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 transition hover:text-slate-600"
                 >
                     <svg
                         v-if="!showPassword"
-                        class="h-5 w-5 text-gray-400 hover:text-gray-600"
+                        class="h-5 w-5"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                     >
@@ -71,7 +71,7 @@ const emit = defineEmits(["toggle-password", "toggle-password-confirmation"]);
                     </svg>
                     <svg
                         v-else
-                        class="h-5 w-5 text-gray-400 hover:text-gray-600"
+                        class="h-5 w-5"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                     >
@@ -108,7 +108,7 @@ const emit = defineEmits(["toggle-password", "toggle-password-confirmation"]);
         <div>
             <label
                 for="password_confirmation"
-                class="block text-sm font-semibold text-gray-700 mb-2"
+                class="block text-sm font-semibold text-slate-700 mb-2"
             >
                 Konfirmasi Password *
             </label>
@@ -117,7 +117,7 @@ const emit = defineEmits(["toggle-password", "toggle-password-confirmation"]);
                     class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                 >
                     <svg
-                        class="h-5 w-5 text-gray-400"
+                        class="h-5 w-5 text-slate-400"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                     >
@@ -134,17 +134,17 @@ const emit = defineEmits(["toggle-password", "toggle-password-confirmation"]);
                     v-model="form.password_confirmation"
                     required
                     autocomplete="new-password"
-                    class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl leading-5 bg-white/50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    class="block w-full rounded-xl border border-slate-200 bg-white/70 py-3 pl-10 pr-12 text-sm text-slate-700 shadow-sm transition focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200"
                     placeholder="Ulangi password"
                 />
                 <button
                     type="button"
                     @click="emit('toggle-password-confirmation')"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 transition hover:text-slate-600"
                 >
                     <svg
                         v-if="!showPasswordConfirmation"
-                        class="h-5 w-5 text-gray-400 hover:text-gray-600"
+                        class="h-5 w-5"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                     >
@@ -157,7 +157,7 @@ const emit = defineEmits(["toggle-password", "toggle-password-confirmation"]);
                     </svg>
                     <svg
                         v-else
-                        class="h-5 w-5 text-gray-400 hover:text-gray-600"
+                        class="h-5 w-5"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                     >

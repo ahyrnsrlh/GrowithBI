@@ -1,5 +1,5 @@
 <template>
-    <div class="mb-8">
+    <!-- <div class="mb-8">
         <div
             class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
         >
@@ -41,7 +41,7 @@
                 </h1>
             </div>
         </div>
-    </div>
+    </div> -->
 </template>
 
 <script setup>

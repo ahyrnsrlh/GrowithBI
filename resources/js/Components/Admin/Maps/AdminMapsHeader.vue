@@ -4,7 +4,7 @@
             class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
         >
             <div>
-                <nav class="flex mb-2" aria-label="Breadcrumb">
+                <!-- <nav class="flex mb-2" aria-label="Breadcrumb">
                     <ol
                         class="inline-flex items-center space-x-1 text-sm text-gray-500"
                     >
@@ -35,7 +35,7 @@
                             </div>
                         </li>
                     </ol>
-                </nav>
+                </nav> -->
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900">
                     Maps Real-Time
                 </h1>
