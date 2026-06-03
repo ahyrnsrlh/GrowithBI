@@ -22,8 +22,8 @@ defineProps({
                 <div class="flex items-center space-x-3">
                     <Link :href="homeHref">
                         <img
-                            src="/logo.png"
-                            alt="Bank Indonesia"
+                            src="/storage/logo_web.png"
+                            alt="GrowithBI Logo"
                             class="h-10 w-auto"
                         />
                     </Link>

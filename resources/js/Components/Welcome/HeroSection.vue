@@ -6,29 +6,11 @@
             <div class="grid lg:grid-cols-2 gap-8 sm:gap-10 items-center">
                 <div data-aos="fade-right" data-aos-duration="1000">
                     <h1
-                        class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-gray-900 mb-5 sm:mb-6"
+                        class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-slate-900 mb-5 sm:mb-6"
                     >
-                        <span class="block overflow-hidden">
-                            <span
-                                class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-300% animate-gradient-x animate-slide-up delay-100"
-                            >
-                                Be The Next
-                            </span>
-                        </span>
-                        <span class="block overflow-hidden">
-                            <span
-                                class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 bg-300% animate-gradient-x animate-slide-up delay-300"
-                            >
-                                Future Economic
-                            </span>
-                        </span>
-                        <span class="block overflow-hidden">
-                            <span
-                                class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 bg-300% animate-gradient-x animate-slide-up delay-500"
-                            >
-                                & Digital Talent
-                            </span>
-                        </span>
+                        <span class="block">Be The Next</span>
+                        <span class="block">Future Economic</span>
+                        <span class="block">& Digital Talent</span>
                     </h1>
                     <p
                         class="text-base sm:text-lg text-gray-600 mb-7 sm:mb-8 max-w-xl"
@@ -61,7 +43,7 @@
                     data-aos-delay="200"
                 >
                     <div
-                        class="aspect-[4/3] rounded-2xl overflow-hidden shadow-xl"
+                        class="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg"
                     >
                         <img
                             src="/hero.png"
@@ -84,31 +66,9 @@ defineProps({
 </script>
 
 <style scoped>
-@keyframes float {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-12px);
-    }
-}
-
-@keyframes gradient-x {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
 @keyframes slide-up {
     0% {
-        transform: translateY(100%);
+        transform: translateY(18px);
         opacity: 0;
     }
     100% {
@@ -117,54 +77,21 @@ defineProps({
     }
 }
 
-@keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.animate-slide-up {
+    animation: slide-up 700ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
 }
 
 .animate-float {
     animation: float 6s ease-in-out infinite;
 }
 
-.animate-gradient-x {
-    background-size: 300% 300%;
-    animation: gradient-x 4s ease infinite;
-}
-
-.animate-slide-up {
-    animation: slide-up 1s ease-out forwards;
-}
-
-.animate-typing {
-    animation:
-        typing 2s ease-out,
-        fadeInUp 1.5s ease-out;
-}
-
-.bg-300\% {
-    background-size: 300% 300%;
-}
-
-.delay-100 {
-    animation-delay: 0.1s;
-}
-
-.delay-300 {
-    animation-delay: 0.3s;
-}
-
-.delay-500 {
-    animation-delay: 0.5s;
-}
-
-.animate-slide-up {
-    transform: translateY(100%);
-    opacity: 0;
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
 }
 </style>

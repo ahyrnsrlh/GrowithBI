@@ -85,7 +85,7 @@ const submit = async () => {
 </script>
 
 <template>
-    <Head title="Login - GrowithBI" />
+    <Head title="Login" />
 
     <AuthSplitLayout>
         <div class="flex flex-col gap-6">

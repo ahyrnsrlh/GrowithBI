@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Enums\RegistrationEventType;
+use App\Events\NewApplicationSubmitted;
 use App\Notifications\RegistrationStatusNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -327,28 +328,8 @@ class ProfileController extends Controller
             
             Log::info('Application created successfully:', $application->toArray());
             
-            // Send notification to user (dispatch asynchronously for better performance)
-            dispatch(function () use ($user, $application) {
-                $user->notify(new \App\Notifications\RegistrationStatusNotification(
-                    $application, 
-                    \App\Enums\RegistrationEventType::APPLICATION_SUBMITTED
-                ));
-            })->afterResponse();
-            
-            // Send notification to admins (optimized: only select necessary fields)
             dispatch(function () use ($application) {
-                $admins = User::select('id', 'name', 'email')
-                    ->where('role', 'admin')
-                    ->get();
-                    
-                foreach ($admins as $admin) {
-                    $admin->notify(new \App\Notifications\RegistrationStatusNotification(
-                        $application, 
-                        \App\Enums\RegistrationEventType::NEW_REGISTRATION, 
-                        [], 
-                        true
-                    ));
-                }
+                NewApplicationSubmitted::dispatch($application);
             })->afterResponse();
 
             if ($request->wantsJson()) {

@@ -1,7 +1,7 @@
 import { computed, ref, watch } from "vue";
 import { router } from "@inertiajs/vue3";
 
-export function useAdminLogbooksPage(logbooks) {
+export function useAdminLogbooksPage(logbooksRef) {
     const searchQuery = ref("");
     const statusFilter = ref("");
     const divisionFilter = ref("");
@@ -12,7 +12,9 @@ export function useAdminLogbooksPage(logbooks) {
     const itemsPerPage = ref(10);
 
     const filteredLogbooks = computed(() => {
-        return (logbooks || []).filter((logbook) => {
+        const items = logbooksRef?.value || [];
+
+        return items.filter((logbook) => {
             const userName = logbook?.user?.name?.toLowerCase() || "";
             const title = logbook?.title?.toLowerCase() || "";
             const activities = logbook?.activities?.toLowerCase() || "";

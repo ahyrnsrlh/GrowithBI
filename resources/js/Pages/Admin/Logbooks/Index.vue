@@ -37,6 +37,7 @@
 </template>
 
 <script setup>
+import { toRef } from "vue";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import AdminLogbooksHeader from "@/Components/Admin/Logbooks/AdminLogbooksHeader.vue";
 import AdminLogbooksStatsCards from "@/Components/Admin/Logbooks/AdminLogbooksStatsCards.vue";
@@ -86,5 +87,5 @@ const {
     getStatusText,
     quickApprove,
     bulkAction,
-} = useAdminLogbooksPage(props.logbooks);
+} = useAdminLogbooksPage(toRef(props, "logbooks"));
 </script>

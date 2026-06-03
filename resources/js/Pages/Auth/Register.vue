@@ -25,7 +25,7 @@ const {
 </script>
 
 <template>
-    <Head title="Daftar - GrowithBI" />
+    <Head title="Daftar" />
 
     <AuthSplitLayout>
         <div class="flex flex-col gap-5">

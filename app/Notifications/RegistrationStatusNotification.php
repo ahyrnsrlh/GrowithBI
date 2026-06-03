@@ -66,13 +66,16 @@ class RegistrationStatusNotification extends Notification implements ShouldBroad
     {
         $divisionName = $this->application->division->name ?? 'N/A';
         $userName = $this->application->user->name ?? 'Pendaftar';
+        $userGreetingName = $this->application->user->name
+            ?? $this->application->name
+            ?? $notifiable->name;
 
         $message = (new MailMessage)
             ->subject($this->eventType->emailSubject($divisionName));
 
         return match($this->eventType) {
             RegistrationEventType::APPLICATION_SUBMITTED => $message
-                ->greeting('Halo ' . $notifiable->name . '!')
+                ->greeting('Halo ' . $userGreetingName . '!')
                 ->line('Pendaftaran Anda untuk posisi **' . $divisionName . '** telah berhasil dikirim.')
                 ->line('Tim kami akan segera meninjau berkas Anda.')
                 ->line('Anda akan menerima notifikasi ketika ada update status pendaftaran.')
@@ -80,14 +83,14 @@ class RegistrationStatusNotification extends Notification implements ShouldBroad
                 ->line('Terima kasih telah mendaftar di GrowithBI!'),
 
             RegistrationEventType::SELECTION_IN_PROGRESS => $message
-                ->greeting('Halo ' . $notifiable->name . '!')
+                ->greeting('Halo ' . $userGreetingName . '!')
                 ->line('Proses seleksi untuk pendaftaran Anda di posisi **' . $divisionName . '** telah dimulai.')
                 ->line('Tim kami sedang meninjau kelengkapan dokumen dan kualifikasi Anda.')
                 ->action('Lihat Detail', url('/profile'))
                 ->line('Mohon tunggu informasi selanjutnya.'),
 
             RegistrationEventType::INTERVIEW_SCHEDULED => $message
-                ->greeting('Halo ' . $notifiable->name . '!')
+                ->greeting('Halo ' . $userGreetingName . '!')
                 ->line('Selamat! Anda telah lolos tahap seleksi dokumen.')
                 ->line('Jadwal wawancara Anda telah ditentukan:')
                 ->line('**Tanggal:** ' . ($this->metadata['interview_date'] ?? 'Akan dikonfirmasi'))
@@ -101,7 +104,7 @@ class RegistrationStatusNotification extends Notification implements ShouldBroad
                 ->line('Silakan hadir tepat waktu dan persiapkan diri dengan baik.'),
 
             RegistrationEventType::INTERVIEW_RESCHEDULED => $message
-                ->greeting('Halo ' . $notifiable->name . '!')
+                ->greeting('Halo ' . $userGreetingName . '!')
                 ->line('Jadwal wawancara Anda telah diubah.')
                 ->line('**Jadwal Baru:**')
                 ->line('**Tanggal:** ' . ($this->metadata['interview_date'] ?? 'Akan dikonfirmasi'))
@@ -115,14 +118,14 @@ class RegistrationStatusNotification extends Notification implements ShouldBroad
                 ->line('Mohon maaf atas ketidaknyamanan ini.'),
 
             RegistrationEventType::APPLICATION_ACCEPTED => $message
-                ->greeting('Selamat ' . $notifiable->name . '! 🎉')
+                ->greeting('Selamat ' . $userGreetingName . '! 🎉')
                 ->line('Kami dengan senang hati mengumumkan bahwa Anda telah **DITERIMA** sebagai peserta magang di posisi **' . $divisionName . '**.')
                 ->line('Surat penerimaan resmi akan segera tersedia untuk diunduh di dashboard Anda.')
                 ->action('Lihat Dashboard', url('/profile'))
                 ->line('Selamat bergabung dengan tim GrowithBI!'),
 
             RegistrationEventType::APPLICATION_REJECTED => $message
-                ->greeting('Halo ' . $notifiable->name)
+                ->greeting('Halo ' . $userGreetingName)
                 ->line('Kami informasikan bahwa pendaftaran Anda untuk posisi **' . $divisionName . '** tidak dapat kami terima pada periode ini.')
                 ->when(
                     isset($this->metadata['rejection_reason']),
@@ -132,14 +135,14 @@ class RegistrationStatusNotification extends Notification implements ShouldBroad
                 ->line('Terima kasih atas minat Anda di GrowithBI.'),
 
             RegistrationEventType::ACCEPTANCE_LETTER_READY => $message
-                ->greeting('Halo ' . $notifiable->name . '!')
+                ->greeting('Halo ' . $userGreetingName . '!')
                 ->line('Surat penerimaan resmi Anda telah tersedia untuk diunduh.')
                 ->line('Silakan unduh dan cetak surat ini untuk dibawa pada hari pertama magang.')
                 ->action('Download Surat Penerimaan', $this->metadata['download_url'] ?? url('/profile'))
                 ->line('Pastikan untuk menyimpan salinan digital dan cetak dari surat ini.'),
 
             RegistrationEventType::APPLICATION_EXPIRED => $message
-                ->greeting('Halo ' . $notifiable->name)
+                ->greeting('Halo ' . $userGreetingName)
                 ->line('Pendaftaran Anda untuk posisi **' . $divisionName . '** telah melewati batas waktu yang ditentukan.')
                 ->line('Jika Anda masih berminat, silakan hubungi tim kami atau ajukan pendaftaran baru.')
                 ->action('Hubungi Kami', url('/contact')),
@@ -160,7 +163,7 @@ class RegistrationStatusNotification extends Notification implements ShouldBroad
                 ->line('Pendaftaran siap untuk ditinjau lebih lanjut.'),
 
             default => $message
-                ->greeting('Halo ' . $notifiable->name)
+                ->greeting('Halo ' . $userGreetingName)
                 ->line('Status pendaftaran Anda telah diperbarui.')
                 ->action('Lihat Detail', url('/profile')),
         };

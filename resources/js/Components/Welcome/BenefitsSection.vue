@@ -2,36 +2,58 @@
     <section id="features" class="py-16 sm:py-20 bg-slate-50 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div
-                class="text-center mb-16"
+                class="text-center mb-12"
                 data-aos="fade-up"
                 data-aos-duration="800"
             >
                 <h2
-                    class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-blue-800"
+                    class="text-1xl sm:text-4xl md:text-4xl font-extrabold mb-3 text-slate-900"
                 >
                     Benefit Magang di Bank Indonesia
                 </h2>
-                <p class="text-blue-700 text-base sm:text-lg max-w-2xl mx-auto">
-                    Belajar, berkembang, dan berkontribusi bersama bank
-                    indonesia provinsi lampung
+                <p
+                    class="text-slate-600 text-base sm:text-lg max-w-2xl mx-auto"
+                >
+                    Belajar, berkembang, dan berkontribusi bersama Bank
+                    Indonesia Provinsi Lampung
                 </p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div
                     v-for="benefit in benefits"
                     :key="benefit.title"
-                    class="group bg-white rounded-2xl p-5 sm:p-6 lg:p-8 border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-300 cursor-pointer"
+                    class="group bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-lg transition-shadow duration-300"
                     data-aos="fade-up"
                     data-aos-duration="600"
                     :data-aos-delay="benefit.delay"
                 >
-                    <div class="flex items-start justify-between mb-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center"
+                            >
+                                <svg
+                                    class="w-6 h-6 text-blue-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        :d="benefit.icon"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+
                         <div
-                            class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center transition-colors"
+                            class="text-blue-400 opacity-60 transform group-hover:translate-x-1 transition-transform duration-300"
                         >
                             <svg
-                                class="w-6 h-6 text-blue-700"
+                                class="w-5 h-5"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -40,28 +62,18 @@
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                     stroke-width="2"
-                                    :d="benefit.icon"
+                                    d="M7 17L17 7M17 7H7M17 7V17"
                                 />
                             </svg>
                         </div>
-                        <svg
-                            class="w-5 h-5 text-blue-500 opacity-60 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M7 17L17 7M17 7H7M17 7V17"
-                            />
-                        </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-3">
+
+                    <h3
+                        class="text-lg md:text-xl font-semibold text-slate-900 mb-2"
+                    >
                         {{ benefit.title }}
                     </h3>
-                    <p class="text-slate-600 leading-relaxed text-sm">
+                    <p class="text-slate-600 text-sm leading-relaxed">
                         {{ benefit.description }}
                     </p>
                 </div>

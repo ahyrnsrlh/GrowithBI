@@ -50,7 +50,9 @@ class ApplicationStatusMail extends Mailable implements ShouldQueue
                 'status' => $this->status,
                 'statusText' => $this->status === 'approved' ? 'DITERIMA' : 'DITOLAK',
                 'statusColor' => $this->status === 'approved' ? '#10B981' : '#EF4444',
-                'userName' => $this->application->name,
+                'userName' => $this->application->user->name
+                    ?? $this->application->name
+                    ?? 'Pendaftar',
                 'divisionName' => $this->application->division->name ?? 'N/A',
             ],
         );

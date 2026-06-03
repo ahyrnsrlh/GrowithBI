@@ -5,11 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Division;
 use App\Models\Application;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\RegistrationStatusNotification;
+use App\Events\NewApplicationSubmitted;
 use Inertia\Inertia;
 
 class PublicController extends Controller
@@ -164,6 +162,7 @@ class PublicController extends Controller
         }
 
         $application = Application::create([
+            'user_id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
             'phone' => $user->phone ?? '',
@@ -172,14 +171,7 @@ class PublicController extends Controller
             'status' => 'menunggu',
         ]);
 
-        // Notify all admins about new application
-        $admins = User::where('role', 'admin')->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new RegistrationStatusNotification($application, \App\Enums\RegistrationEventType::NEW_REGISTRATION, [], true));
-        }
-
-        // Notify user about application submission
-        $user->notify(new RegistrationStatusNotification($application, \App\Enums\RegistrationEventType::APPLICATION_SUBMITTED));
+        NewApplicationSubmitted::dispatch($application);
 
         return response()->json([
             'success' => true,

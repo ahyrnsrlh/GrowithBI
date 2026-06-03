@@ -59,7 +59,20 @@ class SendDocumentsCompletedNotification implements ShouldQueue
 
     private function notifyAdmins(DocumentsCompleted $event): void
     {
-        $admins = User::where('role', 'admin')->get();
+        $applicationUserId = $event->application->user_id;
+        $applicationEmail = $event->application->user->email
+            ?? $event->application->email;
+
+        $admins = User::where('role', 'admin')
+            ->when(
+                $applicationUserId,
+                fn ($query) => $query->where('id', '!=', $applicationUserId)
+            )
+            ->when(
+                $applicationEmail,
+                fn ($query) => $query->where('email', '!=', $applicationEmail)
+            )
+            ->get();
 
         foreach ($admins as $admin) {
             $notification = new RegistrationStatusNotification(

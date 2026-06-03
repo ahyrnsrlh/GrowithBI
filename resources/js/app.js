@@ -9,7 +9,24 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import AppWrapper from "./Components/AppWrapper.vue";
 
-const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+const appName = (import.meta.env.VITE_APP_NAME || "GrowithBI").trim();
+
+const formatDocumentTitle = (pageTitle) => {
+    const normalizedPageTitle = (pageTitle || "")
+        .toString()
+        .trim()
+        .replace(/\s+/g, " ");
+
+    if (!normalizedPageTitle) {
+        return appName;
+    }
+
+    if (normalizedPageTitle.toLowerCase() === appName.toLowerCase()) {
+        return appName;
+    }
+
+    return `${normalizedPageTitle} | ${appName}`;
+};
 
 // Initialize AOS
 AOS.init({
@@ -52,7 +69,7 @@ setTimeout(() => {
     if (!sessionWarningShown) {
         sessionWarningShown = true;
         console.warn(
-            "⏰ Your session will expire in 10 minutes. Please save your work."
+            "⏰ Your session will expire in 10 minutes. Please save your work.",
         );
 
         // Optional: Show toast notification to user
@@ -61,11 +78,11 @@ setTimeout(() => {
 }, SESSION_LIFETIME_MS - WARNING_BEFORE_MS);
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => formatDocumentTitle(title),
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.vue`,
-            import.meta.glob("./Pages/**/*.vue")
+            import.meta.glob("./Pages/**/*.vue"),
         ),
     setup({ el, App, props, plugin }) {
         return createApp({
@@ -75,7 +92,7 @@ createInertiaApp({
                     {},
                     {
                         default: () => h(App, props),
-                    }
+                    },
                 ),
         })
             .use(plugin)

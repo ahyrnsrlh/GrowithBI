@@ -42,8 +42,8 @@
                 <div class="logo-container relative z-10">
                     <div class="logo-wrapper flex items-center justify-center">
                         <img
-                            src="/BI WHITE.png"
-                            alt="Bank Indonesia Logo"
+                            src="/storage/logo_web.png"
+                            alt="GrowithBI Logo"
                             class="logo-image block mx-auto"
                         />
                     </div>
@@ -98,7 +98,9 @@ const startFinishSequence = () => {
 <style scoped>
 /* Loading screen fade out animation */
 .loading-screen {
-    transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+    transition:
+        opacity 0.8s ease-out,
+        visibility 0.8s ease-out;
 }
 
 .loading-screen.fade-out {
