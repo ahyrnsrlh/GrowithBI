@@ -9,7 +9,16 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import AppWrapper from "./Components/AppWrapper.vue";
 
-const appName = (import.meta.env.VITE_APP_NAME || "GrowithBI").trim();
+const resolveAppName = () => {
+    const metaAppName = document.head
+        .querySelector('meta[name="app-name"]')
+        ?.getAttribute("content");
+    const envAppName = import.meta.env.VITE_APP_NAME;
+
+    return (metaAppName || envAppName || "GrowithBI").toString().trim();
+};
+
+const appName = resolveAppName();
 
 const formatDocumentTitle = (pageTitle) => {
     const normalizedPageTitle = (pageTitle || "")
@@ -25,7 +34,7 @@ const formatDocumentTitle = (pageTitle) => {
         return appName;
     }
 
-    return `${normalizedPageTitle} | ${appName}`;
+    return `${normalizedPageTitle} - ${appName}`;
 };
 
 // Initialize AOS
