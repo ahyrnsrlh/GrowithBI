@@ -17,7 +17,7 @@ defineProps({
     <div class="space-y-4 text-center">
         <Link href="/" class="inline-flex items-center justify-center gap-3">
             <img
-                src="/storage/logo_web2.png"
+                src="/logo_web2.png"
                 alt="GrowithBI Logo"
                 class="h-10 w-auto object-contain"
             />

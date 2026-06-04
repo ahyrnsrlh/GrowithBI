@@ -9,7 +9,7 @@ import { Link } from "@inertiajs/vue3";
             class="inline-flex items-center justify-center gap-3 mb-4"
         >
             <img
-                src="/storage/logo_web2.png"
+                src="/logo_web2.png"
                 alt="GrowithBI Logo"
                 class="h-10 w-auto object-contain"
             />

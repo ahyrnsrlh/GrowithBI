@@ -6,7 +6,7 @@
             <div class="flex h-16 justify-between items-center">
                 <Link :href="route('home')" class="flex items-center ml-8">
                     <img
-                        src="/storage/logo_web.png"
+                        src="/logo_web.png"
                         alt="GrowithBI Bank Indonesia Lampung"
                         class="h-8 w-auto object-contain"
                     />

@@ -37,7 +37,7 @@ const submit = () => {
             <div class="text-center mb-8">
                 <Link href="/" class="inline-flex items-center mb-6">
                     <img
-                        src="/storage/logo_web2.png"
+                        src="/logo_web2.png"
                         alt="GrowithBI Logo"
                         class="h-12 w-auto object-contain"
                     />

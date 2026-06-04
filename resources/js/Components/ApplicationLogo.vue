@@ -1,6 +1,6 @@
 <template>
     <img
-        src="/storage/logo_web2.png"
+        src="/logo_web2.png"
         alt="GrowithBI"
         class="object-contain"
         loading="lazy"

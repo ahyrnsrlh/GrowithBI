@@ -22,7 +22,7 @@ defineProps({
                 <div class="flex items-center space-x-3">
                     <Link :href="homeHref">
                         <img
-                            src="/storage/logo_web.png"
+                            src="/logo_web.png"
                             alt="GrowithBI Logo"
                             class="h-10 w-auto"
                         />

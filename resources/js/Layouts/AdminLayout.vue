@@ -32,7 +32,7 @@
             >
                 <div class="flex items-center">
                     <img
-                        src="/storage/logo_web.png"
+                        src="/logo_web.png"
                         alt="GrowithBI Bank Indonesia Lampung"
                         :class="[
                             'object-contain transition-all duration-300 ease-in-out',

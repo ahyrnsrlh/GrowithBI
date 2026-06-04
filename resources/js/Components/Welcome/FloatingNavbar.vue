@@ -16,7 +16,7 @@
             >
                 <div class="flex items-center space-x-3">
                     <img
-                        src="/storage/logo_web.png"
+                        src="/logo_web.png"
                         alt="GrowithBI Bank Indonesia Lampung"
                         class="h-7 w-auto object-contain sm:h-8"
                     />
