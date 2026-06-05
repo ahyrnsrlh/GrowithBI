@@ -21,9 +21,10 @@
                         </h3>
                     </div>
                     <p class="text-blue-100 text-sm sm:text-base mb-6 max-w-md">
-                        Program magang Bank Indonesia KPW Lampung untuk
-                        mengembangkan talenta Business Intelligence & Data
-                        Analytics.
+                        GrowithBI adalah platform program magang Bank Indonesia
+                        KPw Lampung yang menghubungkan talenta muda dengan
+                        pengalaman belajar profesional di bidang data, riset,
+                        teknologi finansial, dan operasional kelembagaan.
                     </p>
                     <div class="flex space-x-4">
                         <a
@@ -68,16 +69,9 @@
                     <h4
                         class="text-base sm:text-lg font-semibold mb-5 text-white"
                     >
-                        Program
+                        Fokus Program
                     </h4>
                     <ul class="space-y-3 text-blue-100 text-sm sm:text-base">
-                        <li>
-                            <a
-                                href="#"
-                                class="hover:text-white transition-colors"
-                                >Data Analytics</a
-                            >
-                        </li>
                         <li>
                             <a
                                 href="#"
@@ -89,14 +83,21 @@
                             <a
                                 href="#"
                                 class="hover:text-white transition-colors"
-                                >Data Science</a
+                                >Data Analytics & Research</a
                             >
                         </li>
                         <li>
                             <a
                                 href="#"
                                 class="hover:text-white transition-colors"
-                                >Machine Learning</a
+                                >Financial Technology</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="#"
+                                class="hover:text-white transition-colors"
+                                >General Affair</a
                             >
                         </li>
                     </ul>
@@ -148,8 +149,8 @@
             <div
                 class="border-t border-blue-700 mt-12 pt-8 text-center text-blue-200 text-sm"
             >
-                &copy; 2025 GrowithBI - Bank Indonesia KPW Lampung. All rights
-                reserved.
+                &copy; {{ new Date().getFullYear() }} GrowithBI &mdash; Bank
+                Indonesia KPw Lampung. Seluruh hak cipta dilindungi.
             </div>
         </div>
     </footer>
