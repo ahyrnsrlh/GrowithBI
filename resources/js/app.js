@@ -20,22 +20,7 @@ const resolveAppName = () => {
 
 const appName = resolveAppName();
 
-const formatDocumentTitle = (pageTitle) => {
-    const normalizedPageTitle = (pageTitle || "")
-        .toString()
-        .trim()
-        .replace(/\s+/g, " ");
-
-    if (!normalizedPageTitle) {
-        return appName;
-    }
-
-    if (normalizedPageTitle.toLowerCase() === appName.toLowerCase()) {
-        return appName;
-    }
-
-    return `${normalizedPageTitle} - ${appName}`;
-};
+const formatDocumentTitle = () => appName;
 
 // Initialize AOS
 AOS.init({
