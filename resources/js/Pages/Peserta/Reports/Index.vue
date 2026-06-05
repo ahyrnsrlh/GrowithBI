@@ -3,7 +3,6 @@ import PesertaReportsIndexActionBar from "@/Components/Peserta/Reports/Index/Pes
 import PesertaReportsIndexInternshipInfo from "@/Components/Peserta/Reports/Index/PesertaReportsIndexInternshipInfo.vue";
 import PesertaReportsIndexProgressSummary from "@/Components/Peserta/Reports/Index/PesertaReportsIndexProgressSummary.vue";
 import PesertaReportsIndexRecentLogbooks from "@/Components/Peserta/Reports/Index/PesertaReportsIndexRecentLogbooks.vue";
-import PesertaReportsIndexStatsCards from "@/Components/Peserta/Reports/Index/PesertaReportsIndexStatsCards.vue";
 import { usePesertaReportsIndexPage } from "@/Composables/usePesertaReportsIndexPage";
 import PesertaLayout from "@/Layouts/PesertaLayout.vue";
 import { Head } from "@inertiajs/vue3";
@@ -40,8 +39,6 @@ const {
         subtitle="Kelola dan buat laporan progress magang Anda"
     >
         <div class="space-y-6">
-            <PesertaReportsIndexStatsCards :stats="stats" />
-
             <PesertaReportsIndexInternshipInfo
                 :stats="stats"
                 :format-date="formatDate"

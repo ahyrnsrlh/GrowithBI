@@ -1,7 +1,6 @@
 <script setup>
 import ProfileReportsIndexHeader from "@/Components/Profile/Reports/Index/ProfileReportsIndexHeader.vue";
 import ProfileReportsIndexList from "@/Components/Profile/Reports/Index/ProfileReportsIndexList.vue";
-import ProfileReportsIndexStatsCards from "@/Components/Profile/Reports/Index/ProfileReportsIndexStatsCards.vue";
 import { useProfileReportsIndexPage } from "@/Composables/useProfileReportsIndexPage";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
@@ -10,10 +9,6 @@ defineProps({
     acceptedApplication: {
         type: Object,
         default: null,
-    },
-    stats: {
-        type: Object,
-        default: () => ({}),
     },
     reports: {
         type: Array,
@@ -41,8 +36,6 @@ const {
         <ProfileReportsIndexHeader
             :create-href="route('profile.reports.create')"
         />
-
-        <ProfileReportsIndexStatsCards :stats="stats" />
 
         <ProfileReportsIndexList
             :reports="reports"

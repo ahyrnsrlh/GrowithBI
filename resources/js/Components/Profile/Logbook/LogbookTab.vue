@@ -56,10 +56,6 @@
             </div>
         </div>
 
-        <div class="p-6 border-b border-gray-100 bg-white">
-            <LogbookStatsCards :logbookStats="logbookStats" />
-        </div>
-
         <div class="p-6 bg-gray-50">
             <LogbookGrid
                 :logbooks="logbooks"
@@ -73,12 +69,10 @@
 </template>
 
 <script setup>
-import LogbookStatsCards from "@/Components/Profile/Logbook/LogbookStatsCards.vue";
 import LogbookGrid from "@/Components/Profile/Logbook/LogbookGrid.vue";
 
 defineProps({
     logbooks: { type: Array, default: () => [] },
-    logbookStats: { type: Object, default: () => ({}) },
     formatDate: { type: Function, required: true },
 });
 

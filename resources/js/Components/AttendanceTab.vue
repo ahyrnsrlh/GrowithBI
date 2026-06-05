@@ -3,7 +3,6 @@ import { computed, ref, watch } from "vue";
 import SimpleCameraModal from "@/Components/SimpleCameraModal.vue";
 import AttendanceHistoryCard from "@/Components/Profile/Attendance/AttendanceHistoryCard.vue";
 import AttendancePageHeader from "@/Components/Profile/Attendance/AttendancePageHeader.vue";
-import AttendanceStatsCards from "@/Components/Profile/Attendance/AttendanceStatsCards.vue";
 import TodayAttendanceStatusCard from "@/Components/Profile/Attendance/TodayAttendanceStatusCard.vue";
 import { useAttendanceCapture } from "@/Composables/Attendance/useAttendanceCapture";
 import { useAttendanceFormatters } from "@/Composables/Attendance/useAttendanceFormatters";
@@ -80,18 +79,6 @@ const totalPages = computed(() =>
     Math.ceil(filteredAttendance.value.length / perPage),
 );
 
-const monthlyStats = computed(() => {
-    const total = attendanceList.value.length;
-    const onTime = attendanceList.value.filter(
-        (attendance) => attendance.status === "On-Time",
-    ).length;
-    const late = attendanceList.value.filter(
-        (attendance) => attendance.status === "Late",
-    ).length;
-
-    return { total, onTime, late };
-});
-
 watch(filterStatus, () => {
     currentPage.value = 1;
 });
@@ -100,8 +87,6 @@ watch(filterStatus, () => {
 <template>
     <div>
         <AttendancePageHeader :currentTime="currentTime" />
-
-        <AttendanceStatsCards :stats="monthlyStats" />
 
         <TodayAttendanceStatusCard
             :todayAttendance="todayAttendance"

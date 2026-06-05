@@ -5,8 +5,6 @@
     >
         <LogbookIndexHeader />
 
-        <LogbookIndexStatsCards :stats="stats" />
-
         <LogbookIndexFilters
             v-model:search-query="searchQuery"
             v-model:status-filter="statusFilter"
@@ -27,7 +25,6 @@
 import LogbookIndexFilters from "@/Components/Peserta/Logbooks/Index/LogbookIndexFilters.vue";
 import LogbookIndexGrid from "@/Components/Peserta/Logbooks/Index/LogbookIndexGrid.vue";
 import LogbookIndexHeader from "@/Components/Peserta/Logbooks/Index/LogbookIndexHeader.vue";
-import LogbookIndexStatsCards from "@/Components/Peserta/Logbooks/Index/LogbookIndexStatsCards.vue";
 import { usePesertaLogbookIndexPage } from "@/Composables/usePesertaLogbookIndexPage";
 import PesertaLayout from "@/Layouts/PesertaLayout.vue";
 
@@ -48,8 +45,6 @@ const props = defineProps({
 });
 
 const logbooks = props.logbooks;
-const stats = props.stats;
-
 const {
     searchQuery,
     statusFilter,

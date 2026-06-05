@@ -4,8 +4,6 @@
 
         <ProfileLogbooksHeader @create="showCreateModal = true" />
 
-        <ProfileLogbooksStatsCards :stats="stats" />
-
         <ProfileLogbooksFilterBar
             v-model:status="filters.status"
             :displayed-count="displayedLogbooks.length"
@@ -39,7 +37,6 @@
 import { Head } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ProfileLogbooksHeader from "@/Components/Profile/Logbooks/ProfileLogbooksHeader.vue";
-import ProfileLogbooksStatsCards from "@/Components/Profile/Logbooks/ProfileLogbooksStatsCards.vue";
 import ProfileLogbooksFilterBar from "@/Components/Profile/Logbooks/ProfileLogbooksFilterBar.vue";
 import ProfileLogbooksGrid from "@/Components/Profile/Logbooks/ProfileLogbooksGrid.vue";
 import ProfileLogbooksCreateModal from "@/Components/Profile/Logbooks/ProfileLogbooksCreateModal.vue";
@@ -49,15 +46,6 @@ const props = defineProps({
     logbooks: {
         type: Array,
         default: () => [],
-    },
-    stats: {
-        type: Object,
-        default: () => ({
-            total_logbooks: 0,
-            pending_logbooks: 0,
-            approved_logbooks: 0,
-            revision_logbooks: 0,
-        }),
     },
     filters: {
         type: Object,

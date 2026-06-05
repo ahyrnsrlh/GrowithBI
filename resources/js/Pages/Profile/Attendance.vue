@@ -4,7 +4,6 @@ import ProfileLayout from "@/Layouts/ProfileLayout.vue";
 import SimpleCameraModal from "@/Components/SimpleCameraModal.vue";
 import AttendanceToasts from "@/Components/Profile/Attendance/AttendanceToasts.vue";
 import AttendancePageHeader from "@/Components/Profile/Attendance/AttendancePageHeader.vue";
-import AttendanceStatsCards from "@/Components/Profile/Attendance/AttendanceStatsCards.vue";
 import TodayAttendanceStatusCard from "@/Components/Profile/Attendance/TodayAttendanceStatusCard.vue";
 import AttendanceHistoryCard from "@/Components/Profile/Attendance/AttendanceHistoryCard.vue";
 import { useProfileAttendancePage } from "@/Composables/useProfileAttendancePage";
@@ -44,7 +43,6 @@ const {
     filteredAttendance,
     paginatedAttendance,
     totalPages,
-    monthlyStats,
     isWithinCheckInTime,
     isWithinCheckOutTime,
     formatDate,
@@ -71,8 +69,6 @@ const {
         />
 
         <AttendancePageHeader :currentTime="currentTime" />
-
-        <AttendanceStatsCards :stats="monthlyStats" />
 
         <TodayAttendanceStatusCard
             :todayAttendance="todayAttendance"

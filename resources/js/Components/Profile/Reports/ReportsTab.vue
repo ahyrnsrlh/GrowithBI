@@ -55,10 +55,6 @@
             </div>
         </div>
 
-        <div class="p-6 border-b border-gray-100 bg-white">
-            <ReportStatsCards :reportStats="reportStats" />
-        </div>
-
         <div class="p-6 bg-gray-50">
             <ReportGrid
                 :reports="reports"
@@ -70,12 +66,10 @@
 </template>
 
 <script setup>
-import ReportStatsCards from "@/Components/Profile/Reports/ReportStatsCards.vue";
 import ReportGrid from "@/Components/Profile/Reports/ReportGrid.vue";
 
 defineProps({
     reports: { type: Array, default: () => [] },
-    reportStats: { type: Object, default: () => ({}) },
     formatDate: { type: Function, required: true },
 });
 
