@@ -1,7 +1,9 @@
 <template>
     <div class="bg-white rounded-2xl shadow-md overflow-hidden">
         <div class="bg-[#2F4C9E] px-6 py-4 border-b border-[#274089]">
-            <div class="flex items-center justify-between">
+            <div
+                class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+            >
                 <h2 class="text-xl font-bold text-white flex items-center">
                     <svg
                         class="w-6 h-6 mr-2 text-white"
@@ -22,7 +24,7 @@
                 <select
                     :value="filterStatus"
                     @change="$emit('update:filterStatus', $event.target.value)"
-                    class="px-4 py-2 border border-white/30 rounded-lg text-sm focus:ring-2 focus:ring-white/50 focus:border-white bg-white/10 text-white backdrop-blur-sm"
+                    class="w-full px-4 py-2 border border-white/30 rounded-lg text-sm focus:ring-2 focus:ring-white/50 focus:border-white bg-white/10 text-white backdrop-blur-sm sm:w-auto"
                 >
                     <option value="all" class="text-gray-900">
                         Semua Status
@@ -38,7 +40,7 @@
 
             <div
                 v-if="monthlyStats"
-                class="mt-4 flex items-center space-x-6 text-sm"
+                class="mt-4 flex flex-col gap-2 text-sm sm:flex-row sm:items-center sm:gap-6"
             >
                 <div class="flex items-center space-x-2">
                     <div class="w-3 h-3 bg-white rounded-full"></div>
@@ -79,8 +81,10 @@
                     :key="attendance.id"
                     class="bg-gradient-to-r from-gray-50 to-white rounded-xl p-4 border border-gray-200 hover:border-[#2F4C9E] hover:shadow-md transition-all duration-300"
                 >
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3 flex-1">
+                    <div
+                        class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                        <div class="flex items-center gap-3 w-full sm:flex-1">
                             <div class="bg-[#E8EEF7] p-3 rounded-lg">
                                 <svg
                                     class="w-5 h-5 text-[#2F4C9E]"
@@ -106,7 +110,7 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center space-x-2 flex-1">
+                        <div class="flex items-center gap-2 w-full sm:flex-1">
                             <svg
                                 class="w-4 h-4 text-green-600"
                                 fill="none"
@@ -132,7 +136,7 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center space-x-2 flex-1">
+                        <div class="flex items-center gap-2 w-full sm:flex-1">
                             <svg
                                 class="w-4 h-4 text-[#2F4C9E]"
                                 fill="none"
@@ -158,7 +162,9 @@
                             </div>
                         </div>
 
-                        <div class="flex-shrink-0">
+                        <div
+                            class="w-full sm:w-auto sm:flex-shrink-0 self-start sm:self-auto"
+                        >
                             <span
                                 v-if="attendance.status === 'On-Time'"
                                 class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 border border-green-200"
@@ -228,7 +234,7 @@
 
             <div
                 v-if="filteredAttendance.length > perPage"
-                class="mt-6 flex items-center justify-between border-t border-gray-200 pt-4"
+                class="mt-6 flex flex-col gap-3 border-t border-gray-200 pt-4 sm:flex-row sm:items-center sm:justify-between"
             >
                 <div class="text-sm text-gray-600">
                     Menampilkan {{ (currentPage - 1) * perPage + 1 }} -
@@ -240,7 +246,7 @@
                     }}
                     dari {{ filteredAttendance.length }} data
                 </div>
-                <div class="flex items-center space-x-2">
+                <div class="flex flex-wrap items-center gap-2">
                     <button
                         @click="$emit('update:currentPage', currentPage - 1)"
                         :disabled="currentPage === 1"
