@@ -70,31 +70,31 @@ onUnmounted(() => {
                 <div class="hidden md:flex items-center space-x-8">
                     <Link
                         href="/#features"
-                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-medium transition-colors duration-200"
                     >
                         Program
                     </Link>
                     <Link
                         href="/#testimonials"
-                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-medium transition-colors duration-200"
                     >
                         Testimoni
                     </Link>
                     <Link
                         href="/#divisions"
-                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-medium transition-colors duration-200"
                     >
                         Divisi
                     </Link>
                     <Link
                         href="/#faq"
-                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-medium transition-colors duration-200"
                     >
                         FAQ
                     </Link>
                     <Link
                         href="/#contact"
-                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-medium transition-colors duration-200"
                     >
                         Kontak
                     </Link>
@@ -105,7 +105,7 @@ onUnmounted(() => {
                     <Link
                         v-if="canLogin && !auth?.user"
                         href="/login"
-                        class="text-sm text-white hover:text-blue-200 font-semibold transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-semibold transition-colors duration-200"
                     >
                         Masuk
                     </Link>
@@ -145,7 +145,7 @@ onUnmounted(() => {
                 <!-- Mobile Menu Button -->
                 <button
                     @click="mobileMenuOpen = !mobileMenuOpen"
-                    class="md:hidden p-2 rounded-lg text-white hover:text-blue-200 hover:bg-blue-700/50 transition-all duration-200"
+                    class="md:hidden p-2 rounded-lg text-white hover:text-white hover:bg-blue-700/50 transition-all duration-200"
                     aria-label="Toggle navigation"
                     :aria-expanded="mobileMenuOpen"
                     aria-controls="public-mobile-nav"

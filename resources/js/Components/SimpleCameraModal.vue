@@ -116,7 +116,7 @@
                                         <p class="text-sm font-medium">
                                             Memuat Model Face Recognition...
                                         </p>
-                                        <p class="text-xs text-gray-300 mt-1">
+                                        <p class="text-xs text-white mt-1">
                                             Mohon tunggu sebentar
                                         </p>
                                     </div>
@@ -168,8 +168,8 @@
                                         :class="[
                                             'px-4 py-2 rounded-lg font-medium text-sm shadow-lg transition-all duration-300',
                                             faceDetected
-                                                ? 'bg-green-500 text-white'
-                                                : 'bg-yellow-500 text-white',
+                                                ? 'bg-green-700 text-white'
+                                                : 'bg-yellow-700 text-white',
                                         ]"
                                     >
                                         <div class="flex items-center gap-2">

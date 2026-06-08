@@ -22,7 +22,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Total Logbook
                     </p>
                     <p class="text-3xl font-bold text-white">
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Total laporan harian</p>
+                <p class="text-xs text-white">Total laporan harian</p>
             </div>
         </div>
 
@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Perlu Review
                     </p>
                     <p class="text-3xl font-bold text-white">
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Menunggu persetujuan admin</p>
+                <p class="text-xs text-white">Menunggu persetujuan admin</p>
             </div>
         </div>
 
@@ -92,14 +92,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Disetujui</p>
+                    <p class="text-sm font-medium text-white">Disetujui</p>
                     <p class="text-3xl font-bold text-white">
                         {{ stats.approved_logbooks || 0 }}
                     </p>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Laporan sudah valid</p>
+                <p class="text-xs text-white">Laporan sudah valid</p>
             </div>
         </div>
 
@@ -125,7 +125,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Rata-rata Jam/Hari
                     </p>
                     <p class="text-3xl font-bold text-white">
@@ -134,7 +134,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Durasi kerja rata-rata</p>
+                <p class="text-xs text-white">Durasi kerja rata-rata</p>
             </div>
         </div>
     </div>

@@ -58,7 +58,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center">
                                 <div
-                                    class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center"
+                                    class="w-10 h-10 bg-gradient-to-br from-blue-700 to-blue-800 rounded-full flex items-center justify-center"
                                 >
                                     <span
                                         class="text-white font-medium text-sm"

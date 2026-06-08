@@ -72,7 +72,7 @@ const cards = [
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         {{ card.label }}
                     </p>
                     <p class="text-3xl font-bold text-white">
@@ -81,7 +81,7 @@ const cards = [
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">{{ card.caption }}</p>
+                <p class="text-xs text-white">{{ card.caption }}</p>
             </div>
         </div>
     </div>

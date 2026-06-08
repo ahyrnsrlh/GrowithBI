@@ -13,7 +13,7 @@
                     <h3 class="text-lg font-semibold text-white">
                         Daftar Absensi Hari Ini
                     </h3>
-                    <p class="text-sm text-white/80">
+                    <p class="text-sm text-white">
                         {{ attendances.length }} peserta tercatat
                     </p>
                 </div>
@@ -68,7 +68,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold text-xs shadow-sm"
+                                    class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-700 to-indigo-800 flex items-center justify-center text-white font-semibold text-xs shadow-sm"
                                 >
                                     {{ getInitials(attendance.user_name) }}
                                 </div>

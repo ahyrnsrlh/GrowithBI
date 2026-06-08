@@ -25,31 +25,31 @@
                 <div class="hidden md:flex items-center space-x-8">
                     <a
                         href="#features"
-                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-medium transition-colors duration-200"
                     >
                         Program
                     </a>
                     <a
                         href="#testimonials"
-                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-medium transition-colors duration-200"
                     >
                         Testimoni
                     </a>
                     <a
                         href="#divisions"
-                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-medium transition-colors duration-200"
                     >
                         Divisi
                     </a>
                     <a
                         href="#faq"
-                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-medium transition-colors duration-200"
                     >
                         FAQ
                     </a>
                     <a
                         href="#contact"
-                        class="text-sm text-white hover:text-blue-200 font-medium transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-medium transition-colors duration-200"
                     >
                         Kontak
                     </a>
@@ -59,7 +59,7 @@
                     <Link
                         v-if="canLogin && !auth?.user"
                         :href="route('login')"
-                        class="text-sm text-white hover:text-blue-200 font-semibold transition-colors duration-200"
+                        class="text-sm text-white hover:text-white font-semibold transition-colors duration-200"
                     >
                         Masuk
                     </Link>
@@ -98,7 +98,7 @@
 
                 <button
                     @click="$emit('update:mobileMenuOpen', !mobileMenuOpen)"
-                    class="md:hidden p-2 rounded-lg text-white hover:text-blue-200 hover:bg-blue-700/50 transition-all duration-200"
+                    class="md:hidden p-2 rounded-lg text-white hover:text-white hover:bg-blue-700/50 transition-all duration-200"
                     aria-label="Toggle navigation"
                     :aria-expanded="mobileMenuOpen"
                     aria-controls="mobile-nav"

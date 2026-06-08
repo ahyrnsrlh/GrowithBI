@@ -70,7 +70,7 @@ const isActiveRoute = (routeName) => {
                                 <span class="inline-flex rounded-md">
                                     <button
                                         type="button"
-                                        class="inline-flex items-center rounded-md border border-transparent bg-transparent px-2 py-2 text-sm font-medium leading-4 text-blue-100 transition duration-150 ease-in-out hover:text-white focus:outline-none"
+                                        class="inline-flex items-center rounded-md border border-transparent bg-transparent px-2 py-2 text-sm font-medium leading-4 text-white transition duration-150 ease-in-out hover:text-white focus:outline-none"
                                         aria-label="Open profile menu"
                                     >
                                         <span
@@ -149,7 +149,7 @@ const isActiveRoute = (routeName) => {
                                         'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors block',
                                         isActiveRoute('profile.edit')
                                             ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
-                                            : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                            : 'text-white hover:bg-blue-700 hover:bg-opacity-30',
                                     ]"
                                 >
                                     <i class="fas fa-user mr-3"></i>
@@ -157,7 +157,7 @@ const isActiveRoute = (routeName) => {
                                 </Link>
                                 <a
                                     :href="route('home') + '#divisions'"
-                                    class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors text-blue-100 hover:bg-blue-700 hover:bg-opacity-30 block"
+                                    class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white hover:bg-blue-700 hover:bg-opacity-30 block"
                                 >
                                     <i
                                         class="fas fa-external-link-alt mr-3"
@@ -172,7 +172,7 @@ const isActiveRoute = (routeName) => {
                                 class="mt-6 pt-4 border-t border-blue-600 border-opacity-40"
                             >
                                 <h3
-                                    class="text-sm font-medium text-blue-100 mb-3"
+                                    class="text-sm font-medium text-white mb-3"
                                 >
                                     Logbook & Laporan
                                 </h3>
@@ -185,7 +185,7 @@ const isActiveRoute = (routeName) => {
                                             'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors block',
                                             isActiveRoute('profile.attendance')
                                                 ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
-                                                : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                                : 'text-white hover:bg-blue-700 hover:bg-opacity-30',
                                         ]"
                                     >
                                         <i class="fas fa-clock mr-3"></i>
@@ -198,7 +198,7 @@ const isActiveRoute = (routeName) => {
                                         "
                                         :class="[
                                             'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors block',
-                                            'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                            'text-white hover:bg-blue-700 hover:bg-opacity-30',
                                         ]"
                                     >
                                         <i class="fas fa-book mr-3"></i>
@@ -211,7 +211,7 @@ const isActiveRoute = (routeName) => {
                                         "
                                         :class="[
                                             'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors block',
-                                            'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                            'text-white hover:bg-blue-700 hover:bg-opacity-30',
                                         ]"
                                     >
                                         <i class="fas fa-chart-line mr-3"></i>

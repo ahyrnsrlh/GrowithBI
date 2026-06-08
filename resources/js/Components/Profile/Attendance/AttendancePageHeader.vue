@@ -3,7 +3,7 @@
         <div class="flex items-start justify-between">
             <div class="flex items-center gap-4">
                 <div
-                    class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25"
+                    class="w-12 h-12 bg-gradient-to-br from-blue-700 to-indigo-800 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25"
                 >
                     <svg
                         class="w-6 h-6 text-white"

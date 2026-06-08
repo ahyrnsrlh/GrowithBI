@@ -55,7 +55,7 @@
                                 {{ division.name }}
                             </h3>
                             <p
-                                class="text-blue-100 mb-1 text-center leading-relaxed text-sm line-clamp-2"
+                                class="text-white mb-1 text-center leading-relaxed text-sm line-clamp-2"
                             >
                                 {{ division.description }}
                             </p>
@@ -65,8 +65,8 @@
                                     :class="[
                                         'px-2.5 py-1 rounded-full text-xs font-medium',
                                         division.is_active
-                                            ? 'bg-green-500/20 text-green-200 border border-green-400/30'
-                                            : 'bg-gray-500/20 text-gray-200 border border-gray-400/30',
+                                            ? 'bg-green-50 text-green-900 border border-green-700/40'
+                                            : 'bg-gray-50 text-gray-800 border border-gray-400',
                                     ]"
                                 >
                                     {{
@@ -83,7 +83,7 @@
                         class="px-4 py-3 border-t border-blue-700/30 bg-blue-700"
                     >
                         <div
-                            class="flex items-center justify-between gap-4 mb-3 text-xs text-blue-200"
+                            class="flex items-center justify-between gap-4 mb-3 text-xs text-white"
                         >
                             <div class="flex items-center">
                                 <svg

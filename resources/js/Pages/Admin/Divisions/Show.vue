@@ -10,14 +10,14 @@
             >
                 <!-- Header -->
                 <div
-                    class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4"
+                    class="bg-gradient-to-r from-blue-700 to-blue-800 px-6 py-4"
                 >
                     <div class="flex items-center justify-between">
                         <div>
                             <h2 class="text-xl font-bold text-white">
                                 {{ division.name }}
                             </h2>
-                            <p class="text-blue-100 text-sm">
+                            <p class="text-white text-sm">
                                 {{ division.description }}
                             </p>
                         </div>

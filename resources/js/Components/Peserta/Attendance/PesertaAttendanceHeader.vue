@@ -1,7 +1,7 @@
 <template>
     <div class="bg-[#2F4C9E] text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <nav class="text-sm mb-4 flex items-center space-x-2 text-blue-100">
+            <nav class="text-sm mb-4 flex items-center space-x-2 text-white">
                 <svg
                     class="w-4 h-4"
                     fill="none"
@@ -43,7 +43,7 @@
                 </div>
                 <div>
                     <h1 class="text-3xl font-bold">Absensi Online</h1>
-                    <p class="text-blue-100 mt-1">
+                    <p class="text-white mt-1">
                         Kelola kehadiran Anda dengan mudah
                     </p>
                 </div>

@@ -62,7 +62,7 @@
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-12 w-12">
                                     <div
-                                        class="h-12 w-12 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center"
+                                        class="h-12 w-12 rounded-full bg-gradient-to-r from-blue-700 to-blue-800 flex items-center justify-center"
                                     >
                                         <span
                                             class="text-white font-semibold text-lg"

@@ -22,7 +22,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Total Pendaftar
                     </p>
                     <h3 class="text-3xl font-bold text-white">
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Total pendaftar saat ini</p>
+                <p class="text-xs text-white">Total pendaftar saat ini</p>
             </div>
         </div>
 
@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Menunggu Review
                     </p>
                     <h3 class="text-3xl font-bold text-white">
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Perlu ditinjau segera</p>
+                <p class="text-xs text-white">Perlu ditinjau segera</p>
             </div>
         </div>
 
@@ -92,14 +92,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Diterima</p>
+                    <p class="text-sm font-medium text-white">Diterima</p>
                     <h3 class="text-3xl font-bold text-white">
                         {{ stats?.accepted_applications || 0 }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">
+                <p class="text-xs text-white">
                     Tingkat penerimaan {{ acceptanceRate }}%
                 </p>
             </div>
@@ -127,14 +127,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Ditolak</p>
+                    <p class="text-sm font-medium text-white">Ditolak</p>
                     <h3 class="text-3xl font-bold text-white">
                         {{ stats?.rejected_applications || 0 }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">
+                <p class="text-xs text-white">
                     Tingkat penolakan {{ rejectionRate }}%
                 </p>
             </div>

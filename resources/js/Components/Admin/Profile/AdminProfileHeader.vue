@@ -83,9 +83,9 @@
 
                 <div class="flex-1">
                     <h1 class="text-2xl font-bold mb-2">{{ authUser.name }}</h1>
-                    <p class="text-blue-100 mb-1">{{ authUser.email }}</p>
+                    <p class="text-white mb-1">{{ authUser.email }}</p>
                     <div
-                        class="flex items-center space-x-4 text-sm text-blue-100"
+                        class="flex items-center space-x-4 text-sm text-white"
                     >
                         <span class="flex items-center">
                             <svg

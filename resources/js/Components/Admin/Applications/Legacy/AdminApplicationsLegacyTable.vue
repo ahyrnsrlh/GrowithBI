@@ -46,7 +46,7 @@
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
                                     <div
-                                        class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center"
+                                        class="h-10 w-10 rounded-full bg-blue-700 flex items-center justify-center"
                                     >
                                         <span
                                             class="text-white font-medium text-sm"

@@ -1,12 +1,12 @@
 <template>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div
-            class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md p-5 text-white"
+            class="bg-gradient-to-br from-blue-700 to-blue-800 rounded-xl shadow-md p-5 text-white"
         >
             <div class="flex items-center justify-between">
                 <div>
                     <p
-                        class="text-blue-100 text-xs font-medium uppercase tracking-wide"
+                        class="text-white text-xs font-medium uppercase tracking-wide"
                     >
                         Total
                     </p>
@@ -70,7 +70,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p
-                        class="text-green-100 text-xs font-medium uppercase tracking-wide"
+                        class="text-white text-xs font-medium uppercase tracking-wide"
                     >
                         Disetujui
                     </p>

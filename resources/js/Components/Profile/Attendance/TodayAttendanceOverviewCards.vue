@@ -54,7 +54,7 @@
                         :class="
                             todayAttendance?.check_in
                                 ? 'text-emerald-700'
-                                : 'text-gray-300'
+                                : 'text-gray-500'
                         "
                     >
                         {{
@@ -158,7 +158,7 @@
                         :class="
                             todayAttendance?.check_out
                                 ? 'text-blue-700'
-                                : 'text-gray-300'
+                                : 'text-gray-500'
                         "
                     >
                         {{

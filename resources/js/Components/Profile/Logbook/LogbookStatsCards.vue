@@ -22,14 +22,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Total</p>
+                    <p class="text-sm font-medium text-white">Total</p>
                     <h3 class="text-3xl font-bold text-white">
                         {{ logbookStats?.total_logbooks || 0 }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Total logbook bulan ini</p>
+                <p class="text-xs text-white">Total logbook bulan ini</p>
             </div>
         </div>
 
@@ -55,14 +55,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Pending</p>
+                    <p class="text-sm font-medium text-white">Pending</p>
                     <h3 class="text-3xl font-bold text-white">
                         {{ logbookStats?.pending_logbooks || 0 }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Menunggu persetujuan</p>
+                <p class="text-xs text-white">Menunggu persetujuan</p>
             </div>
         </div>
 
@@ -88,12 +88,12 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Disetujui</p>
+                    <p class="text-sm font-medium text-white">Disetujui</p>
                     <h3 class="text-3xl font-bold text-white">0</h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Telah disetujui</p>
+                <p class="text-xs text-white">Telah disetujui</p>
             </div>
         </div>
 
@@ -119,14 +119,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Revisi</p>
+                    <p class="text-sm font-medium text-white">Revisi</p>
                     <h3 class="text-3xl font-bold text-white">
                         {{ logbookStats?.revision_logbooks || 0 }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Perlu perbaikan</p>
+                <p class="text-xs text-white">Perlu perbaikan</p>
             </div>
         </div>
     </div>

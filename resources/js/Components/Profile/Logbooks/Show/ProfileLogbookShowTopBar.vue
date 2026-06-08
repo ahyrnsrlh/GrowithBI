@@ -33,7 +33,7 @@ defineProps({
                     </Link>
                     <div class="hidden sm:block">
                         <h1 class="text-white font-bold text-lg">GrowithBI</h1>
-                        <p class="text-blue-200 text-xs">
+                        <p class="text-white text-xs">
                             Bank Indonesia Lampung
                         </p>
                     </div>
@@ -41,7 +41,7 @@ defineProps({
 
                 <Link
                     :href="backHref"
-                    class="inline-flex items-center text-sm text-blue-200 hover:text-white transition-colors group"
+                    class="inline-flex items-center text-sm text-white hover:text-white transition-colors group"
                 >
                     <svg
                         class="w-4 h-4 mr-1.5 transform group-hover:-translate-x-0.5 transition-transform"

@@ -6,7 +6,7 @@
             <div class="mb-6">
                 <Link
                     :href="route('peserta.logbooks.index')"
-                    class="inline-flex items-center text-blue-100 hover:text-white transition-colors group"
+                    class="inline-flex items-center text-white hover:text-white transition-colors group"
                 >
                     <svg
                         class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform"
@@ -49,14 +49,14 @@
                             <h1 class="text-3xl font-bold text-white mb-1">
                                 {{ logbook.title }}
                             </h1>
-                            <p class="text-blue-100 text-sm font-medium">
+                            <p class="text-white text-sm font-medium">
                                 Laporan kegiatan harian peserta magang
                             </p>
                         </div>
                     </div>
 
                     <div class="flex flex-wrap items-center gap-4 mt-4">
-                        <div class="flex items-center text-white/90">
+                        <div class="flex items-center text-white">
                             <svg
                                 class="w-5 h-5 mr-2"
                                 fill="none"
@@ -74,7 +74,7 @@
                                 formatDateShort(logbook.date)
                             }}</span>
                         </div>
-                        <div class="flex items-center text-white/90">
+                        <div class="flex items-center text-white">
                             <svg
                                 class="w-5 h-5 mr-2"
                                 fill="none"
@@ -132,10 +132,10 @@
 
             <div class="mt-8">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-semibold text-blue-100"
+                    <span class="text-xs font-semibold text-white"
                         >Progress Review</span
                     >
-                    <span class="text-xs font-semibold text-blue-100"
+                    <span class="text-xs font-semibold text-white"
                         >{{ getProgressPercentage(logbook.status) }}%</span
                     >
                 </div>

@@ -2,7 +2,7 @@
     <button
         @click="$emit('toggle')"
         data-notification-bell
-        class="relative p-2 text-blue-500 hover:text-blue-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 rounded-lg transition-all duration-200"
+        class="relative p-2 text-blue-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 rounded-lg transition-all duration-200"
         :class="{ 'bg-white bg-opacity-10': isOpen }"
     >
         <BellIcon class="h-6 w-6" />

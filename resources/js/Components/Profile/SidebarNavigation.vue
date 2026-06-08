@@ -50,7 +50,7 @@
                             'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                             activeTab === 'profile'
                                 ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
-                                : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                : 'text-white hover:bg-blue-700 hover:bg-opacity-30',
                         ]"
                     >
                         <i class="fas fa-user mr-3"></i>
@@ -62,7 +62,7 @@
                             'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                             activeTab === 'documents'
                                 ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
-                                : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                : 'text-white hover:bg-blue-700 hover:bg-opacity-30',
                         ]"
                     >
                         <i class="fas fa-file-alt mr-3"></i>
@@ -74,7 +74,7 @@
                             'w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                             activeTab === 'applications'
                                 ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
-                                : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                : 'text-white hover:bg-blue-700 hover:bg-opacity-30',
                         ]"
                     >
                         <i class="fas fa-briefcase mr-3"></i>
@@ -89,7 +89,7 @@
                     <a
                         :href="route('home') + '#divisions'"
                         @click="isOpen = false"
-                        class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors text-blue-100 hover:bg-blue-700 hover:bg-opacity-30 block"
+                        class="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white hover:bg-blue-700 hover:bg-opacity-30 block"
                     >
                         <i class="fas fa-external-link-alt mr-3"></i>
                         Daftar Magang
@@ -100,7 +100,7 @@
                     v-if="hasAcceptedApplication"
                     class="mt-6 pt-4 border-t border-blue-600 border-opacity-40"
                 >
-                    <h3 class="text-sm font-medium text-blue-100 mb-3">
+                    <h3 class="text-sm font-medium text-white mb-3">
                         Logbook & Laporan
                     </h3>
                     <div class="space-y-1">
@@ -110,7 +110,7 @@
                                 'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                                 activeTab === 'attendance'
                                     ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
-                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                    : 'text-white hover:bg-blue-700 hover:bg-opacity-30',
                             ]"
                         >
                             <i class="fas fa-clock mr-3"></i>
@@ -122,7 +122,7 @@
                                 'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                                 activeTab === 'logbook'
                                     ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
-                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                    : 'text-white hover:bg-blue-700 hover:bg-opacity-30',
                             ]"
                         >
                             <i class="fas fa-book mr-3"></i>
@@ -134,7 +134,7 @@
                                 'w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                                 activeTab === 'reports'
                                     ? 'bg-blue-700 bg-opacity-40 text-white border border-blue-500'
-                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-30',
+                                    : 'text-white hover:bg-blue-700 hover:bg-opacity-30',
                             ]"
                         >
                             <i class="fas fa-chart-line mr-3"></i>

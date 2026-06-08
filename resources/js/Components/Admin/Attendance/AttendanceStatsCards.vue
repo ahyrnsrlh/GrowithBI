@@ -22,7 +22,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Total Kehadiran
                     </p>
                     <h3 class="text-3xl font-bold text-white">
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Total absensi bulan ini</p>
+                <p class="text-xs text-white">Total absensi bulan ini</p>
             </div>
         </div>
 
@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Tingkat Kehadiran
                     </p>
                     <h3 class="text-3xl font-bold text-white">
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Persentase kehadiran aktif</p>
+                <p class="text-xs text-white">Persentase kehadiran aktif</p>
             </div>
         </div>
 
@@ -92,7 +92,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Ketepatan Waktu
                     </p>
                     <h3 class="text-3xl font-bold text-white">
@@ -101,7 +101,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Persentase tepat waktu</p>
+                <p class="text-xs text-white">Persentase tepat waktu</p>
             </div>
         </div>
 
@@ -127,14 +127,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Tidak Hadir</p>
+                    <p class="text-sm font-medium text-white">Tidak Hadir</p>
                     <h3 class="text-3xl font-bold text-white">
                         {{ stats?.absent_days || 0 }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Total ketidakhadiran</p>
+                <p class="text-xs text-white">Total ketidakhadiran</p>
             </div>
         </div>
     </div>

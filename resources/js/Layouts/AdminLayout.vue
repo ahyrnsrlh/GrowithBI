@@ -59,7 +59,7 @@
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url === '/admin/dashboard'
                                     ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
+                                    : 'text-white hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                             ]"
                         >
                             <svg
@@ -98,7 +98,7 @@
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url.startsWith('/admin/applications')
                                     ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
+                                    : 'text-white hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                             ]"
                         >
                             <svg
@@ -137,7 +137,7 @@
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url.startsWith('/admin/divisions')
                                     ? 'bg-blue-500 bg-opacity-30 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-500 hover:bg-opacity-30 hover:text-white',
+                                    : 'text-white hover:bg-blue-500 hover:bg-opacity-30 hover:text-white',
                             ]"
                         >
                             <svg
@@ -172,7 +172,7 @@
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url.startsWith('/admin/participants')
                                     ? 'bg-blue-500 bg-opacity-30 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-500 hover:bg-opacity-30 hover:text-white',
+                                    : 'text-white hover:bg-blue-500 hover:bg-opacity-30 hover:text-white',
                             ]"
                         >
                             <svg
@@ -205,7 +205,7 @@
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url.startsWith('/admin/logbooks')
                                     ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
+                                    : 'text-white hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                             ]"
                         >
                             <svg
@@ -244,7 +244,7 @@
                                     $page.url.startsWith('/admin/attendance') &&
                                     !$page.url.includes('/maps')
                                         ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
-                                        : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
+                                        : 'text-white hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                                 ]"
                             >
                                 <svg
@@ -284,7 +284,7 @@
                                         : 'justify-center px-2',
                                     $page.url.includes('/admin/attendance/maps')
                                         ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
-                                        : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
+                                        : 'text-white hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                                 ]"
                             >
                                 <svg
@@ -321,7 +321,7 @@
                                 showSidebarLabels ? '' : 'justify-center px-2',
                                 $page.url.startsWith('/admin/final-reports')
                                     ? 'bg-blue-700 bg-opacity-40 text-white border-r-2 border-blue-300'
-                                    : 'text-blue-100 hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
+                                    : 'text-white hover:bg-blue-700 hover:bg-opacity-40 hover:text-white',
                             ]"
                         >
                             <svg
@@ -414,7 +414,7 @@
                                 </div>
                                 <div
                                     v-else
-                                    class="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center"
+                                    class="h-8 w-8 rounded-full bg-gradient-to-br from-blue-700 to-blue-800 flex items-center justify-center"
                                 >
                                     <span
                                         class="text-white font-medium text-sm"

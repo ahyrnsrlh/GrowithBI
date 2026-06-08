@@ -14,7 +14,7 @@
                     <h3 class="text-2xl font-bold text-white">
                         Tambah Logbook Baru
                     </h3>
-                    <p class="text-blue-100 text-sm mt-1">
+                    <p class="text-white text-sm mt-1">
                         Catat kegiatan harian Anda
                     </p>
                 </div>

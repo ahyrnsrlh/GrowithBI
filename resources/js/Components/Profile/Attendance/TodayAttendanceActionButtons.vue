@@ -97,7 +97,7 @@
                         ? 'bg-gray-300 text-gray-500'
                         : !todayAttendance?.check_in
                           ? 'bg-gray-100 text-gray-400 border-2 border-dashed border-gray-300'
-                          : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40'
+                          : 'bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40'
                 "
             >
                 <svg

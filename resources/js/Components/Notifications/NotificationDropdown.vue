@@ -69,7 +69,7 @@
                     v-else-if="notifications.length === 0"
                     class="text-center py-12"
                 >
-                    <BellIcon class="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                    <BellIcon class="h-16 w-16 text-gray-500 mx-auto mb-4" />
                     <p class="text-gray-500 font-medium">
                         Tidak ada notifikasi
                     </p>

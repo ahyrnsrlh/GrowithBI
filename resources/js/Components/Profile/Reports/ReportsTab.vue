@@ -8,7 +8,7 @@
             >
                 <div class="flex items-start gap-4">
                     <div
-                        class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
+                        class="w-14 h-14 bg-gradient-to-br from-blue-700 to-blue-800 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
                     >
                         <svg
                             class="w-7 h-7 text-white"

@@ -15,12 +15,12 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Total Laporan</p>
+                    <p class="text-sm font-medium text-white">Total Laporan</p>
                     <p class="text-3xl font-bold text-white">{{ stats?.total || 0 }}</p>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Semua laporan akhir</p>
+                <p class="text-xs text-white">Semua laporan akhir</p>
             </div>
         </div>
 
@@ -34,12 +34,12 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Menunggu Review</p>
+                    <p class="text-sm font-medium text-white">Menunggu Review</p>
                     <p class="text-3xl font-bold text-white">{{ stats?.submitted || 0 }}</p>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Perlu ditinjau</p>
+                <p class="text-xs text-white">Perlu ditinjau</p>
             </div>
         </div>
 
@@ -53,12 +53,12 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Disetujui</p>
+                    <p class="text-sm font-medium text-white">Disetujui</p>
                     <p class="text-3xl font-bold text-white">{{ stats?.approved || 0 }}</p>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Lolos review</p>
+                <p class="text-xs text-white">Lolos review</p>
             </div>
         </div>
 
@@ -77,12 +77,12 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Perlu Revisi</p>
+                    <p class="text-sm font-medium text-white">Perlu Revisi</p>
                     <p class="text-3xl font-bold text-white">{{ stats?.revision || 0 }}</p>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Butuh perbaikan</p>
+                <p class="text-xs text-white">Butuh perbaikan</p>
             </div>
         </div>
     </div>

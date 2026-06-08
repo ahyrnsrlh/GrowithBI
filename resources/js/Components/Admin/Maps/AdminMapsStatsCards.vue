@@ -10,14 +10,14 @@
                     <UsersIcon class="h-6 w-6 text-white" />
                 </div>
                 <div class="flex-1">
-                    <p class="text-sm font-medium text-white/90">Total Hadir</p>
+                    <p class="text-sm font-medium text-white">Total Hadir</p>
                     <h3 class="text-2xl font-bold text-white">
                         {{ stats.total_attendances }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">
+                <p class="text-xs text-white">
                     Total peserta hadir hari ini
                 </p>
             </div>
@@ -33,7 +33,7 @@
                     <CheckCircleIcon class="h-6 w-6 text-white" />
                 </div>
                 <div class="flex-1">
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Absensi Valid
                     </p>
                     <h3 class="text-2xl font-bold text-white">
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Dalam radius lokasi kantor</p>
+                <p class="text-xs text-white">Dalam radius lokasi kantor</p>
             </div>
         </div>
 
@@ -56,14 +56,14 @@
                     <ExclamationTriangleIcon class="h-6 w-6 text-white" />
                 </div>
                 <div class="flex-1">
-                    <p class="text-sm font-medium text-white/90">Tidak Valid</p>
+                    <p class="text-sm font-medium text-white">Tidak Valid</p>
                     <h3 class="text-2xl font-bold text-white">
                         {{ stats.invalid_attendances }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Di luar radius lokasi</p>
+                <p class="text-xs text-white">Di luar radius lokasi</p>
             </div>
         </div>
 
@@ -77,14 +77,14 @@
                     <ClockIcon class="h-6 w-6 text-white" />
                 </div>
                 <div class="flex-1">
-                    <p class="text-sm font-medium text-white/90">Terlambat</p>
+                    <p class="text-sm font-medium text-white">Terlambat</p>
                     <h3 class="text-2xl font-bold text-white">
                         {{ stats.late }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Peserta yang terlambat</p>
+                <p class="text-xs text-white">Peserta yang terlambat</p>
             </div>
         </div>
     </div>

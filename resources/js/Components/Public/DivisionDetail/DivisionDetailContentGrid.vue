@@ -28,7 +28,7 @@
                 <p class="text-2xl sm:text-3xl font-bold mb-1">
                     {{ formattedDuration }}
                 </p>
-                <p class="text-blue-100 text-sm">Waktu magang</p>
+                <p class="text-white text-sm">Waktu magang</p>
             </div>
 
             <div
@@ -58,7 +58,7 @@
                 <p class="text-2xl sm:text-3xl font-bold mb-1">
                     {{ formatQuota }}
                 </p>
-                <p class="text-blue-100 text-sm">Peserta diterima</p>
+                <p class="text-white text-sm">Peserta diterima</p>
             </div>
 
             <div
@@ -90,7 +90,7 @@
                 </p>
                 <p
                     :class="
-                        availableSlots > 0 ? 'text-blue-100' : 'text-red-200'
+                        availableSlots > 0 ? 'text-white' : 'text-white'
                     "
                     class="text-sm"
                 >
@@ -125,7 +125,7 @@
                 <p class="text-xl sm:text-2xl font-bold mb-1">
                     {{ formatDate(division.application_deadline) }}
                 </p>
-                <p class="text-blue-100 text-sm">Batas pendaftaran</p>
+                <p class="text-white text-sm">Batas pendaftaran</p>
             </div>
 
             <div

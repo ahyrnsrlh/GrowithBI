@@ -1,11 +1,11 @@
 <template>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div
-            class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white"
+            class="bg-gradient-to-r from-blue-700 to-blue-800 rounded-xl shadow-lg p-6 text-white"
         >
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-blue-100 text-sm font-medium">
+                    <p class="text-white text-sm font-medium">
                         Total Logbook
                     </p>
                     <p class="text-3xl font-bold">
@@ -35,7 +35,7 @@
         >
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-yellow-100 text-sm font-medium">Pending</p>
+                    <p class="text-white text-sm font-medium">Pending</p>
                     <p class="text-3xl font-bold">
                         {{ stats.pending_logbooks || 0 }}
                     </p>
@@ -63,7 +63,7 @@
         >
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-green-100 text-sm font-medium">Disetujui</p>
+                    <p class="text-white text-sm font-medium">Disetujui</p>
                     <p class="text-3xl font-bold">
                         {{ stats.approved_logbooks || 0 }}
                     </p>
@@ -91,7 +91,7 @@
         >
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-red-100 text-sm font-medium">Revisi</p>
+                    <p class="text-white text-sm font-medium">Revisi</p>
                     <p class="text-3xl font-bold">
                         {{ stats.revision_logbooks || 0 }}
                     </p>

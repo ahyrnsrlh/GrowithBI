@@ -16,7 +16,7 @@
                         <h2 class="text-lg font-semibold text-white">
                             Peta Lokasi Absensi
                         </h2>
-                        <p class="text-sm text-white/80">
+                        <p class="text-sm text-white">
                             Monitoring real-time lokasi peserta
                         </p>
                     </div>

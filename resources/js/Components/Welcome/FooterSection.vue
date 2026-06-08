@@ -20,7 +20,7 @@
                             GrowithBI
                         </h3>
                     </div>
-                    <p class="text-blue-100 text-sm sm:text-base mb-6 max-w-md">
+                    <p class="text-white text-sm sm:text-base mb-6 max-w-md">
                         GrowithBI adalah platform program magang Bank Indonesia
                         KPw Lampung yang menghubungkan talenta muda dengan
                         pengalaman belajar profesional di bidang data, riset,
@@ -71,7 +71,7 @@
                     >
                         Fokus Program
                     </h4>
-                    <ul class="space-y-3 text-blue-100 text-sm sm:text-base">
+                    <ul class="space-y-3 text-white text-sm sm:text-base">
                         <li>
                             <a
                                 href="#"
@@ -108,10 +108,10 @@
                     >
                         Kontak
                     </h4>
-                    <ul class="space-y-3 text-blue-100 text-sm sm:text-base">
+                    <ul class="space-y-3 text-white text-sm sm:text-base">
                         <li class="flex items-center">
                             <svg
-                                class="w-5 h-5 mr-3 text-blue-200"
+                                class="w-5 h-5 mr-3 text-white"
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                             >
@@ -122,7 +122,7 @@
                         </li>
                         <li class="flex items-center">
                             <svg
-                                class="w-5 h-5 mr-3 text-blue-200"
+                                class="w-5 h-5 mr-3 text-white"
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                             >
@@ -133,7 +133,7 @@
                         </li>
                         <li class="flex items-start">
                             <svg
-                                class="w-5 h-5 mr-3 mt-1 text-blue-200"
+                                class="w-5 h-5 mr-3 mt-1 text-white"
                                 fill="currentColor"
                                 viewBox="0 0 24 24"
                             >
@@ -147,7 +147,7 @@
                 </div>
             </div>
             <div
-                class="border-t border-blue-700 mt-12 pt-8 text-center text-blue-200 text-sm"
+                class="border-t border-blue-700 mt-12 pt-8 text-center text-white text-sm"
             >
                 &copy; {{ new Date().getFullYear() }} GrowithBI &mdash; Bank
                 Indonesia KPw Lampung. Seluruh hak cipta dilindungi.

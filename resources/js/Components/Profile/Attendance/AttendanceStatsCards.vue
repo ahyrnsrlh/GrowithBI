@@ -22,14 +22,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Total Hadir</p>
+                    <p class="text-sm font-medium text-white">Total Hadir</p>
                     <h3 class="text-3xl font-bold text-white">
                         {{ stats.total }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Total kehadiran bulan ini</p>
+                <p class="text-xs text-white">Total kehadiran bulan ini</p>
             </div>
         </div>
 
@@ -55,14 +55,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Tepat Waktu</p>
+                    <p class="text-sm font-medium text-white">Tepat Waktu</p>
                     <h3 class="text-3xl font-bold text-white">
                         {{ stats.onTime }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Absensi tepat waktu</p>
+                <p class="text-xs text-white">Absensi tepat waktu</p>
             </div>
         </div>
 
@@ -88,14 +88,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Terlambat</p>
+                    <p class="text-sm font-medium text-white">Terlambat</p>
                     <h3 class="text-3xl font-bold text-white">
                         {{ stats.late }}
                     </h3>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Absensi terlambat</p>
+                <p class="text-xs text-white">Absensi terlambat</p>
             </div>
         </div>
     </div>

@@ -22,7 +22,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Total Aplikasi
                     </p>
                     <p class="text-3xl font-bold text-white">
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Semua pendaftaran</p>
+                <p class="text-xs text-white">Semua pendaftaran</p>
             </div>
         </div>
 
@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Menunggu Review
                     </p>
                     <p class="text-3xl font-bold text-white">
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Perlu ditinjau</p>
+                <p class="text-xs text-white">Perlu ditinjau</p>
             </div>
         </div>
 
@@ -92,14 +92,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Diterima</p>
+                    <p class="text-sm font-medium text-white">Diterima</p>
                     <p class="text-3xl font-bold text-white">
                         {{ stats.accepted }}
                     </p>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Lolos seleksi</p>
+                <p class="text-xs text-white">Lolos seleksi</p>
             </div>
         </div>
 
@@ -125,14 +125,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">Ditolak</p>
+                    <p class="text-sm font-medium text-white">Ditolak</p>
                     <p class="text-3xl font-bold text-white">
                         {{ stats.rejected }}
                     </p>
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Tidak memenuhi syarat</p>
+                <p class="text-xs text-white">Tidak memenuhi syarat</p>
             </div>
         </div>
     </div>

@@ -162,7 +162,7 @@ export function useNotificationBell(props) {
 
     const getIconColor = (color) => {
         const colorMap = {
-            blue: "bg-gradient-to-br from-blue-500 to-indigo-600",
+            blue: "bg-gradient-to-br from-blue-700 to-indigo-800",
             green: "bg-gradient-to-br from-emerald-500 to-green-600",
             red: "bg-gradient-to-br from-rose-500 to-red-600",
             emerald: "bg-gradient-to-br from-emerald-500 to-green-600",

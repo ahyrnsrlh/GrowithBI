@@ -76,7 +76,7 @@
                             <span class="font-medium">{{
                                 division.institution || "Bank Indonesia"
                             }}</span>
-                            <span class="hidden sm:inline text-gray-300"
+                            <span class="hidden sm:inline text-gray-500"
                                 >•</span
                             >
                             <div class="flex items-center gap-1.5">

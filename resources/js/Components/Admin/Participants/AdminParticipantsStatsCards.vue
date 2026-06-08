@@ -22,7 +22,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Total Peserta
                     </p>
                     <p class="text-3xl font-bold text-white">
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Terdaftar di sistem</p>
+                <p class="text-xs text-white">Terdaftar di sistem</p>
             </div>
         </div>
 
@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Peserta Aktif
                     </p>
                     <p class="text-3xl font-bold text-white">
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Sedang magang</p>
+                <p class="text-xs text-white">Sedang magang</p>
             </div>
         </div>
 
@@ -92,7 +92,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Total Aplikasi
                     </p>
                     <p class="text-3xl font-bold text-white">
@@ -101,7 +101,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Pendaftaran masuk</p>
+                <p class="text-xs text-white">Pendaftaran masuk</p>
             </div>
         </div>
 
@@ -127,7 +127,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-white/90">
+                    <p class="text-sm font-medium text-white">
                         Selesai Magang
                     </p>
                     <p class="text-3xl font-bold text-white">
@@ -136,7 +136,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t border-white/20">
-                <p class="text-xs text-white/70">Lulus program</p>
+                <p class="text-xs text-white">Lulus program</p>
             </div>
         </div>
     </div>
