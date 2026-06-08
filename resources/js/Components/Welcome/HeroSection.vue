@@ -4,7 +4,7 @@
     >
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid lg:grid-cols-2 gap-8 sm:gap-10 items-center">
-                <div data-aos="fade-right" data-aos-duration="1000">
+                <div>
                     <h1
                         class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-slate-900 mb-5 sm:mb-6"
                     >
@@ -38,9 +38,6 @@
                 </div>
                 <div
                     class="relative"
-                    data-aos="fade-left"
-                    data-aos-duration="1000"
-                    data-aos-delay="200"
                 >
                     <div
                         class="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg"

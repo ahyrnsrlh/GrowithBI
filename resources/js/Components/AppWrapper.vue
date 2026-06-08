@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!-- Loading Screen - muncul saat refresh/reload -->
+        <!-- Loading Screen - disabled on landing so the LCP hero can paint immediately -->
         <LoadingScreen
             v-if="showLoadingScreen"
             @finished="onLoadingFinished"
@@ -8,37 +8,36 @@
         />
 
         <!-- Main App Content -->
-        <div v-show="!isLoading" class="app-content">
+        <div class="app-content">
             <slot />
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import LoadingScreen from "./LoadingScreen.vue";
+import { defineAsyncComponent, ref, onMounted } from "vue";
 
-const isLoading = ref(true);
-const showLoadingScreen = ref(true);
+const LoadingScreen = defineAsyncComponent(() => import("./LoadingScreen.vue"));
 
-onMounted(() => {
-    // Simple approach: Always show loading screen unless it's marked as SPA navigation
+const showLoadingScreen = ref(false);
+
+const shouldShowBlockingLoader = () => {
     const isSPANavigation = sessionStorage.getItem("spa-navigation");
+    const isLandingPage = window.location.pathname === "/";
 
     if (isSPANavigation) {
-        // This was SPA navigation, skip loading
-        isLoading.value = false;
-        showLoadingScreen.value = false;
-        // Clear the flag
         sessionStorage.removeItem("spa-navigation");
-    } else {
-        // This is a refresh/reload/new tab, show loading
-        showLoadingScreen.value = true;
+        return false;
     }
+
+    return !isLandingPage;
+};
+
+onMounted(() => {
+    showLoadingScreen.value = shouldShowBlockingLoader();
 });
 
 const onLoadingFinished = () => {
-    isLoading.value = false;
     showLoadingScreen.value = false;
 };
 </script>

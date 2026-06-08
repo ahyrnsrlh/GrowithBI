@@ -1,13 +1,25 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
-import BenefitsSection from "@/Components/Welcome/BenefitsSection.vue";
-import DivisionsSection from "@/Components/Welcome/DivisionsSection.vue";
-import FaqSection from "@/Components/Welcome/FaqSection.vue";
+import { defineAsyncComponent, onMounted, ref } from "vue";
 import FloatingNavbar from "@/Components/Welcome/FloatingNavbar.vue";
-import FooterSection from "@/Components/Welcome/FooterSection.vue";
 import HeroSection from "@/Components/Welcome/HeroSection.vue";
-import TestimonialsSection from "@/Components/Welcome/TestimonialsSection.vue";
 import { useWelcomePage } from "@/Composables/useWelcomePage";
+
+const BenefitsSection = defineAsyncComponent(() =>
+    import("@/Components/Welcome/BenefitsSection.vue"),
+);
+const DivisionsSection = defineAsyncComponent(() =>
+    import("@/Components/Welcome/DivisionsSection.vue"),
+);
+const TestimonialsSection = defineAsyncComponent(() =>
+    import("@/Components/Welcome/TestimonialsSection.vue"),
+);
+const FaqSection = defineAsyncComponent(() =>
+    import("@/Components/Welcome/FaqSection.vue"),
+);
+const FooterSection = defineAsyncComponent(() =>
+    import("@/Components/Welcome/FooterSection.vue"),
+);
 
 const props = defineProps({
     canLogin: Boolean,
@@ -35,6 +47,21 @@ const {
     prevSlide,
     goToSlide,
 } = useWelcomePage();
+
+const showBelowFoldSections = ref(false);
+
+const renderBelowFoldSections = () => {
+    showBelowFoldSections.value = true;
+};
+
+onMounted(() => {
+    if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(renderBelowFoldSections, { timeout: 1200 });
+        return;
+    }
+
+    window.setTimeout(renderBelowFoldSections, 300);
+});
 </script>
 
 <template>
@@ -89,27 +116,29 @@ const {
         </div>
 
         <HeroSection :canRegister="props.canRegister" />
-        <BenefitsSection />
-        <DivisionsSection :divisions="divisions" />
-        <TestimonialsSection
-            :testimonials="testimonialsData"
-            :currentSlide="currentSlide"
-            :totalSlides="totalSlides"
-            :activeTestimonial="activeTestimonial"
-            :previousTestimonial="previousTestimonial"
-            :nextTestimonialData="nextTestimonialData"
-            @prev-slide="prevSlide"
-            @next-slide="nextSlide"
-            @go-to-slide="goToSlide"
-        />
-        <FaqSection
-            :faqCategories="faqCategories"
-            :selectedFaqCategory="selectedFaqCategory"
-            :openFaq="openFaq"
-            :faqs="faqs"
-            @select-category="selectFaqCategory"
-            @toggle-faq="toggleFaq"
-        />
-        <FooterSection />
+        <template v-if="showBelowFoldSections">
+            <BenefitsSection />
+            <DivisionsSection :divisions="divisions" />
+            <TestimonialsSection
+                :testimonials="testimonialsData"
+                :currentSlide="currentSlide"
+                :totalSlides="totalSlides"
+                :activeTestimonial="activeTestimonial"
+                :previousTestimonial="previousTestimonial"
+                :nextTestimonialData="nextTestimonialData"
+                @prev-slide="prevSlide"
+                @next-slide="nextSlide"
+                @go-to-slide="goToSlide"
+            />
+            <FaqSection
+                :faqCategories="faqCategories"
+                :selectedFaqCategory="selectedFaqCategory"
+                :openFaq="openFaq"
+                :faqs="faqs"
+                @select-category="selectFaqCategory"
+                @toggle-faq="toggleFaq"
+            />
+            <FooterSection />
+        </template>
     </div>
 </template>

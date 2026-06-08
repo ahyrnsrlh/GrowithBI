@@ -1,5 +1,4 @@
 import axios from "axios";
-import { router } from "@inertiajs/vue3";
 
 window.axios = axios;
 
@@ -109,14 +108,15 @@ window.axios.interceptors.response.use(
                 failedRequestsQueue = [];
 
                 // Last resort: Reload page with Inertia (preserves state)
-                if (typeof router !== "undefined") {
-                    console.warn("⚠️ Reloading page via Inertia...");
+                try {
+                    const { router } = await import("@inertiajs/vue3");
+                    console.warn("Reloading page via Inertia after CSRF refresh failure...");
                     router.reload({
                         preserveScroll: true,
                         preserveState: true,
                     });
-                } else {
-                    console.warn("⚠️ Hard reload required...");
+                } catch {
+                    console.warn("Hard reload required after CSRF refresh failure...");
                     window.location.reload();
                 }
 
@@ -128,10 +128,11 @@ window.axios.interceptors.response.use(
 
         // Handle 401 Unauthorized (session expired)
         if (error.response?.status === 401) {
-            console.warn("⚠️ Session expired, redirecting to login...");
-            if (typeof router !== "undefined") {
+            console.warn("Session expired, redirecting to login...");
+            try {
+                const { router } = await import("@inertiajs/vue3");
                 router.visit("/login");
-            } else {
+            } catch {
                 window.location.href = "/login";
             }
         }
@@ -146,12 +147,6 @@ window.axios.interceptors.response.use(
  * allows your team to easily build robust real-time web applications.
  */
 
-import Echo from "laravel-echo";
-import Pusher from "pusher-js";
-
-window.Pusher = Pusher;
-
-// Validate environment variables
 const requiredEnvVars = ["VITE_REVERB_APP_KEY", "VITE_REVERB_HOST"];
 
 const missingVars = requiredEnvVars.filter(
@@ -160,15 +155,29 @@ const missingVars = requiredEnvVars.filter(
 
 if (missingVars.length > 0) {
     console.warn(
-        "⚠️ Missing environment variables:",
+        "?? Missing environment variables:",
         missingVars.join(", "),
-        "\nReal-time notifications will fall back to polling mode."
+        "Real-time notifications will fall back to polling mode."
     );
 }
 
-// Only initialize Echo if required vars are present
-if (missingVars.length === 0) {
+const runWhenIdle = (callback) => {
+    if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(callback, { timeout: 3000 });
+        return;
+    }
+
+    window.setTimeout(callback, 1500);
+};
+
+const initializeEcho = async () => {
     try {
+        const [{ default: Echo }, { default: Pusher }] = await Promise.all([
+            import("laravel-echo"),
+            import("pusher-js"),
+        ]);
+
+        window.Pusher = Pusher;
         window.Echo = new Echo({
             broadcaster: "reverb",
             key: import.meta.env.VITE_REVERB_APP_KEY,
@@ -189,12 +198,16 @@ if (missingVars.length === 0) {
             },
         });
 
-        console.log("✅ Laravel Echo initialized successfully");
+        console.log("? Laravel Echo initialized successfully");
     } catch (error) {
-        console.error("❌ Echo initialization failed:", error);
-        console.warn("⚠️ Falling back to polling mode for notifications");
+        console.error("? Echo initialization failed:", error);
+        console.warn("?? Falling back to polling mode for notifications");
     }
+};
+
+if (missingVars.length === 0) {
+    runWhenIdle(initializeEcho);
 } else {
-    console.warn("⚠️ Laravel Echo NOT initialized - missing configuration");
-    console.info("ℹ️ Notifications will use polling mode as fallback");
+    console.warn("?? Laravel Echo NOT initialized - missing configuration");
+    console.info("?? Notifications will use polling mode as fallback");
 }

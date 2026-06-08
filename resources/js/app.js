@@ -5,10 +5,7 @@ import { createApp, h } from "vue";
 import { createInertiaApp, router } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
-import AOS from "aos";
-import "aos/dist/aos.css";
 import AppWrapper from "./Components/AppWrapper.vue";
-import '@fortawesome/fontawesome-free/css/all.min.css'
 
 const resolveAppName = () => {
     const metaAppName = document.head
@@ -23,13 +20,39 @@ const appName = resolveAppName();
 
 const formatDocumentTitle = () => appName;
 
-// Initialize AOS
-AOS.init({
-    duration: 800,
-    easing: "ease-in-out",
-    once: true,
-    offset: 50,
-});
+const runWhenIdle = (callback) => {
+    if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(callback, { timeout: 2000 });
+        return;
+    }
+
+    window.setTimeout(callback, 1200);
+};
+
+const initializeAos = () => {
+    if (!document.querySelector("[data-aos]")) {
+        return;
+    }
+
+    runWhenIdle(async () => {
+        const [{ default: AOS }] = await Promise.all([
+            import("aos"),
+            import("aos/dist/aos.css"),
+        ]);
+
+        AOS.init({
+            duration: 600,
+            easing: "ease-out",
+            once: true,
+            offset: 80,
+            disableMutationObserver: true,
+        });
+    });
+};
+
+const loadNonCriticalIconFont = () => {
+    runWhenIdle(() => import("@fortawesome/fontawesome-free/css/all.min.css"));
+};
 
 // Sync CSRF token from Inertia props to meta tag and axios
 const syncCsrfToken = (token) => {
@@ -98,3 +121,6 @@ createInertiaApp({
         color: "#4B5563",
     },
 });
+
+initializeAos();
+loadNonCriticalIconFont();

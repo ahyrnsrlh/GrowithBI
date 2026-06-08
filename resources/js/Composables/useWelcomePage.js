@@ -1,5 +1,4 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import AOS from "aos";
 import {
     faqCategories,
     faqs,
@@ -20,6 +19,15 @@ export function useWelcomePage() {
 
     const handleScroll = () => {
         isScrolled.value = window.scrollY > 50;
+    };
+
+    const runWhenIdle = (callback) => {
+        if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(callback, { timeout: 1500 });
+            return;
+        }
+
+        window.setTimeout(callback, 600);
     };
 
     const toggleFaq = (index) => {
@@ -81,23 +89,26 @@ export function useWelcomePage() {
         currentSlide.value = ((index % length) + length) % length;
     };
 
-    onMounted(async () => {
-        AOS.refresh();
+    onMounted(() => {
         window.addEventListener("scroll", handleScroll);
+        handleScroll();
 
-        try {
-            const response = await fetch("/api/divisions");
-            if (response.ok) {
-                const data = await response.json();
-                divisions.value = data?.divisions || data || fallbackDivisions;
-            } else {
+        runWhenIdle(async () => {
+            try {
+                const response = await fetch("/api/divisions");
+                if (response.ok) {
+                    const data = await response.json();
+                    divisions.value =
+                        data?.divisions || data || fallbackDivisions;
+                } else {
+                    divisions.value = fallbackDivisions;
+                }
+            } catch {
                 divisions.value = fallbackDivisions;
+            } finally {
+                loadingDivisions.value = false;
             }
-        } catch {
-            divisions.value = fallbackDivisions;
-        } finally {
-            loadingDivisions.value = false;
-        }
+        });
     });
 
     onUnmounted(() => {
