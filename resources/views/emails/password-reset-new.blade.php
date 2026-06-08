@@ -14,7 +14,7 @@
                     <!-- Header -->
                     <tr>
                         <td style="padding: 32px 40px; text-align: center; border-bottom: 1px solid #E2E8F0;">
-                            <img src="{{ asset('storage/logo_web2.png') }}" alt="GrowithBI Logo" style="height: 40px; width: auto; display: inline-block;">
+                            <img src="{{ asset('logo_web.webp') }}" alt="GrowithBI Logo" width="540" height="131" style="height: 40px; width: auto; display: inline-block;">
                         </td>
                     </tr>
 

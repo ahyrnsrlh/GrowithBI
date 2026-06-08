@@ -1,7 +1,9 @@
 <template>
     <img
-        src="/logo_web2.png"
+        src="/logo_web.webp"
         alt="GrowithBI"
+        width="540"
+        height="131"
         class="object-contain"
         loading="lazy"
         decoding="async"

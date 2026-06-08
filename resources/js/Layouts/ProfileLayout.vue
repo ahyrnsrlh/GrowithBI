@@ -46,9 +46,13 @@ const isActiveRoute = (routeName) => {
                     <!-- Logo -->
                     <Link :href="route('home')" class="flex items-center">
                         <img
-                            src="/logo_web.png"
+                            src="/logo_web.webp"
                             alt="GrowithBI Bank Indonesia Lampung"
+                            width="540"
+                            height="131"
                             class="h-9 sm:h-10 w-auto object-contain"
+                            loading="eager"
+                            decoding="async"
                         />
                     </Link>
 

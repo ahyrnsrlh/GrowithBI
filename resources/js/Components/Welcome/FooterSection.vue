@@ -11,8 +11,8 @@
                     data-aos-duration="800"
                 >
                     <div class="flex items-center mb-6">
-                        <img
-                            src="/logo.png"
+                        <BrandImage
+                            variant="logo"
                             alt="GrowithBI Logo"
                             class="w-12 h-12 mr-3"
                         />
@@ -155,3 +155,7 @@
         </div>
     </footer>
 </template>
+
+<script setup>
+import BrandImage from "@/Components/BrandImage.vue";
+</script>

@@ -38,8 +38,8 @@
                             <div
                                 class="w-28 h-28 sm:w-32 sm:h-32 lg:w-36 lg:h-36 flex items-center justify-center group-hover:scale-105 transition-transform duration-300"
                             >
-                                <img
-                                    src="/BI WHITE.png"
+                                <BrandImage
+                                    variant="biWhite"
                                     alt="Bank Indonesia Logo"
                                     class="w-full h-full object-contain filter drop-shadow-lg"
                                 />
@@ -149,6 +149,7 @@
 
 <script setup>
 import { Link } from "@inertiajs/vue3";
+import BrandImage from "@/Components/BrandImage.vue";
 
 defineProps({
     divisions: {

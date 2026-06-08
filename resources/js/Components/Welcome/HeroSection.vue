@@ -46,9 +46,14 @@
                         class="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg"
                     >
                         <img
-                            src="/hero.png"
+                            src="/hero.webp"
                             alt="Hero Banner"
+                            width="999"
+                            height="660"
                             class="w-full h-full object-cover"
+                            loading="eager"
+                            fetchpriority="high"
+                            decoding="async"
                         />
                     </div>
                 </div>

@@ -55,9 +55,13 @@ onUnmounted(() => {
                 <div class="flex items-center space-x-3">
                     <Link href="/">
                         <img
-                            src="/logo_web.png"
+                            src="/logo_web.webp"
                             alt="GrowithBI Bank Indonesia Lampung"
+                            width="540"
+                            height="131"
                             class="h-7 w-auto object-contain sm:h-8"
+                            loading="eager"
+                            decoding="async"
                         />
                     </Link>
                 </div>

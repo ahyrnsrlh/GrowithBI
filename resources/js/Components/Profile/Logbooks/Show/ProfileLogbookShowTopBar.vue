@@ -22,9 +22,13 @@ defineProps({
                 <div class="flex items-center space-x-3">
                     <Link :href="homeHref">
                         <img
-                            src="/logo_web.png"
+                            src="/logo_web.webp"
                             alt="GrowithBI Logo"
+                            width="540"
+                            height="131"
                             class="h-10 w-auto"
+                            loading="eager"
+                            decoding="async"
                         />
                     </Link>
                     <div class="hidden sm:block">

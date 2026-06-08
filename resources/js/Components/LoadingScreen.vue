@@ -42,9 +42,13 @@
                 <div class="logo-container relative z-10">
                     <div class="logo-wrapper flex items-center justify-center">
                         <img
-                            src="/logo_web.png"
+                            src="/logo_web.webp"
                             alt="GrowithBI Logo"
+                            width="540"
+                            height="131"
                             class="logo-image block mx-auto"
+                            loading="eager"
+                            decoding="async"
                         />
                     </div>
                 </div>

@@ -15,10 +15,10 @@
                 ]"
             >
                 <div class="flex items-center space-x-3">
-                    <img
-                        src="/logo_web.png"
+                    <BrandImage
                         alt="GrowithBI Bank Indonesia Lampung"
                         class="h-7 w-auto object-contain sm:h-8"
+                        loading="eager"
                     />
                 </div>
 
@@ -222,6 +222,7 @@
 
 <script setup>
 import { Link } from "@inertiajs/vue3";
+import BrandImage from "@/Components/BrandImage.vue";
 
 defineProps({
     canLogin: Boolean,

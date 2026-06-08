@@ -55,9 +55,13 @@
                         class="w-16 h-16 sm:w-20 sm:h-20 bg-white border-2 border-gray-100 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0"
                     >
                         <img
-                            :src="division.logo || '/logo.png'"
+                            :src="division.logo || '/logo.webp'"
                             :alt="division.institution || 'Bank Indonesia'"
                             class="w-12 h-12 sm:w-14 sm:h-14 object-contain"
+                            width="200"
+                            height="200"
+                            loading="lazy"
+                            decoding="async"
                         />
                     </div>
                     <div>

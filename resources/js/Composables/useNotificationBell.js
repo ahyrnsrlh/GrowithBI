@@ -271,7 +271,7 @@ export function useNotificationBell(props) {
             // eslint-disable-next-line no-new
             new Notification(notification.title || "Notifikasi Baru", {
                 body: notification.message || "",
-                icon: "/logo.png",
+                icon: "/logo.webp",
             });
         }
     };

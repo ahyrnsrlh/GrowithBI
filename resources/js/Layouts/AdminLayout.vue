@@ -32,12 +32,16 @@
             >
                 <div class="flex items-center">
                     <img
-                        src="/logo_web.png"
+                        src="/logo_web.webp"
                         alt="GrowithBI Bank Indonesia Lampung"
+                        width="540"
+                        height="131"
                         :class="[
                             'object-contain transition-all duration-300 ease-in-out',
                             showSidebarLabels ? 'h-8 w-auto' : 'h-8 w-8',
                         ]"
+                        loading="eager"
+                        decoding="async"
                     />
                 </div>
             </div>
