@@ -1,34 +1,52 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link rel="dns-prefetch" href="https://fonts.bunny.net">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="app-name" content="{{ config('app.name') }}">
-        @if(config('app.env') === 'production')
-        <!-- Production CSP - More restrictive -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.bunny.net https://cdnjs.cloudflare.com; font-src 'self' https://fonts.bunny.net https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob:; connect-src 'self' ws: wss:;">
-        @endif
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="app-name" content="{{ config('app.name') }}">
 
-        <title inertia>{{ config('app.name', 'GrowithBI') }}</title>
-        <link rel="icon" type="image/webp" href="{{ asset('logo_web.webp') }}">
-        <link rel="apple-touch-icon" href="{{ asset('logo_web.webp') }}">
+    @if(config('app.env') === 'production')
+    <meta http-equiv="Content-Security-Policy"
+          content="
+            default-src 'self';
+            script-src 'self' 'unsafe-inline' 'unsafe-eval';
+            style-src 'self' 'unsafe-inline' https://fonts.bunny.net;
+            font-src 'self' https://fonts.bunny.net;
+            img-src 'self' data: blob:;
+            connect-src 'self' ws: wss:;
+          ">
+    @endif
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title inertia>{{ config('app.name', 'GrowithBI') }}</title>
 
-        <!-- Scripts -->
-        @routes
-        @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
-        @inertiaHead
-    </head>
-    <body class="font-sans antialiased">
-        @inertia
-    </body>
+    <!-- Favicon -->
+    <link rel="icon" type="image/webp" href="{{ asset('logo_web.webp') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logo_web.webp') }}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link rel="dns-prefetch" href="https://fonts.bunny.net">
+
+    <link rel="preload"
+          href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"
+          as="style">
+
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"
+          rel="stylesheet">
+
+    <!-- Hero Image Preload (sesuaikan path jika berbeda) -->
+    <link rel="preload"
+          as="image"
+          href="{{ asset('hero.webp') }}"
+          fetchpriority="high">
+
+    <!-- Laravel -->
+    @routes
+    @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+    @inertiaHead
+</head>
+<body class="font-sans antialiased">
+    @inertia
+</body>
 </html>
