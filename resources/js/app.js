@@ -8,6 +8,7 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import AppWrapper from "./Components/AppWrapper.vue";
+import '@fortawesome/fontawesome-free/css/all.min.css'
 
 const resolveAppName = () => {
     const metaAppName = document.head
