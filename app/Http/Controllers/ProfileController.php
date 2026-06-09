@@ -157,8 +157,11 @@ class ProfileController extends Controller
                 });
         }
 
+        $userData = $user->toArray();
+        $userData['birth_date'] = $user->birth_date ? $user->birth_date->format('Y-m-d') : null;
+
         return Inertia::render('Profile/Index', [
-            'user' => $user,
+            'user' => $userData,
             'applications' => $applications,
             'activeApplication' => $activeApplication,
             'canCreateNewApplication' => $canCreateNewApplication,
@@ -362,7 +365,7 @@ class ProfileController extends Controller
         /**
      * Cancel user application - delete the application record
      */
-    public function cancelApplication(Request $request, $id)
+    public function cancelApplication(Request $request, int $id): RedirectResponse
     {
         $application = Application::findOrFail($id);
         
@@ -420,7 +423,7 @@ class ProfileController extends Controller
     /**
      * Calculate profile completion percentage
      */
-    private function calculateProfileCompletion($user): array
+    private function calculateProfileCompletion(User $user): array
     {
         $fields = [
             'name' => $user->name,

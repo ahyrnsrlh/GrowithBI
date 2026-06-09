@@ -2,6 +2,19 @@ import { ref, reactive, computed } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
 import { useProfilePageBoot } from "@/Composables/useProfilePageBoot";
 
+const normalizeDateValue = (value) => {
+    if (!value) {
+        return "";
+    }
+    if (typeof value === "string") {
+        return value.split("T")[0];
+    }
+    if (value instanceof Date) {
+        return value.toISOString().slice(0, 10);
+    }
+    return String(value);
+};
+
 export function useProfilePage(props) {
     const user = reactive({ ...props.user });
     const activeTab = ref("profile");
@@ -45,7 +58,7 @@ export function useProfilePage(props) {
         major: user.major,
         semester: user.semester,
         gpa: user.gpa,
-        birth_date: user.birth_date,
+        birth_date: normalizeDateValue(user.birth_date),
         gender: user.gender,
     });
 
@@ -98,7 +111,7 @@ export function useProfilePage(props) {
                     major: user.major,
                     semester: user.semester,
                     gpa: user.gpa,
-                    birth_date: user.birth_date,
+                    birth_date: normalizeDateValue(user.birth_date),
                     gender: user.gender,
                 };
                 showToast("success", "Profil berhasil diperbarui!");
