@@ -10,8 +10,8 @@
                 :application="application"
                 :getStatusBadgeClass="getStatusBadgeClass"
                 @open-status-modal="showStatusModal = true"
-                    @open-status-modal="showStatusModal = true"
-                    @confirm-delete="openDeleteModal"
+                @confirm-delete="openDeleteModal"
+            />
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <ApplicationMainInformation
@@ -47,12 +47,12 @@
             @submit="uploadAcceptanceLetter"
             @file-change="handleFileChange"
         />
-            <ApplicationDeleteModal
-                :show="showDeleteModal"
-                :application="application"
-                @close="closeDeleteModal"
-                @confirm="deleteApplication"
-            />
+        <ApplicationDeleteModal
+            :show="showDeleteModal"
+            :application="application"
+            @close="closeDeleteModal"
+            @confirm="deleteApplication"
+        />
 
         <UploadSuccessModal
             :show="showSuccessModal"
