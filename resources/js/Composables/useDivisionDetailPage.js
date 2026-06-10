@@ -195,20 +195,33 @@ export function useDivisionDetailPage(props) {
         isLoading.value = true;
 
         try {
-            const response = await fetch(
-                `/applications/check/${props.division.id}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Requested-With": "XMLHttpRequest",
-                    },
+            const url = route("applications.check", props.division.id);
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
                 },
-            );
+            });
 
-            const result = await response.json();
+            const contentType = response.headers.get("content-type") || "";
+            const isJson = contentType.includes("application/json");
+            let result;
 
-            if (response.ok && result.canApply) {
+            if (!response.ok || !isJson) {
+                const body = isJson
+                    ? await response.json()
+                    : await response.text();
+                const message =
+                    typeof body === "string"
+                        ? body
+                        : body?.message || "Not found.";
+                throw new Error(message || `HTTP ${response.status}`);
+            }
+
+            result = await response.json();
+
+            if (result.canApply) {
                 router.post(
                     "/profile/create-application",
                     { division_id: props.division.id },

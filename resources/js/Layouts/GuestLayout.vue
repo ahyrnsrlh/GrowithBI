@@ -51,7 +51,9 @@ const handleSmartRegistration = async (event) => {
         const divisionId = 1;
 
         // Check profile completeness and existing application using web route
-        const response = await axios.get(`/applications/check/${divisionId}`);
+        const response = await axios.get(
+            route("applications.check", divisionId),
+        );
 
         console.log("API Response:", response.data);
 
@@ -64,7 +66,7 @@ const handleSmartRegistration = async (event) => {
                     "/profile/create-application",
                     {
                         division_id: divisionId,
-                    }
+                    },
                 );
 
                 console.log("Application submitted successfully");
@@ -198,7 +200,8 @@ const goToProfile = () => {
                     <div
                         class="absolute inset-0"
                         style="
-                            background-image: linear-gradient(
+                            background-image:
+                                linear-gradient(
                                     rgba(59, 130, 246, 0.1) 1px,
                                     transparent 1px
                                 ),

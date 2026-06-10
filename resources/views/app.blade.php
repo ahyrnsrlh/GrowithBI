@@ -35,12 +35,6 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"
           rel="stylesheet">
 
-    <!-- Hero Image Preload (sesuaikan path jika berbeda) -->
-    <link rel="preload"
-          as="image"
-          href="{{ asset('hero.webp') }}"
-          fetchpriority="high">
-
     <!-- Laravel -->
     @routes
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])

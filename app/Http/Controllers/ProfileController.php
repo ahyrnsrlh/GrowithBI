@@ -208,25 +208,31 @@ class ProfileController extends Controller
     /**
      * Upload profile photo
      */
-    public function uploadPhoto(Request $request): RedirectResponse
+    public function uploadPhoto(Request $request)
     {
         $request->validate([
             'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $user = $request->user();
-        
-        // Delete old photo if exists
+
+        // Delete old photo from the public disk if it exists
         if ($user->profile_photo_path) {
-            Storage::delete($user->profile_photo_path);
+            Storage::disk('public')->delete($user->profile_photo_path);
         }
 
-        // Store new photo
         $path = $request->file('photo')->store('profile-photos', 'public');
-        
+
         $user->update([
-            'profile_photo_path' => $path
+            'profile_photo_path' => $path,
         ]);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'message' => 'Foto profil berhasil diperbarui!',
+                'profile_photo_path' => $path,
+            ]);
+        }
 
         return Redirect::route('profile.edit')->with('success', 'Foto profil berhasil diperbarui!');
     }

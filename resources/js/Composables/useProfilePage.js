@@ -128,17 +128,38 @@ export function useProfilePage(props) {
         if (!file) {
             return;
         }
+
         const formData = new FormData();
         formData.append("photo", file);
+
         window.axios
             .post(route("profile.upload-photo"), formData, {
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Accept: "application/json",
+                },
             })
-            .then(() => {
-                window.location.reload();
+            .then((response) => {
+                const updatedPhotoPath = response.data?.profile_photo_path;
+                if (updatedPhotoPath) {
+                    user.profile_photo_path = updatedPhotoPath;
+                }
+
+                showToast(
+                    "success",
+                    response.data?.message ||
+                        "Foto profil berhasil diperbarui!",
+                );
             })
-            .catch(() => {
-                showToast("error", "Gagal mengunggah foto!");
+            .catch((error) => {
+                const errors = error.response?.data?.errors;
+                const message =
+                    errors?.photo?.[0] ||
+                    error.response?.data?.message ||
+                    "Gagal mengunggah foto!";
+
+                console.error("Profile photo upload error:", error);
+                showToast("error", message);
             });
     };
 
