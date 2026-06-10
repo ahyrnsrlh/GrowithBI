@@ -111,6 +111,13 @@
                                 >
                                     Update Status
                                 </button>
+                                <button
+                                    v-if="isAdmin"
+                                    @click="$emit('confirm-delete', application)"
+                                    class="text-red-600 hover:text-red-900"
+                                >
+                                    Hapus
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -186,6 +193,8 @@
 import { computed } from "vue";
 import { Link } from "@inertiajs/vue3";
 import StatusBadge from "@/Components/StatusBadge.vue";
+import { usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
 
 const props = defineProps({
     applications: {
@@ -207,6 +216,9 @@ const emit = defineEmits([
     "update:selectedApplications",
     "open-status-modal",
 ]);
+
+const page = usePage();
+const isAdmin = computed(() => page.props?.auth?.user?.role === 'admin');
 
 const selectedModel = computed({
     get: () => props.selectedApplications,

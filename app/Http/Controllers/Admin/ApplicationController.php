@@ -10,7 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rules\Enum;
+use App\Services\ApplicationDeletionService;
+
 use Inertia\Inertia;
 
 class ApplicationController extends Controller
@@ -42,10 +43,11 @@ class ApplicationController extends Controller
 
         $applications = $query->latest()->paginate(10)->withQueryString();
 
-        // Add status info to each application for frontend
+        // Add status info and permissions to each application for frontend
         $applications->getCollection()->transform(function ($application) {
             $application->status_info = $application->status_info;
             $application->available_transitions = $application->available_transitions;
+            $application->can_delete = Auth::user()?->role === 'admin';
             return $application;
         });
 
@@ -94,15 +96,16 @@ class ApplicationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Application $application)
     {
-        $application = Application::with(['division', 'user', 'letterUploader', 'reviewer'])->findOrFail($id);
-        
+        $application->load(['division', 'user', 'letterUploader', 'reviewer']);
+
         // Add computed attributes for frontend
         $application->status_info = $application->status_info;
         $application->available_transitions = $application->available_transitions;
         $application->can_download_letter = $application->canDownloadAcceptanceLetter();
-        
+        $application->can_delete = Auth::user()?->role === 'admin';
+
         return Inertia::render('Admin/Applications/Show', [
             'application' => $application,
             'statusOptions' => RegistrationStatus::options(),
@@ -112,7 +115,7 @@ class ApplicationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Application $application)
     {
         //
     }
@@ -233,9 +236,36 @@ class ApplicationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Application $application, ApplicationDeletionService $deletionService)
     {
-        //
+        $admin = Auth::user();
+
+        // Only allow users with the 'admin' role to perform deletion
+        if (!$admin || $admin->role !== 'admin') {
+            abort(403, 'Unauthorized: only admin may delete applications.');
+        }
+
+        try {
+            $deletionService->delete($application, $admin);
+
+            if (request()->wantsJson()) {
+                return response()->json(['message' => 'Data pendaftar berhasil dihapus.'], 200);
+            }
+
+            return redirect()->route('admin.applications.index')->with('success', 'Data pendaftar berhasil dihapus.');
+
+        } catch (\Exception $e) {
+            Log::error('Failed to delete application', [
+                'application_id' => $application->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            if (request()->wantsJson()) {
+                return response()->json(['message' => 'Gagal menghapus pendaftar. Silakan coba lagi.'], 500);
+            }
+
+            return redirect()->back()->with('error', 'Gagal menghapus pendaftar: ' . $e->getMessage());
+        }
     }
 
     /**

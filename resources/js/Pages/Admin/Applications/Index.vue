@@ -26,6 +26,7 @@
             :format-date="formatDate"
             @toggle-all="toggleAllApplications"
             @open-status-modal="openStatusModal"
+            @confirm-delete="confirmDelete"
         />
 
         <AdminApplicationsStatusModal
@@ -44,6 +45,13 @@
             @close="showBulkModal = false"
             @submit="bulkUpdateStatus"
         />
+
+        <ApplicationDeleteModal
+            :show="showDeleteModal"
+            :application="applicationToDelete"
+            @close="closeDeleteModal"
+            @confirm="deleteApplication"
+        />
     </AdminLayout>
 </template>
 
@@ -52,6 +60,7 @@ import AdminLayout from "@/Layouts/AdminLayout.vue";
 import AdminApplicationsStatsCards from "@/Components/Admin/Applications/Index/AdminApplicationsStatsCards.vue";
 import AdminApplicationsFilters from "@/Components/Admin/Applications/Index/AdminApplicationsFilters.vue";
 import AdminApplicationsTable from "@/Components/Admin/Applications/Index/AdminApplicationsTable.vue";
+import ApplicationDeleteModal from "@/Components/Admin/Applications/ApplicationDeleteModal.vue";
 import AdminApplicationsStatusModal from "@/Components/Admin/Applications/Index/AdminApplicationsStatusModal.vue";
 import AdminApplicationsBulkModal from "@/Components/Admin/Applications/Index/AdminApplicationsBulkModal.vue";
 import { useAdminApplicationsPage } from "@/Composables/useAdminApplicationsPage";
@@ -110,5 +119,10 @@ const {
     closeStatusModal,
     updateStatus,
     bulkUpdateStatus,
+    showDeleteModal,
+    applicationToDelete,
+    confirmDelete,
+    closeDeleteModal,
+    deleteApplication,
 } = useAdminApplicationsPage(props);
 </script>

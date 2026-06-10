@@ -7,6 +7,7 @@ export function useAdminApplicationShowPage(application, page) {
     const showStatusModal = ref(false);
     const showLetterUpload = ref(false);
     const showSuccessModal = ref(false);
+    const showDeleteModal = ref(false);
     const successMessage = ref("");
     const selectedFile = ref(null);
     const isUploading = ref(false);
@@ -193,6 +194,25 @@ export function useAdminApplicationShowPage(application, page) {
         resetLetterUploadState();
     };
 
+    const openDeleteModal = () => {
+        showDeleteModal.value = true;
+    };
+
+    const closeDeleteModal = () => {
+        showDeleteModal.value = false;
+    };
+
+    const deleteApplication = () => {
+        router.delete(`/admin/applications/${application.id}`, {
+            onSuccess: () => {
+                // On success, navigate back to applications index (server usually redirects)
+            },
+            onError: (errors) => {
+                console.error("Failed to delete application", errors);
+            },
+        });
+    };
+
     return {
         showStatusModal,
         showLetterUpload,
@@ -213,5 +233,9 @@ export function useAdminApplicationShowPage(application, page) {
         handleFileChange,
         uploadAcceptanceLetter,
         closeLetterUpload,
+        showDeleteModal,
+        openDeleteModal,
+        closeDeleteModal,
+        deleteApplication,
     };
 }

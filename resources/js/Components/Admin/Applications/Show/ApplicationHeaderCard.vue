@@ -44,18 +44,29 @@
                 >
                     Update Status
                 </button>
+                <button
+                    v-if="isAdmin"
+                    @click="$emit('confirm-delete')"
+                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                    Hapus
+                </button>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
+
+const page = usePage();
+const isAdmin = computed(() => page.props?.auth?.user?.role === 'admin');
 
 defineProps({
     application: { type: Object, required: true },
     getStatusBadgeClass: { type: Function, required: true },
 });
 
-defineEmits(["open-status-modal"]);
+defineEmits(["open-status-modal", "confirm-delete"]);
 </script>

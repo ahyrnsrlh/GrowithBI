@@ -10,7 +10,8 @@
                 :application="application"
                 :getStatusBadgeClass="getStatusBadgeClass"
                 @open-status-modal="showStatusModal = true"
-            />
+                    @open-status-modal="showStatusModal = true"
+                    @confirm-delete="openDeleteModal"
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <ApplicationMainInformation
@@ -46,6 +47,12 @@
             @submit="uploadAcceptanceLetter"
             @file-change="handleFileChange"
         />
+            <ApplicationDeleteModal
+                :show="showDeleteModal"
+                :application="application"
+                @close="closeDeleteModal"
+                @confirm="deleteApplication"
+            />
 
         <UploadSuccessModal
             :show="showSuccessModal"
@@ -59,6 +66,7 @@
 import { usePage } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import ApplicationHeaderCard from "@/Components/Admin/Applications/Show/ApplicationHeaderCard.vue";
+import ApplicationDeleteModal from "@/Components/Admin/Applications/ApplicationDeleteModal.vue";
 import ApplicationMainInformation from "@/Components/Admin/Applications/Show/ApplicationMainInformation.vue";
 import ApplicationSidebar from "@/Components/Admin/Applications/Show/ApplicationSidebar.vue";
 import StatusUpdateModal from "@/Components/Admin/Applications/Show/StatusUpdateModal.vue";
@@ -92,5 +100,9 @@ const {
     handleFileChange,
     uploadAcceptanceLetter,
     closeLetterUpload,
+    showDeleteModal,
+    openDeleteModal,
+    closeDeleteModal,
+    deleteApplication,
 } = useAdminApplicationShowPage(props.application, page);
 </script>

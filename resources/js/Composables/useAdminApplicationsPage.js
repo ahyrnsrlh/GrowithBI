@@ -9,6 +9,8 @@ export function useAdminApplicationsPage(props) {
     const showStatusModal = ref(false);
     const showBulkModal = ref(false);
     const currentApplication = ref(null);
+    const showDeleteModal = ref(false);
+    const applicationToDelete = ref(null);
 
     const statusForm = reactive({
         status: "",
@@ -118,6 +120,31 @@ export function useAdminApplicationsPage(props) {
         showStatusModal.value = true;
     };
 
+    const confirmDelete = (application) => {
+        applicationToDelete.value = application;
+        showDeleteModal.value = true;
+    };
+
+    const closeDeleteModal = () => {
+        showDeleteModal.value = false;
+        applicationToDelete.value = null;
+    };
+
+    const deleteApplication = () => {
+        if (!applicationToDelete.value?.id) {
+            return;
+        }
+
+        router.delete(`/admin/applications/${applicationToDelete.value.id}`, {
+            onSuccess: () => {
+                closeDeleteModal();
+            },
+            onError: (errors) => {
+                console.error("Failed to delete application", errors);
+            },
+        });
+    };
+
     const closeStatusModal = () => {
         showStatusModal.value = false;
         statusForm.status = "";
@@ -205,5 +232,10 @@ export function useAdminApplicationsPage(props) {
         closeStatusModal,
         updateStatus,
         bulkUpdateStatus,
+        showDeleteModal,
+        applicationToDelete,
+        confirmDelete,
+        closeDeleteModal,
+        deleteApplication,
     };
 }
