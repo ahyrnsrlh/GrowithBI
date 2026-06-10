@@ -113,7 +113,9 @@
                                 </button>
                                 <button
                                     v-if="isAdmin"
-                                    @click="$emit('confirm-delete', application)"
+                                    @click="
+                                        $emit('confirm-delete', application)
+                                    "
                                     class="text-red-600 hover:text-red-900"
                                 >
                                     Hapus
@@ -218,7 +220,7 @@ const emit = defineEmits([
 ]);
 
 const page = usePage();
-const isAdmin = computed(() => page.props?.auth?.user?.role === 'admin');
+const isAdmin = computed(() => page.props?.auth?.user?.role === "admin");
 
 const selectedModel = computed({
     get: () => props.selectedApplications,

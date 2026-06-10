@@ -61,7 +61,7 @@ import { Link, usePage } from "@inertiajs/vue3";
 import { computed } from "vue";
 
 const page = usePage();
-const isAdmin = computed(() => page.props?.auth?.user?.role === 'admin');
+const isAdmin = computed(() => page.props?.auth?.user?.role === "admin");
 
 defineProps({
     application: { type: Object, required: true },
