@@ -5,14 +5,16 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\Application;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -216,7 +218,7 @@ class User extends Authenticatable
     /**
      * Calculate required logbook days based on internship period
      */
-    private function calculateRequiredLogbookDays($application)
+    private function calculateRequiredLogbookDays(Application $application)
     {
         // Default to 60 working days if no specific period defined
         $startDate = $application->division->start_date ?? $application->created_at;

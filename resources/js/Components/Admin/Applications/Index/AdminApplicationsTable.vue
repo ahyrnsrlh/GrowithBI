@@ -193,10 +193,8 @@
 
 <script setup>
 import { computed } from "vue";
-import { Link } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
 import StatusBadge from "@/Components/StatusBadge.vue";
-import { usePage } from "@inertiajs/vue3";
-import { computed } from "vue";
 
 const props = defineProps({
     applications: {
