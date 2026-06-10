@@ -194,32 +194,58 @@ export function useDivisionDetailPage(props) {
 
         isLoading.value = true;
 
-        try {
-            const url = route("applications.check", props.division.id);
+        const checkWebUrl = route("applications.check", props.division.id);
+        const checkApiUrl = `/api/applications/check/${props.division.id}`;
+
+        const fetchCheck = async (url) => {
             const response = await fetch(url, {
                 method: "GET",
                 headers: {
                     Accept: "application/json",
                     "X-Requested-With": "XMLHttpRequest",
                 },
+                credentials: "same-origin",
             });
 
             const contentType = response.headers.get("content-type") || "";
             const isJson = contentType.includes("application/json");
-            let result;
+            const body = isJson ? await response.json() : await response.text();
 
-            if (!response.ok || !isJson) {
-                const body = isJson
-                    ? await response.json()
-                    : await response.text();
+            if (!response.ok) {
                 const message =
                     typeof body === "string"
                         ? body
-                        : body?.message || "Not found.";
-                throw new Error(message || `HTTP ${response.status}`);
+                        : body?.message || `HTTP ${response.status}`;
+                const error = new Error(message || `HTTP ${response.status}`);
+                error.status = response.status;
+                error.body = body;
+                throw error;
             }
 
-            result = await response.json();
+            if (!isJson) {
+                const error = new Error(
+                    "Unexpected response format from server. Harap coba lagi.",
+                );
+                error.status = response.status;
+                error.body = body;
+                throw error;
+            }
+
+            return body;
+        };
+
+        try {
+            let result;
+
+            try {
+                result = await fetchCheck(checkWebUrl);
+            } catch (error) {
+                if (error.status === 404) {
+                    result = await fetchCheck(checkApiUrl);
+                } else {
+                    throw error;
+                }
+            }
 
             if (result.canApply) {
                 router.post(

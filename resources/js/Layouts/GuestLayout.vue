@@ -49,11 +49,21 @@ const handleSmartRegistration = async (event) => {
 
         // For now, we'll use the first available division (Web Development)
         const divisionId = 1;
+        const checkUrl = route("applications.check", divisionId);
+        const apiCheckUrl = `/api/applications/check/${divisionId}`;
+        let response;
 
-        // Check profile completeness and existing application using web route
-        const response = await axios.get(
-            route("applications.check", divisionId),
-        );
+        try {
+            response = await axios.get(checkUrl, { withCredentials: true });
+        } catch (error) {
+            if (error.response?.status === 404) {
+                response = await axios.get(apiCheckUrl, {
+                    withCredentials: true,
+                });
+            } else {
+                throw error;
+            }
+        }
 
         console.log("API Response:", response.data);
 
