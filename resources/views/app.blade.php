@@ -21,8 +21,8 @@
     <title inertia>{{ config('app.name', 'GrowithBI') }}</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/webp" href="{{ asset('logo_web.webp') }}">
-    <link rel="apple-touch-icon" href="{{ asset('logo_web.webp') }}">
+    <link rel="icon" type="image/webp" href="{{ asset('logo.webp') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logo.webp') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
