@@ -39,6 +39,13 @@ Broadcast::channel('attendance-updates', function ($user) {
     return true; // Public channel, anyone can listen
 });
 
+// Attendance table real-time channel - admin and mentor only
+// Used by the admin attendance index page for live row inserts / updates.
+Broadcast::channel('attendance-channel', function ($user) {
+    return $user && in_array($user->role, ['admin', 'mentor']);
+});
+
+
 // Logbook channel - for logbook-specific updates
 Broadcast::channel('logbook.{logbookId}', function ($user, $logbookId) {
     // User can listen if they own the logbook or are admin/mentor

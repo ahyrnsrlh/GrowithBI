@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Peserta;
 
+use App\Events\AttendanceCreated;
+use App\Events\AttendanceUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\User;
@@ -147,8 +149,10 @@ class AttendanceController extends Controller
             return redirect()->back()->with('error', 'Gagal menyimpan data absensi. Silakan coba lagi.');
         }
 
-        // Fire event for real-time updates
-        event(new \App\Events\AttendanceUpdated($attendance));
+        // Fire AttendanceCreated so the admin table inserts a NEW row in real-time.
+        // AttendanceUpdated is NOT fired here — that is reserved for check-out only,
+        // which lets the frontend distinguish "insert" vs. "update" operations.
+        event(new AttendanceCreated($attendance));
 
         // Send notification to user
         $notificationType = $status === 'On-Time' ? 'checked_in' : 'late';
@@ -259,8 +263,8 @@ class AttendanceController extends Controller
             return redirect()->back()->with('error', 'Gagal menyimpan data check-out. Silakan coba lagi.');
         }
 
-        // Fire event for real-time updates
-        event(new \App\Events\AttendanceUpdated($attendance));
+        // Fire AttendanceUpdated so the admin table updates the EXISTING row in real-time.
+        event(new AttendanceUpdated($attendance));
 
         // Send notification to user
         $user->notify(new AttendanceNotification($attendance, 'checked_out'));

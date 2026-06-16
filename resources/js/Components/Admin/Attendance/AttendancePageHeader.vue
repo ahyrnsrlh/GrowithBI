@@ -30,14 +30,14 @@
                                     />
                                 </svg>
                                 <span class="text-gray-700 font-medium"
-                                    >Absensi</span
+                                    >Presensi</span
                                 >
                             </div>
                         </li>
                     </ol>
                 </nav>
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900">
-                    Manajemen Absensi
+                    Manajemen Presensi
                 </h1>
             </div>
         </div>

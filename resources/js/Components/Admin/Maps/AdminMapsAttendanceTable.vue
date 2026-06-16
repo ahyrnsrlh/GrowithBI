@@ -11,7 +11,7 @@
                 </div>
                 <div>
                     <h3 class="text-lg font-semibold text-white">
-                        Daftar Absensi Hari Ini
+                        Daftar Presensi Hari Ini
                     </h3>
                     <p class="text-sm text-white">
                         {{ attendances.length }} peserta tercatat
@@ -158,7 +158,7 @@
                 Belum ada absensi hari ini
             </h3>
             <p class="text-sm text-gray-500 max-w-sm mx-auto">
-                Absensi peserta akan muncul secara real-time di sini ketika
+                Presensi peserta akan muncul secara real-time di sini ketika
                 mereka melakukan check-in
             </p>
         </div>

@@ -1,22 +1,23 @@
 <template>
     <div class="grid grid-cols-1 xl:grid-cols-5 gap-6">
+        <!-- ── Distribusi Status (dipindah ke bawah) ─────────────────────── -->
         <div
-            class="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-300"
+            class="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-300 flex flex-col"
         >
             <div class="flex items-center justify-between mb-6">
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900">
-                        Kapasitas Divisi
+                        Distribusi Status
                     </h3>
                     <p class="text-sm text-gray-500 mt-0.5">
-                        Kuota vs penerimaan
+                        Status pendaftaran saat ini
                     </p>
                 </div>
                 <div
-                    class="w-10 h-10 bg-gradient-to-br from-violet-50 to-purple-100 rounded-xl flex items-center justify-center"
+                    class="w-10 h-10 bg-gradient-to-br from-purple-50 to-indigo-100 rounded-xl flex items-center justify-center"
                 >
                     <svg
-                        class="w-5 h-5 text-purple-600"
+                        class="w-5 h-5 text-indigo-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -25,17 +26,50 @@
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
-                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                            d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
+                        />
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
                         />
                     </svg>
                 </div>
             </div>
-            <BarChart
-                :data="divisionChartData"
-                :options="{ responsive: true, maintainAspectRatio: false }"
-                class="h-72"
+
+            <PieChart
+                :data="statusChartData"
+                :options="{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                }"
+                class="h-52"
             />
+
+            <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
+                <span
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full"
+                >
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    Disetujui
+                </span>
+                <span
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 text-amber-700 text-xs font-medium rounded-full"
+                >
+                    <span class="w-2 h-2 bg-amber-500 rounded-full"></span>
+                    Menunggu
+                </span>
+                <span
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-700 text-xs font-medium rounded-full"
+                >
+                    <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                    Ditolak
+                </span>
+            </div>
         </div>
+
 
         <div
             class="xl:col-span-3 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300"
@@ -192,10 +226,10 @@
 
 <script setup>
 import { Link } from "@inertiajs/vue3";
-import BarChart from "@/Components/Charts/BarChart.vue";
+import PieChart from "@/Components/Charts/PieChart.vue";
 
 defineProps({
-    divisionChartData: {
+    statusChartData: {
         type: Object,
         required: true,
     },

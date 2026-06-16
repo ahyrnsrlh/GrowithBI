@@ -156,6 +156,7 @@ Route::middleware(['auth', 'verified', 'role:peserta'])->group(function () {
 // Pembimbing (supervisors) have access to admin features
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'role:admin,pembimbing', '2fa'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/attendance-by-division', [DashboardController::class, 'attendanceByDivision'])->name('dashboard.attendance-by-division');
     
     // Profile Management
     Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile.index');

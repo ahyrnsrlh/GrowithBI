@@ -114,7 +114,7 @@
                             ]"
                         >
                             <i class="fas fa-clock mr-3"></i>
-                            Absensi Online
+                            Presensi Online
                         </button>
                         <button
                             @click="selectTab('logbook')"

@@ -14,10 +14,10 @@
                     </div>
                     <div>
                         <h2 class="text-lg font-semibold text-white">
-                            Peta Lokasi Absensi
+                            Peta Lokasi Presensi
                         </h2>
                         <p class="text-sm text-white">
-                            Monitoring real-time lokasi peserta
+                            Monitoring real-time lokasi presensi peserta
                         </p>
                     </div>
                 </div>

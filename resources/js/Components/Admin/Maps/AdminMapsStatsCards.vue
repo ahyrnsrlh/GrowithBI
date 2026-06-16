@@ -34,7 +34,7 @@
                 </div>
                 <div class="flex-1">
                     <p class="text-sm font-medium text-white">
-                        Absensi Valid
+                        Presensi Valid
                     </p>
                     <h3 class="text-2xl font-bold text-white">
                         {{ stats.valid_attendances }}

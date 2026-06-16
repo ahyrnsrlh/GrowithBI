@@ -9,12 +9,12 @@
         />
 
         <AdminDashboardChartsSection
-            :status-chart-data="statusChartData"
             :trends-chart-data="trendsChartData"
         />
 
+
         <AdminDashboardDivisionAndRecent
-            :division-chart-data="divisionChartData"
+            :status-chart-data="statusChartData"
             :recent-applications="recentApplications"
             :get-initials="getInitials"
             :get-status-text="getStatusText"
@@ -22,6 +22,7 @@
             :get-status-dot-class="getStatusDotClass"
             :format-date="formatDate"
         />
+
     </AdminLayout>
 </template>
 
@@ -62,13 +63,13 @@ const {
     rejectionRate,
     statusChartData,
     trendsChartData,
-    divisionChartData,
     getInitials,
     getStatusText,
     getStatusClasses,
     getStatusDotClass,
     formatDate,
 } = useAdminDashboardPage(props);
+
 
 const stats = props.stats;
 const recentApplications = props.recentApplications;

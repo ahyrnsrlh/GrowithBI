@@ -6,12 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Division;
 use App\Models\User;
+use App\Services\AttendanceAnalyticsService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
+    public function __construct(
+        private readonly AttendanceAnalyticsService $analyticsService
+    ) {}
+
     public function index()
     {
         // Check if user is admin
@@ -210,12 +216,36 @@ class DashboardController extends Controller
         });
 
         return Inertia::render('Admin/Dashboard', [
-            'stats' => $stats,
-            'recentApplications' => $recentApplications,
-            'divisionsData' => $divisionsData,
-            'statusDistribution' => $statusDistribution,
-            'applicationTrends' => $applicationTrends,
-            'divisionData' => $divisionChartData
+            'stats'               => $stats,
+            'recentApplications'  => $recentApplications,
+            'divisionsData'       => $divisionsData,
+            'statusDistribution'  => $statusDistribution,
+            'applicationTrends'   => $applicationTrends,
+            'divisionData'        => $divisionChartData,
+        ]);
+    }
+
+    /**
+     * JSON API endpoint: attendance counts per division for today.
+     *
+     * Called by AttendanceDivisionChart.vue on mount to seed the chart.
+     * Subsequent updates arrive via WebSocket (AttendanceCreated event).
+     *
+     * GET /admin/dashboard/attendance-by-division
+     *
+     * @return JsonResponse
+     */
+    public function attendanceByDivision(): JsonResponse
+    {
+        if (!Auth::check() || !in_array(Auth::user()->role, ['admin', 'pembimbing'])) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $data = $this->analyticsService->attendanceByDivisionToday();
+
+        return response()->json([
+            'date' => now()->toDateString(),
+            'data' => $data->values(),
         ]);
     }
 }

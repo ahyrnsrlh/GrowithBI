@@ -77,7 +77,7 @@ class AttendanceController extends Controller
 
         $attendances = $query->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
-            ->paginate(20)
+            ->paginate(10)
             ->through(function ($attendance) {
                 $division = $this->resolveParticipantDivision($attendance->user);
 

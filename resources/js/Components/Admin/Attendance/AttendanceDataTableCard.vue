@@ -2,6 +2,7 @@
     <div
         class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
     >
+        <!-- ── Header ─────────────────────────────────────────────────────── -->
         <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -24,29 +25,58 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-semibold text-white">
-                            Data Absensi
+                            Data Presensi
                         </h3>
-                        <p class="text-sm text-white">
-                            {{ attendances?.total || 0 }} total records
+                        <p class="text-sm text-white/80">
+                            {{ totalCount }} total records
                         </p>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div v-if="isLoading" class="divide-y divide-gray-100">
-            <div v-for="i in 5" :key="i" class="px-6 py-4 animate-pulse">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
-                    <div class="flex-1 space-y-2">
-                        <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-                        <div class="h-3 bg-gray-100 rounded w-1/3"></div>
-                    </div>
-                    <div class="h-6 w-20 bg-gray-200 rounded-full"></div>
+                <!-- Live indicator -->
+                <div class="flex items-center gap-2">
+                    <span
+                        v-if="isConnected"
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-sm text-xs font-medium text-white"
+                        title="Real-time updates aktif"
+                    >
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"
+                            />
+                            <span
+                                class="relative inline-flex rounded-full h-2 w-2 bg-green-400"
+                            />
+                        </span>
+                        Live
+                    </span>
+                    <span
+                        v-else
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 text-xs font-medium text-white/60"
+                        title="Menunggu koneksi real-time..."
+                    >
+                        <span class="h-2 w-2 rounded-full bg-gray-400" />
+                        Offline
+                    </span>
                 </div>
             </div>
         </div>
 
+        <!-- ── Skeleton loader ───────────────────────────────────────────── -->
+        <div v-if="isLoading" class="divide-y divide-gray-100">
+            <div v-for="i in 5" :key="i" class="px-6 py-4 animate-pulse">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-gray-200 rounded-full" />
+                    <div class="flex-1 space-y-2">
+                        <div class="h-4 bg-gray-200 rounded w-1/4" />
+                        <div class="h-3 bg-gray-100 rounded w-1/3" />
+                    </div>
+                    <div class="h-6 w-20 bg-gray-200 rounded-full" />
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Table ─────────────────────────────────────────────────────── -->
         <div v-else class="overflow-x-auto">
             <table class="min-w-full">
                 <thead>
@@ -108,20 +138,35 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
+                    <!--
+                        Key decision: we use `attendanceList` (the WebSocket-backed
+                        reactive array) instead of `attendances.data` (the Inertia
+                        prop). This means the <tr> list is driven by the composable
+                        and mutated surgically by WebSocket events without any full
+                        re-render or page reload.
+
+                        :key="attendance.id" ensures Vue patches only the rows that
+                        actually changed, not the entire list.
+                    -->
                     <tr
-                        v-for="(attendance, index) in attendances?.data || []"
+                        v-for="(attendance, index) in attendanceList"
                         :key="attendance.id"
                         :class="[
-                            'hover:bg-blue-50/50 transition-colors duration-150',
+                            'transition-all duration-300',
                             index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30',
+                            recentlyUpdatedId === attendance.id
+                                ? 'bg-blue-50 ring-1 ring-inset ring-blue-200'
+                                : 'hover:bg-blue-50/50',
                         ]"
                     >
+                        <!-- Tanggal -->
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900">
                                 {{ attendance.date_formatted }}
                             </div>
                         </td>
 
+                        <!-- Peserta -->
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">
                                 <div
@@ -130,26 +175,26 @@
                                     {{ getInitials(attendance.user?.name) }}
                                 </div>
                                 <div>
-                                    <p
-                                        class="text-sm font-medium text-gray-900"
-                                    >
-                                        {{ attendance.user?.name || "-" }}
+                                    <p class="text-sm font-medium text-gray-900">
+                                        {{ attendance.user?.name || '-' }}
                                     </p>
                                     <p class="text-xs text-gray-500">
-                                        {{ attendance.user?.email || "-" }}
+                                        {{ attendance.user?.email || '-' }}
                                     </p>
                                 </div>
                             </div>
                         </td>
 
+                        <!-- Divisi -->
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span
                                 class="inline-flex items-center px-2.5 py-1 rounded-lg bg-gray-100 text-xs font-medium text-gray-700"
                             >
-                                {{ attendance.user?.division?.name || "-" }}
+                                {{ attendance.user?.division?.name || '-' }}
                             </span>
                         </td>
 
+                        <!-- Check-in -->
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-1.5">
                                 <svg
@@ -165,13 +210,13 @@
                                         d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
                                     />
                                 </svg>
-                                <span
-                                    class="text-sm font-medium text-gray-900"
-                                    >{{ attendance.check_in || "-" }}</span
-                                >
+                                <span class="text-sm font-medium text-gray-900">
+                                    {{ attendance.check_in || '-' }}
+                                </span>
                             </div>
                         </td>
 
+                        <!-- Check-out -->
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-1.5">
                                 <svg
@@ -187,13 +232,13 @@
                                         d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                                     />
                                 </svg>
-                                <span
-                                    class="text-sm font-medium text-gray-900"
-                                    >{{ attendance.check_out || "-" }}</span
-                                >
+                                <span class="text-sm font-medium text-gray-900">
+                                    {{ attendance.check_out || '-' }}
+                                </span>
                             </div>
                         </td>
 
+                        <!-- Foto -->
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-2">
                                 <div
@@ -264,20 +309,17 @@
                             </div>
                         </td>
 
+                        <!-- Status -->
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="relative group/status">
                                 <span
-                                    :class="
-                                        getStatusBadgeClass(attendance.status)
-                                    "
+                                    :class="getStatusBadgeClass(attendance.status)"
                                     class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold"
                                 >
                                     <span
-                                        :class="
-                                            getStatusDotClass(attendance.status)
-                                        "
+                                        :class="getStatusDotClass(attendance.status)"
                                         class="w-1.5 h-1.5 rounded-full"
-                                    ></span>
+                                    />
                                     {{ getStatusText(attendance.status) }}
                                 </span>
                                 <div
@@ -288,6 +330,7 @@
                             </div>
                         </td>
 
+                        <!-- Durasi -->
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-sm font-medium text-gray-700">
                                 {{
@@ -296,6 +339,7 @@
                             </span>
                         </td>
 
+                        <!-- Aksi -->
                         <td class="px-6 py-4 whitespace-nowrap text-right">
                             <Link
                                 :href="
@@ -327,11 +371,9 @@
             </table>
         </div>
 
+        <!-- ── Empty state ───────────────────────────────────────────────── -->
         <div
-            v-if="
-                !isLoading &&
-                (!attendances?.data || attendances.data.length === 0)
-            "
+            v-if="!isLoading && attendanceList.length === 0"
             class="text-center py-16"
         >
             <div
@@ -359,8 +401,8 @@
                 Coba ubah filter atau reset untuk melihat semua data.
             </p>
             <button
-                @click="$emit('clear-filters')"
                 class="mt-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                @click="$emit('clear-filters')"
             >
                 <svg
                     class="w-4 h-4"
@@ -379,8 +421,9 @@
             </button>
         </div>
 
+        <!-- ── Pagination ────────────────────────────────────────────────── -->
         <div
-            v-if="attendances?.data?.length"
+            v-if="attendanceList.length > 0"
             class="px-6 py-4 border-t border-gray-100 bg-gray-50/50"
         >
             <div
@@ -392,7 +435,7 @@
                     -
                     <span class="font-medium">{{ attendances.to }}</span>
                     dari
-                    <span class="font-medium">{{ attendances.total }}</span>
+                    <span class="font-medium">{{ totalCount }}</span>
                     data
                 </p>
                 <div class="flex items-center gap-1">
@@ -473,81 +516,89 @@
 </template>
 
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link } from '@inertiajs/vue3';
 
+/**
+ * Props contract:
+ *
+ * - `attendances`       : original Inertia paginator object (for pagination links / from-to).
+ * - `attendanceList`    : reactive array from useAttendanceRealtime (drives the <tr> list).
+ * - `totalCount`        : reactive integer from useAttendanceRealtime (header badge).
+ * - `isConnected`       : boolean, whether Echo is connected.
+ * - `recentlyUpdatedId` : ID to highlight briefly after an insert/update.
+ * - `isLoading`         : filter-load skeleton flag.
+ * - `paginationLinks`   : computed pagination links array.
+ */
 defineProps({
-    attendances: { type: Object, default: () => ({}) },
-    isLoading: { type: Boolean, default: false },
-    paginationLinks: { type: Array, default: () => [] },
+    attendances:       { type: Object,  default: () => ({}) },
+    attendanceList:    { type: Array,   default: () => [] },
+    totalCount:        { type: Number,  default: 0 },
+    isConnected:       { type: Boolean, default: false },
+    recentlyUpdatedId: { type: Number,  default: null },
+    isLoading:         { type: Boolean, default: false },
+    paginationLinks:   { type: Array,   default: () => [] },
 });
 
-defineEmits(["open-photo", "clear-filters"]);
+defineEmits(['open-photo', 'clear-filters']);
+
+// ─── Formatters ───────────────────────────────────────────────────────────────
 
 const getInitials = (name) => {
-    if (!name) {
-        return "?";
-    }
+    if (!name) return '?';
     return name
-        .split(" ")
+        .split(' ')
         .map((part) => part[0])
-        .join("")
+        .join('')
         .toUpperCase()
         .slice(0, 2);
 };
 
 const getStatusText = (status) => {
     const statusMap = {
-        "On-Time": "Tepat Waktu",
-        Late: "Terlambat",
-        Absent: "Tidak Hadir",
-        "Not-Checked-Out": "Belum Check-out",
+        'On-Time':        'Tepat Waktu',
+        Late:             'Terlambat',
+        Absent:           'Tidak Hadir',
+        'Not-Checked-Out': 'Belum Check-out',
     };
     return statusMap[status] || status;
 };
 
 const getStatusTooltip = (status) => {
     const tooltipMap = {
-        "On-Time": "Peserta hadir tepat waktu",
-        Late: "Peserta datang terlambat",
-        Absent: "Peserta tidak hadir",
-        "Not-Checked-Out": "Peserta belum melakukan check-out",
+        'On-Time':        'Peserta hadir tepat waktu',
+        Late:             'Peserta datang terlambat',
+        Absent:           'Peserta tidak hadir',
+        'Not-Checked-Out': 'Peserta belum melakukan check-out',
     };
     return tooltipMap[status] || status;
 };
 
 const getStatusBadgeClass = (status) => {
     const classes = {
-        "On-Time": "bg-emerald-50 text-emerald-700 border border-emerald-200",
-        Late: "bg-amber-50 text-amber-700 border border-amber-200",
-        Absent: "bg-red-50 text-red-700 border border-red-200",
-        "Not-Checked-Out": "bg-blue-50 text-blue-700 border border-blue-200",
+        'On-Time':        'bg-emerald-50 text-emerald-700 border border-emerald-200',
+        Late:             'bg-amber-50 text-amber-700 border border-amber-200',
+        Absent:           'bg-red-50 text-red-700 border border-red-200',
+        'Not-Checked-Out': 'bg-blue-50 text-blue-700 border border-blue-200',
     };
-    return classes[status] || "bg-gray-50 text-gray-700 border border-gray-200";
+    return classes[status] || 'bg-gray-50 text-gray-700 border border-gray-200';
 };
 
 const getStatusDotClass = (status) => {
     const dotClasses = {
-        "On-Time": "bg-emerald-500",
-        Late: "bg-amber-500",
-        Absent: "bg-red-500",
-        "Not-Checked-Out": "bg-blue-500",
+        'On-Time':        'bg-emerald-500',
+        Late:             'bg-amber-500',
+        Absent:           'bg-red-500',
+        'Not-Checked-Out': 'bg-blue-500',
     };
-    return dotClasses[status] || "bg-gray-500";
+    return dotClasses[status] || 'bg-gray-500';
 };
 
 const formatDuration = (minutes) => {
     const totalMinutes = Number(minutes);
-
-    if (!Number.isFinite(totalMinutes) || totalMinutes <= 0) {
-        return "-";
-    }
-
+    if (!Number.isFinite(totalMinutes) || totalMinutes <= 0) return '-';
     const hours = Math.floor(totalMinutes / 60);
-    const mins = totalMinutes % 60;
-
-    if (hours === 0) {
-        return `${mins}m`;
-    }
+    const mins  = totalMinutes % 60;
+    if (hours === 0) return `${mins}m`;
     return `${hours}j ${mins}m`;
 };
 </script>

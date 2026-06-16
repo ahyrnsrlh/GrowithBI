@@ -267,7 +267,7 @@
                                     v-show="showSidebarLabels"
                                     class="menu-label"
                                 >
-                                    Absensi Peserta
+                                    Presensi Peserta
                                 </span>
                             </Link>
 

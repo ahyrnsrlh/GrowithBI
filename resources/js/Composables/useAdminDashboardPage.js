@@ -80,32 +80,6 @@ export function useAdminDashboardPage(props) {
         };
     });
 
-    const divisionChartData = computed(() => {
-        const divisions = props.divisionData || [];
-
-        return {
-            labels: divisions.map((d) => d.name),
-            datasets: [
-                {
-                    label: "Diterima",
-                    data: divisions.map((d) => d.accepted),
-                    backgroundColor: "#10B981",
-                    borderColor: "#10B981",
-                    borderWidth: 0,
-                    borderRadius: 6,
-                },
-                {
-                    label: "Kuota",
-                    data: divisions.map((d) => d.quota),
-                    backgroundColor: "#E5E7EB",
-                    borderColor: "#D1D5DB",
-                    borderWidth: 0,
-                    borderRadius: 6,
-                },
-            ],
-        };
-    });
-
     const getInitials = (name) => {
         if (!name) {
             return "?";
@@ -185,7 +159,6 @@ export function useAdminDashboardPage(props) {
         rejectionRate,
         statusChartData,
         trendsChartData,
-        divisionChartData,
         getInitials,
         getStatusText,
         getStatusClasses,
