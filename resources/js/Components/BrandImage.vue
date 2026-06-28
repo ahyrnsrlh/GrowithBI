@@ -35,7 +35,7 @@ const assets = {
         height: 200,
     },
     logoWeb: {
-        src: "/logo_web.webp",
+        src: "/logo_web_small.webp",
         width: 540,
         height: 131,
     },

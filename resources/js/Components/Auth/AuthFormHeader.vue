@@ -17,7 +17,7 @@ defineProps({
     <div class="space-y-4 text-center">
         <Link href="/" class="inline-flex items-center justify-center gap-3">
             <img
-                src="/logo_web2.webp"
+                src="/logo_web2_small.webp" srcset="/logo_web2_small.webp 1x, /logo_web2.webp 2x"
                 alt="GrowithBI Logo"
                 width="540"
                 height="131"

@@ -2,7 +2,7 @@
     <div class="text-center mb-8">
         <Link href="/" class="inline-flex justify-center mb-4">
             <img
-                src="/logo_web.webp"
+                src="/logo_web_small.webp" srcset="/logo_web_small.webp 1x, /logo_web.webp 2x"
                 alt="GrowithBI Logo"
                 width="540"
                 height="131"

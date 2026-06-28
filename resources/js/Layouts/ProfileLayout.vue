@@ -46,7 +46,7 @@ const isActiveRoute = (routeName) => {
                     <!-- Logo -->
                     <Link :href="route('home')" class="flex items-center">
                         <img
-                            src="/logo_web.webp"
+                            src="/logo_web_small.webp" srcset="/logo_web_small.webp 1x, /logo_web.webp 2x"
                             alt="GrowithBI Bank Indonesia Lampung"
                             width="540"
                             height="131"
