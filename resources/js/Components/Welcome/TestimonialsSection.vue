@@ -347,19 +347,23 @@
                         </button>
                     </div>
 
-                    <div class="mt-6 flex justify-center gap-2">
+                    <div class="mt-6 flex justify-center gap-1 sm:gap-2">
                         <button
                             v-for="(_, index) in totalSlides"
                             :key="index"
                             @click="$emit('go-to-slide', index)"
-                            :class="[
-                                'h-2.5 rounded-full transition-all duration-300',
-                                currentSlide === index
-                                    ? 'w-8 bg-blue-600'
-                                    : 'w-2.5 bg-slate-200 hover:bg-slate-300',
-                            ]"
+                            class="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center group focus:outline-none"
                             :aria-label="`Go to testimonial ${index + 1}`"
-                        ></button>
+                        >
+                            <span
+                                :class="[
+                                    'h-2.5 rounded-full transition-all duration-300',
+                                    currentSlide === index
+                                        ? 'w-8 bg-blue-600'
+                                        : 'w-2.5 bg-slate-200 group-hover:bg-slate-300',
+                                ]"
+                            ></span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -381,9 +385,9 @@ defineEmits(["prev-slide", "next-slide", "go-to-slide"]);
 
 const getAvatarClass = (tagColor) => {
     const palette = {
-        blue: "bg-blue-600",
-        pink: "bg-rose-500",
-        green: "bg-emerald-600",
+        blue: "bg-blue-700",
+        pink: "bg-rose-600",
+        green: "bg-emerald-700",
     };
 
     return palette[tagColor] || "bg-slate-700";
