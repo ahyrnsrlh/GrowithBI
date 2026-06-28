@@ -79,6 +79,10 @@
                                 :src="`/storage/${auth.user.profile_photo_path}`"
                                 :alt="auth.user.name || 'User'"
                                 class="h-full w-full object-cover"
+                                loading="lazy"
+                                width="32"
+                                height="32"
+                                decoding="async"
                             />
                             <span
                                 v-else
@@ -196,6 +200,10 @@
                                         :src="`/storage/${auth.user.profile_photo_path}`"
                                         :alt="auth.user.name || 'User'"
                                         class="h-full w-full object-cover"
+                                        loading="lazy"
+                                        width="40"
+                                        height="40"
+                                        decoding="async"
                                     />
                                     <span
                                         v-else

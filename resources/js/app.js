@@ -1,5 +1,8 @@
 import "./bootstrap";
-import "../css/app.css";
+// NOTE: app.css is intentionally NOT imported here.
+// It is registered as a separate Vite entry in vite.config.js and loaded
+// via a non-blocking preload/onload pattern in resources/views/app.blade.php
+// to eliminate the render-blocking stylesheet penalty (PageSpeed LCP fix).
 
 import { createApp, h } from "vue";
 import { createInertiaApp, router } from "@inertiajs/vue3";

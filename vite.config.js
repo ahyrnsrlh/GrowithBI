@@ -5,7 +5,7 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
     plugins: [
         laravel({
-            input: "resources/js/app.js",
+            input: ["resources/js/app.js", "resources/css/app.css"],
             refresh: true,
         }),
         vue({
@@ -34,6 +34,14 @@ export default defineConfig({
                     return "assets/[name]-[hash][extname]";
                 },
                 manualChunks(id) {
+                    // Vue runtime — stable chunk for long-term caching
+                    if (
+                        id.includes("node_modules/vue") ||
+                        id.includes("node_modules/@vue") ||
+                        id.includes("node_modules/@inertiajs")
+                    ) {
+                        return "vendor-vue";
+                    }
                     // Chart.js — loaded only when a chart component mounts (lazy)
                     if (id.includes("node_modules/chart.js")) {
                         return "vendor-chartjs";

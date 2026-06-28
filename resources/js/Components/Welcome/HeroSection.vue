@@ -44,13 +44,14 @@
                     >
                         <img
                             src="/hero.webp"
-                            alt="Hero Banner"
+                            alt="Hero Banner — GrowithBI Bank Indonesia Lampung"
                             width="999"
                             height="660"
                             class="w-full h-full object-cover"
                             loading="eager"
                             fetchpriority="high"
                             decoding="async"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 500px"
                         />
                     </div>
                 </div>
