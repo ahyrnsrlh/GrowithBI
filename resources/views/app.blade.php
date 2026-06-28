@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="app-name" content="{{ config('app.name') }}">
+    <meta name="description" content="{{ config('app.description', 'GrowithBI - Program magang Bank Indonesia Provinsi Lampung untuk mahasiswa dan fresh graduate yang tertarik pada ekonomi, keuangan, dan transformasi digital.') }}">
 
     @if(config('app.env') === 'production')
     <meta http-equiv="Content-Security-Policy"
