@@ -7,8 +7,9 @@
             :duration="2500"
         />
 
-        <!-- Main App Content -->
-        <div class="app-content">
+        <!-- Main App Content: min-h-screen via Tailwind — eliminates the scoped CSS
+             file that Vite was injecting as a render-blocking <link> stylesheet. -->
+        <div class="min-h-screen">
             <slot />
         </div>
     </div>
@@ -41,9 +42,3 @@ const onLoadingFinished = () => {
     showLoadingScreen.value = false;
 };
 </script>
-
-<style scoped>
-.app-content {
-    min-height: 100vh;
-}
-</style>
