@@ -25,8 +25,12 @@
     <link rel="icon" type="image/webp" href="{{ asset('logo.webp') }}">
     <link rel="apple-touch-icon" href="{{ asset('logo.webp') }}">
 
-    <!-- Preload LCP hero image so the browser fetches it at highest priority -->
-    <link rel="preload" as="image" href="{{ asset('hero.webp') }}" fetchpriority="high">
+    <!-- Preload LCP images so the browser fetches them at highest priority based on route -->
+    @if(request()->routeIs('login', 'register', 'password.*'))
+        <link rel="preload" as="image" href="{{ asset('mascot_small.webp') }}" fetchpriority="high">
+    @elseif(request()->routeIs('home') || request()->is('/'))
+        <link rel="preload" as="image" href="{{ asset('hero.webp') }}" fetchpriority="high">
+    @endif
 
     <!-- Early connection to font CDN -->
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
