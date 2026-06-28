@@ -9,9 +9,9 @@
 
         <!-- Main App Content: min-h-screen via Tailwind — eliminates the scoped CSS
              file that Vite was injecting as a render-blocking <link> stylesheet. -->
-        <div class="min-h-screen">
+        <main class="min-h-screen">
             <slot />
-        </div>
+        </main>
     </div>
 </template>
 

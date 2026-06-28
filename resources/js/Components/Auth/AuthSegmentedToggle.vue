@@ -19,7 +19,7 @@ defineProps({
             :class="
                 active === 'login'
                     ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
-                    : 'text-slate-500 hover:text-slate-700'
+                    : 'text-slate-600 hover:text-slate-800'
             "
         >
             Masuk
@@ -30,7 +30,7 @@ defineProps({
             :class="
                 active === 'register'
                     ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
-                    : 'text-slate-500 hover:text-slate-700'
+                    : 'text-slate-600 hover:text-slate-800'
             "
         >
             Daftar
