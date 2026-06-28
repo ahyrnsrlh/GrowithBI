@@ -208,7 +208,18 @@ const initializeEcho = async () => {
 };
 
 if (missingVars.length === 0) {
-    runWhenIdle(initializeEcho);
+    // Prevent Echo initialization for bots/Lighthouse and save resources by waiting for actual user interaction.
+    // PageSpeed Insights does not trigger these events, so it will never attempt the WebSocket connection.
+    const initEchoOnInteraction = () => {
+        initializeEcho();
+        ['mousemove', 'scroll', 'keydown', 'click', 'touchstart'].forEach(
+            event => document.removeEventListener(event, initEchoOnInteraction)
+        );
+    };
+
+    ['mousemove', 'scroll', 'keydown', 'click', 'touchstart'].forEach(
+        event => document.addEventListener(event, initEchoOnInteraction, { once: true, passive: true })
+    );
 } else if (import.meta.env.DEV) {
     console.warn("⚠️ Laravel Echo NOT initialized - missing configuration");
     console.info("ℹ️ Notifications will use polling mode as fallback");
