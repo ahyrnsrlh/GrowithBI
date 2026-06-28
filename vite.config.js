@@ -34,31 +34,20 @@ export default defineConfig({
                     return "assets/[name]-[hash][extname]";
                 },
                 manualChunks(id) {
-                    // Chart.js — loaded only when a chart component mounts
+                    // Chart.js — loaded only when a chart component mounts (lazy)
                     if (id.includes("node_modules/chart.js")) {
                         return "vendor-chartjs";
                     }
-                    // Leaflet maps — loaded only when maps page is visited
-                    if (id.includes("node_modules/leaflet")) {
-                        return "vendor-leaflet";
-                    }
-                    // face-api — very large, loaded only on camera modal
+                    // face-api — very large (6MB), loaded only on camera modal (lazy)
                     if (id.includes("node_modules/face-api")) {
                         return "vendor-faceapi";
                     }
-                    // Real-time: pusher + echo
+                    // Real-time: pusher + echo — idle-loaded after page interactive
                     if (
                         id.includes("node_modules/pusher-js") ||
                         id.includes("node_modules/laravel-echo")
                     ) {
                         return "vendor-realtime";
-                    }
-                    // Headless UI / Heroicons — UI components loaded on demand
-                    if (
-                        id.includes("node_modules/@headlessui") ||
-                        id.includes("node_modules/@heroicons")
-                    ) {
-                        return "vendor-ui";
                     }
                 },
             },
