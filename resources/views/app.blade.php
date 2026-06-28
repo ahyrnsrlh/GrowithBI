@@ -24,16 +24,17 @@
     <link rel="icon" type="image/webp" href="{{ asset('logo.webp') }}">
     <link rel="apple-touch-icon" href="{{ asset('logo.webp') }}">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
+    <!-- Fonts — non-blocking load to eliminate render-blocking penalty -->
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.bunny.net">
 
     <link rel="preload"
           href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"
-          as="style">
-
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"
-          rel="stylesheet">
+          as="style"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
+    </noscript>
 
     <!-- Laravel -->
     @routes

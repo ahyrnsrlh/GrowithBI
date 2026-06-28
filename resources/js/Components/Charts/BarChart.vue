@@ -5,26 +5,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick } from "vue";
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-} from "chart.js/auto";
-
-// Register Chart.js components - using auto import for all controllers
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-);
+import { ref, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
+import { ChartJS } from "@/Utils/chartSetup";
 
 const props = defineProps({
     data: {
@@ -123,6 +105,13 @@ onMounted(() => {
     nextTick(() => {
         createChart();
     });
+});
+
+onBeforeUnmount(() => {
+    if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+    }
 });
 
 watch(

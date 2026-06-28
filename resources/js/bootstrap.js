@@ -27,9 +27,9 @@ const updateCsrfToken = (newToken) => {
 const initialToken = getCsrfToken();
 if (initialToken) {
     window.axios.defaults.headers.common["X-CSRF-TOKEN"] = initialToken;
-    console.log("✅ CSRF token configured");
+    if (import.meta.env.DEV) console.log("✅ CSRF token configured");
 } else {
-    console.error("❌ CSRF token not found in meta tag");
+    if (import.meta.env.DEV) console.error("❌ CSRF token not found in meta tag");
 }
 
 // Request interceptor - ensure fresh CSRF token on every request
@@ -83,7 +83,7 @@ window.axios.interceptors.response.use(
 
                 if (newToken) {
                     updateCsrfToken(newToken);
-                    console.log("✅ CSRF token refreshed silently");
+                    if (import.meta.env.DEV) console.log("✅ CSRF token refreshed silently");
 
                     // Retry all queued requests
                     failedRequestsQueue.forEach(({ resolve, config }) => {
@@ -99,7 +99,7 @@ window.axios.interceptors.response.use(
                     throw new Error("Failed to get new CSRF token");
                 }
             } catch (refreshError) {
-                console.error("❌ CSRF token refresh failed:", refreshError);
+                if (import.meta.env.DEV) console.error("❌ CSRF token refresh failed:", refreshError);
 
                 // Reject all queued requests
                 failedRequestsQueue.forEach(({ reject }) =>
@@ -110,13 +110,13 @@ window.axios.interceptors.response.use(
                 // Last resort: Reload page with Inertia (preserves state)
                 try {
                     const { router } = await import("@inertiajs/vue3");
-                    console.warn("Reloading page via Inertia after CSRF refresh failure...");
+                    if (import.meta.env.DEV) console.warn("Reloading page via Inertia after CSRF refresh failure...");
                     router.reload({
                         preserveScroll: true,
                         preserveState: true,
                     });
                 } catch {
-                    console.warn("Hard reload required after CSRF refresh failure...");
+                    if (import.meta.env.DEV) console.warn("Hard reload required after CSRF refresh failure...");
                     window.location.reload();
                 }
 
@@ -128,7 +128,7 @@ window.axios.interceptors.response.use(
 
         // Handle 401 Unauthorized (session expired)
         if (error.response?.status === 401) {
-            console.warn("Session expired, redirecting to login...");
+            if (import.meta.env.DEV) console.warn("Session expired, redirecting to login...");
             try {
                 const { router } = await import("@inertiajs/vue3");
                 router.visit("/login");
@@ -153,9 +153,9 @@ const missingVars = requiredEnvVars.filter(
     (varName) => !import.meta.env[varName]
 );
 
-if (missingVars.length > 0) {
+if (missingVars.length > 0 && import.meta.env.DEV) {
     console.warn(
-        "?? Missing environment variables:",
+        "⚠️ Missing environment variables:",
         missingVars.join(", "),
         "Real-time notifications will fall back to polling mode."
     );
@@ -198,16 +198,18 @@ const initializeEcho = async () => {
             },
         });
 
-        console.log("? Laravel Echo initialized successfully");
+        if (import.meta.env.DEV) console.log("✅ Laravel Echo initialized successfully");
     } catch (error) {
-        console.error("? Echo initialization failed:", error);
-        console.warn("?? Falling back to polling mode for notifications");
+        if (import.meta.env.DEV) {
+            console.error("❌ Echo initialization failed:", error);
+            console.warn("⚠️ Falling back to polling mode for notifications");
+        }
     }
 };
 
 if (missingVars.length === 0) {
     runWhenIdle(initializeEcho);
-} else {
-    console.warn("?? Laravel Echo NOT initialized - missing configuration");
-    console.info("?? Notifications will use polling mode as fallback");
+} else if (import.meta.env.DEV) {
+    console.warn("⚠️ Laravel Echo NOT initialized - missing configuration");
+    console.info("ℹ️ Notifications will use polling mode as fallback");
 }
