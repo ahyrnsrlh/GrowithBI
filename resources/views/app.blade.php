@@ -59,22 +59,7 @@
         /* Prevent layout shift from the Inertia mount div */
         #app{min-height:100vh}
 
-        /* Navbar shell — matches FloatingNavbar gradient so nav is visible immediately */
-        body::before{
-            content:'';
-            position:fixed;top:0;left:0;right:0;
-            height:72px;
-            background:linear-gradient(to right,#1e40af,#1d4ed8,#3730a3);
-            z-index:40;
-        }
 
-        /* Hero section background so the page isn't blank white during JS parse */
-        body::after{
-            content:'';
-            position:fixed;top:0;left:0;right:0;bottom:0;
-            background:linear-gradient(135deg,#f8fafc 0%,#eff6ff 50%,#eef2ff 100%);
-            z-index:-1;
-        }
     </style>
 
     <!-- Vite assets: JS is module (non-blocking by spec); CSS is deferred below -->
