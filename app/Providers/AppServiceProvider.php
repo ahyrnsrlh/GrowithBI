@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Vite::prefetch(concurrency: 3);
+        // Note: Vite::prefetch() was removed — it eagerly loaded ALL lazy chunks
+        // (vendor-chartjs, vendor-leaflet, vendor-faceapi) which defeats code splitting.
+        // Lazy chunks now load only on demand.
     }
 }

@@ -36,6 +36,13 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
     </noscript>
 
+    <!-- Inline critical CSS — prevents blank flash before main stylesheet loads -->
+    <style>
+        *,::before,::after{box-sizing:border-box}
+        html{line-height:1.5;-webkit-text-size-adjust:100%}
+        body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:#fff}
+    </style>
+
     <!-- Laravel -->
     @routes
     @vite('resources/js/app.js')

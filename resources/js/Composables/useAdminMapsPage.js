@@ -1,18 +1,8 @@
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 
-// Fix Leaflet default markers
-// eslint-disable-next-line no-underscore-dangle
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-    iconUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-    shadowUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
+// L is loaded dynamically inside onMounted — keeps leaflet + its CSS
+// OUT of the critical-path bundle (both JS and CSS become lazy chunks)
+let L = null;
 
 export function useAdminMapsPage(props) {
     const map = ref(null);
@@ -222,7 +212,26 @@ export function useAdminMapsPage(props) {
         );
     };
 
-    onMounted(() => {
+    onMounted(async () => {
+        // Dynamic import keeps leaflet + its CSS out of the critical-path bundle
+        const [leafletModule] = await Promise.all([
+            import("leaflet"),
+            import("leaflet/dist/leaflet.css"),
+        ]);
+        L = leafletModule.default;
+
+        // Fix Leaflet default markers (must run after import)
+        // eslint-disable-next-line no-underscore-dangle
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+            iconRetinaUrl:
+                "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+            iconUrl:
+                "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+            shadowUrl:
+                "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+        });
+
         setTimeout(initializeMap, 100);
 
         refreshInterval = setInterval(refreshData, 30000);
@@ -246,10 +255,11 @@ export function useAdminMapsPage(props) {
                     showNotification(e.attendance);
                 },
             );
-        } else {
+        } else if (import.meta.env.DEV) {
             console.log("WebSocket not available, using polling method");
         }
     });
+
 
     onUnmounted(() => {
         if (refreshInterval) {
