@@ -7,6 +7,7 @@ use App\Services\CaptchaVerificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -41,15 +42,16 @@ class PasswordResetLinkController extends Controller
     {
         $request->validate([
             'email' => [
-                'required', 
-                'email:rfc,dns', 
-                'exists:users,email'
+                'required',
+                'email:rfc,dns',
+                // Only allow active (non-soft-deleted) users to reset their password
+                Rule::exists('users', 'email')->whereNull('deleted_at'),
             ],
             'captcha_token' => ['nullable', 'string'],
         ], [
             'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'email.exists' => 'Email tidak terdaftar dalam sistem kami.',
+            'email.email'    => 'Format email tidak valid.',
+            'email.exists'   => 'Email tidak terdaftar dalam sistem kami.',
         ]);
 
         // Verify captcha before sending password reset link

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -37,9 +38,10 @@ class NewPasswordController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => [
-                'required', 
-                'email:rfc,dns', 
-                'exists:users,email'
+                'required',
+                'email:rfc,dns',
+                // Only allow active (non-soft-deleted) users to reset their password
+                Rule::exists('users', 'email')->whereNull('deleted_at'),
             ],
             'password' => [
                 'required', 

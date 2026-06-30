@@ -10,6 +10,7 @@ use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class AdminController extends Controller
@@ -347,11 +348,15 @@ class AdminController extends Controller
     public function storeParticipant(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'name'     => 'required|string|max:255',
+            'email'    => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->whereNull('deleted_at'),
+            ],
             'password' => 'required|string|min:8',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
+            'phone'    => 'nullable|string|max:20',
+            'address'  => 'nullable|string',
         ]);
 
         User::create([
@@ -383,9 +388,13 @@ class AdminController extends Controller
         $participant = User::where('role', 'peserta')->findOrFail($id);
         
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'phone' => 'nullable|string|max:20',
+            'name'    => 'required|string|max:255',
+            'email'   => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($id)->whereNull('deleted_at'),
+            ],
+            'phone'   => 'nullable|string|max:20',
             'address' => 'nullable|string',
         ]);
 
@@ -481,12 +490,16 @@ class AdminController extends Controller
     public function storeUser(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'name'     => 'required|string|max:255',
+            'email'    => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->whereNull('deleted_at'),
+            ],
             'password' => 'required|string|min:8',
-            'role' => 'required|in:admin,pembimbing,peserta',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
+            'role'     => 'required|in:admin,pembimbing,peserta',
+            'phone'    => 'nullable|string|max:20',
+            'address'  => 'nullable|string',
         ]);
 
         User::create([
@@ -518,10 +531,14 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'role' => 'required|in:admin,pembimbing,peserta',
-            'phone' => 'nullable|string|max:20',
+            'name'    => 'required|string|max:255',
+            'email'   => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($id)->whereNull('deleted_at'),
+            ],
+            'role'    => 'required|in:admin,pembimbing,peserta',
+            'phone'   => 'nullable|string|max:20',
             'address' => 'nullable|string',
         ]);
 

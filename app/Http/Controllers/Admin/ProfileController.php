@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 
@@ -37,11 +38,17 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
-            'phone' => 'nullable|string|max:20',
-            'position' => 'nullable|string|max:255',
-            'bio' => 'nullable|string|max:1000',
+            'name'          => 'required|string|max:255',
+            'email'         => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore(Auth::id())->whereNull('deleted_at'),
+            ],
+            'phone'         => 'nullable|string|max:20',
+            'position'      => 'nullable|string|max:255',
+            'bio'           => 'nullable|string|max:1000',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
