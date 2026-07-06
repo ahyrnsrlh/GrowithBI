@@ -80,7 +80,7 @@ class FaceRecognitionService
         if (!$isMatch) {
             return [
                 'success'    => false,
-                'message'    => '❌ Verifikasi wajah gagal! Wajah tidak cocok. Pastikan Anda yang melakukan absensi.',
+                'message'    => '❌ Verifikasi wajah gagal! Wajah tidak cocok.',
                 'distance'   => $distance,
                 'confidence' => $confidence,
             ];

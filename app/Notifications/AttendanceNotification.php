@@ -129,8 +129,8 @@ class AttendanceNotification extends Notification implements ShouldBroadcast
                 ? "Wajah {$userName} telah berhasil didaftarkan untuk verifikasi absensi"
                 : "Wajah Anda telah berhasil didaftarkan untuk verifikasi absensi.",
             'face_not_recognized' => $isAdmin
-                ? "Verifikasi wajah {$userName} gagal saat check-in"
-                : "Verifikasi wajah gagal. Pastikan wajah Anda terlihat jelas di kamera.",
+                ? "Verifikasi wajah {$userName} gagal. Wajah tidak sesuai dengan data biometrik."
+                : "Verifikasi wajah gagal! Wajah yang terdeteksi tidak cocok.",
             'reminder_checkin' => $isAdmin
                 ? "{$userName} belum melakukan check-in hari ini"
                 : "Jangan lupa untuk melakukan check-in hari ini.",
