@@ -24,25 +24,46 @@ export function usePesertaAttendancePage(props, page) {
     const { formatDate, formatDayName, formatTime } = useAttendanceFormatters();
 
     const showSuccessToast = ref(false);
-    const showErrorToast = ref(false);
+    const showErrorToast   = ref(false);
 
+    // ── Face enrollment ───────────────────────────────────────────────────────
+    /** Reactive enrollment status; seeded from Inertia prop, updated after enrollment */
+    const faceEnrolled    = ref(props.face_enrolled ?? false);
+    const showEnrollment  = ref(false);
+
+    const openEnrollment  = () => { showEnrollment.value = true; };
+    const closeEnrollment = () => { showEnrollment.value = false; };
+
+    const onEnrolled = () => {
+        faceEnrolled.value = true;
+        showEnrollment.value = false;
+        showToastFor("success");
+    };
+
+    // Watch for prop changes (e.g., Inertia page reload after enroll)
+    watch(
+        () => props.face_enrolled,
+        (val) => { if (val !== undefined) faceEnrolled.value = val; },
+    );
+
+    // ── Location (GPS) status label for SecureCameraModal ────────────────────
+    const locationStatus = ref(null);
+
+    // ── Attendance filtering / pagination ─────────────────────────────────────
     const filterStatus = ref("all");
-    const currentPage = ref(1);
-    const perPage = 5;
+    const currentPage  = ref(1);
+    const perPage      = 5;
 
     const filteredAttendance = computed(() => {
-        if (filterStatus.value === "all") {
-            return attendanceList.value;
-        }
+        if (filterStatus.value === "all") return attendanceList.value;
         return attendanceList.value.filter(
-            (attendance) => attendance.status === filterStatus.value,
+            (a) => a.status === filterStatus.value,
         );
     });
 
     const paginatedAttendance = computed(() => {
         const start = (currentPage.value - 1) * perPage;
-        const end = start + perPage;
-        return filteredAttendance.value.slice(start, end);
+        return filteredAttendance.value.slice(start, start + perPage);
     });
 
     const totalPages = computed(() =>
@@ -50,86 +71,66 @@ export function usePesertaAttendancePage(props, page) {
     );
 
     const monthlyStats = computed(() => {
-        const total = attendanceList.value.length;
-        const onTime = attendanceList.value.filter(
-            (attendance) => attendance.status === "On-Time",
-        ).length;
-        const late = attendanceList.value.filter(
-            (attendance) => attendance.status === "Late",
-        ).length;
-
+        const total  = attendanceList.value.length;
+        const onTime = attendanceList.value.filter((a) => a.status === "On-Time").length;
+        const late   = attendanceList.value.filter((a) => a.status === "Late").length;
         return { total, onTime, late };
     });
 
+    // ── Toast helpers ─────────────────────────────────────────────────────────
     const showToastFor = (type) => {
         if (type === "success") {
             showSuccessToast.value = true;
-            setTimeout(() => {
-                showSuccessToast.value = false;
-            }, 5000);
+            setTimeout(() => { showSuccessToast.value = false; }, 5000);
             return;
         }
-
         showErrorToast.value = true;
-        setTimeout(() => {
-            showErrorToast.value = false;
-        }, 5000);
+        setTimeout(() => { showErrorToast.value = false; }, 5000);
     };
 
-    watch(
-        () => page.props.flash?.success,
-        (value) => {
-            if (value) {
-                showToastFor("success");
-            }
-        },
-    );
-
-    watch(
-        () => page.props.flash?.error,
-        (value) => {
-            if (value) {
-                showToastFor("error");
-            }
-        },
-    );
-
-    watch(filterStatus, () => {
-        currentPage.value = 1;
-    });
+    watch(() => page.props.flash?.success, (val) => { if (val) showToastFor("success"); });
+    watch(() => page.props.flash?.error,   (val) => { if (val) showToastFor("error"); });
+    watch(filterStatus, () => { currentPage.value = 1; });
 
     onMounted(() => {
-        if (page.props.flash?.success) {
-            showToastFor("success");
-        }
-
-        if (page.props.flash?.error) {
-            showToastFor("error");
-        }
+        if (page.props.flash?.success) showToastFor("success");
+        if (page.props.flash?.error)   showToastFor("error");
     });
 
     return {
+        // Camera
         showCamera,
         actionType,
         isProcessing,
+        cameraTitle,
+        locationStatus,
+        handleCheckIn,
+        handleCheckOut,
+        onPhotoCaptured,
+        // Face enrollment
+        faceEnrolled,
+        showEnrollment,
+        openEnrollment,
+        closeEnrollment,
+        onEnrolled,
+        // Toast
         showSuccessToast,
         showErrorToast,
+        // Clock
         currentTime,
+        isWithinCheckInTime,
+        isWithinCheckOutTime,
+        // Filters
         filterStatus,
         currentPage,
         perPage,
-        cameraTitle,
         filteredAttendance,
         paginatedAttendance,
         totalPages,
         monthlyStats,
-        isWithinCheckInTime,
-        isWithinCheckOutTime,
+        // Formatters
         formatDate,
         formatDayName,
         formatTime,
-        handleCheckIn,
-        handleCheckOut,
-        onPhotoCaptured,
     };
 }

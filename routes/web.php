@@ -102,6 +102,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/check-in', [\App\Http\Controllers\Peserta\AttendanceController::class, 'checkIn'])->name('check-in')->middleware('throttle:5,1');
         Route::post('/check-out', [\App\Http\Controllers\Peserta\AttendanceController::class, 'checkOut'])->name('check-out')->middleware('throttle:5,1');
         Route::get('/stats', [\App\Http\Controllers\Peserta\AttendanceController::class, 'stats'])->name('stats');
+        // Face enrollment endpoints
+        Route::get('/face-status', [\App\Http\Controllers\Peserta\AttendanceController::class, 'faceStatus'])->name('face-status');
+        Route::post('/enroll-face', [\App\Http\Controllers\Peserta\AttendanceController::class, 'enrollFace'])->name('enroll-face')->middleware('throttle:10,1');
     });
     
     // Reports routes (accessible from profile page)

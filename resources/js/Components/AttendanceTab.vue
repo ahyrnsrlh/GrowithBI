@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch } from "vue";
-import SimpleCameraModal from "@/Components/SimpleCameraModal.vue";
+import SecureCameraModal from "@/Components/Attendance/SecureCameraModal.vue";
+import FaceEnrollmentModal from "@/Components/Attendance/FaceEnrollmentModal.vue";
 import AttendanceHistoryCard from "@/Components/Profile/Attendance/AttendanceHistoryCard.vue";
 import AttendancePageHeader from "@/Components/Profile/Attendance/AttendancePageHeader.vue";
 import TodayAttendanceStatusCard from "@/Components/Profile/Attendance/TodayAttendanceStatusCard.vue";
@@ -22,6 +23,10 @@ const props = defineProps({
         default: null,
     },
     stats: Object,
+    faceEnrolled: {
+        type: Boolean,
+        default: true,
+    },
 });
 
 const emit = defineEmits(["show-toast"]);
@@ -55,6 +60,18 @@ const { currentTime, isWithinCheckInTime, isWithinCheckOutTime } =
     useAttendanceServerClock();
 const { formatDate, formatDayName, formatTime } = useAttendanceFormatters();
 
+// Face enrollment (Profile tab also supports enrollment)
+const showEnrollment  = ref(false);
+const localFaceEnrolled = ref(props.faceEnrolled);
+
+watch(() => props.faceEnrolled, (val) => { localFaceEnrolled.value = val; });
+
+const onEnrolled = () => {
+    localFaceEnrolled.value = true;
+    showEnrollment.value = false;
+    emit("show-toast", "success", "Wajah berhasil didaftarkan!");
+};
+
 const filterStatus = ref("all");
 const currentPage = ref(1);
 const perPage = 5;
@@ -63,7 +80,6 @@ const filteredAttendance = computed(() => {
     if (filterStatus.value === "all") {
         return attendanceList.value;
     }
-
     return attendanceList.value.filter(
         (attendance) => attendance.status === filterStatus.value,
     );
@@ -113,11 +129,19 @@ watch(filterStatus, () => {
             @update:currentPage="currentPage = $event"
         />
 
-        <SimpleCameraModal
+        <!-- Secure Camera Modal (check-in / check-out) -->
+        <SecureCameraModal
             :show="showCamera"
             :title="cameraTitle"
             @close="showCamera = false"
             @photo-captured="onPhotoCaptured"
+        />
+
+        <!-- Face Enrollment Modal -->
+        <FaceEnrollmentModal
+            :show="showEnrollment"
+            @close="showEnrollment = false"
+            @enrolled="onEnrolled"
         />
     </div>
 </template>

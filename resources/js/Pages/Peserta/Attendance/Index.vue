@@ -21,8 +21,10 @@
                 :isWithinCheckInTime="isWithinCheckInTime"
                 :isWithinCheckOutTime="isWithinCheckOutTime"
                 :formatTime="formatTime"
+                :faceEnrolled="faceEnrolled"
                 @check-in="handleCheckIn"
                 @check-out="handleCheckOut"
+                @enroll-face="openEnrollment"
             />
 
             <PesertaAttendanceHistoryCard
@@ -42,17 +44,27 @@
         </div>
     </div>
 
-    <SimpleCameraModal
+    <!-- Secure Camera Modal (check-in / check-out) -->
+    <SecureCameraModal
         :show="showCamera"
         :title="cameraTitle"
+        :locationStatus="locationStatus"
         @close="showCamera = false"
         @photo-captured="onPhotoCaptured"
+    />
+
+    <!-- Face Enrollment Modal -->
+    <FaceEnrollmentModal
+        :show="showEnrollment"
+        @close="closeEnrollment"
+        @enrolled="onEnrolled"
     />
 </template>
 
 <script setup>
 import { Head, usePage } from "@inertiajs/vue3";
-import SimpleCameraModal from "@/Components/SimpleCameraModal.vue";
+import SecureCameraModal from "@/Components/Attendance/SecureCameraModal.vue";
+import FaceEnrollmentModal from "@/Components/Attendance/FaceEnrollmentModal.vue";
 import PesertaAttendanceHeader from "@/Components/Peserta/Attendance/PesertaAttendanceHeader.vue";
 import PesertaAttendanceToasts from "@/Components/Peserta/Attendance/PesertaAttendanceToasts.vue";
 import PesertaTodayAttendanceCard from "@/Components/Peserta/Attendance/PesertaTodayAttendanceCard.vue";
@@ -60,21 +72,13 @@ import PesertaAttendanceHistoryCard from "@/Components/Peserta/Attendance/Pesert
 import { usePesertaAttendancePage } from "@/Composables/usePesertaAttendancePage";
 
 const props = defineProps({
-    attendances: {
-        type: Array,
-        default: () => [],
-    },
-    attendanceHistory: {
-        type: Array,
-        default: () => [],
-    },
-    todayAttendance: {
-        type: Object,
-        default: null,
-    },
-    stats: Object,
-    officeLocation: Object,
-    currentDateTime: String,
+    attendances:       { type: Array,  default: () => [] },
+    attendanceHistory: { type: Array,  default: () => [] },
+    todayAttendance:   { type: Object, default: null },
+    stats:             Object,
+    officeLocation:    Object,
+    currentDateTime:   String,
+    face_enrolled:     { type: Boolean, default: false },
 });
 
 const page = usePage();
@@ -90,6 +94,7 @@ const {
     currentPage,
     perPage,
     cameraTitle,
+    locationStatus,
     filteredAttendance,
     paginatedAttendance,
     totalPages,
@@ -102,45 +107,21 @@ const {
     handleCheckIn,
     handleCheckOut,
     onPhotoCaptured,
+    faceEnrolled,
+    showEnrollment,
+    openEnrollment,
+    closeEnrollment,
+    onEnrolled,
 } = usePesertaAttendancePage(props, page);
 </script>
 
 <style scoped>
 @keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+    from { transform: translateX(100%); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
 }
-
 @keyframes slideOutRight {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-}
-
-.bg-gradient-to-r.from-blue-700.to-blue-600 {
-    position: relative;
-}
-
-.bg-gradient-to-r.from-blue-700.to-blue-600::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    opacity: 0.1;
-    pointer-events: none;
+    from { transform: translateX(0);    opacity: 1; }
+    to   { transform: translateX(100%); opacity: 0; }
 }
 </style>
