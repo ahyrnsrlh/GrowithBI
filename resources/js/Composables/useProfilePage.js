@@ -208,44 +208,43 @@ export function useProfilePage(props) {
         });
     };
 
-    const uploadPhoto = (event) => {
-        const file = event.target.files[0];
-        if (!file) {
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append("photo", file);
-
-        window.axios
-            .post(route("profile.upload-photo"), formData, {
+    const uploadPhoto = async ({ photo, descriptor }, callback) => {
+        try {
+            const response = await window.axios.post(route("profile.upload-photo"), {
+                photo: photo,
+                face_descriptor: JSON.stringify(descriptor)
+            }, {
                 headers: {
-                    "Content-Type": "multipart/form-data",
                     Accept: "application/json",
                 },
-            })
-            .then((response) => {
-                const updatedPhotoPath = response.data?.profile_photo_path;
-                if (updatedPhotoPath) {
-                    user.profile_photo_path = updatedPhotoPath;
-                }
-
-                showToast(
-                    "success",
-                    response.data?.message ||
-                        "Foto profil berhasil diperbarui!",
-                );
-            })
-            .catch((error) => {
-                const errors = error.response?.data?.errors;
-                const message =
-                    errors?.photo?.[0] ||
-                    error.response?.data?.message ||
-                    "Gagal mengunggah foto!";
-
-                console.error("Profile photo upload error:", error);
-                showToast("error", message);
             });
+
+            const updatedPhotoPath = response.data?.profile_photo_path;
+            if (updatedPhotoPath) {
+                user.profile_photo_path = updatedPhotoPath;
+                // Also update the local face_descriptor to let frontend know it's enrolled
+                user.face_descriptor = JSON.stringify(descriptor); 
+            }
+
+            showToast(
+                "success",
+                response.data?.message || "Foto profil dan biometrik berhasil diperbarui!",
+            );
+            
+            if (typeof callback === 'function') callback(true);
+        } catch (error) {
+            const errors = error.response?.data?.errors;
+            const message =
+                errors?.photo?.[0] ||
+                errors?.face_descriptor?.[0] ||
+                error.response?.data?.message ||
+                "Gagal menyimpan data biometrik!";
+
+            console.error("Profile photo upload error:", error);
+            showToast("error", message);
+            
+            if (typeof callback === 'function') callback(false);
+        }
     };
 
     const submitLogbook = () => {

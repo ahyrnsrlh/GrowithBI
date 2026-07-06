@@ -50,6 +50,7 @@ class User extends Authenticatable
         'pas_foto_path',
         'face_descriptor',
         'face_registered_at',
+        'face_updated_at',
         'two_factor_enabled',
         'two_factor_verified_at',
     ];
@@ -79,6 +80,7 @@ class User extends Authenticatable
             'semester' => 'integer',
             'preferences' => 'array',
             'face_registered_at' => 'datetime',
+            'face_updated_at' => 'datetime',
             'two_factor_enabled' => 'boolean',
             'two_factor_verified_at' => 'datetime',
         ];

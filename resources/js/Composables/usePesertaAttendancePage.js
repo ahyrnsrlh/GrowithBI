@@ -29,18 +29,8 @@ export function usePesertaAttendancePage(props, page) {
     // ── Face enrollment ───────────────────────────────────────────────────────
     /** Reactive enrollment status; seeded from Inertia prop, updated after enrollment */
     const faceEnrolled    = ref(props.face_enrolled ?? false);
-    const showEnrollment  = ref(false);
 
-    const openEnrollment  = () => { showEnrollment.value = true; };
-    const closeEnrollment = () => { showEnrollment.value = false; };
-
-    const onEnrolled = () => {
-        faceEnrolled.value = true;
-        showEnrollment.value = false;
-        showToastFor("success");
-    };
-
-    // Watch for prop changes (e.g., Inertia page reload after enroll)
+    // Watch for prop changes
     watch(
         () => props.face_enrolled,
         (val) => { if (val !== undefined) faceEnrolled.value = val; },
@@ -109,10 +99,6 @@ export function usePesertaAttendancePage(props, page) {
         onPhotoCaptured,
         // Face enrollment
         faceEnrolled,
-        showEnrollment,
-        openEnrollment,
-        closeEnrollment,
-        onEnrolled,
         // Toast
         showSuccessToast,
         showErrorToast,

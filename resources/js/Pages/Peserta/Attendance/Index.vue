@@ -24,7 +24,6 @@
                 :faceEnrolled="faceEnrolled"
                 @check-in="handleCheckIn"
                 @check-out="handleCheckOut"
-                @enroll-face="openEnrollment"
             />
 
             <PesertaAttendanceHistoryCard
@@ -53,18 +52,12 @@
         @photo-captured="onPhotoCaptured"
     />
 
-    <!-- Face Enrollment Modal -->
-    <FaceEnrollmentModal
-        :show="showEnrollment"
-        @close="closeEnrollment"
-        @enrolled="onEnrolled"
-    />
+
 </template>
 
 <script setup>
 import { Head, usePage } from "@inertiajs/vue3";
 import SecureCameraModal from "@/Components/Attendance/SecureCameraModal.vue";
-import FaceEnrollmentModal from "@/Components/Attendance/FaceEnrollmentModal.vue";
 import PesertaAttendanceHeader from "@/Components/Peserta/Attendance/PesertaAttendanceHeader.vue";
 import PesertaAttendanceToasts from "@/Components/Peserta/Attendance/PesertaAttendanceToasts.vue";
 import PesertaTodayAttendanceCard from "@/Components/Peserta/Attendance/PesertaTodayAttendanceCard.vue";
@@ -108,10 +101,6 @@ const {
     handleCheckOut,
     onPhotoCaptured,
     faceEnrolled,
-    showEnrollment,
-    openEnrollment,
-    closeEnrollment,
-    onEnrolled,
 } = usePesertaAttendancePage(props, page);
 </script>
 

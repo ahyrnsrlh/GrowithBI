@@ -35,7 +35,6 @@
                 :faceEnrolled="faceEnrolled"
                 @check-in="$emit('check-in')"
                 @check-out="$emit('check-out')"
-                @enroll-face="$emit('enroll-face')"
             />
         </div>
     </div>
@@ -55,5 +54,5 @@ defineProps({
     faceEnrolled:         { type: Boolean,  default: true },
 });
 
-defineEmits(["check-in", "check-out", "enroll-face"]);
+defineEmits(["check-in", "check-out"]);
 </script>

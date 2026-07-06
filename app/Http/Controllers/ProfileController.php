@@ -206,35 +206,55 @@ class ProfileController extends Controller
     }
 
     /**
-     * Upload profile photo
+     * Upload profile photo and face descriptor
      */
     public function uploadPhoto(Request $request)
     {
         $request->validate([
-            'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'photo' => 'required|string', // Base64 string
+            'face_descriptor' => 'required|string', // JSON string array of floats
         ]);
 
         $user = $request->user();
+
+        // Extract base64
+        $imageParts = explode(";base64,", $request->photo);
+        
+        if (count($imageParts) !== 2) {
+            return response()->json(['message' => 'Format foto tidak valid.'], 422);
+        }
+        
+        $imageBase64 = base64_decode($imageParts[1]);
+
+        if ($imageBase64 === false) {
+            return response()->json(['message' => 'Gagal memproses foto.'], 422);
+        }
 
         // Delete old photo from the public disk if it exists
         if ($user->profile_photo_path) {
             Storage::disk('public')->delete($user->profile_photo_path);
         }
 
-        $path = $request->file('photo')->store('profile-photos', 'public');
+        $fileName = uniqid() . '.png';
+        $path = 'profile-photos/' . $fileName;
+        Storage::disk('public')->put($path, $imageBase64);
 
+        $now = now();
         $user->update([
             'profile_photo_path' => $path,
+            'face_descriptor' => $request->face_descriptor,
+            'face_registered_at' => $user->face_registered_at ?? $now,
+            'face_updated_at' => $now,
         ]);
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
-                'message' => 'Foto profil berhasil diperbarui!',
+                'message' => 'Foto profil dan biometrik berhasil diperbarui!',
                 'profile_photo_path' => $path,
             ]);
         }
 
-        return Redirect::route('profile.edit')->with('success', 'Foto profil berhasil diperbarui!');
+        return Redirect::route('profile.edit')->with('success', 'Foto profil dan biometrik berhasil diperbarui!');
     }
 
     /**

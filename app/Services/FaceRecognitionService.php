@@ -12,9 +12,9 @@ class FaceRecognitionService
 {
     /**
      * Face match threshold — lower = stricter.
-     * Industry best-practice for face-api.js: 0.55
+     * Updated for stricter verification.
      */
-    public const MATCH_THRESHOLD = 0.55;
+    public const MATCH_THRESHOLD = 0.45;
 
     /**
      * Descriptor length expected from face-api.js

@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import SecureCameraModal from "@/Components/Attendance/SecureCameraModal.vue";
-import FaceEnrollmentModal from "@/Components/Attendance/FaceEnrollmentModal.vue";
 import AttendanceHistoryCard from "@/Components/Profile/Attendance/AttendanceHistoryCard.vue";
 import AttendancePageHeader from "@/Components/Profile/Attendance/AttendancePageHeader.vue";
 import TodayAttendanceStatusCard from "@/Components/Profile/Attendance/TodayAttendanceStatusCard.vue";
@@ -60,17 +59,10 @@ const { currentTime, isWithinCheckInTime, isWithinCheckOutTime } =
     useAttendanceServerClock();
 const { formatDate, formatDayName, formatTime } = useAttendanceFormatters();
 
-// Face enrollment (Profile tab also supports enrollment)
-const showEnrollment  = ref(false);
+// Face enrollment tracking
 const localFaceEnrolled = ref(props.faceEnrolled);
 
 watch(() => props.faceEnrolled, (val) => { localFaceEnrolled.value = val; });
-
-const onEnrolled = () => {
-    localFaceEnrolled.value = true;
-    showEnrollment.value = false;
-    emit("show-toast", "success", "Wajah berhasil didaftarkan!");
-};
 
 const filterStatus = ref("all");
 const currentPage = ref(1);
@@ -137,11 +129,6 @@ watch(filterStatus, () => {
             @photo-captured="onPhotoCaptured"
         />
 
-        <!-- Face Enrollment Modal -->
-        <FaceEnrollmentModal
-            :show="showEnrollment"
-            @close="showEnrollment = false"
-            @enrolled="onEnrolled"
-        />
+
     </div>
 </template>

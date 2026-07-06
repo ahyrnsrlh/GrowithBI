@@ -25,18 +25,14 @@
                             alt="Profile"
                             class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
                         />
-                        <label
+                        <button
                             v-if="editMode"
-                            class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors"
+                            @click="showCameraModal = true"
+                            type="button"
+                            class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors shadow"
                         >
                             <i class="fas fa-camera text-xs"></i>
-                            <input
-                                type="file"
-                                @change="$emit('upload-photo', $event)"
-                                accept="image/*"
-                                class="hidden"
-                            />
-                        </label>
+                        </button>
                     </div>
                     <div>
                         <h3 class="text-lg font-medium text-gray-900">
@@ -205,15 +201,38 @@
                 </button>
             </div>
         </form>
+
+        <ProfileCameraModal
+            :show="showCameraModal"
+            :is-submitting="isUploading"
+            @close="showCameraModal = false"
+            @capture="handleCapture"
+        />
     </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import ProfileCameraModal from './ProfileCameraModal.vue';
+
 defineProps({
     user: { type: Object, required: true },
     profileForm: { type: Object, required: true },
     editMode: { type: Boolean, default: false },
 });
 
-defineEmits(["toggle-edit", "cancel-edit", "submit-profile", "upload-photo"]);
+const emit = defineEmits(["toggle-edit", "cancel-edit", "submit-profile", "upload-photo"]);
+
+const showCameraModal = ref(false);
+const isUploading = ref(false);
+
+const handleCapture = (data) => {
+    isUploading.value = true;
+    emit('upload-photo', data, (success) => {
+        isUploading.value = false;
+        if (success) {
+            showCameraModal.value = false;
+        }
+    });
+};
 </script>

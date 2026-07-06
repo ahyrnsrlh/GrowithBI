@@ -13,19 +13,19 @@
                         d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </div>
-            <h4 class="font-bold text-blue-900 text-sm mb-1">Wajah Belum Terdaftar</h4>
+            <h4 class="font-bold text-blue-900 text-sm mb-1">Foto Profil & Biometrik Belum Lengkap</h4>
             <p class="text-xs text-blue-700 mb-4 leading-relaxed">
-                Daftarkan wajah Anda terlebih dahulu untuk mengaktifkan fitur absensi biometrik yang aman.
+                Silakan lengkapi foto profil Anda terlebih dahulu menggunakan Live Camera untuk mengaktifkan fitur absensi biometrik.
             </p>
-            <button
-                @click="$emit('enroll-face')"
+            <Link
+                href="/profile"
                 class="w-full py-3 px-4 bg-[#2F4C9E] hover:bg-[#274089] text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Daftarkan Wajah Sekarang
-            </button>
+                Lengkapi Foto Profil
+            </Link>
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════════════
@@ -116,6 +116,8 @@
 </template>
 
 <script setup>
+import { Link } from '@inertiajs/vue3';
+
 defineProps({
     todayAttendance:    { type: Object,  default: null },
     isProcessing:       { type: Boolean, default: false },
