@@ -1,5 +1,5 @@
 <template>
-    <BaseModal :show="show" @close="$emit('close')">
+    <BaseModal :show="show" maxWidth="max-w-2xl" @close="$emit('close')">
         <div class="p-6">
             <!-- Modal Header -->
             <div class="flex items-center justify-between pb-4 border-b border-gray-100">
@@ -7,14 +7,6 @@
                     <h3 class="text-xl font-bold text-gray-900">Detail Laporan Akhir</h3>
                     <p class="text-xs text-gray-500 mt-1">Informasi lengkap dokumen laporan magang Anda</p>
                 </div>
-                <button
-                    @click="$emit('close')"
-                    class="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-1.5 rounded-lg transition-colors"
-                >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
             </div>
 
             <!-- Loader State -->

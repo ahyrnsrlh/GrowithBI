@@ -1,5 +1,5 @@
 <template>
-    <BaseModal :show="show" @close="handleClose">
+    <BaseModal :show="show" maxWidth="max-w-2xl" @close="handleClose">
         <div class="p-6">
             <!-- Modal Header -->
             <div class="flex items-center justify-between pb-4 border-b border-gray-100">

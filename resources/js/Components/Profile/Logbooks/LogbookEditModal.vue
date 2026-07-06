@@ -3,7 +3,7 @@
         :show="show"
         :title="loading ? 'Memuat Data Logbook...' : 'Edit Logbook Harian'"
         subtitle="Ubah dan perbaiki rincian logbook aktivitas Anda"
-        maxWidth="4xl"
+        maxWidth="max-w-2xl"
         @close="handleClose"
     >
         <!-- Loading State -->
