@@ -33,6 +33,7 @@
             :show="showStatusModal"
             :status-options="statusOptions"
             :status-form="statusForm"
+            :current-status="currentApplication?.status || 'menunggu'"
             @close="closeStatusModal"
             @submit="updateStatus"
         />
@@ -124,5 +125,6 @@ const {
     confirmDelete,
     closeDeleteModal,
     deleteApplication,
+    currentApplication,
 } = useAdminApplicationsPage(props);
 </script>

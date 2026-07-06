@@ -237,5 +237,6 @@ export function useAdminApplicationsPage(props) {
         confirmDelete,
         closeDeleteModal,
         deleteApplication,
+        currentApplication,
     };
 }

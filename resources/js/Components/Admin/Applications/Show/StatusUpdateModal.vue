@@ -11,24 +11,37 @@
                     Update Status Pendaftaran
                 </h3>
                 <form @submit.prevent="$emit('submit')">
+                    <!-- Current Status Info Box -->
+                    <div class="mb-5 p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 flex-shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="text-xs text-slate-600 leading-relaxed">
+                            <span class="font-bold text-slate-800 block mb-1">Panduan Alur Pendaftaran</span>
+                            Status pendaftaran saat ini adalah <span class="font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md inline-block mt-0.5">{{ getLabel(currentStatus) }}</span>.
+                            Pilihan di bawah telah disaring otomatis untuk memandu proses tahap demi tahap.
+                        </div>
+                    </div>
+
                     <div class="mb-4">
                         <label
                             class="block text-sm font-medium text-gray-700 mb-2"
                         >
-                            Status
+                            Status Baru
                         </label>
                         <select
                             v-model="statusForm.status"
                             class="w-full border border-gray-300 rounded-md px-3 py-2"
                         >
-                            <option value="menunggu">Menunggu</option>
-                            <option value="in_review">Dalam Review</option>
-                            <option value="interview_scheduled">
-                                Wawancara Dijadwalkan
+                            <option
+                                v-for="option in filteredOptions"
+                                :key="option.value"
+                                :value="option.value"
+                            >
+                                {{ option.label }}
                             </option>
-                            <option value="accepted">Diterima</option>
-                            <option value="rejected">Ditolak</option>
-                            <option value="expired">Kedaluwarsa</option>
                         </select>
                     </div>
 
@@ -48,6 +61,7 @@
                             <input
                                 type="date"
                                 v-model="statusForm.interview_date"
+                                :min="minDate"
                                 class="w-full border border-gray-300 rounded-md px-3 py-2"
                                 required
                             />
@@ -144,10 +158,59 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from "vue";
+
+const props = defineProps({
     show: { type: Boolean, default: false },
     statusForm: { type: Object, required: true },
+    currentStatus: { type: String, default: "menunggu" },
 });
 
 defineEmits(["close", "submit"]);
+
+const allStatusOptions = [
+    { value: "menunggu", label: "Menunggu Review" },
+    { value: "in_review", label: "Dalam Proses Seleksi" },
+    { value: "interview_scheduled", label: "Wawancara Dijadwalkan" },
+    { value: "accepted", label: "Diterima" },
+    { value: "rejected", label: "Ditolak" },
+    { value: "letter_ready", label: "Surat Penerimaan Tersedia" },
+    { value: "expired", label: "Kedaluwarsa" },
+];
+
+const getLabel = (value) => {
+    const option = allStatusOptions.find((o) => o.value === value);
+    return option ? option.label : value;
+};
+
+const filteredOptions = computed(() => {
+    const current = props.currentStatus || "menunggu";
+
+    // Status transition map to enforce step-by-step update flow
+    const transitions = {
+        menunggu: ["menunggu", "in_review", "rejected", "expired"],
+        in_review: ["in_review", "interview_scheduled", "rejected", "expired"],
+        interview_scheduled: [
+            "interview_scheduled",
+            "accepted",
+            "rejected",
+            "expired",
+        ],
+        accepted: ["accepted", "letter_ready", "expired"],
+        letter_ready: ["letter_ready", "expired"],
+        rejected: ["rejected", "menunggu"],
+        expired: ["expired", "menunggu"],
+    };
+
+    const allowed = transitions[current] || [current];
+    return allStatusOptions.filter((option) => allowed.includes(option.value));
+});
+
+const minDate = computed(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+});
 </script>

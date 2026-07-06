@@ -11,6 +11,20 @@
                     Update Status Pendaftaran
                 </h3>
                 <form @submit.prevent="$emit('submit')">
+                    <!-- Current Status Info Box -->
+                    <div class="mb-5 p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 flex-shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="text-xs text-slate-600 leading-relaxed">
+                            <span class="font-bold text-slate-800 block mb-1">Panduan Alur Pendaftaran</span>
+                            Status pendaftaran saat ini adalah <span class="font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md inline-block mt-0.5">{{ getLabel(currentStatus) }}</span>.
+                            Pilihan di bawah telah disaring otomatis untuk memandu proses tahap demi tahap.
+                        </div>
+                    </div>
+
                     <div class="mb-4">
                         <label
                             class="block text-sm font-medium text-gray-700 mb-2"
@@ -21,7 +35,7 @@
                             class="w-full border border-gray-300 rounded-md px-3 py-2"
                         >
                             <option
-                                v-for="option in statusOptions"
+                                v-for="option in filteredOptions"
                                 :key="option.value"
                                 :value="option.value"
                             >
@@ -43,6 +57,7 @@
                             <input
                                 type="datetime-local"
                                 v-model="statusForm.interview_date"
+                                :min="minDateTime"
                                 class="w-full border border-gray-300 rounded-md px-3 py-2"
                             />
                         </div>
@@ -109,7 +124,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from "vue";
+
+const props = defineProps({
     show: {
         type: Boolean,
         default: false,
@@ -122,7 +139,49 @@ defineProps({
         type: Object,
         required: true,
     },
+    currentStatus: {
+        type: String,
+        default: "menunggu",
+    },
 });
 
 defineEmits(["close", "submit"]);
+
+const getLabel = (value) => {
+    const option = props.statusOptions.find((o) => o.value === value);
+    return option ? option.label : value;
+};
+
+const filteredOptions = computed(() => {
+    const current = props.currentStatus || "menunggu";
+
+    // Status transition map to enforce step-by-step update flow
+    const transitions = {
+        menunggu: ["menunggu", "in_review", "rejected", "expired"],
+        in_review: ["in_review", "interview_scheduled", "rejected", "expired"],
+        interview_scheduled: [
+            "interview_scheduled",
+            "accepted",
+            "rejected",
+            "expired",
+        ],
+        accepted: ["accepted", "letter_ready", "expired"],
+        letter_ready: ["letter_ready", "expired"],
+        rejected: ["rejected", "menunggu"],
+        expired: ["expired", "menunggu"],
+    };
+
+    const allowed = transitions[current] || [current];
+    return props.statusOptions.filter((option) => allowed.includes(option.value));
+});
+
+const minDateTime = computed(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+});
 </script>

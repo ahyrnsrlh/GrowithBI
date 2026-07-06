@@ -33,6 +33,7 @@
         <StatusUpdateModal
             :show="showStatusModal"
             :statusForm="statusForm"
+            :current-status="application.status"
             @close="showStatusModal = false"
             @submit="updateStatus"
         />
