@@ -63,6 +63,7 @@
                 @create="$emit('create-logbook')"
                 @view="$emit('view-logbook', $event)"
                 @edit="$emit('edit-logbook', $event)"
+                @delete="$emit('delete-logbook', $event)"
             />
         </div>
     </div>
@@ -76,5 +77,5 @@ defineProps({
     formatDate: { type: Function, required: true },
 });
 
-defineEmits(["create-logbook", "view-logbook", "edit-logbook"]);
+defineEmits(["create-logbook", "view-logbook", "edit-logbook", "delete-logbook"]);
 </script>

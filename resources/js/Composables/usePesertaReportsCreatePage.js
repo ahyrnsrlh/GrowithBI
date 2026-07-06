@@ -22,7 +22,31 @@ export function usePesertaReportsCreatePage() {
     };
 
     const submit = () => {
-        form.post(route("peserta.reports.store"), {
+        form.transform((data) => {
+            const formattedType = {
+                weekly: "Mingguan",
+                monthly: "Bulanan",
+                final: "Akhir"
+            }[data.report_type] || data.report_type;
+
+            const periodText = (data.period_start && data.period_end)
+                ? `${formatDate(data.period_start)} - ${formatDate(data.period_end)}`
+                : "-";
+
+            const descriptionParts = [
+                `Tipe Laporan: ${formattedType}`,
+                `Periode: ${periodText}`,
+                `Ringkasan Aktivitas:\n${data.summary || "-"}`,
+                `Pencapaian:\n${data.achievements || "-"}`,
+                `Tantangan & Pembelajaran:\n${data.challenges || "-"}`,
+                `Rencana Selanjutnya:\n${data.next_plans || "-"}`
+            ];
+
+            return {
+                ...data,
+                description: descriptionParts.join("\n\n")
+            };
+        }).post(route("peserta.reports.store"), {
             forceFormData: true,
         });
     };

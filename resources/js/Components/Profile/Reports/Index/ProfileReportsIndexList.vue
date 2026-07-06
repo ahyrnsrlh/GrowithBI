@@ -126,7 +126,7 @@ defineProps({
                         <div class="flex space-x-2">
                             <a
                                 :href="
-                                    route('profile.reports.download', report.id)
+                                    route('peserta.reports.download', report.id)
                                 "
                                 class="text-blue-600 hover:text-blue-700 text-sm font-medium"
                                 title="Download"

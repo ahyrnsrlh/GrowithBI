@@ -7,6 +7,8 @@ use App\Models\Application;
 use App\Models\Report;
 use App\Models\Logbook;
 use App\Models\User;
+use App\Http\Requests\StoreReportRequest;
+use App\Http\Requests\UpdateReportRequest;
 use App\Notifications\ReportNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +41,7 @@ class PesertaReportController extends Controller
             ->first();
             
         if (!$acceptedApplication) {
-            return redirect()->route('peserta.dashboard')
+            return redirect()->route('profile.edit')
                 ->with('error', 'Anda belum memiliki status magang yang diterima untuk mengakses laporan.');
         }
 
@@ -136,7 +138,7 @@ class PesertaReportController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreReportRequest $request)
     {
         /** @var User|null $user */
         $user = $request->user();
@@ -160,13 +162,9 @@ class PesertaReportController extends Controller
             return back()->with('error', 'Anda belum memiliki status magang yang diterima.');
         }
 
-        // Simple validation for basic report upload
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string|max:2000',
-            'report_file' => 'required|file|mimes:pdf,doc,docx|max:10240', // 10MB max
-        ]);
+        $filePath = null;
 
+        \DB::beginTransaction();
         try {
             // Store the file
             $file = $request->file('report_file');
@@ -186,6 +184,8 @@ class PesertaReportController extends Controller
                 'status' => 'submitted'
             ]);
 
+            \DB::commit();
+
             // Send notification to user
             $user->notify(new ReportNotification($report, 'submitted'));
             
@@ -196,9 +196,17 @@ class PesertaReportController extends Controller
                 $admin->notify(new ReportNotification($report, 'submitted'));
             }
 
-            return redirect()->route('profile.edit')
-                ->with('success', 'Laporan berhasil diupload dan dikirim untuk review.');
+            if ($request->wantsJson()) {
+                return response()->json(['success' => true, 'report' => $report]);
+            }
+
+            return back()->with('success', 'Laporan berhasil diunggah.');
         } catch (\Exception $e) {
+            \DB::rollBack();
+            // Delete newly uploaded file if it was created
+            if ($filePath && Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
             Log::error('Report upload error: ' . $e->getMessage());
             if ($request->wantsJson()) {
                 return response()->json(['error' => 'Gagal mengupload laporan. Silakan coba lagi.'], 500);
@@ -210,7 +218,7 @@ class PesertaReportController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
         /** @var User|null $user */
         $user = Auth::user();
@@ -219,9 +227,16 @@ class PesertaReportController extends Controller
             abort(401);
         }
         $report = Report::where('user_id', $user->id)->findOrFail($id);
+        $report->load(['reviewer', 'application.division']);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'report' => $report
+            ]);
+        }
         
         return Inertia::render('Peserta/Reports/Show', [
-            'report' => $report->load(['reviewer', 'application.division'])
+            'report' => $report
         ]);
     }
 
@@ -271,22 +286,20 @@ class PesertaReportController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateReportRequest $request, string $id)
     {
         $user = Auth::user();
         $report = Report::where('user_id', $user->id)->findOrFail($id);
         
-        // Only allow updating if status is draft or revision
-        if (!in_array($report->status, ['draft', 'revision'])) {
+        // Only allow updating if status is draft, submitted, or revision
+        if (!in_array($report->status, ['draft', 'submitted', 'revision'])) {
             return back()->with('error', 'Laporan tidak dapat diedit karena sudah disubmit atau disetujui.');
         }
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
-            'report_file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240', // 10MB max
-        ]);
+        $newFileStored = null;
+        $oldFileToDelete = null;
 
+        \DB::beginTransaction();
         try {
             $updateData = [
                 'title' => $request->title,
@@ -296,15 +309,14 @@ class PesertaReportController extends Controller
 
             // If new file is uploaded, replace the old one
             if ($request->hasFile('report_file')) {
-                // Delete old file
-                if (Storage::disk('public')->exists($report->file_path)) {
-                    Storage::disk('public')->delete($report->file_path);
-                }
+                // Queue old file to delete after commit
+                $oldFileToDelete = $report->file_path;
 
                 // Store new file
                 $file = $request->file('report_file');
                 $filename = 'report_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
                 $filePath = $file->storeAs('reports', $filename, 'public');
+                $newFileStored = $filePath;
 
                 $updateData = array_merge($updateData, [
                     'file_path' => $filePath,
@@ -316,9 +328,21 @@ class PesertaReportController extends Controller
 
             $report->update($updateData);
 
-            return redirect()->route('peserta.reports.show', $report->id)
-                ->with('success', 'Laporan berhasil diperbarui.');
+            \DB::commit();
+
+            // Delete old file from storage only after transaction commits successfully
+            if ($oldFileToDelete && Storage::disk('public')->exists($oldFileToDelete)) {
+                Storage::disk('public')->delete($oldFileToDelete);
+            }
+
+            return back()->with('success', 'Laporan berhasil diperbarui.');
         } catch (\Exception $e) {
+            \DB::rollBack();
+            // Clean up new file from storage if transaction fails
+            if ($newFileStored && Storage::disk('public')->exists($newFileStored)) {
+                Storage::disk('public')->delete($newFileStored);
+            }
+            Log::error('Report update error: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan saat memperbarui laporan.')
                         ->withInput();
         }
@@ -332,23 +356,29 @@ class PesertaReportController extends Controller
         $user = Auth::user();
         $report = Report::where('user_id', $user->id)->findOrFail($id);
         
-        // Only allow deleting if status is draft or revision
-        if (!in_array($report->status, ['draft', 'revision'])) {
+        // Only allow deleting if status is draft, submitted, or revision
+        if (!in_array($report->status, ['draft', 'submitted', 'revision'])) {
             return back()->with('error', 'Laporan tidak dapat dihapus karena sudah disubmit atau disetujui.');
         }
 
-        try {
-            // Delete file from storage
-            if (Storage::disk('public')->exists($report->file_path)) {
-                Storage::disk('public')->delete($report->file_path);
-            }
+        $fileToDelete = $report->file_path;
 
-            // Delete report record
+        \DB::beginTransaction();
+        try {
+            // Delete report record first
             $report->delete();
 
-            return redirect()->route('peserta.reports.index')
-                ->with('success', 'Laporan berhasil dihapus.');
+            \DB::commit();
+
+            // Delete file from storage only after successful commit
+            if ($fileToDelete && Storage::disk('public')->exists($fileToDelete)) {
+                Storage::disk('public')->delete($fileToDelete);
+            }
+
+            return back()->with('success', 'Laporan berhasil dihapus.');
         } catch (\Exception $e) {
+            \DB::rollBack();
+            Log::error('Report deletion error: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan saat menghapus laporan.');
         }
     }

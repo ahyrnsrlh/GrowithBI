@@ -157,8 +157,8 @@ class Logbook extends Model
     // Methods
     public function canBeEditedBy(User $user): bool
     {
-        // Only the owner can edit draft logbooks
-        return $this->user_id === $user->id && $this->status === 'draft';
+        // Only the owner can edit draft, submitted, or revision logbooks
+        return $this->user_id === $user->id && in_array($this->status, ['draft', 'submitted', 'revision']);
     }
 
     public function canBeReviewedBy(User $user): bool

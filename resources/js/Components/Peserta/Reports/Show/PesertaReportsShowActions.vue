@@ -1,7 +1,7 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 
-defineProps({
+const props = defineProps({
     report: {
         type: Object,
         required: true,
@@ -11,14 +11,21 @@ defineProps({
         required: true,
     },
 });
+
+const deleteReport = () => {
+    if (confirm("Apakah Anda yakin ingin menghapus laporan ini? File laporan juga akan dihapus dari server.")) {
+        router.delete(route("peserta.reports.destroy", props.report.id));
+    }
+};
 </script>
 
 <template>
     <div
-        v-if="report.status === 'draft' || report.status === 'revision'"
+        v-if="report.status === 'draft' || report.status === 'revision' || report.status === 'submitted'"
         class="flex space-x-3"
     >
         <Link
+            v-if="report.status === 'draft' || report.status === 'revision'"
             :href="editHref"
             class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
         >
@@ -37,5 +44,25 @@ defineProps({
             </svg>
             Edit Laporan
         </Link>
+        <button
+            v-if="report.status === 'draft' || report.status === 'revision'"
+            @click="deleteReport"
+            class="inline-flex items-center px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+        >
+            <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+            </svg>
+            Hapus Laporan
+        </button>
     </div>
 </template>

@@ -54,7 +54,7 @@ defineProps({
                 <dt class="text-sm font-medium text-gray-500">File</dt>
                 <dd class="mt-1">
                     <a
-                        :href="route('reports.download', report.id)"
+                        :href="route('peserta.reports.download', report.id)"
                         class="inline-flex items-center text-blue-600 hover:text-blue-900 text-sm"
                     >
                         <svg

@@ -22,6 +22,8 @@
             @load-more="loadMore"
             @create="showCreateModal = true"
             @reset-filter="setStatusFilter('')"
+            @view="openDetailModal"
+            @edit="openEditModal"
         />
 
         <ProfileLogbooksCreateModal
@@ -29,6 +31,19 @@
             :form="createForm"
             @close="showCreateModal = false"
             @submit="submitLogbook"
+        />
+
+        <LogbookDetailModal
+            :show="showDetailModal"
+            :logbook-id="selectedLogbookId"
+            @close="showDetailModal = false"
+        />
+
+        <LogbookEditModal
+            :show="showEditModal"
+            :logbook-id="selectedLogbookId"
+            @close="showEditModal = false"
+            @success="handleEditSuccess"
         />
     </AuthenticatedLayout>
 </template>
@@ -40,6 +55,8 @@ import ProfileLogbooksHeader from "@/Components/Profile/Logbooks/ProfileLogbooks
 import ProfileLogbooksFilterBar from "@/Components/Profile/Logbooks/ProfileLogbooksFilterBar.vue";
 import ProfileLogbooksGrid from "@/Components/Profile/Logbooks/ProfileLogbooksGrid.vue";
 import ProfileLogbooksCreateModal from "@/Components/Profile/Logbooks/ProfileLogbooksCreateModal.vue";
+import LogbookDetailModal from "@/Components/Profile/Logbooks/LogbookDetailModal.vue";
+import LogbookEditModal from "@/Components/Profile/Logbooks/LogbookEditModal.vue";
 import { useProfileLogbooksPage } from "@/Composables/useProfileLogbooksPage";
 
 const props = defineProps({
@@ -58,6 +75,9 @@ const props = defineProps({
 
 const {
     showCreateModal,
+    showDetailModal,
+    showEditModal,
+    selectedLogbookId,
     displayedCount,
     filters,
     filteredLogbooks,
@@ -66,6 +86,9 @@ const {
     createForm,
     loadMore,
     setStatusFilter,
+    openDetailModal,
+    openEditModal,
+    handleEditSuccess,
     submitLogbook,
     formatDateShort,
     getStatusClass,

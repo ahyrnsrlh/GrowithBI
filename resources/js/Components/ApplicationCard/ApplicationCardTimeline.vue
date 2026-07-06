@@ -193,10 +193,10 @@
                         <div
                             :class="[
                                 'w-8 h-8 rounded-full flex items-center justify-center z-10 transition-all ring-4 ring-white',
-                                isStepComplete(4) &&
+                                (isStepComplete(4) || isStepActive(4)) &&
                                 isAccepted(application.status)
                                     ? 'bg-emerald-500'
-                                    : isStepComplete(4) &&
+                                    : (isStepComplete(4) || isStepActive(4)) &&
                                         !isAccepted(application.status)
                                       ? 'bg-red-500'
                                       : 'bg-gray-100 border-2 border-gray-200',
@@ -204,7 +204,7 @@
                         >
                             <svg
                                 v-if="
-                                    isStepComplete(4) &&
+                                    (isStepComplete(4) || isStepActive(4)) &&
                                     isAccepted(application.status)
                                 "
                                 class="w-4 h-4 text-white"
@@ -219,7 +219,7 @@
                             </svg>
                             <svg
                                 v-else-if="
-                                    isStepComplete(4) &&
+                                    (isStepComplete(4) || isStepActive(4)) &&
                                     !isAccepted(application.status)
                                 "
                                 class="w-4 h-4 text-white"
@@ -240,17 +240,17 @@
                         <span
                             :class="[
                                 'mt-3 text-xs font-medium text-center',
-                                isStepComplete(4) &&
+                                (isStepComplete(4) || isStepActive(4)) &&
                                 isAccepted(application.status)
                                     ? 'text-emerald-600'
-                                    : isStepComplete(4) &&
+                                    : (isStepComplete(4) || isStepActive(4)) &&
                                         !isAccepted(application.status)
                                       ? 'text-red-600'
                                       : 'text-gray-400',
                             ]"
                         >
                             {{
-                                isStepComplete(4)
+                                (isStepComplete(4) || isStepActive(4))
                                     ? isAccepted(application.status)
                                         ? "Diterima"
                                         : "Ditolak"
@@ -258,7 +258,7 @@
                             }}
                         </span>
                         <span
-                            v-if="isStepComplete(4)"
+                            v-if="isStepComplete(4) || isStepActive(4)"
                             class="text-[10px] text-gray-500 text-center mt-0.5"
                             >{{ formatShortDate(application.updated_at) }}</span
                         >

@@ -132,6 +132,7 @@ Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'verified', 'rol
     // Reports management for participants
     Route::get('/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'index'])->name('reports.index');
     Route::post('/reports', [App\Http\Controllers\Peserta\PesertaReportController::class, 'store'])->name('reports.store')->middleware('throttle:10,1');
+    Route::get('/reports/{report}/download', [App\Http\Controllers\Peserta\PesertaReportController::class, 'download'])->name('reports.download')->middleware('ownership:report');
     Route::get('/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'show'])->name('reports.show')->middleware('ownership:report');
     Route::put('/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'update'])->name('reports.update')->middleware(['ownership:report', 'throttle:10,1']);
     Route::delete('/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'destroy'])->name('reports.destroy')->middleware('ownership:report');

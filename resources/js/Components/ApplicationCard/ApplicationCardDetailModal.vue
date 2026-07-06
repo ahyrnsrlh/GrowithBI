@@ -287,17 +287,7 @@
                                     </div>
                                 </div>
 
-                                <div v-if="application.motivation">
-                                    <label
-                                        class="text-xs font-semibold text-gray-400 uppercase tracking-wider"
-                                        >Motivasi</label
-                                    >
-                                    <p
-                                        class="mt-2 text-sm text-gray-700 leading-relaxed bg-gray-50 rounded-xl p-4"
-                                    >
-                                        {{ application.motivation }}
-                                    </p>
-                                </div>
+                                <div></div>
 
                                 <div
                                     v-if="

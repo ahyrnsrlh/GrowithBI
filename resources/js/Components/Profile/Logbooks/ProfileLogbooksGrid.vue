@@ -105,8 +105,8 @@
                 <div
                     class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-2"
                 >
-                    <Link
-                        :href="route('profile.logbooks.show', logbook.id)"
+                    <button
+                        @click="$emit('view', logbook.id)"
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
                     >
                         <svg
@@ -129,10 +129,10 @@
                             />
                         </svg>
                         Detail
-                    </Link>
-                    <Link
-                        v-if="logbook.status !== 'approved'"
-                        :href="route('profile.logbooks.edit', logbook.id)"
+                    </button>
+                    <button
+                        v-if="['draft', 'submitted', 'revision'].includes(logbook.status)"
+                        @click="$emit('edit', logbook.id)"
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all duration-200"
                     >
                         <svg
@@ -149,7 +149,7 @@
                             />
                         </svg>
                         Edit
-                    </Link>
+                    </button>
                 </div>
             </div>
         </div>
@@ -277,7 +277,7 @@ defineProps({
     },
 });
 
-defineEmits(["load-more", "create", "reset-filter"]);
+defineEmits(["load-more", "create", "reset-filter", "view", "edit"]);
 </script>
 
 <style scoped>

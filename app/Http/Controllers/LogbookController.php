@@ -8,6 +8,7 @@ use App\Models\Application;
 use App\Models\User;
 use App\Notifications\LogbookNotification;
 use Illuminate\Http\Request;
+use App\Http\Requests\UpdateLogbookRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -218,7 +219,7 @@ class LogbookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Logbook $logbook)
+    public function show(Request $request, Logbook $logbook)
     {
         /** @var User|null $user */
         $user = Auth::user();
@@ -234,43 +235,49 @@ class LogbookController extends Controller
 
         $logbook->load(['division', 'comments.user', 'reviewer', 'reviewedBy']);
 
+        $logbookData = [
+            'id' => $logbook->id,
+            'title' => $logbook->title,
+            'date' => $logbook->date,
+            'activities' => $logbook->activities,
+            'learning_points' => $logbook->learning_points,
+            'challenges' => $logbook->challenges,
+            'duration' => $logbook->duration,
+            'status' => $logbook->status,
+            'mentor_feedback' => $logbook->mentor_feedback,
+            'reviewed_at' => $logbook->reviewed_at,
+            'reviewed_by' => $logbook->reviewed_by,
+            'attachments' => $logbook->attachments ? json_decode($logbook->attachments, true) : [],
+            'created_at' => $logbook->created_at,
+            'updated_at' => $logbook->updated_at,
+            'division' => $logbook->division ? [
+                'id' => $logbook->division->id,
+                'name' => $logbook->division->name
+            ] : null,
+            'comments' => $logbook->comments->map(function ($comment) {
+                return [
+                    'id' => $comment->id,
+                    'comment' => $comment->comment,
+                    'created_at' => $comment->created_at,
+                    'user' => [
+                        'id' => $comment->user->id,
+                        'name' => $comment->user->name,
+                        'role' => $comment->user->role
+                    ]
+                ];
+            }),
+            'reviewer' => $logbook->reviewer ? [
+                'id' => $logbook->reviewer->id,
+                'name' => $logbook->reviewer->name
+            ] : null
+        ];
+
+        if ($request->wantsJson()) {
+            return response()->json(['logbook' => $logbookData]);
+        }
+
         return Inertia::render('Profile/Logbooks/Show', [
-            'logbook' => [
-                'id' => $logbook->id,
-                'title' => $logbook->title,
-                'date' => $logbook->date,
-                'activities' => $logbook->activities,
-                'learning_points' => $logbook->learning_points,
-                'challenges' => $logbook->challenges,
-                'duration' => $logbook->duration,
-                'status' => $logbook->status,
-                'mentor_feedback' => $logbook->mentor_feedback,
-                'reviewed_at' => $logbook->reviewed_at,
-                'reviewed_by' => $logbook->reviewed_by,
-                'attachments' => $logbook->attachments ? json_decode($logbook->attachments, true) : [],
-                'created_at' => $logbook->created_at,
-                'updated_at' => $logbook->updated_at,
-                'division' => $logbook->division ? [
-                    'id' => $logbook->division->id,
-                    'name' => $logbook->division->name
-                ] : null,
-                'comments' => $logbook->comments->map(function ($comment) {
-                    return [
-                        'id' => $comment->id,
-                        'comment' => $comment->comment,
-                        'created_at' => $comment->created_at,
-                        'user' => [
-                            'id' => $comment->user->id,
-                            'name' => $comment->user->name,
-                            'role' => $comment->user->role
-                        ]
-                    ];
-                }),
-                'reviewer' => $logbook->reviewer ? [
-                    'id' => $logbook->reviewer->id,
-                    'name' => $logbook->reviewer->name
-                ] : null
-            ]
+            'logbook' => $logbookData
         ]);
     }
 
@@ -310,63 +317,105 @@ class LogbookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Logbook $logbook)
+    public function update(UpdateLogbookRequest $request, Logbook $logbook)
     {
+        /** @var User|null $user */
         $user = Auth::user();
         
-        // Check if user owns this logbook
-        if ($logbook->user_id !== $user->id) {
-            abort(403, 'Unauthorized access to this logbook.');
-        }
+        $oldStatus = $logbook->status;
 
-        // Check if logbook can be edited
-        if (!in_array($logbook->status, ['draft', 'revision'])) {
-            return redirect()->route('profile.edit')
-                ->with('error', 'Logbook yang sudah disubmit atau disetujui tidak dapat diedit.');
-        }
-
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'date' => 'required|date|before_or_equal:today',
-            'activities' => 'required|string',
-            'learning_points' => 'nullable|string',
-            'challenges' => 'nullable|string',
-            'duration' => 'required|numeric|min:0.5|max:12',
-            'status' => 'required|in:draft,submitted',
-            'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120' // 5MB
-        ]);
-
-        // Handle file uploads
-        $attachments = [];
-        if ($request->hasFile('attachments')) {
-            foreach ($request->file('attachments') as $file) {
-                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $path = $file->storeAs('logbooks', $filename, 'public');
-                $attachments[] = [
-                    'name' => $file->getClientOriginalName(),
-                    'path' => $path,
-                    'size' => $file->getSize()
-                ];
+        $existingAttachments = $logbook->attachments ? json_decode($logbook->attachments, true) : [];
+        $removedFiles = $request->input('removed_files', []);
+        
+        // Filter out removed files
+        $attachmentsToKeep = [];
+        $filesToDelete = [];
+        
+        foreach ($existingAttachments as $attachment) {
+            if (in_array($attachment['path'], $removedFiles)) {
+                $filesToDelete[] = $attachment['path'];
+            } else {
+                $attachmentsToKeep[] = $attachment;
             }
         }
 
-        // Merge with existing attachments if any
-        $existingAttachments = $logbook->attachments ? json_decode($logbook->attachments, true) : [];
-        $allAttachments = array_merge($existingAttachments, $attachments);
+        $newAttachments = [];
 
-        $logbook->update([
-            'title' => $request->title,
-            'date' => $request->date,
-            'time_in' => $request->time_in ?? $logbook->time_in ?? '08:00:00',
-            'activities' => $request->activities,
-            'learning_points' => $request->learning_points,
-            'duration' => $request->duration,
-            'status' => $request->status,
-        ]);
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            // Handle file uploads first
+            if ($request->hasFile('attachments')) {
+                foreach ($request->file('attachments') as $file) {
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $path = $file->storeAs('logbooks', $filename, 'public');
+                    $newAttachments[] = [
+                        'name' => $file->getClientOriginalName(),
+                        'path' => $path,
+                        'size' => $file->getSize(),
+                        'type' => $file->getMimeType()
+                    ];
+                }
+            }
+
+            // Merge remaining attachments and new uploads
+            $allAttachments = array_merge($attachmentsToKeep, $newAttachments);
+
+            $logbook->update([
+                'title' => $request->title,
+                'date' => $request->date,
+                'time_in' => $request->time_in ?? $logbook->time_in ?? '08:00:00',
+                'activities' => $request->activities,
+                'learning_points' => $request->learning_points,
+                'challenges' => $request->challenges,
+                'duration' => $request->duration,
+                'status' => $request->status,
+                'attachments' => !empty($allAttachments) ? json_encode($allAttachments) : null,
+            ]);
+
+            \Illuminate\Support\Facades\DB::commit();
+
+            // After successful commit, delete the files queued for removal
+            foreach ($filesToDelete as $filePath) {
+                if (Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
+                }
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            // Delete newly uploaded files since database update failed
+            foreach ($newAttachments as $newAttachment) {
+                if (Storage::disk('public')->exists($newAttachment['path'])) {
+                    Storage::disk('public')->delete($newAttachment['path']);
+                }
+            }
+            throw $e;
+        }
+
+        // Send notification to user when logbook transitions to 'submitted'
+        if ($request->status === 'submitted' && $oldStatus !== 'submitted') {
+            // Notify the participant that their logbook was submitted
+            $user->notify(new LogbookNotification($logbook, 'submitted', $user->id, 'user'));
+            
+            // Send notification to all admins
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                /** @var User $admin */
+                $admin->notify(new LogbookNotification($logbook, 'submitted', $user->id, 'admin'));
+            }
+            
+            // Also notify mentors in the same division
+            $mentors = User::where('role', 'mentor')
+                ->where('division_id', $logbook->division_id)
+                ->get();
+            foreach ($mentors as $mentor) {
+                /** @var User $mentor */
+                $mentor->notify(new LogbookNotification($logbook, 'submitted', $user->id, 'mentor'));
+            }
+        }
 
         $message = $request->status === 'draft' ? 'Logbook berhasil diperbarui sebagai draft.' : 'Logbook berhasil diperbarui dan dikirim untuk review.';
         
-        return redirect()->route('profile.edit')->with('success', $message);
+        return redirect()->back()->with('success', $message);
     }
 
     /**
@@ -381,26 +430,39 @@ class LogbookController extends Controller
             abort(403, 'Unauthorized access to this logbook.');
         }
 
-        // Only allow deletion of draft logbooks
-        if ($logbook->status !== 'draft') {
-            return redirect()->route('profile.edit')
-                ->with('error', 'Hanya logbook dengan status draft yang dapat dihapus.');
+        // Only allow deletion of non-approved logbooks
+        if (!in_array($logbook->status, ['draft', 'submitted', 'revision'])) {
+            return back()->with('error', 'Hanya logbook yang belum disetujui yang dapat dihapus.');
         }
 
-        // Delete associated files
+        $attachmentsToDelete = [];
         if ($logbook->attachments) {
-            $attachments = json_decode($logbook->attachments, true);
-            foreach ($attachments as $attachment) {
-                if (Storage::disk('public')->exists($attachment['path'])) {
-                    Storage::disk('public')->delete($attachment['path']);
+            $attachmentsToDelete = json_decode($logbook->attachments, true);
+        }
+
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            // Delete associated comments first to avoid foreign key constraint violations
+            $logbook->comments()->delete();
+
+            // Delete logbook record
+            $logbook->delete();
+
+            \Illuminate\Support\Facades\DB::commit();
+
+            // Delete associated files from storage only after transaction commits successfully
+            foreach ($attachmentsToDelete as $attachment) {
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($attachment['path'])) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($attachment['path']);
                 }
             }
+
+            return back()->with('success', 'Logbook berhasil dihapus.');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            \Illuminate\Support\Facades\Log::error('Logbook deletion error: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat menghapus logbook.');
         }
-
-        $logbook->delete();
-
-        return redirect()->route('profile.edit')
-            ->with('success', 'Logbook berhasil dihapus.');
     }
 
     /**

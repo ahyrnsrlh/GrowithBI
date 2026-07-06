@@ -60,6 +60,9 @@
                 :reports="reports"
                 :formatDate="formatDate"
                 @create="$emit('create-report')"
+                @view="$emit('view-report', $event)"
+                @edit="$emit('edit-report', $event)"
+                @delete="$emit('delete-report', $event)"
             />
         </div>
     </div>
@@ -73,5 +76,5 @@ defineProps({
     formatDate: { type: Function, required: true },
 });
 
-defineEmits(["create-report"]);
+defineEmits(["create-report", "view-report", "edit-report", "delete-report"]);
 </script>

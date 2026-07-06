@@ -166,32 +166,79 @@
                     </div>
                 </div>
 
-                <div
-                    class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200"
-                >
-                    <button
-                        type="button"
-                        @click="$emit('close')"
-                        class="px-6 py-2.5 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-medium transition-colors"
+                    <div>
+                        <label
+                            class="block text-sm font-semibold text-gray-700 mb-2"
+                        >
+                            Lampiran Dokumentasi
+                        </label>
+                        <div class="space-y-3">
+                            <!-- New Files Queue -->
+                            <div v-if="form.attachments?.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div
+                                    v-for="(file, idx) in form.attachments"
+                                    :key="idx"
+                                    class="flex items-center justify-between p-2.5 rounded-lg border border-blue-200 bg-blue-50/30 text-xs"
+                                >
+                                    <span class="truncate font-medium text-blue-700 flex-1 pr-2">{{ file.name }}</span>
+                                    <button
+                                        type="button"
+                                        @click="removeNewFile(idx)"
+                                        class="text-gray-500 hover:text-gray-700 hover:bg-gray-100 p-1 rounded transition-colors"
+                                    >
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Upload Button -->
+                            <label
+                                class="flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 hover:border-blue-500 rounded-xl p-4 bg-white cursor-pointer hover:bg-blue-50/10 transition-all group"
+                            >
+                                <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span class="text-xs font-medium text-gray-600 group-hover:text-blue-600 transition-colors">Unggah File Lampiran</span>
+                                <input
+                                    type="file"
+                                    multiple
+                                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                    class="hidden"
+                                    @change="handleFileChange"
+                                />
+                            </label>
+                            <span class="text-[10px] text-gray-400 block">Mendukung file: PDF, Word (DOC/DOCX), Gambar (JPG/PNG). Maks: 5MB per file.</span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200"
                     >
-                        Batal
-                    </button>
-                    <button
-                        type="submit"
-                        :disabled="form.processing"
-                        class="px-6 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
-                    >
-                        <span v-if="form.processing">Menyimpan...</span>
-                        <span v-else>Simpan Logbook</span>
-                    </button>
-                </div>
-            </form>
+                        <button
+                            type="button"
+                            @click="$emit('close')"
+                            class="px-6 py-2.5 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-medium transition-colors"
+                        >
+                            Batal
+                        </button>
+                        <button
+                            type="submit"
+                            :disabled="form.processing"
+                            class="px-6 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                        >
+                            <span v-if="form.processing">Menyimpan...</span>
+                            <span v-else>Simpan Logbook</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
     show: {
         type: Boolean,
         default: false,
@@ -202,5 +249,14 @@ defineProps({
     },
 });
 
-defineEmits(["close", "submit"]);
+const emit = defineEmits(["close", "submit"]);
+
+const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    props.form.attachments = [...(props.form.attachments || []), ...files];
+};
+
+const removeNewFile = (idx) => {
+    props.form.attachments.splice(idx, 1);
+};
 </script>

@@ -165,6 +165,27 @@
                                     </svg>
                                     Edit
                                 </Link>
+
+                                <button
+                                    v-if="logbook.status !== 'approved'"
+                                    @click="deleteLogbook(logbook.id)"
+                                    class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-700 text-sm font-medium rounded-md hover:bg-red-100 transition-colors"
+                                >
+                                    <svg
+                                        class="w-4 h-4 mr-1"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                        />
+                                    </svg>
+                                    Hapus
+                                </button>
                             </div>
 
                             <div
@@ -233,7 +254,7 @@
 </template>
 
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 
 defineProps({
     filteredLogbooks: {
@@ -257,6 +278,20 @@ defineProps({
         required: true,
     },
 });
+
+const deleteLogbook = (id) => {
+    if (confirm("Apakah Anda yakin ingin menghapus entri logbook ini?")) {
+        router.delete(route("peserta.logbooks.destroy", id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Instantly reloads page state
+            },
+            onError: (errors) => {
+                console.error("Delete logbook error:", errors);
+            }
+        });
+    }
+};
 </script>
 
 <style scoped>

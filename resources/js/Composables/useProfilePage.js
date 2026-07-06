@@ -1,5 +1,5 @@
-import { ref, reactive, computed } from "vue";
-import { useForm, router } from "@inertiajs/vue3";
+import { ref, reactive, computed, watch } from "vue";
+import { useForm, router, usePage } from "@inertiajs/vue3";
 import { useProfilePageBoot } from "@/Composables/useProfilePageBoot";
 
 const normalizeDateValue = (value) => {
@@ -24,6 +24,20 @@ export function useProfilePage(props) {
     const notificationMessage = ref("");
     const showCreateLogbookModal = ref(false);
     const showCreateReportModal = ref(false);
+
+    const page = usePage();
+    watch(
+        () => page.props.flash,
+        (flash) => {
+            if (flash?.success) {
+                showToast("success", flash.success);
+            }
+            if (flash?.error) {
+                showToast("error", flash.error);
+            }
+        },
+        { deep: true, immediate: true }
+    );
 
     const acceptedStatuses = ["accepted", "letter_ready", "diterima"];
     const hasAcceptedApplication = computed(() =>
@@ -70,6 +84,7 @@ export function useProfilePage(props) {
         learning_points: "",
         challenges: "",
         status: "submitted",
+        attachments: [],
     });
 
     const reportForm = useForm({
@@ -87,14 +102,84 @@ export function useProfilePage(props) {
         }, 5000);
     };
 
+    const showDetailLogbookModal = ref(false);
+    const showEditLogbookModal = ref(false);
+    const selectedLogbookId = ref(null);
+
     const viewLogbookDetail = (logbookId) => {
-        router.visit(route("profile.logbooks.show", logbookId));
+        selectedLogbookId.value = logbookId;
+        showDetailLogbookModal.value = true;
     };
 
     const editLogbook = (logbookId) => {
-        router.visit(route("profile.logbooks.show", logbookId), {
-            data: { edit: true },
-        });
+        selectedLogbookId.value = logbookId;
+        showEditLogbookModal.value = true;
+    };
+
+    const deleteLogbook = (logbookId) => {
+        if (confirm("Apakah Anda yakin ingin menghapus entri logbook ini?")) {
+            router.delete(route("peserta.logbooks.destroy", logbookId), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    showToast("success", "Logbook berhasil dihapus!");
+                    setTimeout(() => {
+                        router.reload({ only: ["logbooks", "logbookStats"] });
+                    }, 1000);
+                },
+                onError: (errors) => {
+                    console.error("Delete logbook error:", errors);
+                    showToast("error", "Gagal menghapus logbook.");
+                }
+            });
+        }
+    };
+
+    const handleEditSuccess = () => {
+        showEditLogbookModal.value = false;
+        showToast("success", "Logbook berhasil diperbarui!");
+        setTimeout(() => {
+            router.reload({ only: ["logbooks", "logbookStats"] });
+        }, 1000);
+    };
+
+    const showDetailReportModal = ref(false);
+    const showEditReportModal = ref(false);
+    const selectedReportId = ref(null);
+
+    const viewReportDetail = (reportId) => {
+        selectedReportId.value = reportId;
+        showDetailReportModal.value = true;
+    };
+
+    const editReport = (reportId) => {
+        selectedReportId.value = reportId;
+        showEditReportModal.value = true;
+    };
+
+    const deleteReport = (reportId) => {
+        if (confirm("Apakah Anda yakin ingin menghapus laporan ini? File laporan juga akan dihapus dari server.")) {
+            router.delete(route("peserta.reports.destroy", reportId), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    showToast("success", "Laporan berhasil dihapus!");
+                    setTimeout(() => {
+                        router.reload({ only: ["reports", "reportStats"] });
+                    }, 1000);
+                },
+                onError: (errors) => {
+                    console.error("Delete report errors:", errors);
+                    showToast("error", "Gagal menghapus laporan!");
+                }
+            });
+        }
+    };
+
+    const handleReportEditSuccess = () => {
+        showEditReportModal.value = false;
+        showToast("success", "Laporan berhasil diperbarui!");
+        setTimeout(() => {
+            router.reload({ only: ["reports", "reportStats"] });
+        }, 1000);
     };
 
     const updateProfile = () => {
@@ -166,6 +251,7 @@ export function useProfilePage(props) {
     const submitLogbook = () => {
         createLogbookForm.post(route("profile.logbooks.store"), {
             preserveScroll: true,
+            forceFormData: true,
             onSuccess: () => {
                 showCreateLogbookModal.value = false;
                 createLogbookForm.reset();
@@ -222,6 +308,19 @@ export function useProfilePage(props) {
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
+            if (file.type !== "application/pdf") {
+                reportForm.setError("report_file", "File harus berformat PDF.");
+                event.target.value = null;
+                reportForm.report_file = null;
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                reportForm.setError("report_file", "Ukuran file tidak boleh melebihi 10MB.");
+                event.target.value = null;
+                reportForm.report_file = null;
+                return;
+            }
+            reportForm.clearErrors("report_file");
             reportForm.report_file = file;
         }
     };
@@ -283,6 +382,17 @@ export function useProfilePage(props) {
         notificationMessage,
         showCreateLogbookModal,
         showCreateReportModal,
+        showDetailLogbookModal,
+        showEditLogbookModal,
+        selectedLogbookId,
+        handleEditSuccess,
+        showDetailReportModal,
+        showEditReportModal,
+        selectedReportId,
+        viewReportDetail,
+        editReport,
+        deleteReport,
+        handleReportEditSuccess,
         hasAcceptedApplication,
         documentProgress,
         profileForm,
@@ -292,6 +402,7 @@ export function useProfilePage(props) {
         showToast,
         viewLogbookDetail,
         editLogbook,
+        deleteLogbook,
         updateProfile,
         uploadPhoto,
         submitLogbook,

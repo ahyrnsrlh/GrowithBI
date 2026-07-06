@@ -60,6 +60,7 @@
                             @create-logbook="showCreateLogbookModal = true"
                             @view-logbook="viewLogbookDetail"
                             @edit-logbook="editLogbook"
+                            @delete-logbook="deleteLogbook"
                         />
 
                         <ReportsTab
@@ -68,6 +69,9 @@
                             :reportStats="props.reportStats"
                             :formatDate="formatDate"
                             @create-report="showCreateReportModal = true"
+                            @view-report="viewReportDetail"
+                            @edit-report="editReport"
+                            @delete-report="deleteReport"
                         />
                     </div>
                 </div>
@@ -87,6 +91,32 @@
                 @submit="submitReport"
                 @file-change="handleFileChange"
             />
+
+            <LogbookDetailModal
+                :show="showDetailLogbookModal"
+                :logbook-id="selectedLogbookId"
+                @close="showDetailLogbookModal = false"
+            />
+
+            <LogbookEditModal
+                :show="showEditLogbookModal"
+                :logbook-id="selectedLogbookId"
+                @close="showEditLogbookModal = false"
+                @success="handleEditSuccess"
+            />
+
+            <FinalReportDetailModal
+                :show="showDetailReportModal"
+                :report-id="selectedReportId"
+                @close="showDetailReportModal = false"
+            />
+
+            <FinalReportEditModal
+                :show="showEditReportModal"
+                :report-id="selectedReportId"
+                @close="showEditReportModal = false"
+                @success="handleReportEditSuccess"
+            />
         </div>
     </div>
 </template>
@@ -97,6 +127,10 @@ import AttendanceTab from "@/Components/AttendanceTab.vue";
 import ApplicationsTab from "@/Components/Profile/ApplicationsTab.vue";
 import CreateLogbookModal from "@/Components/Profile/CreateLogbookModal.vue";
 import CreateReportModal from "@/Components/Profile/CreateReportModal.vue";
+import LogbookDetailModal from "@/Components/Profile/Logbooks/LogbookDetailModal.vue";
+import LogbookEditModal from "@/Components/Profile/Logbooks/LogbookEditModal.vue";
+import FinalReportDetailModal from "@/Components/Profile/Reports/FinalReportDetailModal.vue";
+import FinalReportEditModal from "@/Components/Profile/Reports/FinalReportEditModal.vue";
 import DocumentsTab from "@/Components/Profile/DocumentsTab.vue";
 import LogbookTab from "@/Components/Profile/Logbook/LogbookTab.vue";
 import ProfileHeader from "@/Components/Profile/ProfileHeader.vue";
@@ -130,6 +164,17 @@ const {
     notificationMessage,
     showCreateLogbookModal,
     showCreateReportModal,
+    showDetailLogbookModal,
+    showEditLogbookModal,
+    selectedLogbookId,
+    handleEditSuccess,
+    showDetailReportModal,
+    showEditReportModal,
+    selectedReportId,
+    viewReportDetail,
+    editReport,
+    deleteReport,
+    handleReportEditSuccess,
     hasAcceptedApplication,
     documentProgress,
     profileForm,
@@ -139,6 +184,7 @@ const {
     showToast,
     viewLogbookDetail,
     editLogbook,
+    deleteLogbook,
     updateProfile,
     uploadPhoto,
     submitLogbook,

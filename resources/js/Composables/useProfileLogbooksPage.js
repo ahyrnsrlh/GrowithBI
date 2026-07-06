@@ -1,8 +1,11 @@
 import { computed, ref } from "vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, router } from "@inertiajs/vue3";
 
 export function useProfileLogbooksPage(logbooks, initialFilters = {}) {
     const showCreateModal = ref(false);
+    const showDetailModal = ref(false);
+    const showEditModal = ref(false);
+    const selectedLogbookId = ref(null);
     const displayedCount = ref(9);
 
     const filters = ref({
@@ -37,6 +40,24 @@ export function useProfileLogbooksPage(logbooks, initialFilters = {}) {
         displayedCount.value = 9;
     };
 
+    const openDetailModal = (id) => {
+        selectedLogbookId.value = id;
+        showDetailModal.value = true;
+    };
+
+    const openEditModal = (id) => {
+        selectedLogbookId.value = id;
+        showEditModal.value = true;
+    };
+
+    const handleEditSuccess = () => {
+        showEditModal.value = false;
+        router.reload({
+            preserveScroll: true,
+            only: ['logbooks']
+        });
+    };
+
     const createForm = useForm({
         date: new Date().toISOString().split("T")[0],
         duration: 8,
@@ -45,11 +66,13 @@ export function useProfileLogbooksPage(logbooks, initialFilters = {}) {
         learning_points: "",
         challenges: "",
         status: "submitted",
+        attachments: [],
     });
 
     const submitLogbook = () => {
         createForm.post(route("profile.logbooks.store"), {
             preserveScroll: true,
+            forceFormData: true,
             onSuccess: () => {
                 showCreateModal.value = false;
                 createForm.reset();
@@ -86,6 +109,9 @@ export function useProfileLogbooksPage(logbooks, initialFilters = {}) {
 
     return {
         showCreateModal,
+        showDetailModal,
+        showEditModal,
+        selectedLogbookId,
         displayedCount,
         filters,
         filteredLogbooks,
@@ -94,6 +120,9 @@ export function useProfileLogbooksPage(logbooks, initialFilters = {}) {
         createForm,
         loadMore,
         setStatusFilter,
+        openDetailModal,
+        openEditModal,
+        handleEditSuccess,
         submitLogbook,
         formatDateShort,
         getStatusClass,

@@ -62,6 +62,7 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Masukkan judul laporan"
                         />
+                         <p v-if="form.errors.title" class="text-xs text-red-600 mt-1">{{ form.errors.title }}</p>
                     </div>
 
                     <div>
@@ -79,6 +80,7 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Jelaskan ringkasan laporan Anda"
                         ></textarea>
+                        <p v-if="form.errors.description" class="text-xs text-red-600 mt-1">{{ form.errors.description }}</p>
                     </div>
 
                     <div>
@@ -96,9 +98,10 @@
                             required
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
-                        <p class="text-sm text-gray-500 mt-1">
+                        <p class="text-xs text-gray-500 mt-1">
                             File harus berformat PDF dan maksimal 10MB
                         </p>
+                        <p v-if="form.errors.report_file" class="text-xs text-red-600 mt-1">{{ form.errors.report_file }}</p>
                     </div>
 
                     <div class="flex justify-end gap-3 pt-4">
