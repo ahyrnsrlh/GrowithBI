@@ -125,7 +125,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Top HUD: confidence badge + GPS -->
+                                <!-- Top HUD: confidence badge -->
                                 <div
                                     v-if="cameraReady && !capturedPhoto && !loadingModels"
                                     class="absolute top-3 left-3 right-3 flex items-center justify-between gap-2"
@@ -137,18 +137,6 @@
                                     >
                                         <div v-if="faceDetected" class="w-2 h-2 rounded-full bg-white animate-pulse" />
                                         <span>{{ confidenceLabel }}</span>
-                                    </div>
-
-                                    <!-- GPS status -->
-                                    <div
-                                        v-if="locationStatus"
-                                        class="px-3 py-1.5 rounded-lg bg-black/50 backdrop-blur-sm text-white text-xs flex items-center gap-1.5 max-w-[45%]"
-                                    >
-                                        <svg class="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                        <span class="truncate">{{ locationStatus }}</span>
                                     </div>
                                 </div>
 
@@ -177,7 +165,7 @@
                             </div>
 
                             <!-- Error message -->
-                            <div v-if="errorMessage" class="mx-5 mt-3 p-3 bg-red-900/30 border border-red-700/50 rounded-xl">
+                            <div v-if="errorMessage" class="mx-5 mt-3 p-3 bg-red-950/30 border border-red-700/50 rounded-xl">
                                 <p class="text-sm text-red-300">{{ errorMessage }}</p>
                             </div>
 
@@ -223,9 +211,9 @@
                                     v-if="!capturedPhoto"
                                     type="button"
                                     @click="capturePhoto"
-                                    :disabled="!cameraReady || !faceDetected || loadingModels || !gpsValidated"
+                                    :disabled="!cameraReady || !faceDetected || loadingModels"
                                     class="flex-1 py-3 font-semibold rounded-xl transition text-sm flex items-center justify-center gap-2"
-                                    :class="cameraReady && faceDetected && !loadingModels && gpsValidated
+                                    :class="cameraReady && faceDetected && !loadingModels
                                         ? 'bg-[#2F4C9E] hover:bg-[#274089] text-white shadow-lg shadow-blue-900/40'
                                         : 'bg-gray-700 cursor-not-allowed text-gray-500'"
                                 >

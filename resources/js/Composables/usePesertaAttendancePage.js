@@ -60,8 +60,6 @@ export function usePesertaAttendancePage(props, page) {
         (val) => { if (val !== undefined) faceEnrolled.value = val; },
     );
 
-    // ── Location (GPS) status label for SecureCameraModal ────────────────────
-    const locationStatus = ref(null);
 
     // ── Attendance filtering / pagination ─────────────────────────────────────
     const filterStatus = ref("all");
@@ -127,7 +125,6 @@ export function usePesertaAttendancePage(props, page) {
         actionType,
         isProcessing,
         cameraTitle,
-        locationStatus,
         handleCheckIn,
         handleCheckOut,
         onPhotoCaptured,

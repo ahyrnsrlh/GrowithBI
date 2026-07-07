@@ -56,12 +56,6 @@ export function useAttendanceCapture(options = {}) {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
                 accuracy: position.coords.accuracy,
-                coordinateStability: 0.0,
-                samples: [{
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    accuracy: position.coords.accuracy,
-                }]
             };
         } catch {
             notify(
@@ -148,8 +142,6 @@ export function useAttendanceCapture(options = {}) {
                 latitude: userLocation.value.latitude,
                 longitude: userLocation.value.longitude,
                 gps_accuracy: userLocation.value.accuracy ?? null,
-                coordinate_stability: userLocation.value.coordinateStability ?? null,
-                samples: userLocation.value.samples ?? null,
             },
             {
                 preserveScroll: true,

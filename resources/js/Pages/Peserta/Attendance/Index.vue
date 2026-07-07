@@ -24,7 +24,7 @@
             <template v-else>
                 <LocationValidationWidget
                     :sampler="locationSampler"
-                    :maxAccuracy="50"
+                    :isProcessing="isProcessing"
                     :allowedRadius="allowedRadius"
                 />
 
@@ -63,9 +63,6 @@
         v-if="faceEnrolled"
         :show="showCamera"
         :title="cameraTitle"
-        :locationStatus="locationStatus"
-        :gpsValidated="locationSampler.samplingStatus.value === 'done'"
-        :locationSummary="locationSampler.locationResult.value ? `GPS Terdeteksi (±${Math.round(locationSampler.locationResult.value.accuracy)}m)` : null"
         @close="showCamera = false"
         @photo-captured="onPhotoCaptured"
         @face-verified="onFaceVerified"

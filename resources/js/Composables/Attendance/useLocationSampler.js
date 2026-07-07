@@ -1,15 +1,13 @@
 import { ref } from "vue";
 
 export function useLocationSampler(options = {}) {
-    const samplingStatus = ref("idle"); // 'idle' | 'requesting-permission' | 'sampling' | 'validating' | 'done' | 'error'
+    const samplingStatus = ref("idle"); // 'idle' | 'requesting-permission' | 'locating' | 'done' | 'error'
     const samplingProgress = ref(0);
     const gpsAccuracy = ref(null);
     const samplesCollected = ref(0);
     const samples = ref([]);
-    const totalSamples = ref(options.sampleCount || 3);
+    const totalSamples = ref(1);
     
-    const maxAccuracy = ref(options.gpsAccuracyMax || 50);
-    const maxStability = ref(options.stabilityMax || 0.0003);
     const allowedRadius = ref(options.allowedRadius || 500);
     const officeLat = ref(options.officeLocation?.latitude ?? -5.4194538);
     const officeLon = ref(options.officeLocation?.longitude ?? 105.2604370);
@@ -17,8 +15,6 @@ export function useLocationSampler(options = {}) {
     const validationLayers = ref([]);
     const locationResult = ref(null);
     const errorMessage = ref(null);
-
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const getSinglePosition = () => {
         return new Promise((resolve, reject) => {
@@ -32,22 +28,6 @@ export function useLocationSampler(options = {}) {
                 maximumAge: 0,
             });
         });
-    };
-
-    const calculateStdDev = (values) => {
-        if (values.length <= 1) return 0;
-        const mean = values.reduce((a, b) => a + b, 0) / values.length;
-        const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (values.length - 1);
-        return Math.sqrt(variance);
-    };
-
-    const calculateStability = (sampleList) => {
-        if (sampleList.length <= 1) return 0;
-        const lats = sampleList.map((s) => s.latitude);
-        const lons = sampleList.map((s) => s.longitude);
-        const stdDevLat = calculateStdDev(lats);
-        const stdDevLon = calculateStdDev(lons);
-        return Math.max(stdDevLat, stdDevLon);
     };
 
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -69,86 +49,31 @@ export function useLocationSampler(options = {}) {
         errorMessage.value = null;
         samples.value = [];
         samplesCollected.value = 0;
-        samplingProgress.value = 0;
+        samplingProgress.value = 25;
         validationLayers.value = [];
         locationResult.value = null;
 
-        // Layer 1: Request permission (via first sample)
+        let position;
         try {
-            const firstPosition = await getSinglePosition();
-            samples.value.push({
-                latitude: firstPosition.coords.latitude,
-                longitude: firstPosition.coords.longitude,
-                accuracy: firstPosition.coords.accuracy,
-            });
-            samplesCollected.value = 1;
-            samplingProgress.value = Math.round((1 / totalSamples.value) * 100);
-            samplingStatus.value = "sampling";
+            position = await getSinglePosition();
+            samplingProgress.value = 75;
+            samplingStatus.value = "locating";
         } catch (err) {
             samplingStatus.value = "error";
             errorMessage.value = "Izinkan akses lokasi untuk melakukan presensi.";
             return;
         }
 
-        // Collect remaining samples
-        for (let i = 1; i < totalSamples.value; i++) {
-            await sleep(2000); // 2 seconds interval between samples
-            try {
-                const position = await getSinglePosition();
-                samples.value.push({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    accuracy: position.coords.accuracy,
-                });
-                samplesCollected.value = samples.value.length;
-                samplingProgress.value = Math.round((samples.value.length / totalSamples.value) * 100);
-            } catch (err) {
-                console.warn("Failed to collect GPS sample:", err);
-            }
-        }
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        gpsAccuracy.value = position.coords.accuracy;
+        samplesCollected.value = 1;
+        samples.value = [{ latitude: lat, longitude: lon, accuracy: gpsAccuracy.value }];
 
-        if (samples.value.length === 0) {
-            samplingStatus.value = "error";
-            errorMessage.value = "Gagal memperoleh lokasi. Pastikan GPS aktif dan izinkan akses lokasi.";
-            return;
-        }
-
-        samplingStatus.value = "validating";
-
-        // Select best sample for accuracy reference
-        const bestSample = samples.value.reduce((best, current) => {
-            return current.accuracy < best.accuracy ? current : best;
-        }, samples.value[0]);
-
-        gpsAccuracy.value = bestSample.accuracy;
-
-        const accuracyPassed = gpsAccuracy.value <= maxAccuracy.value;
-        
-        // Calculate stability std dev of collected samples
-        const stabilityVal = calculateStability(samples.value);
-        const stabilityPassed = samples.value.length < 2 || stabilityVal <= maxStability.value;
-
-        // Average coordinates for finalized location submission
-        const averageLat = samples.value.reduce((sum, s) => sum + s.latitude, 0) / samples.value.length;
-        const averageLon = samples.value.reduce((sum, s) => sum + s.longitude, 0) / samples.value.length;
-        const distance = calculateDistance(averageLat, averageLon, officeLat.value, officeLon.value);
+        const distance = calculateDistance(lat, lon, officeLat.value, officeLon.value);
         const radiusPassed = distance <= allowedRadius.value;
 
         validationLayers.value = [
-            {
-                name: "gps_accuracy",
-                passed: accuracyPassed,
-                message: accuracyPassed
-                    ? `Akurasi GPS baik (±${Math.round(gpsAccuracy.value)}m)`
-                    : "Akurasi GPS Anda terlalu rendah. Silakan aktifkan mode Lokasi Akurasi Tinggi dan berpindah ke area terbuka.",
-            },
-            {
-                name: "coordinate_stability",
-                passed: stabilityPassed,
-                message: stabilityPassed
-                    ? "Koordinat lokasi stabil"
-                    : "Lokasi Anda belum stabil. Mohon tunggu beberapa saat hingga sistem memperoleh lokasi yang lebih akurat.",
-            },
             {
                 name: "radius_validation",
                 passed: radiusPassed,
@@ -158,16 +83,13 @@ export function useLocationSampler(options = {}) {
             },
         ];
 
-        if (!accuracyPassed) {
-            samplingStatus.value = "error";
-            errorMessage.value = "Akurasi GPS Anda terlalu rendah. Silakan aktifkan mode Lokasi Akurasi Tinggi dan berpindah ke area terbuka.";
-            return;
-        }
-
-        if (!stabilityPassed) {
-            samplingStatus.value = "error";
-            errorMessage.value = "Lokasi Anda belum stabil. Mohon tunggu beberapa saat hingga sistem memperoleh lokasi yang lebih akurat.";
-            return;
+        // Add warning layer for poor accuracy but do NOT block
+        if (gpsAccuracy.value > 100) {
+            validationLayers.value.push({
+                name: "gps_accuracy",
+                passed: true,
+                message: `Sinyal GPS kurang akurat (±${Math.round(gpsAccuracy.value)}m)`,
+            });
         }
 
         if (!radiusPassed) {
@@ -176,12 +98,13 @@ export function useLocationSampler(options = {}) {
             return;
         }
 
+        samplingProgress.value = 100;
         samplingStatus.value = "done";
         locationResult.value = {
-            latitude: averageLat,
-            longitude: averageLon,
+            latitude: lat,
+            longitude: lon,
             accuracy: gpsAccuracy.value,
-            coordinateStability: stabilityVal,
+            coordinateStability: null,
             samples: samples.value,
         };
     };

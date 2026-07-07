@@ -207,8 +207,6 @@ class AttendanceController extends Controller
             'photo'                => 'required|string', // Base64 encoded image
             'face_descriptor'      => 'required|array|size:128',
             'gps_accuracy'         => 'nullable|numeric',
-            'coordinate_stability' => 'nullable|numeric',
-            'samples'              => 'nullable|array',
         ]);
 
         /** @var User $user */
@@ -240,18 +238,19 @@ class AttendanceController extends Controller
                 ->with('error', 'Anda sudah melakukan check-in hari ini.');
         }
 
-        // 2. LOCATION VALIDATION (Multi-Layer)
-        $locationResult = $this->locationService->validateAll($user, $request->only([
-            'latitude', 'longitude', 'gps_accuracy', 'coordinate_stability', 'samples'
-        ]));
+        // 2. LOCATION VALIDATION (Radius-Based)
+        $locationResult = $this->locationService->validateRadius(
+            (float) $request->latitude,
+            (float) $request->longitude,
+            $request->gps_accuracy ? (float) $request->gps_accuracy : null
+        );
 
         if (!$locationResult['passed']) {
-            $this->sendFailedAttendanceNotification($user, 'location_invalid');
+            $this->sendFailedFailedAttendanceNotification($user);
             Log::warning('Attendance check-in location validation failed', [
                 'user_id' => $user->id,
                 'location_notes' => $locationResult['notes'],
                 'gps_accuracy' => $request->gps_accuracy,
-                'coordinate_stability' => $locationResult['coordinate_stability'] ?? null,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
             ]);
@@ -280,10 +279,10 @@ class AttendanceController extends Controller
  
         // Store location validation metadata
         $attendance->gps_accuracy               = $request->gps_accuracy;
-        $attendance->coordinate_stability       = $locationResult['coordinate_stability'] ?? null;
-        $attendance->location_validation_status  = $locationResult['status'] ?? 'valid';
+        $attendance->coordinate_stability       = null;
+        $attendance->location_validation_status  = 'passed';
         $attendance->location_validation_notes   = $locationResult['notes'] ?? null;
-        $attendance->suspicious_location         = $locationResult['suspicious'] ?? false;
+        $attendance->suspicious_location         = false;
         $attendance->validation_timestamp       = Carbon::now('Asia/Jakarta');
  
         try {
@@ -325,6 +324,21 @@ class AttendanceController extends Controller
         return redirect()->back()->with('success', $message);
     }
 
+    /**
+     * Send failed attendance notification due to location validation (helper to avoid duplicate sendFailedAttendanceNotification call)
+     */
+    private function sendFailedFailedAttendanceNotification(User $user)
+    {
+        try {
+            $this->sendFailedAttendanceNotification($user, 'location_invalid');
+        } catch (\Exception $e) {
+            Log::error('Failed to send location invalid notification', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
     // =========================================================================
     // CHECK-OUT
     // =========================================================================
@@ -340,8 +354,6 @@ class AttendanceController extends Controller
             'photo'                => 'required|string',
             'face_descriptor'      => 'required|array|size:128',
             'gps_accuracy'         => 'nullable|numeric',
-            'coordinate_stability' => 'nullable|numeric',
-            'samples'              => 'nullable|array',
         ]);
 
         /** @var User $user */
@@ -377,18 +389,19 @@ class AttendanceController extends Controller
                 ->with('error', 'Anda sudah melakukan check-out hari ini.');
         }
 
-        // 2. LOCATION VALIDATION (Multi-Layer)
-        $locationResult = $this->locationService->validateAll($user, $request->only([
-            'latitude', 'longitude', 'gps_accuracy', 'coordinate_stability', 'samples'
-        ]));
+        // 2. LOCATION VALIDATION (Radius-Based)
+        $locationResult = $this->locationService->validateRadius(
+            (float) $request->latitude,
+            (float) $request->longitude,
+            $request->gps_accuracy ? (float) $request->gps_accuracy : null
+        );
 
         if (!$locationResult['passed']) {
-            $this->sendFailedAttendanceNotification($user, 'location_invalid');
+            $this->sendFailedFailedAttendanceNotification($user);
             Log::warning('Attendance check-out location validation failed', [
                 'user_id' => $user->id,
                 'location_notes' => $locationResult['notes'],
                 'gps_accuracy' => $request->gps_accuracy,
-                'coordinate_stability' => $locationResult['coordinate_stability'] ?? null,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
             ]);
@@ -406,13 +419,11 @@ class AttendanceController extends Controller
         $attendance->checkout_latitude  = $request->latitude;
         $attendance->checkout_longitude = $request->longitude;
  
-        // Merge or set suspicious flags if checkout triggers it
-        if ($locationResult['suspicious'] ?? false) {
-            $attendance->suspicious_location = true;
-            $attendance->location_validation_status = 'suspicious';
-        }
+        // Simplify metadata storage on checkout
+        $attendance->suspicious_location = false;
+        $attendance->location_validation_status = 'passed';
         if (!empty($locationResult['notes'])) {
-            $attendance->location_validation_notes = $attendance->location_validation_notes 
+            $attendance->location_validation_notes = $attendance->location_validation_notes
                 ? $attendance->location_validation_notes . '; ' . $locationResult['notes']
                 : $locationResult['notes'];
         }

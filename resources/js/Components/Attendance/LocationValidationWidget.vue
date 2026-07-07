@@ -1,112 +1,142 @@
 <template>
-    <div v-if="sampler.samplingStatus.value !== 'idle'" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl max-w-xl mx-auto mb-6 text-slate-100 overflow-hidden relative">
-        <!-- Progress bar glow -->
-        <div 
-            class="absolute top-0 left-0 h-[3px] bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500 transition-all duration-300"
-            :style="{ width: `${sampler.samplingProgress.value}%` }"
-        />
-
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-sm font-semibold tracking-wide uppercase text-slate-400 flex items-center gap-2">
-                <svg class="w-4 h-4 text-blue-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Verifikasi Lokasi Multi-Layer
+    <div 
+        v-if="sampler.samplingStatus.value !== 'idle'" 
+        class="bg-white rounded-2xl p-6 shadow-md border border-gray-100 max-w-xl mx-auto mb-6 overflow-hidden relative transition-all duration-300"
+    >
+        <!-- Horizontal status bar at the top -->
+        <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+            <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
+                <span class="flex h-2.5 w-2.5 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
+                </span>
+                Proses Presensi
             </h3>
             <span 
-                class="text-xs px-2.5 py-1 rounded-full font-bold uppercase tracking-wider text-center"
+                class="text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider text-center"
                 :class="statusBadgeClass"
             >
                 {{ statusLabel }}
             </span>
         </div>
 
-        <!-- Sampling progress details -->
-        <div v-if="sampler.samplingStatus.value === 'sampling'" class="mb-5 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80">
-            <div class="flex justify-between items-center mb-2">
-                <span class="text-xs text-slate-400">Mengumpulkan sampel koordinat...</span>
-                <span class="text-xs font-semibold text-blue-400">{{ sampler.samplesCollected.value }} / {{ sampler.totalSamples.value }}</span>
-            </div>
-            <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                <div class="bg-blue-500 h-2 rounded-full transition-all duration-300" :style="{ width: `${sampler.samplingProgress.value}%` }" />
-            </div>
-            <p class="text-[11px] text-slate-500 mt-2 italic">
-                Tahan posisi perangkat Anda tetap diam selama beberapa detik...
-            </p>
-        </div>
+        <!-- Vertical Stepper -->
+        <div class="relative pl-8 space-y-6">
+            <!-- Connecting Line -->
+            <div class="absolute left-[11px] top-2 bottom-2 w-0.5 bg-gray-200 z-0"></div>
 
-        <!-- Layers checking layout -->
-        <div class="space-y-3.5">
-            <!-- Layer 1: Geolocation Permission -->
-            <div class="flex items-start justify-between gap-3 text-xs p-3 rounded-lg bg-slate-950/20 border border-slate-800/30">
-                <div class="flex gap-2.5">
-                    <div class="mt-0.5" :class="layerStatusColor(permissionStatus)">
-                        <i :class="layerStatusIcon(permissionStatus)"></i>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-slate-200">Izin Geolocation Browser</p>
-                        <p class="text-slate-400 text-[11px] mt-0.5">{{ permissionMessage }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Layer 2: GPS Accuracy -->
-            <div class="flex items-start justify-between gap-3 text-xs p-3 rounded-lg bg-slate-950/20 border border-slate-800/30">
-                <div class="flex gap-2.5">
-                    <div class="mt-0.5" :class="layerStatusColor(accuracyStatus)">
-                        <i :class="layerStatusIcon(accuracyStatus)"></i>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-slate-200">Akurasi Sinyal GPS (Maks: {{ maxAccuracy }}m)</p>
-                        <p class="text-slate-400 text-[11px] mt-0.5">{{ accuracyMessage }}</p>
-                    </div>
-                </div>
-                <div v-if="sampler.gpsAccuracy.value !== null" class="flex-shrink-0">
-                    <span 
-                        class="text-[11px] px-2 py-0.5 rounded font-mono font-semibold"
-                        :class="accuracyBadgeClass"
-                    >
-                        ±{{ Math.round(sampler.gpsAccuracy.value) }}m
+            <!-- Step 1: Face Verification -->
+            <div class="relative flex items-start">
+                <!-- Dot Indicator -->
+                <div class="absolute left-[-28px] top-0.5 z-10">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 border-2 border-emerald-500">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                        </svg>
                     </span>
                 </div>
-            </div>
-
-            <!-- Layer 3: Coordinate Stability -->
-            <div class="flex items-start justify-between gap-3 text-xs p-3 rounded-lg bg-slate-950/20 border border-slate-800/30">
-                <div class="flex gap-2.5">
-                    <div class="mt-0.5" :class="layerStatusColor(stabilityStatus)">
-                        <i :class="layerStatusIcon(stabilityStatus)"></i>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-slate-200">Stabilitas Sinyal GPS</p>
-                        <p class="text-slate-400 text-[11px] mt-0.5">{{ stabilityMessage }}</p>
-                    </div>
+                <div>
+                    <h4 class="text-sm font-bold text-gray-800">Verifikasi Wajah</h4>
+                    <p class="text-xs text-emerald-600 font-medium">✓ Wajah terverifikasi berhasil</p>
                 </div>
             </div>
 
-            <!-- Layer 4: Presence Radius -->
-            <div class="flex items-start justify-between gap-3 text-xs p-3 rounded-lg bg-slate-950/20 border border-slate-800/30">
-                <div class="flex gap-2.5">
-                    <div class="mt-0.5" :class="layerStatusColor(radiusStatus)">
-                        <i :class="layerStatusIcon(radiusStatus)"></i>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-slate-200">Validasi Radius Presensi (Maks: {{ allowedRadius }}m)</p>
-                        <p class="text-slate-400 text-[11px] mt-0.5">{{ radiusMessage }}</p>
-                    </div>
+            <!-- Step 2: GPS Location -->
+            <div class="relative flex items-start">
+                <!-- Dot Indicator -->
+                <div class="absolute left-[-28px] top-0.5 z-10">
+                    <!-- Current -->
+                    <span v-if="gpsStepStatus === 'current'" class="flex h-6 w-6 items-center justify-center rounded-full bg-blue-50 text-blue-600 border-2 border-blue-500 animate-pulse">
+                        <span class="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
+                    </span>
+                    <!-- Completed -->
+                    <span v-else-if="gpsStepStatus === 'completed'" class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 border-2 border-emerald-500">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </span>
+                    <!-- Failed -->
+                    <span v-else-if="gpsStepStatus === 'failed'" class="flex h-6 w-6 items-center justify-center rounded-full bg-red-100 text-red-600 border-2 border-red-500">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </span>
+                    <!-- Pending -->
+                    <span v-else class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-400 border-2 border-gray-200">
+                        <span class="h-2 w-2 rounded-full bg-gray-300"></span>
+                    </span>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold" :class="gpsStepStatus !== 'pending' ? 'text-gray-800' : 'text-gray-400'">Membaca Lokasi GPS</h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">{{ gpsStepDescription }}</p>
+                </div>
+            </div>
+
+            <!-- Step 3: Radius Verification -->
+            <div class="relative flex items-start">
+                <!-- Dot Indicator -->
+                <div class="absolute left-[-28px] top-0.5 z-10">
+                    <!-- Current -->
+                    <span v-if="radiusStepStatus === 'current'" class="flex h-6 w-6 items-center justify-center rounded-full bg-blue-50 text-blue-600 border-2 border-blue-500 animate-pulse">
+                        <span class="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
+                    </span>
+                    <!-- Completed -->
+                    <span v-else-if="radiusStepStatus === 'completed'" class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 border-2 border-emerald-500">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </span>
+                    <!-- Failed -->
+                    <span v-else-if="radiusStepStatus === 'failed'" class="flex h-6 w-6 items-center justify-center rounded-full bg-red-100 text-red-600 border-2 border-red-500">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </span>
+                    <!-- Pending -->
+                    <span v-else class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-400 border-2 border-gray-200">
+                        <span class="h-2 w-2 rounded-full bg-gray-300"></span>
+                    </span>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold" :class="radiusStepStatus !== 'pending' ? 'text-gray-800' : 'text-gray-400'">Validasi Radius Presensi</h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">{{ radiusStepDescription }}</p>
+                </div>
+            </div>
+
+            <!-- Step 4: Submission -->
+            <div class="relative flex items-start">
+                <!-- Dot Indicator -->
+                <div class="absolute left-[-28px] top-0.5 z-10">
+                    <!-- Current -->
+                    <span v-if="submitStepStatus === 'current'" class="flex h-6 w-6 items-center justify-center rounded-full bg-blue-50 text-blue-600 border-2 border-blue-500 animate-pulse">
+                        <span class="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
+                    </span>
+                    <!-- Completed -->
+                    <span v-else-if="submitStepStatus === 'completed'" class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 border-2 border-emerald-500">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </span>
+                    <!-- Pending -->
+                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-400 border-2 border-gray-200" v-else>
+                        <span class="h-2 w-2 rounded-full bg-gray-300"></span>
+                    </span>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold" :class="submitStepStatus !== 'pending' ? 'text-gray-800' : 'text-gray-400'">Menyimpan Presensi</h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">{{ submitStepDescription }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- General error notice -->
-        <div v-if="sampler.errorMessage.value" class="mt-4 p-3 bg-red-950/40 border border-red-900/50 rounded-xl flex gap-2.5 text-xs text-red-300">
-            <svg class="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Error display -->
+        <div v-if="sampler.errorMessage.value" class="mt-6 p-4 bg-red-50 border border-red-100 rounded-xl flex gap-3 text-xs text-red-700">
+            <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <div>
-                <p class="font-semibold">Kesalahan Verifikasi</p>
-                <p class="mt-0.5 text-red-400/90 leading-relaxed">{{ sampler.errorMessage.value }}</p>
+                <p class="font-bold">Presensi Gagal</p>
+                <p class="mt-0.5 text-red-600/90 leading-relaxed font-medium">{{ sampler.errorMessage.value }}</p>
             </div>
         </div>
     </div>
@@ -117,141 +147,108 @@ import { computed } from "vue";
 
 const props = defineProps({
     sampler: { type: Object, required: true },
-    maxAccuracy: { type: Number, default: 50 },
+    isProcessing: { type: Boolean, default: false },
     allowedRadius: { type: Number, default: 500 },
 });
 
 const statusLabel = computed(() => {
+    if (props.sampler.errorMessage.value) return "Gagal";
+    if (props.isProcessing) return "Menyimpan";
+    
     switch (props.sampler.samplingStatus.value) {
         case "requesting-permission":
-            return "Perizinan";
-        case "sampling":
-            return "Mengambil Sampel";
-        case "validating":
-            return "Memvalidasi";
+            return "Perizinan GPS";
+        case "locating":
+            return "Mencari Lokasi";
         case "done":
-            return "Selesai";
-        case "error":
-            return "Gagal";
+            return "Validasi Berhasil";
         default:
-            return "Standby";
+            return "Memproses";
     }
 });
 
 const statusBadgeClass = computed(() => {
+    if (props.sampler.errorMessage.value) {
+        return "bg-red-50 text-red-600 border border-red-100";
+    }
+    if (props.isProcessing) {
+        return "bg-blue-50 text-blue-600 border border-blue-100 animate-pulse";
+    }
+    
     switch (props.sampler.samplingStatus.value) {
         case "requesting-permission":
-        case "sampling":
-            return "bg-blue-900/40 text-blue-400 border border-blue-800/40";
-        case "validating":
-            return "bg-amber-900/40 text-amber-400 border border-amber-800/40 animate-pulse";
+        case "locating":
+            return "bg-blue-50 text-blue-600 border border-blue-100";
         case "done":
-            return "bg-emerald-900/40 text-emerald-400 border border-emerald-800/40";
-        case "error":
-            return "bg-red-900/40 text-red-400 border border-red-800/40";
+            return "bg-emerald-50 text-emerald-600 border border-emerald-100";
         default:
-            return "bg-slate-800 text-slate-400 border border-slate-700";
+            return "bg-gray-50 text-gray-500 border border-gray-100";
     }
 });
 
-// Layer state resolvers
-const permissionStatus = computed(() => {
-    if (props.sampler.samplingStatus.value === "requesting-permission") return "checking";
-    if (props.sampler.samplingStatus.value === "error" && props.sampler.errorMessage.value?.includes("akses lokasi")) return "failed";
-    if (props.sampler.samplingStatus.value === "idle") return "pending";
-    return "passed";
-});
+// Step statuses: 'pending' | 'current' | 'completed' | 'failed'
+const gpsStepStatus = computed(() => {
+    const status = props.sampler.samplingStatus.value;
+    const errorMsg = props.sampler.errorMessage.value;
 
-const permissionMessage = computed(() => {
-    if (permissionStatus.value === "checking") return "Menunggu izin akses GPS...";
-    if (permissionStatus.value === "failed") return "Akses GPS ditolak oleh browser/pengguna.";
-    if (permissionStatus.value === "passed") return "Izin GPS diberikan.";
-    return "Menunggu memulai verifikasi...";
-});
-
-const accuracyStatus = computed(() => {
-    if (permissionStatus.value !== "passed") return "pending";
-    if (props.sampler.samplingStatus.value === "sampling") return "checking";
-    if (props.sampler.gpsAccuracy.value === null) return "pending";
-    return props.sampler.gpsAccuracy.value <= props.maxAccuracy ? "passed" : "failed";
-});
-
-const accuracyMessage = computed(() => {
-    if (accuracyStatus.value === "pending") return "Menunggu sinyal GPS...";
-    if (accuracyStatus.value === "checking") return "Membaca akurasi sinyal GPS...";
-    if (accuracyStatus.value === "passed") return `Akurasi sinyal stabil (di bawah threshold ${props.maxAccuracy}m).`;
-    return `Sinyal terlalu lemah (±${Math.round(props.sampler.gpsAccuracy.value)}m). Silakan pindah ke area terbuka.`;
-});
-
-const accuracyBadgeClass = computed(() => {
-    if (accuracyStatus.value === "passed") return "bg-emerald-950 text-emerald-400 border border-emerald-900/40";
-    if (accuracyStatus.value === "failed") return "bg-red-950 text-red-400 border border-red-900/40 animate-pulse";
-    return "bg-slate-800 text-slate-400 border border-slate-700";
-});
-
-const stabilityStatus = computed(() => {
-    if (accuracyStatus.value !== "passed") return "pending";
-    if (props.sampler.samplingStatus.value === "validating") return "checking";
-    if (props.sampler.samplingStatus.value === "done") {
-        const check = props.sampler.validationLayers.value.find(l => l.name === 'coordinate_stability');
-        return check?.passed ? "passed" : "failed";
-    }
-    if (props.sampler.samplingStatus.value === "error" && props.sampler.errorMessage.value?.includes("stabil")) return "failed";
+    if (errorMsg && errorMsg.includes("akses lokasi")) return "failed";
+    if (status === "requesting-permission" || status === "locating") return "current";
+    if (status === "done") return "completed";
     return "pending";
 });
 
-const stabilityMessage = computed(() => {
-    if (stabilityStatus.value === "pending") return "Menunggu pengumpulan sampel selesai...";
-    if (stabilityStatus.value === "checking") return "Memvalidasi fluktuasi koordinat GPS...";
-    if (stabilityStatus.value === "passed") return "Koordinat lokasi konsisten dan bebas dari manipulasi drift.";
-    return "Pergeseran koordinat terlalu tinggi. Pastikan perangkat Anda diam.";
+const gpsStepDescription = computed(() => {
+    const status = props.sampler.samplingStatus.value;
+    const errorMsg = props.sampler.errorMessage.value;
+
+    if (errorMsg && errorMsg.includes("akses lokasi")) return "Izin GPS ditolak. Silakan berikan izin lokasi pada browser Anda.";
+    if (status === "requesting-permission") return "Meminta izin akses GPS perangkat...";
+    if (status === "locating") return "Membaca posisi koordinat...";
+    if (status === "done") {
+        const accuracyVal = props.sampler.gpsAccuracy.value;
+        const accuracyStr = accuracyVal !== null ? ` (Akurasi: ±${Math.round(accuracyVal)}m)` : "";
+        return "Lokasi berhasil didapatkan" + accuracyStr;
+    }
+    return "Menunggu memulai pencarian lokasi...";
 });
 
-const radiusStatus = computed(() => {
-    if (stabilityStatus.value !== "passed") return "pending";
-    if (props.sampler.samplingStatus.value === "validating") return "checking";
-    if (props.sampler.samplingStatus.value === "done") {
-        const check = props.sampler.validationLayers.value.find(l => l.name === 'radius_validation');
-        return check?.passed ? "passed" : "failed";
-    }
-    if (props.sampler.samplingStatus.value === "error" && props.sampler.errorMessage.value?.includes("luar area")) return "failed";
+const radiusStepStatus = computed(() => {
+    const status = props.sampler.samplingStatus.value;
+    const errorMsg = props.sampler.errorMessage.value;
+
+    if (errorMsg && (errorMsg.includes("radius") || errorMsg.includes("luar area"))) return "failed";
+    if (status === "done") return "completed";
+    if (gpsStepStatus.value === "completed" && status !== "done" && !errorMsg) return "current";
     return "pending";
 });
 
-const radiusMessage = computed(() => {
-    if (radiusStatus.value === "pending") return "Menunggu koordinat lokasi terverifikasi...";
-    if (radiusStatus.value === "checking") return "Memverifikasi koordinat terhadap radius kantor...";
-    if (radiusStatus.value === "passed") {
-        const check = props.sampler.validationLayers.value.find(l => l.name === 'radius_validation');
-        return check ? check.message : "Berada di dalam area presensi magang.";
+const radiusStepDescription = computed(() => {
+    const status = props.sampler.samplingStatus.value;
+    const errorMsg = props.sampler.errorMessage.value;
+
+    if (errorMsg && (errorMsg.includes("radius") || errorMsg.includes("luar area"))) {
+        return "Gagal: Anda berada di luar radius kantor yang diizinkan.";
     }
-    return "Koordinat Anda berada di luar batas area presensi magang Bank Indonesia.";
+    if (status === "done") {
+        const distanceVal = props.sampler.validationLayers.value.find(l => l.name === 'radius_validation')?.message;
+        return distanceVal || `Berada di dalam radius presensi (maks ${props.allowedRadius}m).`;
+    }
+    if (radiusStepStatus.value === "current") return "Memverifikasi koordinat terhadap area kantor...";
+    return "Menunggu koordinat lokasi terverifikasi...";
 });
 
-// Helper for layer state classes
-const layerStatusColor = (status) => {
-    switch (status) {
-        case "passed":
-            return "text-emerald-400";
-        case "failed":
-            return "text-red-400";
-        case "checking":
-            return "text-blue-400";
-        default:
-            return "text-slate-600";
+const submitStepStatus = computed(() => {
+    if (props.isProcessing) return "current";
+    if (props.sampler.samplingStatus.value === "done" && !props.isProcessing) {
+        // Since the page updates or reloads, if it is done and not processing, it is completed or ready
+        return "completed";
     }
-};
+    return "pending";
+});
 
-const layerStatusIcon = (status) => {
-    switch (status) {
-        case "passed":
-            return "fas fa-check-circle";
-        case "failed":
-            return "fas fa-times-circle";
-        case "checking":
-            return "fas fa-spinner animate-spin";
-        default:
-            return "fas fa-dot-circle";
-    }
-};
+const submitStepDescription = computed(() => {
+    if (props.isProcessing) return "Mengirimkan data presensi aman ke server...";
+    if (submitStepStatus.value === "completed") return "Presensi berhasil tercatat di sistem.";
+    return "Menunggu verifikasi lokasi selesai...";
+});
 </script>
