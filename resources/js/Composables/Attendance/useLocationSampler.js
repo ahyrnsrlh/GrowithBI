@@ -11,8 +11,8 @@ export function useLocationSampler(options = {}) {
     const maxAccuracy = ref(options.gpsAccuracyMax || 50);
     const maxStability = ref(options.stabilityMax || 0.0003);
     const allowedRadius = ref(options.allowedRadius || 500);
-    const officeLat = ref(options.officeLocation?.latitude ?? -5.397140);
-    const officeLon = ref(options.officeLocation?.longitude ?? 105.266792);
+    const officeLat = ref(options.officeLocation?.latitude ?? -5.4194538);
+    const officeLon = ref(options.officeLocation?.longitude ?? 105.2604370);
 
     const validationLayers = ref([]);
     const locationResult = ref(null);

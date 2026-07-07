@@ -368,10 +368,10 @@ class AttendanceController extends Controller
 
         // Office location (Bank Indonesia KPw Lampung)
         $officeLocation = [
-            'latitude' => -5.3971,
-            'longitude' => 105.2669,
-            'radius' => 200, // 200 meters
-            'name' => 'Bank Indonesia KPw Lampung'
+            'latitude' => (float)config('attendance.office.latitude', -5.4194538),
+            'longitude' => (float)config('attendance.office.longitude', 105.2604370),
+            'radius' => (int)config('attendance.radius', 500),
+            'name' => 'Telkom Witel Lampung (Testing)'
         ];
 
         return Inertia::render('Admin/Maps/Index', [
@@ -451,10 +451,10 @@ class AttendanceController extends Controller
      */
     private function isValidLocation($latitude, $longitude): bool
     {
-        // Office coordinates (Bank Indonesia KPw Lampung)
-        $officeLat = -5.3971;
-        $officeLng = 105.2669;
-        $radius = 200; // meters
+        // Office coordinates
+        $officeLat = (float)config('attendance.office.latitude', -5.4194538);
+        $officeLng = (float)config('attendance.office.longitude', 105.2604370);
+        $radius = (int)config('attendance.radius', 500);
 
         $distance = $this->calculateDistance($officeLat, $officeLng, $latitude, $longitude);
         

@@ -126,9 +126,9 @@ class AttendanceUpdated implements ShouldBroadcastNow
             return false;
         }
 
-        $officeLat = -5.3971;
-        $officeLng = 105.2669;
-        $radius    = 200;
+        $officeLat = (float)config('attendance.office.latitude', -5.4194538);
+        $officeLng = (float)config('attendance.office.longitude', 105.2604370);
+        $radius    = (int)config('attendance.radius', 500);
 
         $distance = $this->calculateDistance($officeLat, $officeLng, $latitude, $longitude);
 

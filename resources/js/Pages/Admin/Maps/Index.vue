@@ -55,10 +55,10 @@ const props = defineProps({
     officeLocation: {
         type: Object,
         default: () => ({
-            latitude: -5.39714,
-            longitude: 105.26679,
-            name: "Bank Indonesia KPw Lampung",
-            radius: 100,
+            latitude: -5.4194538,
+            longitude: 105.2604370,
+            name: "Telkom Witel Lampung (Testing)",
+            radius: 500,
         }),
     },
     currentDate: {

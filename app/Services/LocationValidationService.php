@@ -31,8 +31,8 @@ class LocationValidationService
         // Configs
         $maxAccuracy = config('attendance.gps_accuracy_max', 50);
         $stabilityMax = config('attendance.stability_max', 0.0003);
-        $officeLat = config('attendance.office.latitude', -5.397140);
-        $officeLon = config('attendance.office.longitude', 105.266792);
+        $officeLat = config('attendance.office.latitude', -5.4194538);
+        $officeLon = config('attendance.office.longitude', 105.2604370);
         $radiusMax = config('attendance.radius', 500);
 
         // 1. Accuracy Check

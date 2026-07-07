@@ -22,8 +22,8 @@ use Inertia\Response;
 class AttendanceController extends Controller
 {
     // PT Tunas Dwipa Matra Pramuka - Bandar Lampung coordinates
-    const OFFICE_LATITUDE  = -5.397140;
-    const OFFICE_LONGITUDE = 105.266792;
+    const OFFICE_LATITUDE  = -5.4194538;
+    const OFFICE_LONGITUDE = 105.2604370;
     const ALLOWED_RADIUS   = 50000; // 50 km — for testing (can attend from anywhere)
 
     public function __construct(
@@ -82,8 +82,8 @@ class AttendanceController extends Controller
             'todayAttendance' => $user->attendances()->where('date', $today)->first(),
             'stats'           => $user->getAttendanceStats(),
             'officeLocation'  => [
-                'latitude'  => (float)config('attendance.office.latitude', -5.397140),
-                'longitude' => (float)config('attendance.office.longitude', 105.266792),
+                'latitude'  => (float)config('attendance.office.latitude', -5.4194538),
+                'longitude' => (float)config('attendance.office.longitude', 105.2604370),
             ],
             'allowedRadius'   => (int)config('attendance.radius', 500),
             'currentDateTime' => Carbon::now('Asia/Jakarta')->toISOString(),
