@@ -102,8 +102,18 @@ export function usePesertaAttendancePage(props, page) {
         setTimeout(() => { showErrorToast.value = false; }, 5000);
     };
 
-    watch(() => page.props.flash?.success, (val) => { if (val) showToastFor("success"); });
-    watch(() => page.props.flash?.error,   (val) => { if (val) showToastFor("error"); });
+    watch(
+        () => page.props.flash,
+        (flash) => {
+            if (flash?.success) {
+                showToastFor("success");
+            }
+            if (flash?.error) {
+                showToastFor("error");
+            }
+        },
+        { deep: true }
+    );
     watch(filterStatus, () => { currentPage.value = 1; });
 
     onMounted(() => {

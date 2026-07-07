@@ -4,9 +4,11 @@ import SecureCameraModal from "@/Components/Attendance/SecureCameraModal.vue";
 import AttendanceHistoryCard from "@/Components/Profile/Attendance/AttendanceHistoryCard.vue";
 import AttendancePageHeader from "@/Components/Profile/Attendance/AttendancePageHeader.vue";
 import TodayAttendanceStatusCard from "@/Components/Profile/Attendance/TodayAttendanceStatusCard.vue";
+import LocationValidationWidget from "@/Components/Attendance/LocationValidationWidget.vue";
 import { useAttendanceCapture } from "@/Composables/Attendance/useAttendanceCapture";
 import { useAttendanceFormatters } from "@/Composables/Attendance/useAttendanceFormatters";
 import { useAttendanceServerClock } from "@/Composables/Attendance/useAttendanceServerClock";
+import { useLocationSampler } from "@/Composables/Attendance/useLocationSampler";
 
 const props = defineProps({
     attendances: {
@@ -26,6 +28,11 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    officeLocation: Object,
+    allowedRadius: {
+        type: Number,
+        default: 500,
+    },
 });
 
 const emit = defineEmits(["show-toast"]);
@@ -33,6 +40,13 @@ const emit = defineEmits(["show-toast"]);
 const attendanceList = computed(
     () => props.attendanceHistory || props.attendances || [],
 );
+
+const locationSampler = useLocationSampler({
+    allowedRadius: props.allowedRadius,
+    officeLocation: props.officeLocation,
+});
+
+const locationStatus = ref(null);
 
 const {
     showCamera,
@@ -42,7 +56,9 @@ const {
     handleCheckIn,
     handleCheckOut,
     onPhotoCaptured,
+    onFaceVerified,
 } = useAttendanceCapture({
+    locationSampler,
     onNotify: (type, message) => {
         emit("show-toast", type, message);
     },
@@ -96,6 +112,13 @@ watch(filterStatus, () => {
     <div>
         <AttendancePageHeader :currentTime="currentTime" />
 
+        <LocationValidationWidget
+            v-if="locationSampler.samplingStatus.value !== 'idle'"
+            :sampler="locationSampler"
+            :maxAccuracy="50"
+            :allowedRadius="allowedRadius"
+        />
+
         <TodayAttendanceStatusCard
             :todayAttendance="todayAttendance"
             :isProcessing="isProcessing"
@@ -125,8 +148,12 @@ watch(filterStatus, () => {
         <SecureCameraModal
             :show="showCamera"
             :title="cameraTitle"
+            :locationStatus="locationStatus"
+            :gpsValidated="locationSampler.samplingStatus.value === 'done'"
+            :locationSummary="locationSampler.locationResult.value ? `GPS Terdeteksi (±${Math.round(locationSampler.locationResult.value.accuracy)}m)` : null"
             @close="showCamera = false"
             @photo-captured="onPhotoCaptured"
+            @face-verified="onFaceVerified"
         />
 
 

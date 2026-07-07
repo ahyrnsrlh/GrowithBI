@@ -222,7 +222,9 @@ class AttendanceController extends Controller
         $verifiedAt = session()->get('face_verified_at');
         $verifiedUserId = session()->get('face_verified_user_id');
         if (!$verifiedAt || $verifiedUserId !== $user->id || (now()->timestamp - $verifiedAt) > 300) {
-            return redirect()->back()->with('error', 'Verifikasi wajah diperlukan sebelum melakukan presensi.');
+            return redirect()->back()
+                ->withErrors(['error' => 'Verifikasi wajah diperlukan sebelum melakukan presensi.'])
+                ->with('error', 'Verifikasi wajah diperlukan sebelum melakukan presensi.');
         }
 
         // IMPORTANT: Always use server time, never trust client time
@@ -233,7 +235,9 @@ class AttendanceController extends Controller
         $existingAttendance = $user->attendances()->where('date', $today)->first();
 
         if ($existingAttendance && $existingAttendance->check_in) {
-            return redirect()->back()->with('error', 'Anda sudah melakukan check-in hari ini.');
+            return redirect()->back()
+                ->withErrors(['error' => 'Anda sudah melakukan check-in hari ini.'])
+                ->with('error', 'Anda sudah melakukan check-in hari ini.');
         }
 
         // 2. LOCATION VALIDATION (Multi-Layer)
@@ -251,7 +255,9 @@ class AttendanceController extends Controller
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
             ]);
-            return redirect()->back()->with('error', $locationResult['notes'] ?: 'Akses lokasi tidak valid.');
+            return redirect()->back()
+                ->withErrors(['error' => $locationResult['notes'] ?: 'Akses lokasi tidak valid.'])
+                ->with('error', $locationResult['notes'] ?: 'Akses lokasi tidak valid.');
         }
 
         // Save photo
@@ -349,7 +355,9 @@ class AttendanceController extends Controller
         $verifiedAt = session()->get('face_verified_at');
         $verifiedUserId = session()->get('face_verified_user_id');
         if (!$verifiedAt || $verifiedUserId !== $user->id || (now()->timestamp - $verifiedAt) > 300) {
-            return redirect()->back()->with('error', 'Verifikasi wajah diperlukan sebelum melakukan presensi.');
+            return redirect()->back()
+                ->withErrors(['error' => 'Verifikasi wajah diperlukan sebelum melakukan presensi.'])
+                ->with('error', 'Verifikasi wajah diperlukan sebelum melakukan presensi.');
         }
 
         $now   = Carbon::now('Asia/Jakarta');
@@ -358,11 +366,15 @@ class AttendanceController extends Controller
         $attendance = $user->attendances()->where('date', $today)->first();
 
         if (!$attendance || !$attendance->check_in) {
-            return redirect()->back()->with('error', 'Anda belum melakukan check-in hari ini.');
+            return redirect()->back()
+                ->withErrors(['error' => 'Anda belum melakukan check-in hari ini.'])
+                ->with('error', 'Anda belum melakukan check-in hari ini.');
         }
 
         if ($attendance->check_out) {
-            return redirect()->back()->with('error', 'Anda sudah melakukan check-out hari ini.');
+            return redirect()->back()
+                ->withErrors(['error' => 'Anda sudah melakukan check-out hari ini.'])
+                ->with('error', 'Anda sudah melakukan check-out hari ini.');
         }
 
         // 2. LOCATION VALIDATION (Multi-Layer)
@@ -380,7 +392,9 @@ class AttendanceController extends Controller
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
             ]);
-            return redirect()->back()->with('error', $locationResult['notes'] ?: 'Akses lokasi tidak valid.');
+            return redirect()->back()
+                ->withErrors(['error' => $locationResult['notes'] ?: 'Akses lokasi tidak valid.'])
+                ->with('error', $locationResult['notes'] ?: 'Akses lokasi tidak valid.');
         }
 
         // Save photo

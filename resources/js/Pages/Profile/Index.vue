@@ -56,6 +56,8 @@
                             <AttendanceTab
                                 :attendanceHistory="props.attendanceHistory"
                                 :todayAttendance="props.todayAttendance"
+                                :officeLocation="props.officeLocation"
+                                :allowedRadius="props.allowedRadius"
                                 @show-toast="(type, msg) => showToast(type, msg)"
                             />
                         </div>
@@ -164,6 +166,8 @@ const props = defineProps({
     face_registered_at: { type: String, default: null },
     mustVerifyEmail: Boolean,
     status: String,
+    officeLocation: Object,
+    allowedRadius: { type: Number, default: 500 },
 });
 
 const {

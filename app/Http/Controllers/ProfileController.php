@@ -178,6 +178,11 @@ class ProfileController extends Controller
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
             'selectedDivisionId' => $request->get('division_id') ?? session('division_id'),
+            'officeLocation' => [
+                'latitude'  => (float)config('attendance.office.latitude', -5.4194538),
+                'longitude' => (float)config('attendance.office.longitude', 105.2604370),
+            ],
+            'allowedRadius' => (int)config('attendance.radius', 500),
         ]);
     }
 
