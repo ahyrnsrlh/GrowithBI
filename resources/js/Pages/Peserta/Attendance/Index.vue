@@ -68,6 +68,7 @@
         :locationSummary="locationSampler.locationResult.value ? `GPS Terdeteksi (±${Math.round(locationSampler.locationResult.value.accuracy)}m)` : null"
         @close="showCamera = false"
         @photo-captured="onPhotoCaptured"
+        @face-verified="onFaceVerified"
     />
 
 </template>
@@ -120,6 +121,7 @@ const {
     handleCheckIn,
     handleCheckOut,
     onPhotoCaptured,
+    onFaceVerified,
     faceEnrolled,
     locationSampler,
 } = usePesertaAttendancePage(props, page);

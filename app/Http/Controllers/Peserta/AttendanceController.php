@@ -143,6 +143,55 @@ class AttendanceController extends Controller
         ]);
     }
 
+    /**
+     * Verify the authenticated user's face against their enrolled descriptor.
+     */
+    public function verifyFace(Request $request): JsonResponse
+    {
+        $request->validate([
+            'face_descriptor' => 'required|array|size:128',
+            'photo'           => 'nullable|string',
+        ]);
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized.',
+            ], 401);
+        }
+
+        $faceResult = $this->faceService->verifyFace($user, $request->face_descriptor);
+
+        if ($faceResult['success']) {
+            // Save face verification status + timestamp in session (expires in 5 minutes)
+            session()->put('face_verified_at', now()->timestamp);
+            session()->put('face_verified_user_id', $user->id);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Verifikasi wajah berhasil.',
+            ]);
+        }
+
+        // Log failed attempt to logs
+        Log::warning('Face verification failed for user during pre-submission scan', [
+            'user_id' => $user->id,
+            'error'   => $faceResult['message'],
+        ]);
+
+        if (!empty($user->face_descriptor)) {
+            $this->sendFailedAttendanceNotification($user, 'face_not_recognized');
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Wajah yang terdeteksi tidak sesuai dengan wajah yang telah didaftarkan. Pastikan Anda menggunakan akun dan wajah Anda sendiri untuk melakukan presensi.',
+        ]);
+    }
+
     // =========================================================================
     // CHECK-IN
     // =========================================================================
@@ -169,18 +218,16 @@ class AttendanceController extends Controller
             abort(401);
         }
 
+        // Enforce face verification session check
+        $verifiedAt = session()->get('face_verified_at');
+        $verifiedUserId = session()->get('face_verified_user_id');
+        if (!$verifiedAt || $verifiedUserId !== $user->id || (now()->timestamp - $verifiedAt) > 300) {
+            return redirect()->back()->with('error', 'Verifikasi wajah diperlukan sebelum melakukan presensi.');
+        }
+
         // IMPORTANT: Always use server time, never trust client time
         $now   = Carbon::now('Asia/Jakarta');
         $today = $now->toDateString();
-
-        // 1. FACE VERIFICATION — reject if not enrolled
-        $faceResult = $this->faceService->verifyFace($user, $request->face_descriptor);
-        if (!$faceResult['success']) {
-            if (!empty($user->face_descriptor)) {
-                $this->sendFailedAttendanceNotification($user, 'face_not_recognized');
-            }
-            return redirect()->back()->with('error', $faceResult['message']);
-        }
 
         // Check if already checked in today
         $existingAttendance = $user->attendances()->where('date', $today)->first();
@@ -241,9 +288,10 @@ class AttendanceController extends Controller
                 'date'         => $today,
                 'check_in'     => $now->format('Y-m-d H:i:s'),
                 'status'       => $status,
-                'confidence'   => $faceResult['confidence'],
                 'gps_accuracy' => $attendance->gps_accuracy,
             ]);
+            // Clear face verification status from session
+            session()->forget(['face_verified_at', 'face_verified_user_id']);
         } catch (\Exception $e) {
             Log::error('Failed to save attendance', [
                 'user_id' => $user->id,
@@ -297,15 +345,15 @@ class AttendanceController extends Controller
             abort(401);
         }
 
+        // Enforce face verification session check
+        $verifiedAt = session()->get('face_verified_at');
+        $verifiedUserId = session()->get('face_verified_user_id');
+        if (!$verifiedAt || $verifiedUserId !== $user->id || (now()->timestamp - $verifiedAt) > 300) {
+            return redirect()->back()->with('error', 'Verifikasi wajah diperlukan sebelum melakukan presensi.');
+        }
+
         $now   = Carbon::now('Asia/Jakarta');
         $today = $now->toDateString();
-
-        // 1. FACE VERIFICATION — reject if not enrolled or no match
-        $faceResult = $this->faceService->verifyFace($user, $request->face_descriptor);
-        if (!$faceResult['success']) {
-            $this->sendFailedAttendanceNotification($user, 'face_not_recognized');
-            return redirect()->back()->with('error', $faceResult['message']);
-        }
 
         $attendance = $user->attendances()->where('date', $today)->first();
 
@@ -362,8 +410,9 @@ class AttendanceController extends Controller
                 'attendance_id'=> $attendance->id,
                 'date'         => $today,
                 'check_out'    => $now->format('Y-m-d H:i:s'),
-                'confidence'   => $faceResult['confidence'],
             ]);
+            // Clear face verification status from session
+            session()->forget(['face_verified_at', 'face_verified_user_id']);
         } catch (\Exception $e) {
             Log::error('Failed to save check-out', [
                 'user_id' => $user->id,

@@ -34,6 +34,17 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+    Route::get('register/success', [RegisteredUserController::class, 'success'])
+        ->name('register.success');
+
+    Route::post('register/resend-verification', [RegisteredUserController::class, 'resendGuestVerification'])
+        ->name('register.resend')
+        ->middleware('throttle:3,1');
+
+    Route::post('register/change-email', [RegisteredUserController::class, 'changeGuestEmail'])
+        ->name('register.change-email')
+        ->middleware('throttle:3,1');
 });
 
 Route::middleware('auth')->group(function () {
@@ -70,3 +81,6 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
+
+Route::get('verify-email/success', [VerifyEmailController::class, 'success'])
+    ->name('verification.success');

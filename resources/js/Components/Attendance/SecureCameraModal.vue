@@ -38,13 +38,13 @@
                                     </div>
                                     <DialogTitle as="h3" class="text-base font-bold text-white">{{ title }}</DialogTitle>
                                 </div>
-                                <!-- Live / Captured badge -->
+                                <!-- Verification Status badge -->
                                 <div
-                                    class="text-xs font-bold px-3 py-1 rounded-full"
-                                    :class="capturedPhoto ? 'bg-emerald-600/30 text-emerald-400 border border-emerald-600/40' : 'bg-red-600/30 text-red-400 border border-red-600/40 flex items-center gap-1.5'"
+                                    class="text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5"
+                                    :class="statusBadgeColor"
                                 >
-                                    <span v-if="!capturedPhoto" class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse inline-block" />
-                                    {{ capturedPhoto ? '✓ FOTO' : 'LIVE' }}
+                                    <span v-if="verificationStatus !== 'Face Verified' && verificationStatus !== 'Face Verification Failed'" class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse inline-block" />
+                                    {{ verificationStatus }}
                                 </div>
                             </div>
 
@@ -58,18 +58,37 @@
                                     playsinline
                                     class="w-full h-full object-cover mirror"
                                 />
-                                <!-- GPS Not Validated Overlay -->
+                                <!-- Comparing Face / Loading Verification Overlay -->
                                 <div
-                                    v-if="!gpsValidated && !loadingModels && !capturedPhoto"
-                                    class="absolute inset-0 flex flex-col items-center justify-center bg-black/90 px-6 text-center z-10"
+                                    v-if="verificationStatus === 'Comparing Face'"
+                                    class="absolute inset-0 flex flex-col items-center justify-center bg-black/85 z-20 text-center"
                                 >
-                                    <svg class="w-12 h-12 text-amber-500 mb-3 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                    </svg>
-                                    <p class="text-sm font-semibold text-slate-100">Validasi Lokasi Diperlukan</p>
-                                    <p class="text-xs text-slate-400 mt-1 max-w-xs leading-relaxed">
-                                        Sistem sedang memverifikasi lokasi Anda sebelum kamera diizinkan untuk digunakan.
+                                    <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4" />
+                                    <p class="text-sm font-semibold text-slate-100">Membandingkan Wajah...</p>
+                                    <p class="text-xs text-slate-400 mt-1">Mohon tunggu sebentar, sistem sedang melakukan verifikasi biometrik.</p>
+                                </div>
+
+                                <!-- Face Verification Failure Blocking Dialog -->
+                                <div
+                                    v-if="verificationFailed"
+                                    class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/95 z-30 px-6 text-center"
+                                >
+                                    <div class="w-16 h-16 bg-red-950/50 border border-red-500 rounded-full flex items-center justify-center mb-4">
+                                        <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
+                                    </div>
+                                    <p class="text-base font-bold text-slate-100">Verifikasi Wajah Gagal</p>
+                                    <p class="text-xs text-slate-400 mt-2 max-w-xs leading-relaxed">
+                                        Wajah yang terdeteksi tidak sesuai dengan wajah yang telah didaftarkan. Pastikan Anda menggunakan akun dan wajah Anda sendiri untuk melakukan presensi.
                                     </p>
+                                    <button
+                                        type="button"
+                                        @click="retakePhoto"
+                                        class="mt-6 px-6 py-2.5 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white text-xs font-semibold rounded-xl transition duration-150"
+                                    >
+                                        Coba Lagi
+                                    </button>
                                 </div>
                                 <!-- Canvas overlay (bounding box) -->
                                 <canvas
@@ -260,7 +279,7 @@ const props = defineProps({
     locationSummary:{ type: String, default: null },
 });
 
-const emit = defineEmits(["close", "photo-captured"]);
+const emit = defineEmits(["close", "photo-captured", "face-verified"]);
 
 const {
     videoElement,
@@ -279,7 +298,24 @@ const {
     retakePhoto,
     confirmPhoto,
     close,
+    verificationStatus,
+    verificationFailed,
 } = useSecureCameraModal(props, emit);
+
+import { computed } from "vue";
+
+const statusBadgeColor = computed(() => {
+    switch (verificationStatus.value) {
+        case "Face Verified":
+            return "bg-emerald-600/30 text-emerald-400 border border-emerald-600/40";
+        case "Face Verification Failed":
+            return "bg-red-600/30 text-red-400 border border-red-600/40";
+        case "Comparing Face":
+            return "bg-amber-600/30 text-amber-400 border border-amber-600/40 animate-pulse";
+        default:
+            return "bg-blue-600/30 text-blue-400 border border-blue-600/40";
+    }
+});
 </script>
 
 <style scoped>

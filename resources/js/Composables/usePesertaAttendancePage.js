@@ -22,6 +22,7 @@ export function usePesertaAttendancePage(props, page) {
         handleCheckIn,
         handleCheckOut,
         onPhotoCaptured,
+        onFaceVerified,
     } = useAttendanceCapture({
         locationSampler,
         onNotify: (type, msg) => {
@@ -120,6 +121,7 @@ export function usePesertaAttendancePage(props, page) {
         handleCheckIn,
         handleCheckOut,
         onPhotoCaptured,
+        onFaceVerified,
         // Location Verification
         locationSampler,
         // Face enrollment

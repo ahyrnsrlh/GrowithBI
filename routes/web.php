@@ -105,6 +105,7 @@ Route::middleware('auth')->group(function () {
         // Face enrollment endpoints
         Route::get('/face-status', [\App\Http\Controllers\Peserta\AttendanceController::class, 'faceStatus'])->name('face-status');
         Route::post('/enroll-face', [\App\Http\Controllers\Peserta\AttendanceController::class, 'enrollFace'])->name('enroll-face')->middleware('throttle:10,1');
+        Route::post('/verify-face', [\App\Http\Controllers\Peserta\AttendanceController::class, 'verifyFace'])->name('verify-face')->middleware('throttle:10,1');
     });
     
     // Reports routes (accessible from profile page)

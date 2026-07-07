@@ -1,5 +1,6 @@
 import { onBeforeUnmount, onMounted, ref, watch, computed } from "vue";
 import * as faceapi from "face-api.js";
+import axios from "axios";
 
 /**
  * Composable for the SecureCameraModal used during check-in / check-out.
@@ -19,6 +20,9 @@ export function useSecureCameraModal(props, emit) {
     const faceDetected = ref(false);
     const faceDescriptor = ref(null);
     const loadingModels = ref(true);
+ 
+    const verificationStatus = ref("Initializing Camera");
+    const verificationFailed = ref(false);
 
     // Confidence is a 0-100 number derived from comparing consecutive descriptors.
     // It's a client-side quality indicator, NOT the server-side match score.
@@ -66,6 +70,7 @@ export function useSecureCameraModal(props, emit) {
                 videoElement.value.srcObject = stream;
                 await videoElement.value.play();
                 cameraReady.value = true;
+                verificationStatus.value = "Detecting Face";
                 if (modelsLoaded.value) startFaceDetection();
             }
         } catch (err) {
@@ -111,6 +116,7 @@ export function useSecureCameraModal(props, emit) {
 
                 if (detection?.descriptor) {
                     faceDetected.value = true;
+                    verificationStatus.value = "Generating Face Descriptor";
                     const desc = Array.from(detection.descriptor);
                     faceDescriptor.value = desc;
 
@@ -142,6 +148,7 @@ export function useSecureCameraModal(props, emit) {
                     stableFrames = 0;
                     confidence.value = 0;
                     matchStatus.value = "idle";
+                    verificationStatus.value = "Detecting Face";
                     cancelAutoCapture();
                     clearCanvas();
                 }
@@ -272,11 +279,14 @@ export function useSecureCameraModal(props, emit) {
         stableFrames = 0;
         confidence.value = 0;
         matchStatus.value = "idle";
+        verificationFailed.value = false;
+        errorMessage.value = "";
+        verificationStatus.value = "Detecting Face";
         clearCanvas();
         if (modelsLoaded.value && cameraReady.value) startFaceDetection();
     };
 
-    const confirmPhoto = () => {
+    const confirmPhoto = async () => {
         if (!capturedPhoto.value) {
             errorMessage.value = "Tidak ada foto yang diambil.";
             return;
@@ -285,11 +295,31 @@ export function useSecureCameraModal(props, emit) {
             errorMessage.value = "Face descriptor tidak valid. Silakan ambil foto ulang.";
             return;
         }
-        emit("photo-captured", {
-            photo: capturedPhoto.value,
-            faceDescriptor: faceDescriptor.value,
-        });
-        close();
+ 
+        verificationStatus.value = "Comparing Face";
+        try {
+            const response = await axios.post(route("profile.attendance.verify-face"), {
+                face_descriptor: faceDescriptor.value,
+                photo: capturedPhoto.value,
+            });
+ 
+            if (response.data?.success) {
+                verificationStatus.value = "Face Verified";
+                emit("face-verified", {
+                    photo: capturedPhoto.value,
+                    faceDescriptor: faceDescriptor.value,
+                });
+                close();
+            } else {
+                verificationStatus.value = "Face Verification Failed";
+                verificationFailed.value = true;
+                errorMessage.value = response.data?.message || "Verifikasi wajah gagal.";
+            }
+        } catch (error) {
+            verificationStatus.value = "Face Verification Failed";
+            verificationFailed.value = true;
+            errorMessage.value = error.response?.data?.message || "Terjadi kesalahan sistem. Silakan coba lagi.";
+        }
     };
 
     const close = () => {
@@ -325,6 +355,7 @@ export function useSecureCameraModal(props, emit) {
     onMounted(async () => {
         try {
             loadingModels.value = true;
+            verificationStatus.value = "Initializing Camera";
             await Promise.all([
                 faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
                 faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
@@ -359,5 +390,7 @@ export function useSecureCameraModal(props, emit) {
         retakePhoto,
         confirmPhoto,
         close,
+        verificationStatus,
+        verificationFailed,
     };
 }

@@ -22,36 +22,20 @@ export function useAttendanceCapture(options = {}) {
         actionType.value === "check-in" ? "Foto Check-in" : "Foto Check-out",
     );
 
-    const handleCheckIn = async () => {
+    const handleCheckIn = () => {
         actionType.value = "check-in";
         if (options.locationSampler) {
             options.locationSampler.reset();
-            await options.locationSampler.startSampling();
-            if (options.locationSampler.samplingStatus.value === "done") {
-                userLocation.value = options.locationSampler.locationResult.value;
-                showCamera.value = true;
-            } else if (options.locationSampler.samplingStatus.value === "error") {
-                notify("error", options.locationSampler.errorMessage.value);
-            }
-        } else {
-            await getLocation();
         }
+        showCamera.value = true;
     };
 
-    const handleCheckOut = async () => {
+    const handleCheckOut = () => {
         actionType.value = "check-out";
         if (options.locationSampler) {
             options.locationSampler.reset();
-            await options.locationSampler.startSampling();
-            if (options.locationSampler.samplingStatus.value === "done") {
-                userLocation.value = options.locationSampler.locationResult.value;
-                showCamera.value = true;
-            } else if (options.locationSampler.samplingStatus.value === "error") {
-                notify("error", options.locationSampler.errorMessage.value);
-            }
-        } else {
-            await getLocation();
         }
+        showCamera.value = true;
     };
 
     const getLocation = async () => {
@@ -79,13 +63,36 @@ export function useAttendanceCapture(options = {}) {
                     accuracy: position.coords.accuracy,
                 }]
             };
-
-            showCamera.value = true;
         } catch {
             notify(
                 "error",
                 "Gagal mendapatkan lokasi. Pastikan GPS aktif dan izinkan akses lokasi.",
             );
+        }
+    };
+
+    const onFaceVerified = async (data) => {
+        if (typeof data === "string") {
+            photoBase64.value = data;
+        } else {
+            photoBase64.value = data.photo;
+            faceDescriptor.value = data.faceDescriptor;
+        }
+
+        showCamera.value = false;
+
+        if (options.locationSampler) {
+            options.locationSampler.reset();
+            await options.locationSampler.startSampling();
+            if (options.locationSampler.samplingStatus.value === "done") {
+                userLocation.value = options.locationSampler.locationResult.value;
+                submit();
+            } else if (options.locationSampler.samplingStatus.value === "error") {
+                notify("error", options.locationSampler.errorMessage.value);
+            }
+        } else {
+            await getLocation();
+            submit();
         }
     };
 
@@ -180,5 +187,6 @@ export function useAttendanceCapture(options = {}) {
         handleCheckIn,
         handleCheckOut,
         onPhotoCaptured,
+        onFaceVerified,
     };
 }
