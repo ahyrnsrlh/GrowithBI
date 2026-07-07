@@ -38,7 +38,10 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user'         => $request->user(),
+                // Dedicated boolean — face_descriptor is hidden from user serialization for security.
+                // Use this prop in all Vue components instead of checking user.face_descriptor.
+                'face_enrolled' => $request->user()?->hasFaceEnrolled() ?? false,
             ],
             'csrf_token' => csrf_token(), // Always inject fresh CSRF token
             'flash' => [

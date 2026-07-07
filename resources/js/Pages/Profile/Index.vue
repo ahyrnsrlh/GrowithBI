@@ -12,6 +12,12 @@
             <ProfileHeader :user="$page.props.auth?.user" />
 
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <!-- Face enrollment banner — shown when biometric registration is incomplete -->
+                <FaceEnrollmentBanner
+                    :show="!faceEnrolled"
+                    @go-to-profile="goToProfileCamera"
+                />
+
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                     <SidebarNavigation
                         :activeTab="activeTab"
@@ -26,6 +32,8 @@
                             :user="user"
                             :profileForm="profileForm"
                             :editMode="editMode"
+                            :faceEnrolled="faceEnrolled"
+                            :faceRegisteredAt="props.face_registered_at"
                             @toggle-edit="editMode = !editMode"
                             @cancel-edit="editMode = false"
                             @submit-profile="updateProfile"
@@ -138,6 +146,7 @@ import ProfileInfoTab from "@/Components/Profile/ProfileInfoTab.vue";
 import ReportsTab from "@/Components/Profile/Reports/ReportsTab.vue";
 import SidebarNavigation from "@/Components/Profile/SidebarNavigation.vue";
 import ToastNotification from "@/Components/Profile/ToastNotification.vue";
+import FaceEnrollmentBanner from "@/Components/Profile/FaceEnrollmentBanner.vue";
 import { useProfilePage } from "@/Composables/useProfilePage";
 
 const props = defineProps({
@@ -151,6 +160,8 @@ const props = defineProps({
     attendanceHistory: { type: Array, default: () => [] },
     todayAttendance: { type: Object, default: null },
     profileCompletion: Object,
+    face_enrolled: { type: Boolean, default: false },
+    face_registered_at: { type: String, default: null },
     mustVerifyEmail: Boolean,
     status: String,
 });
@@ -159,6 +170,7 @@ const {
     user,
     activeTab,
     editMode,
+    faceEnrolled,
     showNotification,
     notificationType,
     notificationMessage,
@@ -192,4 +204,13 @@ const {
     handleFileChange,
     uploadDocument,
 } = useProfilePage(props);
+
+/**
+ * Switch to the profile tab and open the camera modal
+ * (triggered by the FaceEnrollmentBanner CTA)
+ */
+const goToProfileCamera = () => {
+    activeTab.value = 'profile';
+    editMode.value = false; // Camera button shows when !faceEnrolled regardless of editMode
+};
 </script>

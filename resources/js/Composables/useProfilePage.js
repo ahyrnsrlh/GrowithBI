@@ -25,7 +25,10 @@ export function useProfilePage(props) {
     const showCreateLogbookModal = ref(false);
     const showCreateReportModal = ref(false);
 
+    // ── Face Enrollment ───────────────────────────────────────────────────────
+    // Seeded from the dedicated Inertia prop (face_descriptor is hidden from user object).
     const page = usePage();
+    const faceEnrolled = ref(props.face_enrolled ?? page.props.auth?.face_enrolled ?? false);
     watch(
         () => page.props.flash,
         (flash) => {
@@ -222,15 +225,17 @@ export function useProfilePage(props) {
             const updatedPhotoPath = response.data?.profile_photo_path;
             if (updatedPhotoPath) {
                 user.profile_photo_path = updatedPhotoPath;
-                // Also update the local face_descriptor to let frontend know it's enrolled
-                user.face_descriptor = JSON.stringify(descriptor); 
             }
+
+            // Mark enrollment as complete — face_descriptor is hidden from user object,
+            // so we track it reactively here instead.
+            faceEnrolled.value = true;
 
             showToast(
                 "success",
                 response.data?.message || "Foto profil dan biometrik berhasil diperbarui!",
             );
-            
+
             if (typeof callback === 'function') callback(true);
         } catch (error) {
             const errors = error.response?.data?.errors;
@@ -242,7 +247,7 @@ export function useProfilePage(props) {
 
             console.error("Profile photo upload error:", error);
             showToast("error", message);
-            
+
             if (typeof callback === 'function') callback(false);
         }
     };
@@ -376,6 +381,7 @@ export function useProfilePage(props) {
         user,
         activeTab,
         editMode,
+        faceEnrolled,
         showNotification,
         notificationType,
         notificationMessage,

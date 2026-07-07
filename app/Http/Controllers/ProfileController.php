@@ -173,6 +173,8 @@ class ProfileController extends Controller
             'attendanceHistory' => $attendanceData,
             'todayAttendance' => $todayAttendance,
             'profileCompletion' => $profileCompletion,
+            'face_enrolled' => $user->hasFaceEnrolled(),
+            'face_registered_at' => $user->face_registered_at?->toISOString(),
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
             'selectedDivisionId' => $request->get('division_id') ?? session('division_id'),
@@ -447,7 +449,8 @@ class ProfileController extends Controller
     }
 
     /**
-     * Calculate profile completion percentage
+     * Calculate profile completion percentage.
+     * Includes face_descriptor (biometric enrollment) as a required field.
      */
     private function calculateProfileCompletion(User $user): array
     {
@@ -457,6 +460,7 @@ class ProfileController extends Controller
             'phone' => $user->phone,
             'address' => $user->address,
             'profile_photo_path' => $user->profile_photo_path,
+            'face_descriptor' => $user->face_descriptor, // Biometric enrollment is required
             'surat_pengantar_path' => $user->surat_pengantar_path,
             'cv_path' => $user->cv_path,
             'motivation_letter_path' => $user->motivation_letter_path,

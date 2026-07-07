@@ -25,11 +25,18 @@
                             alt="Profile"
                             class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
                         />
+                        <!-- Camera button: visible in editMode, OR always visible when face is not enrolled -->
                         <button
-                            v-if="editMode"
+                            v-if="editMode || !faceEnrolled"
                             @click="showCameraModal = true"
                             type="button"
-                            class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors shadow"
+                            :class="[
+                                'absolute bottom-0 right-0 p-2 rounded-full cursor-pointer transition-colors shadow',
+                                !faceEnrolled
+                                    ? 'bg-amber-500 hover:bg-amber-600 text-white ring-2 ring-amber-300 ring-offset-1'
+                                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                            ]"
+                            :title="!faceEnrolled ? 'Daftarkan wajah — wajib sebelum presensi' : 'Ganti foto profil'"
                         >
                             <i class="fas fa-camera text-xs"></i>
                         </button>
@@ -39,6 +46,29 @@
                             {{ user.name }}
                         </h3>
                         <p class="text-gray-500">{{ user.email }}</p>
+                        <!-- Face enrollment status badge -->
+                        <div class="mt-2 flex items-center gap-1.5">
+                            <span
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
+                                :class="faceEnrolled
+                                    ? 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                                    : 'bg-amber-100 text-amber-700 border border-amber-200'"
+                            >
+                                <span
+                                    class="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                                    :class="faceEnrolled ? 'bg-emerald-500' : 'bg-amber-400 animate-pulse'"
+                                />
+                                <template v-if="faceEnrolled">
+                                    Wajah Terdaftar
+                                    <span v-if="faceRegisteredAt" class="text-emerald-600 font-normal">
+                                        · {{ formatRegisteredAt(faceRegisteredAt) }}
+                                    </span>
+                                </template>
+                                <template v-else>
+                                    Wajah Belum Terdaftar — Klik kamera untuk daftar
+                                </template>
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -215,16 +245,24 @@
 import { ref } from 'vue';
 import ProfileCameraModal from './ProfileCameraModal.vue';
 
-defineProps({
-    user: { type: Object, required: true },
-    profileForm: { type: Object, required: true },
-    editMode: { type: Boolean, default: false },
+const props = defineProps({
+    user:             { type: Object,  required: true },
+    profileForm:      { type: Object,  required: true },
+    editMode:         { type: Boolean, default: false },
+    faceEnrolled:     { type: Boolean, default: false },
+    faceRegisteredAt: { type: String,  default: null },
 });
 
 const emit = defineEmits(["toggle-edit", "cancel-edit", "submit-profile", "upload-photo"]);
 
 const showCameraModal = ref(false);
 const isUploading = ref(false);
+
+/** Format the ISO registration timestamp to a short locale string */
+const formatRegisteredAt = (iso) => {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+};
 
 const handleCapture = (data) => {
     isUploading.value = true;

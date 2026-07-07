@@ -29,6 +29,8 @@ class AttendanceController extends Controller
         private readonly FaceRecognitionService $faceService
     ) {
         $this->middleware('auth');
+
+        // Guard 1: Require accepted application
         $this->middleware(function ($request, $next) {
             /** @var User|null $user */
             $user = $request->user();
@@ -39,6 +41,26 @@ class AttendanceController extends Controller
             }
             return $next($request);
         });
+
+        // Guard 2: Require face enrollment (biometric registration)
+        // Exempt enrollFace and faceStatus so users can complete enrollment first.
+        $this->middleware(function ($request, $next) {
+            /** @var User|null $user */
+            $user = $request->user();
+
+            if (!$user || !$user->hasFaceEnrolled()) {
+                if ($request->wantsJson() || $request->expectsJson()) {
+                    return response()->json([
+                        'success'  => false,
+                        'message'  => 'Registrasi wajah belum selesai. Silakan lengkapi foto profil terlebih dahulu.',
+                        'redirect' => route('profile.edit'),
+                    ], 403);
+                }
+                return redirect()->route('profile.edit')
+                    ->with('error', 'Anda harus menyelesaikan registrasi foto profil terlebih dahulu sebelum menggunakan fitur absensi.');
+            }
+            return $next($request);
+        })->except(['enrollFace', 'faceStatus']);
     }
 
     /**

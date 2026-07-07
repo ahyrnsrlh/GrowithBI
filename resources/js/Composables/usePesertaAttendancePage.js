@@ -27,12 +27,19 @@ export function usePesertaAttendancePage(props, page) {
     const showErrorToast   = ref(false);
 
     // ── Face enrollment ───────────────────────────────────────────────────────
-    /** Reactive enrollment status; seeded from Inertia prop, updated after enrollment */
-    const faceEnrolled    = ref(props.face_enrolled ?? false);
+    /** Reactive enrollment status; seeded from Inertia prop OR shared auth.face_enrolled */
+    const faceEnrolled = ref(
+        props.face_enrolled ?? page.props.auth?.face_enrolled ?? false
+    );
 
-    // Watch for prop changes
+    // Sync when the page prop updates (e.g. after Inertia reload)
     watch(
         () => props.face_enrolled,
+        (val) => { if (val !== undefined) faceEnrolled.value = val; },
+    );
+    // Also sync from the globally shared auth prop
+    watch(
+        () => page.props.auth?.face_enrolled,
         (val) => { if (val !== undefined) faceEnrolled.value = val; },
     );
 

@@ -14,7 +14,15 @@
                 @close-error="showErrorToast = false"
             />
 
+            <!--
+                GATE: If face enrollment is incomplete, show the empty state instead of the
+                attendance action card. The camera modal is also excluded to prevent any camera
+                startup before biometric registration.
+            -->
+            <AttendanceEnrollmentEmptyState v-if="!faceEnrolled" />
+
             <PesertaTodayAttendanceCard
+                v-else
                 :todayAttendance="todayAttendance"
                 :isProcessing="isProcessing"
                 :actionType="actionType"
@@ -43,15 +51,15 @@
         </div>
     </div>
 
-    <!-- Secure Camera Modal (check-in / check-out) -->
+    <!-- Secure Camera Modal — only rendered when face is enrolled to prevent accidental camera startup -->
     <SecureCameraModal
+        v-if="faceEnrolled"
         :show="showCamera"
         :title="cameraTitle"
         :locationStatus="locationStatus"
         @close="showCamera = false"
         @photo-captured="onPhotoCaptured"
     />
-
 
 </template>
 
@@ -62,6 +70,7 @@ import PesertaAttendanceHeader from "@/Components/Peserta/Attendance/PesertaAtte
 import PesertaAttendanceToasts from "@/Components/Peserta/Attendance/PesertaAttendanceToasts.vue";
 import PesertaTodayAttendanceCard from "@/Components/Peserta/Attendance/PesertaTodayAttendanceCard.vue";
 import PesertaAttendanceHistoryCard from "@/Components/Peserta/Attendance/PesertaAttendanceHistoryCard.vue";
+import AttendanceEnrollmentEmptyState from "@/Components/Peserta/Attendance/AttendanceEnrollmentEmptyState.vue";
 import { usePesertaAttendancePage } from "@/Composables/usePesertaAttendancePage";
 
 const props = defineProps({
@@ -114,3 +123,4 @@ const {
     to   { transform: translateX(100%); opacity: 0; }
 }
 </style>
+

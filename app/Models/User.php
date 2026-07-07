@@ -57,12 +57,14 @@ class User extends Authenticatable
 
     /**
      * The attributes that should be hidden for serialization.
+     * face_descriptor is excluded to prevent biometric data exposure on frontend.
      *
      * @var list<string>
      */
     protected $hidden = [
         'password',
         'remember_token',
+        'face_descriptor',
     ];
 
     /**
@@ -274,11 +276,20 @@ class User extends Authenticatable
     public function canAccessAttendance(): bool
     {
         if ($this->role !== 'peserta') return false;
-        
+
         // Check if user has accepted application (any of the accepted statuses)
         return $this->applications()
             ->whereIn('status', self::ACCEPTED_STATUSES)
             ->exists();
+    }
+
+    /**
+     * Check if user has completed face/biometric enrollment.
+     * This is the single authoritative check used by both backend guards and frontend props.
+     */
+    public function hasFaceEnrolled(): bool
+    {
+        return !empty($this->face_descriptor);
     }
 
     /**
