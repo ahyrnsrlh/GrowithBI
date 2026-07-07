@@ -21,18 +21,25 @@
             -->
             <AttendanceEnrollmentEmptyState v-if="!faceEnrolled" />
 
-            <PesertaTodayAttendanceCard
-                v-else
-                :todayAttendance="todayAttendance"
-                :isProcessing="isProcessing"
-                :actionType="actionType"
-                :isWithinCheckInTime="isWithinCheckInTime"
-                :isWithinCheckOutTime="isWithinCheckOutTime"
-                :formatTime="formatTime"
-                :faceEnrolled="faceEnrolled"
-                @check-in="handleCheckIn"
-                @check-out="handleCheckOut"
-            />
+            <template v-else>
+                <LocationValidationWidget
+                    :sampler="locationSampler"
+                    :maxAccuracy="50"
+                    :allowedRadius="allowedRadius"
+                />
+
+                <PesertaTodayAttendanceCard
+                    :todayAttendance="todayAttendance"
+                    :isProcessing="isProcessing"
+                    :actionType="actionType"
+                    :isWithinCheckInTime="isWithinCheckInTime"
+                    :isWithinCheckOutTime="isWithinCheckOutTime"
+                    :formatTime="formatTime"
+                    :faceEnrolled="faceEnrolled"
+                    @check-in="handleCheckIn"
+                    @check-out="handleCheckOut"
+                />
+            </template>
 
             <PesertaAttendanceHistoryCard
                 :paginatedAttendance="paginatedAttendance"
@@ -57,6 +64,8 @@
         :show="showCamera"
         :title="cameraTitle"
         :locationStatus="locationStatus"
+        :gpsValidated="locationSampler.samplingStatus.value === 'done'"
+        :locationSummary="locationSampler.locationResult.value ? `GPS Terdeteksi (±${Math.round(locationSampler.locationResult.value.accuracy)}m)` : null"
         @close="showCamera = false"
         @photo-captured="onPhotoCaptured"
     />
@@ -71,6 +80,7 @@ import PesertaAttendanceToasts from "@/Components/Peserta/Attendance/PesertaAtte
 import PesertaTodayAttendanceCard from "@/Components/Peserta/Attendance/PesertaTodayAttendanceCard.vue";
 import PesertaAttendanceHistoryCard from "@/Components/Peserta/Attendance/PesertaAttendanceHistoryCard.vue";
 import AttendanceEnrollmentEmptyState from "@/Components/Peserta/Attendance/AttendanceEnrollmentEmptyState.vue";
+import LocationValidationWidget from "@/Components/Attendance/LocationValidationWidget.vue";
 import { usePesertaAttendancePage } from "@/Composables/usePesertaAttendancePage";
 
 const props = defineProps({
@@ -79,6 +89,7 @@ const props = defineProps({
     todayAttendance:   { type: Object, default: null },
     stats:             Object,
     officeLocation:    Object,
+    allowedRadius:     { type: Number, default: 500 },
     currentDateTime:   String,
     face_enrolled:     { type: Boolean, default: false },
 });
@@ -110,6 +121,7 @@ const {
     handleCheckOut,
     onPhotoCaptured,
     faceEnrolled,
+    locationSampler,
 } = usePesertaAttendancePage(props, page);
 </script>
 

@@ -9,6 +9,7 @@ use App\Models\Attendance;
 use App\Models\User;
 use App\Notifications\AttendanceNotification;
 use App\Services\FaceRecognitionService;
+use App\Services\LocationValidationService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,7 +27,8 @@ class AttendanceController extends Controller
     const ALLOWED_RADIUS   = 50000; // 50 km — for testing (can attend from anywhere)
 
     public function __construct(
-        private readonly FaceRecognitionService $faceService
+        private readonly FaceRecognitionService $faceService,
+        private readonly LocationValidationService $locationService
     ) {
         $this->middleware('auth');
 
@@ -80,9 +82,10 @@ class AttendanceController extends Controller
             'todayAttendance' => $user->attendances()->where('date', $today)->first(),
             'stats'           => $user->getAttendanceStats(),
             'officeLocation'  => [
-                'latitude'  => self::OFFICE_LATITUDE,
-                'longitude' => self::OFFICE_LONGITUDE,
+                'latitude'  => (float)config('attendance.office.latitude', -5.397140),
+                'longitude' => (float)config('attendance.office.longitude', 105.266792),
             ],
+            'allowedRadius'   => (int)config('attendance.radius', 500),
             'currentDateTime' => Carbon::now('Asia/Jakarta')->toISOString(),
             'face_enrolled'   => !empty($user->face_descriptor),
         ]);
@@ -150,10 +153,13 @@ class AttendanceController extends Controller
     public function checkIn(Request $request)
     {
         $request->validate([
-            'latitude'        => 'required|numeric',
-            'longitude'       => 'required|numeric',
-            'photo'           => 'required|string', // Base64 encoded image
-            'face_descriptor' => 'required|array|size:128',
+            'latitude'             => 'required|numeric',
+            'longitude'            => 'required|numeric',
+            'photo'                => 'required|string', // Base64 encoded image
+            'face_descriptor'      => 'required|array|size:128',
+            'gps_accuracy'         => 'nullable|numeric',
+            'coordinate_stability' => 'nullable|numeric',
+            'samples'              => 'nullable|array',
         ]);
 
         /** @var User $user */
@@ -176,19 +182,6 @@ class AttendanceController extends Controller
             return redirect()->back()->with('error', $faceResult['message']);
         }
 
-        // Validate check-in time range (07:30 - 08:00 WIB)
-        // DISABLED FOR TESTING — Uncomment for production
-        /*
-        $checkInStart = Carbon::today('Asia/Jakarta')->setTime(7, 30, 0);
-        $checkInEnd   = Carbon::today('Asia/Jakarta')->setTime(8, 0, 0);
-        if ($now->lt($checkInStart) || $now->gt($checkInEnd)) {
-            return redirect()->back()->with('error',
-                'Check-in hanya diperbolehkan antara pukul 07:30 - 08:00 WIB. '
-                . 'Waktu server saat ini: ' . $now->format('H:i:s') . ' WIB'
-            );
-        }
-        */
-
         // Check if already checked in today
         $existingAttendance = $user->attendances()->where('date', $today)->first();
 
@@ -196,10 +189,22 @@ class AttendanceController extends Controller
             return redirect()->back()->with('error', 'Anda sudah melakukan check-in hari ini.');
         }
 
-        // Validate location
-        if (!$this->isWithinAllowedLocation($request->latitude, $request->longitude)) {
+        // 2. LOCATION VALIDATION (Multi-Layer)
+        $locationResult = $this->locationService->validateAll($user, $request->only([
+            'latitude', 'longitude', 'gps_accuracy', 'coordinate_stability', 'samples'
+        ]));
+
+        if (!$locationResult['passed']) {
             $this->sendFailedAttendanceNotification($user, 'location_invalid');
-            return redirect()->back()->with('error', 'Absensi hanya dapat dilakukan di lokasi magang Bank Indonesia.');
+            Log::warning('Attendance check-in location validation failed', [
+                'user_id' => $user->id,
+                'location_notes' => $locationResult['notes'],
+                'gps_accuracy' => $request->gps_accuracy,
+                'coordinate_stability' => $locationResult['coordinate_stability'] ?? null,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+            ]);
+            return redirect()->back()->with('error', $locationResult['notes'] ?: 'Akses lokasi tidak valid.');
         }
 
         // Save photo
@@ -219,7 +224,15 @@ class AttendanceController extends Controller
         $attendance->longitude        = $request->longitude;
         $attendance->location_address = $this->getLocationAddress($request->latitude, $request->longitude);
         $attendance->photo_checkin    = $photoPath;
-
+ 
+        // Store location validation metadata
+        $attendance->gps_accuracy               = $request->gps_accuracy;
+        $attendance->coordinate_stability       = $locationResult['coordinate_stability'] ?? null;
+        $attendance->location_validation_status  = $locationResult['status'] ?? 'valid';
+        $attendance->location_validation_notes   = $locationResult['notes'] ?? null;
+        $attendance->suspicious_location         = $locationResult['suspicious'] ?? false;
+        $attendance->validation_timestamp       = Carbon::now('Asia/Jakarta');
+ 
         try {
             $attendance->save();
             Log::info('Attendance check-in saved', [
@@ -229,6 +242,7 @@ class AttendanceController extends Controller
                 'check_in'     => $now->format('Y-m-d H:i:s'),
                 'status'       => $status,
                 'confidence'   => $faceResult['confidence'],
+                'gps_accuracy' => $attendance->gps_accuracy,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to save attendance', [
@@ -267,10 +281,13 @@ class AttendanceController extends Controller
     public function checkOut(Request $request)
     {
         $request->validate([
-            'latitude'        => 'required|numeric',
-            'longitude'       => 'required|numeric',
-            'photo'           => 'required|string',
-            'face_descriptor' => 'required|array|size:128',
+            'latitude'             => 'required|numeric',
+            'longitude'            => 'required|numeric',
+            'photo'                => 'required|string',
+            'face_descriptor'      => 'required|array|size:128',
+            'gps_accuracy'         => 'nullable|numeric',
+            'coordinate_stability' => 'nullable|numeric',
+            'samples'              => 'nullable|array',
         ]);
 
         /** @var User $user */
@@ -300,31 +317,43 @@ class AttendanceController extends Controller
             return redirect()->back()->with('error', 'Anda sudah melakukan check-out hari ini.');
         }
 
-        // Validate check-out time range (16:00 - 18:00 WIB)
-        // DISABLED FOR TESTING — Uncomment for production
-        /*
-        $checkOutStart = Carbon::today('Asia/Jakarta')->setTime(16, 0, 0);
-        $checkOutEnd   = Carbon::today('Asia/Jakarta')->setTime(18, 0, 0);
-        if ($now->lt($checkOutStart) || $now->gt($checkOutEnd)) {
-            return redirect()->back()->with('error',
-                'Check-out hanya diperbolehkan antara pukul 16:00 - 18:00 WIB. '
-                . 'Waktu server saat ini: ' . $now->format('H:i:s') . ' WIB'
-            );
-        }
-        */
+        // 2. LOCATION VALIDATION (Multi-Layer)
+        $locationResult = $this->locationService->validateAll($user, $request->only([
+            'latitude', 'longitude', 'gps_accuracy', 'coordinate_stability', 'samples'
+        ]));
 
-        // Validate location
-        if (!$this->isWithinAllowedLocation($request->latitude, $request->longitude)) {
+        if (!$locationResult['passed']) {
             $this->sendFailedAttendanceNotification($user, 'location_invalid');
-            return redirect()->back()->with('error', 'Check-out hanya dapat dilakukan di lokasi magang Bank Indonesia.');
+            Log::warning('Attendance check-out location validation failed', [
+                'user_id' => $user->id,
+                'location_notes' => $locationResult['notes'],
+                'gps_accuracy' => $request->gps_accuracy,
+                'coordinate_stability' => $locationResult['coordinate_stability'] ?? null,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+            ]);
+            return redirect()->back()->with('error', $locationResult['notes'] ?: 'Akses lokasi tidak valid.');
         }
 
         // Save photo
         $photoPath = $this->savePhoto($request->photo, 'checkout', $user->id);
 
         // Update attendance — ALWAYS use server time
-        $attendance->check_out      = $now;
-        $attendance->photo_checkout = $photoPath;
+        $attendance->check_out          = $now;
+        $attendance->photo_checkout     = $photoPath;
+        $attendance->checkout_latitude  = $request->latitude;
+        $attendance->checkout_longitude = $request->longitude;
+ 
+        // Merge or set suspicious flags if checkout triggers it
+        if ($locationResult['suspicious'] ?? false) {
+            $attendance->suspicious_location = true;
+            $attendance->location_validation_status = 'suspicious';
+        }
+        if (!empty($locationResult['notes'])) {
+            $attendance->location_validation_notes = $attendance->location_validation_notes 
+                ? $attendance->location_validation_notes . '; ' . $locationResult['notes']
+                : $locationResult['notes'];
+        }
 
         try {
             $attendance->save();
@@ -382,40 +411,6 @@ class AttendanceController extends Controller
     // =========================================================================
     // PRIVATE HELPERS
     // =========================================================================
-
-    /**
-     * Check if coordinates are within allowed location
-     */
-    private function isWithinAllowedLocation($latitude, $longitude): bool
-    {
-        $distance = $this->calculateDistance(
-            self::OFFICE_LATITUDE,
-            self::OFFICE_LONGITUDE,
-            $latitude,
-            $longitude
-        );
-
-        return $distance <= self::ALLOWED_RADIUS;
-    }
-
-    /**
-     * Calculate distance between two coordinates using Haversine formula
-     */
-    private function calculateDistance($lat1, $lon1, $lat2, $lon2): float
-    {
-        $earthRadius  = 6371000; // metres
-        $lat1Rad      = deg2rad($lat1);
-        $lat2Rad      = deg2rad($lat2);
-        $deltaLatRad  = deg2rad($lat2 - $lat1);
-        $deltaLonRad  = deg2rad($lon2 - $lon1);
-
-        $a = sin($deltaLatRad / 2) ** 2
-            + cos($lat1Rad) * cos($lat2Rad) * sin($deltaLonRad / 2) ** 2;
-
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-
-        return $earthRadius * $c;
-    }
 
     /**
      * Get location address from coordinates (placeholder)

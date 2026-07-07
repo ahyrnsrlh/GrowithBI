@@ -24,12 +24,34 @@ export function useAttendanceCapture(options = {}) {
 
     const handleCheckIn = async () => {
         actionType.value = "check-in";
-        await getLocation();
+        if (options.locationSampler) {
+            options.locationSampler.reset();
+            await options.locationSampler.startSampling();
+            if (options.locationSampler.samplingStatus.value === "done") {
+                userLocation.value = options.locationSampler.locationResult.value;
+                showCamera.value = true;
+            } else if (options.locationSampler.samplingStatus.value === "error") {
+                notify("error", options.locationSampler.errorMessage.value);
+            }
+        } else {
+            await getLocation();
+        }
     };
 
     const handleCheckOut = async () => {
         actionType.value = "check-out";
-        await getLocation();
+        if (options.locationSampler) {
+            options.locationSampler.reset();
+            await options.locationSampler.startSampling();
+            if (options.locationSampler.samplingStatus.value === "done") {
+                userLocation.value = options.locationSampler.locationResult.value;
+                showCamera.value = true;
+            } else if (options.locationSampler.samplingStatus.value === "error") {
+                notify("error", options.locationSampler.errorMessage.value);
+            }
+        } else {
+            await getLocation();
+        }
     };
 
     const getLocation = async () => {
@@ -49,6 +71,13 @@ export function useAttendanceCapture(options = {}) {
             userLocation.value = {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
+                accuracy: position.coords.accuracy,
+                coordinateStability: 0.0,
+                samples: [{
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    accuracy: position.coords.accuracy,
+                }]
             };
 
             showCamera.value = true;
@@ -76,6 +105,9 @@ export function useAttendanceCapture(options = {}) {
         userLocation.value = null;
         actionType.value = "";
         showCamera.value = false;
+        if (options.locationSampler) {
+            options.locationSampler.reset();
+        }
     };
 
     const submit = () => {
@@ -108,6 +140,9 @@ export function useAttendanceCapture(options = {}) {
                 face_descriptor: faceDescriptor.value,
                 latitude: userLocation.value.latitude,
                 longitude: userLocation.value.longitude,
+                gps_accuracy: userLocation.value.accuracy ?? null,
+                coordinate_stability: userLocation.value.coordinateStability ?? null,
+                samples: userLocation.value.samples ?? null,
             },
             {
                 preserveScroll: true,

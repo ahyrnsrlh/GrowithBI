@@ -2,11 +2,17 @@ import { ref, computed, watch, onMounted } from "vue";
 import { useAttendanceServerClock } from "@/Composables/Attendance/useAttendanceServerClock";
 import { useAttendanceFormatters } from "@/Composables/Attendance/useAttendanceFormatters";
 import { useAttendanceCapture } from "@/Composables/Attendance/useAttendanceCapture";
+import { useLocationSampler } from "@/Composables/Attendance/useLocationSampler";
 
 export function usePesertaAttendancePage(props, page) {
     const attendanceList = computed(
         () => props.attendanceHistory || props.attendances || [],
     );
+
+    const locationSampler = useLocationSampler({
+        allowedRadius: props.allowedRadius,
+        officeLocation: props.officeLocation,
+    });
 
     const {
         showCamera,
@@ -16,7 +22,17 @@ export function usePesertaAttendancePage(props, page) {
         handleCheckIn,
         handleCheckOut,
         onPhotoCaptured,
-    } = useAttendanceCapture();
+    } = useAttendanceCapture({
+        locationSampler,
+        onNotify: (type, msg) => {
+            // Emulate backend errors if any
+            if (type === 'error') {
+                page.props.flash.error = msg;
+                showErrorToast.value = true;
+                setTimeout(() => { showErrorToast.value = false; }, 5000);
+            }
+        }
+    });
 
     const { currentTime, isWithinCheckInTime, isWithinCheckOutTime } =
         useAttendanceServerClock();
@@ -104,6 +120,8 @@ export function usePesertaAttendancePage(props, page) {
         handleCheckIn,
         handleCheckOut,
         onPhotoCaptured,
+        // Location Verification
+        locationSampler,
         // Face enrollment
         faceEnrolled,
         // Toast

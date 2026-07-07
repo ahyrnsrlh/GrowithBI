@@ -23,6 +23,14 @@ class Attendance extends Model
         'notes',
         'photo_checkin',
         'photo_checkout',
+        'gps_accuracy',
+        'coordinate_stability',
+        'location_validation_status',
+        'location_validation_notes',
+        'suspicious_location',
+        'validation_timestamp',
+        'checkout_latitude',
+        'checkout_longitude',
     ];
 
     protected $casts = [
@@ -31,7 +39,21 @@ class Attendance extends Model
         'check_out' => 'datetime',
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
+        'gps_accuracy' => 'float',
+        'coordinate_stability' => 'float',
+        'suspicious_location' => 'boolean',
+        'validation_timestamp' => 'datetime',
+        'checkout_latitude' => 'decimal:8',
+        'checkout_longitude' => 'decimal:8',
     ];
+
+    /**
+     * Scope to filter suspicious locations.
+     */
+    public function scopeSuspicious($query)
+    {
+        return $query->where('suspicious_location', true);
+    }
 
     /**
      * Get the user that owns the attendance record.

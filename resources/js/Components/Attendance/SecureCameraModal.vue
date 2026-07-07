@@ -58,6 +58,19 @@
                                     playsinline
                                     class="w-full h-full object-cover mirror"
                                 />
+                                <!-- GPS Not Validated Overlay -->
+                                <div
+                                    v-if="!gpsValidated && !loadingModels && !capturedPhoto"
+                                    class="absolute inset-0 flex flex-col items-center justify-center bg-black/90 px-6 text-center z-10"
+                                >
+                                    <svg class="w-12 h-12 text-amber-500 mb-3 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    <p class="text-sm font-semibold text-slate-100">Validasi Lokasi Diperlukan</p>
+                                    <p class="text-xs text-slate-400 mt-1 max-w-xs leading-relaxed">
+                                        Sistem sedang memverifikasi lokasi Anda sebelum kamera diizinkan untuk digunakan.
+                                    </p>
+                                </div>
                                 <!-- Canvas overlay (bounding box) -->
                                 <canvas
                                     v-show="!capturedPhoto"
@@ -194,9 +207,9 @@
                                     v-if="!capturedPhoto"
                                     type="button"
                                     @click="capturePhoto"
-                                    :disabled="!cameraReady || !faceDetected || loadingModels"
+                                    :disabled="!cameraReady || !faceDetected || loadingModels || !gpsValidated"
                                     class="flex-1 py-3 font-semibold rounded-xl transition text-sm flex items-center justify-center gap-2"
-                                    :class="cameraReady && faceDetected && !loadingModels
+                                    :class="cameraReady && faceDetected && !loadingModels && gpsValidated
                                         ? 'bg-[#2F4C9E] hover:bg-[#274089] text-white shadow-lg shadow-blue-900/40'
                                         : 'bg-gray-700 cursor-not-allowed text-gray-500'"
                                 >
@@ -243,6 +256,8 @@ const props = defineProps({
     show:           { type: Boolean, default: false },
     title:          { type: String, default: "📸 Foto Absensi" },
     locationStatus: { type: String, default: null }, // e.g. "GPS Terdeteksi (±15m)"
+    gpsValidated:   { type: Boolean, default: true },
+    locationSummary:{ type: String, default: null },
 });
 
 const emit = defineEmits(["close", "photo-captured"]);
