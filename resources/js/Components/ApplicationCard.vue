@@ -103,9 +103,7 @@ const confirmWithdraw = () => {
 };
 
 const handleWithdraw = () => {
-    router.post(route("applications.cancel", props.application.id), {
-        _method: 'delete',
-    }, {
+    router.delete(route("applications.cancel", props.application.id), {
         preserveScroll: true,
         onSuccess: () => {
             showConfirmModal.value = false;
