@@ -405,7 +405,12 @@ class ProfileController extends Controller
      */
     public function cancelApplication(Request $request, int $id): RedirectResponse
     {
-        $application = Application::findOrFail($id);
+        $application = Application::find($id);
+        
+        // Handle case where application is already deleted or not found gracefully
+        if (!$application) {
+            return redirect()->route('profile.edit')->with('success', 'Lamaran berhasil dibatalkan. Anda dapat mengajukan lamaran baru.');
+        }
         
         // Ensure user can only cancel their own application
         if ($application->user_id !== Auth::id()) {
