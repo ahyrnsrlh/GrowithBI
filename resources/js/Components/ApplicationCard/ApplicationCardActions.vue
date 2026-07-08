@@ -3,6 +3,27 @@
         class="px-6 py-4 bg-white border-t border-gray-100 flex items-center justify-end gap-3"
     >
         <button
+            v-if="application.status === 'menunggu'"
+            @click="$emit('withdraw-application')"
+            class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200"
+        >
+            <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+            </svg>
+            Batalkan Lamaran
+        </button>
+
+        <button
             @click="$emit('view-details')"
             class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all duration-200"
         >
@@ -83,5 +104,5 @@ defineProps({
     downloading: { type: Boolean, default: false },
 });
 
-defineEmits(["view-details", "download-offer"]);
+defineEmits(["view-details", "download-offer", "withdraw-application"]);
 </script>

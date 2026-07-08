@@ -64,16 +64,21 @@ class AdminDeleteApplicationTest extends TestCase
 
         $response->assertRedirect(route('admin.applications.index'));
 
-        // Application and report should be gone
-        $this->assertDatabaseMissing('applications', ['id' => $application->id]);
-        $this->assertDatabaseMissing('reports', ['id' => $report->id]);
+        // Application and report should still exist in database
+        $this->assertDatabaseHas('applications', [
+            'id' => $application->id,
+            'status' => 'cancelled',
+            'cancelled_by' => 'Admin',
+            'cancellation_reason' => 'Dibatalkan oleh Admin',
+        ]);
+        $this->assertDatabaseHas('reports', ['id' => $report->id]);
 
-        // Files should be deleted
-        $this->assertFalse(Storage::disk('public')->exists('applications/cv/test-cv.pdf'));
-        $this->assertFalse(Storage::disk('public')->exists('applications/letter/test-letter.pdf'));
-        $this->assertFalse(Storage::disk('public')->exists('applications/transcript/test-transcript.pdf'));
-        $this->assertFalse(Storage::disk('public')->exists('applications/ktp/test-ktp.pdf'));
-        $this->assertFalse(Storage::disk('public')->exists('reports/test-report.pdf'));
+        // Files should NOT be deleted (preserved for history)
+        $this->assertTrue(Storage::disk('public')->exists('applications/cv/test-cv.pdf'));
+        $this->assertTrue(Storage::disk('public')->exists('applications/letter/test-letter.pdf'));
+        $this->assertTrue(Storage::disk('public')->exists('applications/transcript/test-transcript.pdf'));
+        $this->assertTrue(Storage::disk('public')->exists('applications/ktp/test-ktp.pdf'));
+        $this->assertTrue(Storage::disk('public')->exists('reports/test-report.pdf'));
     }
 
     public function test_non_admin_cannot_delete_application(): void

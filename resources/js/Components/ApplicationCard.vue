@@ -28,6 +28,7 @@
                 :downloading="downloading"
                 @view-details="viewDetails"
                 @download-offer="downloadOffer"
+                @withdraw-application="confirmWithdraw"
             />
         </div>
 
@@ -43,10 +44,43 @@
             @close="closeModal"
             @download-offer="downloadOffer"
         />
+
+        <Modal :show="showConfirmModal" @close="showConfirmModal = false" maxWidth="md">
+            <div class="p-6">
+                <div class="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 text-center mb-2">
+                    Batalkan Lamaran?
+                </h3>
+                <p class="text-sm text-gray-500 text-center mb-6">
+                    Anda akan membatalkan lamaran magang yang telah dikirim. Setelah pembatalan berhasil, Anda dapat mengajukan lamaran baru.
+                </p>
+                <div class="flex items-center justify-center gap-3">
+                    <button
+                        @click="showConfirmModal = false"
+                        class="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all duration-200"
+                    >
+                        Kembali
+                    </button>
+                    <button
+                        @click="handleWithdraw"
+                        class="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-all duration-200"
+                    >
+                        Ya, Batalkan Lamaran
+                    </button>
+                </div>
+            </div>
+        </Modal>
     </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { router } from "@inertiajs/vue3";
+import Modal from "@/Components/Modal.vue";
 import ApplicationCardActions from "@/Components/ApplicationCard/ApplicationCardActions.vue";
 import ApplicationCardDetailModal from "@/Components/ApplicationCard/ApplicationCardDetailModal.vue";
 import ApplicationCardHeader from "@/Components/ApplicationCard/ApplicationCardHeader.vue";
@@ -61,6 +95,23 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["status-updated"]);
+
+const showConfirmModal = ref(false);
+
+const confirmWithdraw = () => {
+    showConfirmModal.value = true;
+};
+
+const handleWithdraw = () => {
+    router.delete(route("applications.cancel", props.application.id), {
+        onSuccess: () => {
+            showConfirmModal.value = false;
+        },
+        onFinish: () => {
+            showConfirmModal.value = false;
+        },
+    });
+};
 
 const {
     showModal,

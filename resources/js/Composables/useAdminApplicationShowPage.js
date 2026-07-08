@@ -88,6 +88,9 @@ export function useAdminApplicationShowPage(application, page) {
         if (status === "rejected") {
             return "bg-red-100 text-red-800";
         }
+        if (status === "cancelled") {
+            return "bg-gray-100 text-gray-800 border border-gray-200";
+        }
         return "bg-gray-100 text-gray-800";
     };
 
@@ -106,6 +109,9 @@ export function useAdminApplicationShowPage(application, page) {
         }
         if (status === "rejected") {
             return "text-red-600";
+        }
+        if (status === "cancelled") {
+            return "text-gray-500";
         }
         return "text-gray-600";
     };

@@ -157,6 +157,28 @@
                         </p>
                     </div>
                 </div>
+
+                <div
+                    v-if="application.status === 'cancelled'"
+                    class="flex items-start space-x-3"
+                >
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 text-gray-500">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">
+                            Dibatalkan oleh {{ application.cancelled_by === 'Applicant' ? 'Pelamar' : (application.cancelled_by || 'Admin') }}
+                        </p>
+                        <p class="text-xs text-gray-500" v-if="application.cancelled_at">
+                            {{ formatDateTime(application.cancelled_at) }}
+                        </p>
+                        <p class="text-xs text-red-600 mt-1" v-if="application.cancellation_reason">
+                            Catatan: {{ application.cancellation_reason }}
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -173,7 +195,19 @@
                             getStatusTextClass(application.status),
                         ]"
                     >
-                        {{ application.status }}
+                        {{ application.status === 'cancelled' ? 'Dibatalkan' : application.status }}
+                    </span>
+                </div>
+                <div class="flex justify-between" v-if="application.cancelled_at">
+                    <span class="text-sm text-gray-600">Waktu Batal</span>
+                    <span class="text-sm font-medium text-gray-900">
+                        {{ formatDateTime(application.cancelled_at) }}
+                    </span>
+                </div>
+                <div class="flex justify-between" v-if="application.cancelled_by">
+                    <span class="text-sm text-gray-600">Dibatalkan Oleh</span>
+                    <span class="text-sm font-medium text-gray-900">
+                        {{ application.cancelled_by === 'Applicant' ? 'Pelamar' : application.cancelled_by }}
                     </span>
                 </div>
                 <div class="flex justify-between">

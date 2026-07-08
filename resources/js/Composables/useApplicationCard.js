@@ -87,6 +87,7 @@ export function useApplicationCard(application, emit) {
             letter_ready: "bg-gradient-to-r from-emerald-400 to-teal-400",
             diterima: "bg-gradient-to-r from-green-400 to-emerald-400",
             ditolak: "bg-gradient-to-r from-red-400 to-rose-400",
+            cancelled: "bg-gradient-to-r from-gray-400 to-gray-500",
         };
         return (
             gradients[status] || "bg-gradient-to-r from-gray-400 to-gray-300"
@@ -105,6 +106,7 @@ export function useApplicationCard(application, emit) {
                 "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20",
             diterima: "bg-green-50 text-green-700 ring-1 ring-green-600/20",
             ditolak: "bg-red-50 text-red-700 ring-1 ring-red-600/20",
+            cancelled: "bg-gray-50 text-gray-600 ring-1 ring-gray-500/20",
         };
         return (
             classes[status] ||
@@ -122,6 +124,7 @@ export function useApplicationCard(application, emit) {
             letter_ready: "bg-emerald-500 animate-pulse",
             diterima: "bg-green-500",
             ditolak: "bg-red-500",
+            cancelled: "bg-gray-400",
         };
         return classes[status] || "bg-gray-500";
     };
@@ -137,6 +140,7 @@ export function useApplicationCard(application, emit) {
             expired: "Kedaluwarsa",
             diterima: "Diterima",
             ditolak: "Ditolak",
+            cancelled: "Dibatalkan",
         };
         return texts[status] || status;
     };

@@ -246,13 +246,18 @@ class ApplicationController extends Controller
         }
 
         try {
-            $deletionService->delete($application, $admin);
+            $application->update([
+                'status' => 'cancelled',
+                'cancelled_at' => now(),
+                'cancelled_by' => 'Admin',
+                'cancellation_reason' => 'Dibatalkan oleh Admin',
+            ]);
 
             if (request()->wantsJson()) {
-                return response()->json(['message' => 'Data pendaftar berhasil dihapus.'], 200);
+                return response()->json(['message' => 'Pendaftaran berhasil dibatalkan.'], 200);
             }
 
-            return redirect()->route('admin.applications.index')->with('success', 'Data pendaftar berhasil dihapus.');
+            return redirect()->route('admin.applications.index')->with('success', 'Pendaftaran berhasil dibatalkan.');
 
         } catch (\Exception $e) {
             Log::error('Failed to delete application', [

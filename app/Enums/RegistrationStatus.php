@@ -22,6 +22,8 @@ enum RegistrationStatus: string
     case REJECTED = 'rejected';
     case LETTER_READY = 'letter_ready';
     case EXPIRED = 'expired';
+    case CANCELLED = 'cancelled';
+
 
     /**
      * Get the human-readable label for the status
@@ -36,6 +38,7 @@ enum RegistrationStatus: string
             self::REJECTED => 'Ditolak',
             self::LETTER_READY => 'Surat Penerimaan Tersedia',
             self::EXPIRED => 'Kedaluwarsa',
+            self::CANCELLED => 'Dibatalkan',
         };
     }
 
@@ -52,6 +55,7 @@ enum RegistrationStatus: string
             self::REJECTED => 'Mohon maaf, pendaftaran Anda tidak dapat kami terima.',
             self::LETTER_READY => 'Surat penerimaan resmi Anda telah tersedia untuk diunduh.',
             self::EXPIRED => 'Pendaftaran telah melewati batas waktu yang ditentukan.',
+            self::CANCELLED => 'Pendaftaran telah dibatalkan.',
         };
     }
 
@@ -68,6 +72,7 @@ enum RegistrationStatus: string
             self::REJECTED => 'red',
             self::LETTER_READY => 'emerald',
             self::EXPIRED => 'gray',
+            self::CANCELLED => 'gray',
         };
     }
 
@@ -84,6 +89,7 @@ enum RegistrationStatus: string
             self::REJECTED => 'bg-red-100 text-red-800 border-red-200',
             self::LETTER_READY => 'bg-emerald-100 text-emerald-800 border-emerald-200',
             self::EXPIRED => 'bg-gray-100 text-gray-800 border-gray-200',
+            self::CANCELLED => 'bg-gray-100 text-gray-800 border-gray-200',
         };
     }
 
@@ -100,6 +106,7 @@ enum RegistrationStatus: string
             self::REJECTED => 'x-circle',
             self::LETTER_READY => 'document-download',
             self::EXPIRED => 'exclamation-circle',
+            self::CANCELLED => 'x-circle',
         };
     }
 
@@ -112,6 +119,7 @@ enum RegistrationStatus: string
             self::REJECTED,
             self::LETTER_READY,
             self::EXPIRED,
+            self::CANCELLED,
         ]);
     }
 
@@ -150,6 +158,7 @@ enum RegistrationStatus: string
                 self::IN_REVIEW,
                 self::REJECTED,
                 self::EXPIRED,
+                self::CANCELLED,
             ],
             self::IN_REVIEW => [
                 self::INTERVIEW_SCHEDULED,
@@ -169,6 +178,7 @@ enum RegistrationStatus: string
             self::REJECTED => [],
             self::LETTER_READY => [],
             self::EXPIRED => [],
+            self::CANCELLED => [],
         };
     }
 

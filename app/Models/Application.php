@@ -45,6 +45,9 @@ class Application extends Model
         'reviewed_by',
         'last_notification_event',
         'last_notification_at',
+        'cancelled_at',
+        'cancelled_by',
+        'cancellation_reason',
     ];
 
     protected $casts = [
@@ -52,6 +55,7 @@ class Application extends Model
         'acceptance_letter_uploaded_at' => 'datetime',
         'reviewed_at' => 'datetime',
         'last_notification_at' => 'datetime',
+        'cancelled_at' => 'datetime',
         'semester' => 'integer',
         'gpa' => 'decimal:2',
         'birth_date' => 'date',

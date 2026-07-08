@@ -40,7 +40,7 @@ class ProfileController extends Controller
             ->get();
             
         // Check if user has a pending or accepted application
-        $activeApplication = $applications->whereIn('status', ['menunggu', 'dalam_review', 'wawancara', 'diterima'])->first();
+        $activeApplication = $applications->whereIn('status', ['menunggu', 'in_review', 'interview_scheduled', 'accepted', 'letter_ready'])->first();
         $canCreateNewApplication = !$activeApplication;
             
         // Calculate profile completion percentage
@@ -412,29 +412,20 @@ class ProfileController extends Controller
             abort(403, 'Unauthorized');
         }
         
-        // Only allow canceling pending applications
-        if (!in_array($application->status, ['menunggu', 'dalam_review'])) {
+        // Only allow canceling pending (menunggu) applications
+        if ($application->status !== 'menunggu') {
             return back()->withErrors(['error' => 'Aplikasi tidak dapat dibatalkan karena sudah diproses lebih lanjut.']);
         }
         
-        // Delete uploaded files if they exist
-        $filePaths = [
-            $application->cv_path,
-            $application->surat_lamaran_path,
-            $application->transkrip_path,
-            $application->ktp_path
-        ];
+        // Perform withdrawal instead of deletion
+        $application->update([
+            'status' => 'cancelled',
+            'cancelled_at' => now(),
+            'cancelled_by' => 'Applicant',
+            'cancellation_reason' => 'Dibatalkan oleh Pelamar',
+        ]);
         
-        foreach ($filePaths as $filePath) {
-            if ($filePath && Storage::disk('public')->exists($filePath)) {
-                Storage::disk('public')->delete($filePath);
-            }
-        }
-        
-        // Delete the application record
-        $application->delete();
-        
-        return redirect()->route('profile.edit')->with('success', 'Pendaftaran berhasil dibatalkan dan dihapus dari riwayat.');
+        return redirect()->route('profile.edit')->with('success', 'Lamaran berhasil dibatalkan. Anda dapat mengajukan lamaran baru.');
     }
 
     /**

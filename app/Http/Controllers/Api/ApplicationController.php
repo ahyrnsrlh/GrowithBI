@@ -23,7 +23,7 @@ class ApplicationController extends Controller
         $existingApplication = Application::select('id', 'status', 'division_id', 'created_at')
             ->where('user_id', $user->id)
             ->where('division_id', $divisionId)
-            ->whereIn('status', ['menunggu', 'dalam_review', 'wawancara'])
+            ->whereIn('status', ['menunggu', 'in_review', 'interview_scheduled'])
             ->first();
 
         if ($existingApplication) {

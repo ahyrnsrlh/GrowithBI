@@ -24,7 +24,7 @@ class UniqueActiveApplication implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $query = Application::whereIn('status', ['menunggu', 'dalam_review', 'wawancara', 'diterima']);
+        $query = Application::whereIn('status', ['menunggu', 'in_review', 'interview_scheduled', 'accepted', 'letter_ready']);
 
         if ($this->email) {
             $query->where('email', $this->email);
