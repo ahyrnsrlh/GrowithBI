@@ -27,7 +27,7 @@ class ApplicationWithdrawalTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->delete(route('applications.cancel', $application->id));
+            ->patch(route('applications.withdraw', $application->id));
 
         $response->assertRedirect(route('profile.edit'));
         $response->assertSessionHas('success', 'Lamaran berhasil dibatalkan. Anda dapat mengajukan lamaran baru.');
@@ -54,9 +54,9 @@ class ApplicationWithdrawalTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->delete(route('applications.cancel', $application->id));
+            ->patch(route('applications.withdraw', $application->id));
 
-        $response->assertSessionHasErrors(['error']);
+        $response->assertSessionHasErrors(['withdrawal']);
         
         $application->refresh();
         $this->assertEquals('in_review', $application->status);
