@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ApplicationController;
-use App\Http\Controllers\ApplicationController as UserApplicationController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicController;
@@ -114,11 +113,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/applications/{application}/acceptance-letter/upload', [App\Http\Controllers\AcceptanceLetterController::class, 'upload'])->name('acceptance-letter.upload')->middleware(['ownership:application', 'throttle:5,1']);
     Route::get('/applications/{application}/acceptance-letter/download', [App\Http\Controllers\AcceptanceLetterController::class, 'download'])->name('acceptance-letter.download')->middleware('ownership:application');
     Route::get('/applications/{application}/acceptance-letter/check', [App\Http\Controllers\AcceptanceLetterController::class, 'check'])->name('acceptance-letter.check')->middleware('ownership:application');
-    
-    // Cancel application (POST — Business Action Pattern, preserves application history)
-    Route::post('/applications/{application}/cancel', [UserApplicationController::class, 'cancel'])
-        ->name('applications.cancel')
-        ->middleware(['ownership:application', 'throttle:5,1']);
 });
 
 // Peserta Routes (require peserta role)

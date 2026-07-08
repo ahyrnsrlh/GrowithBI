@@ -400,56 +400,6 @@ class ProfileController extends Controller
         }
     }
 
-    /**
-     * Withdraw a pending internship application (status transition, not deletion).
-     *
-     * Only applications in 'menunggu' (pending) status may be withdrawn.
-     * Application history is preserved with cancelled_at / cancelled_by audit trail.
-     *
-     * Route: PATCH /applications/{application}/withdraw  [applications.withdraw]
-     * Middleware: auth, ownership:application, throttle:5,1
-     */
-    public function withdraw(Request $request, Application $application): RedirectResponse
-    {
-        // Defense-in-depth: middleware already verified ownership, but double-check here
-        if ($application->user_id !== Auth::id()) {
-            abort(403, 'Anda tidak memiliki akses ke lamaran ini.');
-        }
-
-        // Only pending (menunggu) applications may be withdrawn
-        if ($application->status !== 'menunggu') {
-            return back()->withErrors([
-                'withdrawal' => 'Lamaran tidak dapat dibatalkan. Hanya lamaran dengan status "Menunggu Review" yang dapat dibatalkan.',
-            ]);
-        }
-
-        try {
-            $application->update([
-                'status'              => 'cancelled',
-                'cancelled_at'        => now(),
-                'cancelled_by'        => 'Applicant',
-                'cancellation_reason' => 'Dibatalkan oleh Pelamar',
-            ]);
-
-            Log::info('Application withdrawn by applicant', [
-                'application_id' => $application->id,
-                'user_id'        => Auth::id(),
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Failed to withdraw application', [
-                'application_id' => $application->id,
-                'user_id'        => Auth::id(),
-                'error'          => $e->getMessage(),
-            ]);
-
-            return back()->withErrors([
-                'withdrawal' => 'Terjadi kesalahan saat membatalkan lamaran. Silakan coba lagi.',
-            ]);
-        }
-
-        return redirect()->route('profile.edit')
-            ->with('success', 'Lamaran berhasil dibatalkan. Anda dapat mengajukan lamaran baru.');
-    }
 
     /**
      * Delete the user's account.

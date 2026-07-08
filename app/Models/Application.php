@@ -146,14 +146,7 @@ class Application extends Model
                 $updateData['rejection_reason'] = $metadata['rejection_reason'];
             }
 
-            // Add cancellation audit trail
-            if ($newStatus === RegistrationStatus::CANCELLED) {
-                $updateData['cancelled_at'] = now();
-                $updateData['cancelled_by'] = $metadata['cancelled_by'] ?? ($changedBy?->role === 'admin' ? 'Admin' : 'Applicant');
-                if (isset($metadata['cancellation_reason'])) {
-                    $updateData['cancellation_reason'] = $metadata['cancellation_reason'];
-                }
-            }
+
 
             // Add admin notes
             if (isset($metadata['admin_notes'])) {
