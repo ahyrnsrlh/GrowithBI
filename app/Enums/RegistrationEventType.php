@@ -19,6 +19,7 @@ enum RegistrationEventType: string
     case APPLICATION_REJECTED = 'application_rejected';
     case ACCEPTANCE_LETTER_READY = 'acceptance_letter_ready';
     case APPLICATION_EXPIRED = 'application_expired';
+    case APPLICATION_CANCELLED = 'application_cancelled';
 
     // Admin-facing events
     case NEW_REGISTRATION = 'new_registration';
@@ -55,6 +56,9 @@ enum RegistrationEventType: string
             self::APPLICATION_EXPIRED => $isAdmin 
                 ? 'Pendaftaran Kedaluwarsa' 
                 : 'Pendaftaran Kedaluwarsa',
+            self::APPLICATION_CANCELLED => $isAdmin
+                ? 'Lamaran Dibatalkan oleh Pelamar'
+                : 'Lamaran Berhasil Dibatalkan',
 
             // Admin-only titles
             self::NEW_REGISTRATION => 'Pendaftaran Baru',
@@ -77,6 +81,7 @@ enum RegistrationEventType: string
             self::APPLICATION_REJECTED => 'x-circle',
             self::ACCEPTANCE_LETTER_READY => 'document-download',
             self::APPLICATION_EXPIRED => 'clock',
+            self::APPLICATION_CANCELLED => 'ban',
             self::DOCUMENTS_COMPLETED => 'document-check',
         };
     }
@@ -96,6 +101,7 @@ enum RegistrationEventType: string
             self::APPLICATION_REJECTED => 'red',
             self::ACCEPTANCE_LETTER_READY => 'emerald',
             self::APPLICATION_EXPIRED => 'gray',
+            self::APPLICATION_CANCELLED => 'gray',
             self::DOCUMENTS_COMPLETED => 'cyan',
         };
     }
@@ -108,6 +114,7 @@ enum RegistrationEventType: string
         return in_array($this, [
             self::NEW_REGISTRATION,
             self::DOCUMENTS_COMPLETED,
+            self::APPLICATION_CANCELLED, // Notify admin when applicant cancels
         ]);
     }
 
@@ -143,6 +150,7 @@ enum RegistrationEventType: string
             self::APPLICATION_REJECTED => RegistrationStatus::REJECTED,
             self::ACCEPTANCE_LETTER_READY => RegistrationStatus::LETTER_READY,
             self::APPLICATION_EXPIRED => RegistrationStatus::EXPIRED,
+            self::APPLICATION_CANCELLED => RegistrationStatus::CANCELLED,
             self::DOCUMENTS_COMPLETED => null, // No status change
         };
     }
@@ -164,6 +172,7 @@ enum RegistrationEventType: string
             RegistrationStatus::REJECTED => self::APPLICATION_REJECTED,
             RegistrationStatus::LETTER_READY => self::ACCEPTANCE_LETTER_READY,
             RegistrationStatus::EXPIRED => self::APPLICATION_EXPIRED,
+            RegistrationStatus::CANCELLED => self::APPLICATION_CANCELLED,
         };
     }
 
@@ -183,6 +192,7 @@ enum RegistrationEventType: string
             self::APPLICATION_REJECTED => $prefix . 'Status Pendaftaran Magang Anda',
             self::ACCEPTANCE_LETTER_READY => $prefix . 'Surat Penerimaan Magang Tersedia',
             self::APPLICATION_EXPIRED => $prefix . 'Pendaftaran Magang Kedaluwarsa',
+            self::APPLICATION_CANCELLED => $prefix . '[Admin] Lamaran Dibatalkan oleh Pelamar',
             self::NEW_REGISTRATION => $prefix . '[Admin] Pendaftaran Baru - ' . $divisionName,
             self::DOCUMENTS_COMPLETED => $prefix . '[Admin] Dokumen Pendaftaran Lengkap',
         };

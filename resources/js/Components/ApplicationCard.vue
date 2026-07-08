@@ -111,15 +111,15 @@ const confirmWithdraw = () => {
 
 const handleWithdraw = () => {
     processing.value = true;
-    router.patch(route("applications.withdraw", props.application.id), {}, {
+    router.post(route("applications.cancel", props.application.id), {}, {
         preserveScroll: true,
         onSuccess: () => {
             showConfirmModal.value = false;
         },
         onError: (errors) => {
             showConfirmModal.value = false;
-            if (errors.withdrawal) {
-                alert(errors.withdrawal);
+            if (errors.cancellation) {
+                alert(errors.cancellation);
             } else {
                 alert('Terjadi kesalahan saat membatalkan lamaran. Silakan coba lagi.');
             }
