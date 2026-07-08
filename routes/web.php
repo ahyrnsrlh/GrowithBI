@@ -46,9 +46,6 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/applications/check/{division}', [App\Http\Controllers\Api\ApplicationController::class, 'checkExisting'])->name('applications.check');
     Route::get('/applications/{application}/status', [App\Http\Controllers\Api\ApplicationController::class, 'getStatus'])->name('applications.status');
-    
-    // Application cancellation (available for logged in users)
-    Route::delete('/applications/{application}', [App\Http\Controllers\ProfileController::class, 'cancelApplication'])->name('applications.destroy');
 });
 
 // Authentication routes
@@ -117,8 +114,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/applications/{application}/acceptance-letter/download', [App\Http\Controllers\AcceptanceLetterController::class, 'download'])->name('acceptance-letter.download')->middleware('ownership:application');
     Route::get('/applications/{application}/acceptance-letter/check', [App\Http\Controllers\AcceptanceLetterController::class, 'check'])->name('acceptance-letter.check')->middleware('ownership:application');
     
-    // Cancel application (global route for applications management)
-    Route::delete('/applications/{application}', [ProfileController::class, 'cancelApplication'])->name('applications.cancel')->middleware('ownership:application');
+    // Withdraw application (PATCH status transition — preserves history)
+    Route::patch('/applications/{application}/withdraw', [ProfileController::class, 'withdraw'])
+        ->name('applications.withdraw')
+        ->middleware(['ownership:application', 'throttle:5,1']);
 });
 
 // Peserta Routes (require peserta role)
@@ -141,8 +140,6 @@ Route::prefix('peserta')->name('peserta.')->middleware(['auth', 'verified', 'rol
     Route::put('/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'update'])->name('reports.update')->middleware(['ownership:report', 'throttle:10,1']);
     Route::delete('/reports/{report}', [App\Http\Controllers\Peserta\PesertaReportController::class, 'destroy'])->name('reports.destroy')->middleware('ownership:report');
     
-    // Application management for participants
-    Route::delete('/applications/{application}', [App\Http\Controllers\ProfileController::class, 'cancelApplication'])->name('applications.cancel')->middleware('ownership:application');
 });
 
 // Logbook routes (accessible by accepted participants only) - Legacy support

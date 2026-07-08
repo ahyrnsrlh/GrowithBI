@@ -26,6 +26,7 @@
             <ApplicationCardActions
                 :application="application"
                 :downloading="downloading"
+                :processing="processing"
                 @view-details="viewDetails"
                 @download-offer="downloadOffer"
                 @withdraw-application="confirmWithdraw"
@@ -67,9 +68,14 @@
                     </button>
                     <button
                         @click="handleWithdraw"
-                        class="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-all duration-200"
+                        :disabled="processing"
+                        class="px-5 py-2.5 text-sm font-semibold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2"
                     >
-                        Ya, Batalkan Lamaran
+                        <svg v-if="processing" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        {{ processing ? 'Membatalkan...' : 'Ya, Batalkan Lamaran' }}
                     </button>
                 </div>
             </div>
@@ -97,22 +103,29 @@ const props = defineProps({
 const emit = defineEmits(["status-updated"]);
 
 const showConfirmModal = ref(false);
+const processing = ref(false);
 
 const confirmWithdraw = () => {
     showConfirmModal.value = true;
 };
 
 const handleWithdraw = () => {
-    router.delete(route("applications.cancel", props.application.id), {
+    processing.value = true;
+    router.patch(route("applications.withdraw", props.application.id), {}, {
         preserveScroll: true,
         onSuccess: () => {
             showConfirmModal.value = false;
         },
         onError: (errors) => {
-            console.error("Failed to cancel application:", errors);
             showConfirmModal.value = false;
+            if (errors.withdrawal) {
+                alert(errors.withdrawal);
+            } else {
+                alert('Terjadi kesalahan saat membatalkan lamaran. Silakan coba lagi.');
+            }
         },
         onFinish: () => {
+            processing.value = false;
             showConfirmModal.value = false;
         },
     });

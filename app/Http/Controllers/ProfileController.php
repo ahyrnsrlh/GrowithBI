@@ -400,37 +400,55 @@ class ProfileController extends Controller
         }
     }
 
-        /**
-     * Cancel user application - delete the application record
+    /**
+     * Withdraw a pending internship application (status transition, not deletion).
+     *
+     * Only applications in 'menunggu' (pending) status may be withdrawn.
+     * Application history is preserved with cancelled_at / cancelled_by audit trail.
+     *
+     * Route: PATCH /applications/{application}/withdraw  [applications.withdraw]
+     * Middleware: auth, ownership:application, throttle:5,1
      */
-    public function cancelApplication(Request $request, int $id): RedirectResponse
+    public function withdraw(Request $request, Application $application): RedirectResponse
     {
-        $application = Application::find($id);
-        
-        // Handle case where application is already deleted or not found gracefully
-        if (!$application) {
-            return redirect()->route('profile.edit')->with('success', 'Lamaran berhasil dibatalkan. Anda dapat mengajukan lamaran baru.');
-        }
-        
-        // Ensure user can only cancel their own application
+        // Defense-in-depth: middleware already verified ownership, but double-check here
         if ($application->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized');
+            abort(403, 'Anda tidak memiliki akses ke lamaran ini.');
         }
-        
-        // Only allow canceling pending (menunggu) applications
+
+        // Only pending (menunggu) applications may be withdrawn
         if ($application->status !== 'menunggu') {
-            return back()->withErrors(['error' => 'Aplikasi tidak dapat dibatalkan karena sudah diproses lebih lanjut.']);
+            return back()->withErrors([
+                'withdrawal' => 'Lamaran tidak dapat dibatalkan. Hanya lamaran dengan status "Menunggu Review" yang dapat dibatalkan.',
+            ]);
         }
-        
-        // Perform withdrawal instead of deletion
-        $application->update([
-            'status' => 'cancelled',
-            'cancelled_at' => now(),
-            'cancelled_by' => 'Applicant',
-            'cancellation_reason' => 'Dibatalkan oleh Pelamar',
-        ]);
-        
-        return redirect()->route('profile.edit')->with('success', 'Lamaran berhasil dibatalkan. Anda dapat mengajukan lamaran baru.');
+
+        try {
+            $application->update([
+                'status'              => 'cancelled',
+                'cancelled_at'        => now(),
+                'cancelled_by'        => 'Applicant',
+                'cancellation_reason' => 'Dibatalkan oleh Pelamar',
+            ]);
+
+            Log::info('Application withdrawn by applicant', [
+                'application_id' => $application->id,
+                'user_id'        => Auth::id(),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to withdraw application', [
+                'application_id' => $application->id,
+                'user_id'        => Auth::id(),
+                'error'          => $e->getMessage(),
+            ]);
+
+            return back()->withErrors([
+                'withdrawal' => 'Terjadi kesalahan saat membatalkan lamaran. Silakan coba lagi.',
+            ]);
+        }
+
+        return redirect()->route('profile.edit')
+            ->with('success', 'Lamaran berhasil dibatalkan. Anda dapat mengajukan lamaran baru.');
     }
 
     /**
