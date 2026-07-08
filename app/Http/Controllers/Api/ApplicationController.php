@@ -37,6 +37,24 @@ class ApplicationController extends Controller
                 ]
             ]);
         }
+
+        // Check division quota
+        $division = \App\Models\Division::find($divisionId);
+        if (!$division) {
+            return response()->json([
+                'canApply' => false,
+                'message' => 'Divisi tidak ditemukan.'
+            ]);
+        }
+
+        $quotaService = app(\App\Services\DivisionQuotaService::class);
+        if (!$quotaService->hasAvailableQuota($division)) {
+            return response()->json([
+                'canApply' => false,
+                'message' => 'Divisi yang dipilih telah mencapai batas kuota peserta. Silakan pilih divisi lain.',
+                'quotaFull' => true
+            ]);
+        }
             
         // Check profile completeness
         $missingPersonalData = [];

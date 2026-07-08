@@ -19,6 +19,7 @@ class SendNewApplicationNotification implements ShouldQueue
     use InteractsWithQueue;
 
     public string $connection = 'sync';
+    public bool $afterCommit = true;
     public string $queue = 'notifications';
     public int $tries = 3;
     public int $backoff = 60;

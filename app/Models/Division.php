@@ -23,6 +23,12 @@ class Division extends Model
         'is_active',
     ];
 
+    protected $appends = [
+        'quota',
+        'available_quota',
+        'accepted_count',
+    ];
+
     protected function casts(): array
     {
         return [
@@ -56,9 +62,15 @@ class Division extends Model
         $this->attributes['max_interns'] = $value;
     }
 
+    public function getAcceptedCountAttribute()
+    {
+        $acceptedStatuses = ['accepted', 'letter_ready', 'diterima'];
+        return $this->applications()->whereIn('status', $acceptedStatuses)->count();
+    }
+
     public function getAvailableQuotaAttribute()
     {
-        return $this->quota - $this->applications()->where('status', 'diterima')->count();
+        return max(0, $this->quota - $this->getAcceptedCountAttribute());
     }
 
     public function getJobDescriptionAttribute($value)

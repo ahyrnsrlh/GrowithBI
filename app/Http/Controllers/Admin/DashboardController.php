@@ -20,9 +20,9 @@ class DashboardController extends Controller
 
     public function index()
     {
-        // Check if user is admin
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
-            abort(403, 'Unauthorized access. Admin role required.');
+        // Check if user is admin or pembimbing
+        if (!Auth::check() || !in_array(Auth::user()->role, ['admin', 'pembimbing'])) {
+            abort(403, 'Unauthorized access. Admin or pembimbing role required.');
         }
 
         // Real data from database - support both Indonesian and English status values

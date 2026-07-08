@@ -34,6 +34,7 @@
             :show="showStatusModal"
             :statusForm="statusForm"
             :current-status="application.status"
+            :division="application.division"
             @close="showStatusModal = false"
             @submit="updateStatus"
         />

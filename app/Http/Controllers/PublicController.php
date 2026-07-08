@@ -14,23 +14,20 @@ class PublicController extends Controller
 {
     public function divisions()
     {
+        $quotaService = app(\App\Services\DivisionQuotaService::class);
         $divisions = Division::where('is_active', true)
-            ->withCount([
-                'applications',
-                'applications as accepted_count' => function ($query) {
-                    $query->where('status', 'diterima');
-                }
-            ])
             ->get()
-            ->map(function ($division) {
+            ->map(function ($division) use ($quotaService) {
+                $acceptedCount = $quotaService->acceptedCount($division);
+                $remaining = $quotaService->remainingQuota($division);
                 return [
                     'id' => $division->id,
                     'name' => $division->name,
                     'description' => $division->description,
                     'requirements' => $division->requirements,
-                    'quota' => $division->quota,
-                    'current_interns' => $division->accepted_count,
-                    'available_slots' => $division->quota - $division->accepted_count,
+                    'quota' => $division->max_interns,
+                    'current_interns' => $acceptedCount,
+                    'available_slots' => $remaining,
                     'supervisor' => 'GrowithBI Admin',
                     'supervisor_email' => 'admin@growithbi.com',
                 ];
@@ -68,9 +65,9 @@ class PublicController extends Controller
             }
 
             // Optimized: Use single query with count aggregate
-            $acceptedCount = $division->applications()
-                ->where('status', 'diterima')
-                ->count();
+            $quotaService = app(\App\Services\DivisionQuotaService::class);
+            $acceptedCount = $quotaService->acceptedCount($division);
+            $remaining = $quotaService->remainingQuota($division);
             
             $quota = $division->quota ?? $division->max_interns;
 
@@ -83,7 +80,7 @@ class PublicController extends Controller
                 'requirements' => $division->requirements,
                 'quota' => $quota,
                 'current_interns' => $acceptedCount,
-                'available_slots' => max(0, $quota - $acceptedCount), // Prevent negative slots
+                'available_slots' => $remaining,
                 'start_date' => $division->start_date,
                 'end_date' => $division->end_date,
                 'application_deadline' => $division->application_deadline,
@@ -144,6 +141,15 @@ class PublicController extends Controller
 
         $user = $request->user();
         
+        $division = Division::findOrFail($request->division_id);
+        $quotaService = app(\App\Services\DivisionQuotaService::class);
+        if (!$quotaService->hasAvailableQuota($division)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Divisi yang dipilih telah mencapai batas kuota peserta. Silakan pilih divisi lain.'
+            ]);
+        }
+
         // Check if user already has a pending or accepted application
         $existingApplication = Application::where('email', $user->email)
             ->whereIn('status', ['menunggu', 'diterima'])

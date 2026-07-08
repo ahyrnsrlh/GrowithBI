@@ -41,14 +41,16 @@ return new class extends Migration
             ->update(['status' => 'menunggu']); // Temporary value
 
         // Step 2: Modify enum dengan nilai baru yang konsisten dengan kode
-        DB::statement("ALTER TABLE applications MODIFY COLUMN status ENUM(
-            'menunggu',              -- Initial state: Application submitted
-            'in_review',             -- Documents being reviewed
-            'interview_scheduled',   -- Interview scheduled
-            'accepted',              -- Application accepted
-            'rejected',              -- Application rejected
-            'expired'                -- Application expired
-        ) DEFAULT 'menunggu'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE applications MODIFY COLUMN status ENUM(
+                'menunggu',              -- Initial state: Application submitted
+                'in_review',             -- Documents being reviewed
+                'interview_scheduled',   -- Interview scheduled
+                'accepted',              -- Application accepted
+                'rejected',              -- Application rejected
+                'expired'                -- Application expired
+            ) DEFAULT 'menunggu'");
+        }
         
         // Step 3: Set semua ke 'menunggu' sebagai default safe state
         // Admin bisa re-update status yang benar dari dashboard
@@ -82,15 +84,17 @@ return new class extends Migration
             ->where('status', 'expired')
             ->update(['status' => 'menunggu']); // Temporary
 
-        DB::statement("ALTER TABLE applications MODIFY COLUMN status ENUM(
-            'menunggu',
-            'dalam_review',
-            'wawancara_dijadwalkan',
-            'diterima',
-            'ditolak',
-            'surat_dikirim',
-            'kedaluwarsa'
-        ) DEFAULT 'menunggu'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE applications MODIFY COLUMN status ENUM(
+                'menunggu',
+                'dalam_review',
+                'wawancara_dijadwalkan',
+                'diterima',
+                'ditolak',
+                'surat_dikirim',
+                'kedaluwarsa'
+            ) DEFAULT 'menunggu'");
+        }
     }
 };
 

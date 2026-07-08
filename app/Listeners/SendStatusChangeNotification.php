@@ -28,6 +28,11 @@ class SendStatusChangeNotification implements ShouldQueue
     public string $connection = 'sync';
 
     /**
+     * Determine if the job should run after database transaction commits.
+     */
+    public bool $afterCommit = true;
+
+    /**
      * The queue name.
      */
     public string $queue = 'notifications';

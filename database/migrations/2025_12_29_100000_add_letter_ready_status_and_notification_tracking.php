@@ -19,15 +19,17 @@ return new class extends Migration
         // We'll update them to 'letter_ready' after modifying the enum
         
         // Step 2: Modify the status enum to include 'letter_ready'
-        DB::statement("ALTER TABLE applications MODIFY COLUMN status ENUM(
-            'menunggu',              -- Initial state: Application submitted
-            'in_review',             -- Documents being reviewed / Selection in progress
-            'interview_scheduled',   -- Interview scheduled
-            'accepted',              -- Application accepted (awaiting letter)
-            'rejected',              -- Application rejected
-            'letter_ready',          -- Acceptance letter uploaded and ready
-            'expired'                -- Application expired
-        ) DEFAULT 'menunggu'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE applications MODIFY COLUMN status ENUM(
+                'menunggu',              -- Initial state: Application submitted
+                'in_review',             -- Documents being reviewed / Selection in progress
+                'interview_scheduled',   -- Interview scheduled
+                'accepted',              -- Application accepted (awaiting letter)
+                'rejected',              -- Application rejected
+                'letter_ready',          -- Acceptance letter uploaded and ready
+                'expired'                -- Application expired
+            ) DEFAULT 'menunggu'");
+        }
 
         // Step 3: Update applications that already have acceptance letters to 'letter_ready'
         DB::table('applications')
@@ -80,13 +82,15 @@ return new class extends Migration
             ->update(['status' => 'accepted']);
 
         // Restore original enum without 'letter_ready'
-        DB::statement("ALTER TABLE applications MODIFY COLUMN status ENUM(
-            'menunggu',
-            'in_review',
-            'interview_scheduled',
-            'accepted',
-            'rejected',
-            'expired'
-        ) DEFAULT 'menunggu'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE applications MODIFY COLUMN status ENUM(
+                'menunggu',
+                'in_review',
+                'interview_scheduled',
+                'accepted',
+                'rejected',
+                'expired'
+            ) DEFAULT 'menunggu'");
+        }
     }
 };

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         // Create sample applications for testing charts
-        $users = App\Models\User::where('role', 'peserta')->get();
-        $divisions = App\Models\Division::where('is_active', true)->get();
+        $users = \Illuminate\Support\Facades\DB::table('users')->where('role', 'peserta')->get();
+        $divisions = \Illuminate\Support\Facades\DB::table('divisions')->where('is_active', true)->get();
         
         if ($users->count() > 0 && $divisions->count() > 0) {
             $statuses = ['menunggu', 'diterima', 'ditolak'];

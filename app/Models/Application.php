@@ -102,6 +102,19 @@ class Application extends Model
         }
 
         return DB::transaction(function () use ($newStatus, $oldStatus, $changedBy, $metadata) {
+            // Check division quota under pessimistic lock when accepting applicant
+            if ($newStatus->isAccepted() && (!$oldStatus || !$oldStatus->isAccepted())) {
+                $division = Division::where('id', $this->division_id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$division) {
+                    throw new \Exception('Divisi tidak ditemukan.');
+                }
+
+                app(\App\Services\DivisionQuotaService::class)->validateApprovalQuota($division);
+            }
+
             // Update the status
             $updateData = [
                 'status' => $newStatus->value,
@@ -139,10 +152,15 @@ class Application extends Model
                 $updateData['reviewed_by'] = $changedBy->id;
             }
 
-            $this->update($updateData);
-
             // Determine the event type from status change
             $eventType = RegistrationEventType::fromStatusChange($oldStatus, $newStatus);
+
+            if ($eventType) {
+                $updateData['last_notification_event'] = $eventType->value;
+                $updateData['last_notification_at'] = now();
+            }
+
+            $this->update($updateData);
 
             if ($eventType) {
                 // Format metadata untuk notifikasi
@@ -158,21 +176,17 @@ class Application extends Model
                     $formattedMetadata['interview_time'] = \Carbon\Carbon::parse($metadata['interview_time'])->format('H:i') . ' WIB';
                 }
                 
-                // Dispatch the event
-                ApplicationStatusChanged::dispatch(
-                    $this->fresh(['user', 'division']),
-                    $eventType,
-                    $oldStatus,
-                    $newStatus,
-                    $changedBy,
-                    $formattedMetadata
-                );
-
-                // Track last notification
-                $this->update([
-                    'last_notification_event' => $eventType->value,
-                    'last_notification_at' => now(),
-                ]);
+                // Defer the event dispatch until after the transaction commits successfully
+                DB::afterCommit(function () use ($eventType, $oldStatus, $newStatus, $changedBy, $formattedMetadata) {
+                    ApplicationStatusChanged::dispatch(
+                        $this->fresh(['user', 'division']),
+                        $eventType,
+                        $oldStatus,
+                        $newStatus,
+                        $changedBy,
+                        $formattedMetadata
+                    );
+                });
             }
 
             return true;

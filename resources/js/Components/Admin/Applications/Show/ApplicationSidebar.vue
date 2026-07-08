@@ -1,5 +1,77 @@
 <template>
     <div class="space-y-6">
+        <!-- Division Quota Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Kuota Divisi</h3>
+            <div class="space-y-4">
+                <!-- Quota Capacity Status Badge -->
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-600">Status Kapasitas</span>
+                    <span
+                        v-if="(application.division.available_quota ?? 0) <= 0"
+                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 border border-red-200"
+                    >
+                        <span class="w-1.5 h-1.5 bg-red-500 rounded-full mr-1.5 animate-pulse"></span>
+                        Full (Penuh)
+                    </span>
+                    <span
+                        v-else-if="(application.division.available_quota ?? 0) <= 2"
+                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200"
+                    >
+                        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full mr-1.5 animate-pulse"></span>
+                        Hampir Penuh
+                    </span>
+                    <span
+                        v-else
+                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 border border-green-200"
+                    >
+                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
+                        Tersedia
+                    </span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span>Progress Quota</span>
+                        <span>{{ application.division.accepted_count ?? 0 }} / {{ application.division.quota }}</span>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                        <div
+                            class="h-full rounded-full transition-all duration-500"
+                            :class="[
+                                (application.division.available_quota ?? 0) <= 0
+                                    ? 'bg-red-500'
+                                    : (application.division.available_quota ?? 0) <= 2
+                                    ? 'bg-amber-500'
+                                    : 'bg-green-500',
+                            ]"
+                            :style="{
+                                width: Math.min(100, Math.round(((application.division.accepted_count ?? 0) / (application.division.quota || 1)) * 100)) + '%',
+                            }"
+                        ></div>
+                    </div>
+                </div>
+
+                <!-- Stats Details -->
+                <div class="border-t border-gray-100 pt-3 flex justify-between text-xs sm:text-sm">
+                    <span class="text-gray-600 font-medium">Sisa Kuota</span>
+                    <span
+                        class="font-bold"
+                        :class="[
+                            (application.division.available_quota ?? 0) <= 0
+                                ? 'text-red-600'
+                                : (application.division.available_quota ?? 0) <= 2
+                                ? 'text-amber-600'
+                                : 'text-green-600',
+                        ]"
+                    >
+                        {{ application.division.available_quota ?? 0 }} slot
+                    </span>
+                </div>
+            </div>
+        </div>
+
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Timeline</h3>
             <div class="space-y-4">

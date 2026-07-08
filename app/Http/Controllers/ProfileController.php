@@ -47,14 +47,16 @@ class ProfileController extends Controller
         $profileCompletion = $this->calculateProfileCompletion($user);
         
         // Get available divisions for new applications
+        $quotaService = app(\App\Services\DivisionQuotaService::class);
         $divisions = Division::where('is_active', true)
-            ->select('id', 'name', 'max_interns')
             ->get()
-            ->map(function ($division) {
+            ->map(function ($division) use ($quotaService) {
                 return [
                     'id' => $division->id,
                     'name' => $division->name,
-                    'quota' => $division->max_interns
+                    'quota' => $division->max_interns,
+                    'accepted_count' => $quotaService->acceptedCount($division),
+                    'available_quota' => $quotaService->remainingQuota($division),
                 ];
             });
             
@@ -327,6 +329,9 @@ class ProfileController extends Controller
             'division_id' => ['required', 'exists:divisions,id', new \App\Rules\UniqueActiveApplication(null, $user->id)],
             'motivation' => 'nullable|string|min:50|max:1000',
         ]);
+
+        $division = Division::findOrFail($request->division_id);
+        app(\App\Services\DivisionQuotaService::class)->validateRegistrationQuota($division);
 
         try {
             Log::info('=== CREATING APPLICATION ===');

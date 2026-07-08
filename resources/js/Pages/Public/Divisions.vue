@@ -134,7 +134,26 @@
                             <!-- Status Badges -->
                             <div class="flex flex-wrap gap-2 mb-4 sm:mb-6">
                                 <span
-                                    class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-green-100 text-green-800"
+                                    v-if="(division.available_slots ?? 0) <= 0"
+                                    class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-red-100 text-red-800 border border-red-200"
+                                >
+                                    <span
+                                        class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full mr-1 sm:mr-2 animate-pulse"
+                                    ></span>
+                                    Kuota Penuh
+                                </span>
+                                <span
+                                    v-else-if="(division.available_slots ?? 0) <= 2"
+                                    class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-amber-100 text-amber-800 border border-amber-200"
+                                >
+                                    <span
+                                        class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-amber-500 rounded-full mr-1 sm:mr-2 animate-pulse"
+                                    ></span>
+                                    Hampir Penuh
+                                </span>
+                                <span
+                                    v-else
+                                    class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-green-100 text-green-800 border border-green-200"
                                 >
                                     <span
                                         class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full mr-1 sm:mr-2"

@@ -20,6 +20,9 @@ class AdminDeleteApplicationTest extends TestCase
         // Create admin user
         $admin = User::factory()->create(['role' => 'admin']);
 
+        // Create division
+        $division = \App\Models\Division::factory()->create();
+
         // Create applicant user and application with file paths
         $applicant = User::factory()->create(['role' => 'peserta']);
 
@@ -27,7 +30,7 @@ class AdminDeleteApplicationTest extends TestCase
             'user_id' => $applicant->id,
             'name' => $applicant->name,
             'email' => $applicant->email,
-            'division_id' => null,
+            'division_id' => $division->id,
             'status' => 'menunggu',
             'cv_path' => 'applications/cv/test-cv.pdf',
             'surat_lamaran_path' => 'applications/letter/test-letter.pdf',
@@ -77,12 +80,13 @@ class AdminDeleteApplicationTest extends TestCase
     {
         $user = User::factory()->create(['role' => 'pembimbing']);
         $applicant = User::factory()->create(['role' => 'peserta']);
+        $division = \App\Models\Division::factory()->create();
 
         $application = Application::create([
             'user_id' => $applicant->id,
             'name' => $applicant->name,
             'email' => $applicant->email,
-            'division_id' => null,
+            'division_id' => $division->id,
             'status' => 'menunggu',
         ]);
 

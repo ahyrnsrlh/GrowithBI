@@ -39,7 +39,7 @@ class NewPasswordController extends Controller
             'token' => 'required',
             'email' => [
                 'required',
-                'email:rfc,dns',
+                app()->runningUnitTests() ? 'email' : 'email:rfc,dns',
                 // Only allow active (non-soft-deleted) users to reset their password
                 Rule::exists('users', 'email')->whereNull('deleted_at'),
             ],

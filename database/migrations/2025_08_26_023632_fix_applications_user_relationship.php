@@ -14,26 +14,42 @@ return new class extends Migration
     {
         // Update applications yang tidak memiliki user_id yang valid
         // Hapus aplikasi yang tidak memiliki user_id atau user yang tidak ada
-        DB::statement('
-            DELETE FROM applications 
-            WHERE user_id IS NULL 
-            OR user_id NOT IN (SELECT id FROM users)
-        ');
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement('
+                DELETE FROM applications 
+                WHERE user_id IS NULL 
+                OR user_id NOT IN (SELECT id FROM users)
+            ');
+        } else {
+            DB::statement('
+                DELETE FROM applications 
+                WHERE user_id IS NULL 
+                OR user_id NOT IN (SELECT id FROM users)
+            ');
+        }
         
         // Pastikan foreign key constraint ada
         Schema::table('applications', function (Blueprint $table) {
-            // Check if foreign key exists and drop if it does
-            $foreignKeys = DB::select("
-                SELECT CONSTRAINT_NAME 
-                FROM information_schema.KEY_COLUMN_USAGE 
-                WHERE TABLE_SCHEMA = DATABASE() 
-                AND TABLE_NAME = 'applications' 
-                AND COLUMN_NAME = 'user_id' 
-                AND CONSTRAINT_NAME != 'PRIMARY'
-            ");
-            
-            foreach ($foreignKeys as $fk) {
-                $table->dropForeign($fk->CONSTRAINT_NAME);
+            if (DB::getDriverName() === 'mysql') {
+                // Check if foreign key exists and drop if it does
+                $foreignKeys = DB::select("
+                    SELECT CONSTRAINT_NAME 
+                    FROM information_schema.KEY_COLUMN_USAGE 
+                    WHERE TABLE_SCHEMA = DATABASE() 
+                    AND TABLE_NAME = 'applications' 
+                    AND COLUMN_NAME = 'user_id' 
+                    AND CONSTRAINT_NAME != 'PRIMARY'
+                ");
+                
+                foreach ($foreignKeys as $fk) {
+                    $table->dropForeign($fk->CONSTRAINT_NAME);
+                }
+            } else {
+                try {
+                    $table->dropForeign(['user_id']);
+                } catch (\Exception $e) {
+                    // Ignore if not supported or not exists
+                }
             }
             
             // Add foreign key constraint
@@ -47,18 +63,26 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('applications', function (Blueprint $table) {
-            // Check if foreign key exists before dropping
-            $foreignKeys = DB::select("
-                SELECT CONSTRAINT_NAME 
-                FROM information_schema.KEY_COLUMN_USAGE 
-                WHERE TABLE_SCHEMA = DATABASE() 
-                AND TABLE_NAME = 'applications' 
-                AND COLUMN_NAME = 'user_id' 
-                AND CONSTRAINT_NAME != 'PRIMARY'
-            ");
-            
-            foreach ($foreignKeys as $fk) {
-                $table->dropForeign($fk->CONSTRAINT_NAME);
+            if (DB::getDriverName() === 'mysql') {
+                // Check if foreign key exists before dropping
+                $foreignKeys = DB::select("
+                    SELECT CONSTRAINT_NAME 
+                    FROM information_schema.KEY_COLUMN_USAGE 
+                    WHERE TABLE_SCHEMA = DATABASE() 
+                    AND TABLE_NAME = 'applications' 
+                    AND COLUMN_NAME = 'user_id' 
+                    AND CONSTRAINT_NAME != 'PRIMARY'
+                ");
+                
+                foreach ($foreignKeys as $fk) {
+                    $table->dropForeign($fk->CONSTRAINT_NAME);
+                }
+            } else {
+                try {
+                    $table->dropForeign(['user_id']);
+                } catch (\Exception $e) {
+                    // Ignore
+                }
             }
         });
     }

@@ -48,12 +48,15 @@ class DivisionController extends Controller
                                    }
                                }
 
+                               $quotaService = app(\App\Services\DivisionQuotaService::class);
                                return [
                                    'id' => $division->id,
                                    'name' => $division->name,
                                    'description' => $division->description,
                                    'icon' => $division->icon,
                                    'quota' => $division->max_interns,
+                                   'current_interns' => $quotaService->acceptedCount($division),
+                                   'available_slots' => $quotaService->remainingQuota($division),
                                    'duration' => $duration,
                                    'is_active' => $division->is_active
                                ];

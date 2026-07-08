@@ -229,7 +229,7 @@ class LogbookController extends Controller
         }
         
         // Check if user owns this logbook
-        if ($logbook->user_id !== $user->id) {
+        if (!in_array($user->role, ['admin', 'pembimbing']) && $logbook->user_id !== $user->id) {
             abort(403, 'Unauthorized access to this logbook.');
         }
 
@@ -289,7 +289,7 @@ class LogbookController extends Controller
         $user = Auth::user();
         
         // Check if user owns this logbook
-        if ($logbook->user_id !== $user->id) {
+        if (!in_array($user->role, ['admin', 'pembimbing']) && $logbook->user_id !== $user->id) {
             abort(403, 'Unauthorized access to this logbook.');
         }
 
@@ -426,7 +426,7 @@ class LogbookController extends Controller
         $user = Auth::user();
         
         // Check if user owns this logbook
-        if ($logbook->user_id !== $user->id) {
+        if (!in_array($user->role, ['admin', 'pembimbing']) && $logbook->user_id !== $user->id) {
             abort(403, 'Unauthorized access to this logbook.');
         }
 
@@ -473,7 +473,7 @@ class LogbookController extends Controller
         $user = Auth::user();
         
         // Check if user owns this logbook
-        if ($logbook->user_id !== $user->id) {
+        if (!in_array($user->role, ['admin', 'pembimbing']) && $logbook->user_id !== $user->id) {
             abort(403, 'Unauthorized access to this logbook.');
         }
 
