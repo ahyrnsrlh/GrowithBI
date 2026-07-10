@@ -21,13 +21,18 @@ export function useProfilePage(props) {
     const activeTab = ref("profile");
     const editMode = ref(false);
         
+    const showNotification = ref(false);
+    const notificationType = ref("success");
+    const notificationMessage = ref("");
+        
     const showToast = (type, message) => {
-        notificationType.value = type;
-        notificationMessage.value = message;
-        showNotification.value = true;
-        setTimeout(() => {
-            showNotification.value = false;
-        }, 5000);
+        if (type === "success") {
+            SwalPlugin.toastSuccess(message);
+        } else if (type === "error") {
+            SwalPlugin.toastError(message);
+        } else {
+            SwalPlugin.toastWarning(message);
+        }
     };
     const showCreateLogbookModal = ref(false);
     const showCreateReportModal = ref(false);

@@ -1,5 +1,6 @@
 import { ref, watch } from "vue";
 import { router, usePage } from "@inertiajs/vue3";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 export function usePesertaReportsIndexPage() {
     const showDetailReportModal = ref(false);
@@ -11,12 +12,13 @@ export function usePesertaReportsIndexPage() {
     const notificationMessage = ref("");
 
     const showToast = (type, message) => {
-        notificationType.value = type;
-        notificationMessage.value = message;
-        showNotification.value = true;
-        setTimeout(() => {
-            showNotification.value = false;
-        }, 3000);
+        if (type === "success") {
+            SwalPlugin.toastSuccess(message);
+        } else if (type === "error") {
+            SwalPlugin.toastError(message);
+        } else {
+            SwalPlugin.toastWarning(message);
+        }
     };
 
     const page = usePage();
@@ -46,16 +48,15 @@ export function usePesertaReportsIndexPage() {
     const deleteReport = (id) => {
         SwalPlugin.confirmDestructive("Konfirmasi", "Apakah Anda yakin ingin menghapus laporan ini? File laporan juga akan dihapus dari server.").then((result) => {
             if (result.isConfirmed) {
-
-            router.delete(route("peserta.reports.destroy", id), {
-                preserveScroll: true,
-                onSuccess: () => {
-                    // Let Inertia handle page reload automatically
-                },
-                onError: (errors) => {
-                    console.error("Delete report errors:", errors);
-                }
-            });
+                router.delete(route("peserta.reports.destroy", id), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        // Let Inertia handle page reload automatically
+                    },
+                    onError: (errors) => {
+                        console.error("Delete report errors:", errors);
+                    }
+                });
             }
         });
     };
