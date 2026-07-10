@@ -39,8 +39,7 @@
                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-200 text-amber-800">Wajib</span>
                         </div>
                         <p class="text-xs text-amber-800 leading-relaxed">
-                            Untuk menggunakan fitur <strong>Presensi Online</strong>, Anda wajib melakukan registrasi
-                            foto profil menggunakan kamera. Foto ini akan digunakan sebagai referensi verifikasi wajah saat presensi.
+                            Lengkapi foto profil menggunakan kamera sebagai bagian dari proses registrasi akun GrowithBI.
                         </p>
                     </div>
 
