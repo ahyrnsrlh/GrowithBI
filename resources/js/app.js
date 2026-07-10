@@ -7,7 +7,7 @@ import "./bootstrap";
 import { createApp, h } from "vue";
 import { createInertiaApp, router } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import { ZiggyVue } from "../../vendor/tightenco/ziggy";
+import { ZiggyVue } from "ziggy-js";
 import AppWrapper from "./Components/AppWrapper.vue";
 import SwalPlugin from "./Plugins/sweetalert";
 
