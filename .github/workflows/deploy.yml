@@ -10,15 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Checkout code
+        uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies & Build assets
+        run: |
+          npm ci
+          npm run build
+
+      - name: Copy built assets to VPS
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           port: ${{ secrets.VPS_PORT }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          source: "public/build/"
+          target: "/var/www/GrowithBI"
 
+      - name: Deploy commands on VPS via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          port: ${{ secrets.VPS_PORT }}
+          key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /var/www/GrowithBI
 
@@ -28,11 +50,6 @@ jobs:
             composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
             php artisan migrate --force
-
-            npm ci
-            npm run build
-
-            cp public/build/.vite/manifest.json public/build/manifest.json || true
 
             php artisan optimize:clear
             php artisan optimize
