@@ -71,12 +71,12 @@ export function useAdminProfilePage(auth) {
         }
 
         if (!file.type.startsWith("image/")) {
-            alert("Silakan pilih file gambar");
+            SwalPlugin.toastWarning("Silakan pilih file gambar");
             return;
         }
 
         if (file.size > 2 * 1024 * 1024) {
-            alert("Ukuran file maksimal 2MB");
+            SwalPlugin.toastError("Ukuran file maksimal 2MB");
             return;
         }
 

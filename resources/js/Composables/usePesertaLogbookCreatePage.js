@@ -1,5 +1,6 @@
 import { computed, ref } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 export function usePesertaLogbookCreatePage() {
     const selectedFiles = ref([]);
@@ -32,7 +33,7 @@ export function usePesertaLogbookCreatePage() {
 
         files.forEach((file) => {
             if (file.size > maxSize) {
-                alert(`File ${file.name} terlalu besar. Maksimal 5MB.`);
+                SwalPlugin.toastError(`File ${file.name} terlalu besar. Maksimal 5MB.`);
                 return;
             }
 
@@ -73,15 +74,18 @@ export function usePesertaLogbookCreatePage() {
             selectedFiles.value.length > 0;
 
         if (hasData) {
-            const shouldCancel = confirm(
+            SwalPlugin.confirmAction(
+                "Batal Tambah",
                 "Anda memiliki data yang belum disimpan. Yakin ingin membatalkan?",
-            );
-            if (!shouldCancel) {
-                return;
-            }
+                "Ya, Batalkan"
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    router.visit(route("peserta.logbooks.index"));
+                }
+            });
+        } else {
+            router.visit(route("peserta.logbooks.index"));
         }
-
-        router.visit(route("peserta.logbooks.index"));
     };
 
     const submitWithStatus = (status) => {

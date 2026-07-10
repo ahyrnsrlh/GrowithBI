@@ -1,4 +1,5 @@
 import { ref, computed, watch, onMounted } from "vue";
+import SwalPlugin from "@/Plugins/sweetalert";
 import { useAttendanceServerClock } from "@/Composables/Attendance/useAttendanceServerClock";
 import { useAttendanceFormatters } from "@/Composables/Attendance/useAttendanceFormatters";
 import { useAttendanceCapture } from "@/Composables/Attendance/useAttendanceCapture";
@@ -89,35 +90,7 @@ export function usePesertaAttendancePage(props, page) {
         return { total, onTime, late };
     });
 
-    // ── Toast helpers ─────────────────────────────────────────────────────────
-    const showToastFor = (type) => {
-        if (type === "success") {
-            showSuccessToast.value = true;
-            setTimeout(() => { showSuccessToast.value = false; }, 5000);
-            return;
-        }
-        showErrorToast.value = true;
-        setTimeout(() => { showErrorToast.value = false; }, 5000);
-    };
-
-    watch(
-        () => page.props.flash,
-        (flash) => {
-            if (flash?.success) {
-                showToastFor("success");
-            }
-            if (flash?.error) {
-                showToastFor("error");
-            }
-        },
-        { deep: true }
-    );
     watch(filterStatus, () => { currentPage.value = 1; });
-
-    onMounted(() => {
-        if (page.props.flash?.success) showToastFor("success");
-        if (page.props.flash?.error)   showToastFor("error");
-    });
 
     return {
         // Camera

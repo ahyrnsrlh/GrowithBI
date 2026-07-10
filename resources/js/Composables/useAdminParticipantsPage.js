@@ -222,7 +222,7 @@ export function useAdminParticipantsPage(props) {
     };
 
     const exportData = () => {
-        alert("Fitur export akan segera ditambahkan!");
+        SwalPlugin.toastError("Fitur export akan segera ditambahkan!");
     };
 
     return {

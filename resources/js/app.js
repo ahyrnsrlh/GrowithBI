@@ -9,6 +9,7 @@ import { createInertiaApp, router } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import AppWrapper from "./Components/AppWrapper.vue";
+import SwalPlugin from "./Plugins/sweetalert";
 
 const resolveAppName = () => {
     const metaAppName = document.head
@@ -81,6 +82,20 @@ router.on("navigate", (event) => {
     }
 });
 
+// Handle global flash messages
+router.on("success", (event) => {
+    const flash = event.detail.page.props.flash;
+    if (flash?.success) {
+        SwalPlugin.toastSuccess(flash.success);
+    }
+    if (flash?.error) {
+        SwalPlugin.toastError(flash.error);
+    }
+    if (flash?.warning) {
+        SwalPlugin.toastWarning(flash.warning);
+    }
+});
+
 // Warn about session expiry (480min - 10min warning)
 let sessionWarningShown = false;
 const SESSION_LIFETIME_MS = 480 * 60 * 1000; // 480 minutes
@@ -97,6 +112,29 @@ setTimeout(() => {
         // You can implement a toast component here
     }
 }, SESSION_LIFETIME_MS - WARNING_BEFORE_MS);
+
+// Intercept logout and show confirmation dialog
+let isLoggingOut = false;
+router.on("before", (event) => {
+    const isLogout = event.detail.visit.url.pathname === "/logout" || event.detail.visit.url.pathname.endsWith("/logout");
+    if (isLogout && event.detail.visit.method === "post" && !isLoggingOut) {
+        event.preventDefault();
+        SwalPlugin.confirmAction(
+            "Log Out",
+            "Apakah Anda yakin ingin keluar dari aplikasi?",
+            "Ya, Keluar"
+        ).then((result) => {
+            if (result.isConfirmed) {
+                isLoggingOut = true;
+                router.post("/logout", {}, {
+                    onFinish: () => {
+                        isLoggingOut = false;
+                    }
+                });
+            }
+        });
+    }
+});
 
 createInertiaApp({
     title: (title) => formatDocumentTitle(title),

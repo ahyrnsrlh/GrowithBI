@@ -1,5 +1,6 @@
 <script setup>
 import { Link, router } from "@inertiajs/vue3";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 const props = defineProps({
     report: {
@@ -13,9 +14,14 @@ const props = defineProps({
 });
 
 const deleteReport = () => {
-    if (confirm("Apakah Anda yakin ingin menghapus laporan ini? File laporan juga akan dihapus dari server.")) {
-        router.delete(route("peserta.reports.destroy", props.report.id));
-    }
+    SwalPlugin.confirmDestructive(
+        "Hapus Laporan",
+        "Apakah Anda yakin ingin menghapus laporan ini? File laporan juga akan dihapus dari server."
+    ).then((result) => {
+        if (result.isConfirmed) {
+            router.delete(route("peserta.reports.destroy", props.report.id));
+        }
+    });
 };
 </script>
 

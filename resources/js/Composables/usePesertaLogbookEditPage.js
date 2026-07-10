@@ -1,5 +1,6 @@
 import { computed, onMounted, ref } from "vue";
 import { router, useForm } from "@inertiajs/vue3";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 export function usePesertaLogbookEditPage(logbook) {
     const newFiles = ref([]);
@@ -132,15 +133,18 @@ export function usePesertaLogbookEditPage(logbook) {
             form.removed_files.length > 0;
 
         if (hasChanges) {
-            const shouldLeave = confirm(
+            SwalPlugin.confirmAction(
+                "Batal Edit",
                 "Anda memiliki perubahan yang belum disimpan. Yakin ingin membatalkan?",
-            );
-            if (!shouldLeave) {
-                return;
-            }
+                "Ya, Batalkan"
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    router.visit(route("peserta.logbooks.index"));
+                }
+            });
+        } else {
+            router.visit(route("peserta.logbooks.index"));
         }
-
-        router.visit(route("peserta.logbooks.index"));
     };
 
     const submitForm = () => {

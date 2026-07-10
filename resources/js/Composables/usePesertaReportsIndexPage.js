@@ -24,10 +24,10 @@ export function usePesertaReportsIndexPage() {
         () => page.props.flash,
         (flash) => {
             if (flash?.success) {
-                showToast("success", flash.success);
+                SwalPlugin.toastSuccess(flash.success);
             }
             if (flash?.error) {
-                showToast("error", flash.error);
+                SwalPlugin.toastError(flash.error);
             }
         },
         { deep: true, immediate: true }
@@ -44,7 +44,9 @@ export function usePesertaReportsIndexPage() {
     };
 
     const deleteReport = (id) => {
-        if (confirm("Apakah Anda yakin ingin menghapus laporan ini? File laporan juga akan dihapus dari server.")) {
+        SwalPlugin.confirmDestructive("Konfirmasi", "Apakah Anda yakin ingin menghapus laporan ini? File laporan juga akan dihapus dari server.").then((result) => {
+            if (result.isConfirmed) {
+
             router.delete(route("peserta.reports.destroy", id), {
                 preserveScroll: true,
                 onSuccess: () => {
@@ -54,7 +56,8 @@ export function usePesertaReportsIndexPage() {
                     console.error("Delete report errors:", errors);
                 }
             });
-        }
+            }
+        });
     };
 
     const handleReportEditSuccess = () => {
@@ -105,7 +108,7 @@ export function usePesertaReportsIndexPage() {
 
     const generateReport = () => {
         // Placeholder until backend report generation endpoint is available.
-        alert("Fitur generate laporan akan segera tersedia!");
+        SwalPlugin.toastError("Fitur generate laporan akan segera tersedia!");
     };
 
     return {

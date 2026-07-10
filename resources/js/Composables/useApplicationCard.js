@@ -183,9 +183,7 @@ export function useApplicationCard(application, emit) {
             const checkResult = await checkResponse.json();
 
             if (!checkResult.success || !checkResult.has_letter) {
-                alert(
-                    "Surat penerimaan belum tersedia. Hubungi pembimbing Anda.",
-                );
+                SwalPlugin.toastError("Surat penerimaan belum tersedia. Hubungi pembimbing Anda.",);
                 return;
             }
 
@@ -195,7 +193,7 @@ export function useApplicationCard(application, emit) {
             );
         } catch (error) {
             console.error("Error downloading acceptance letter:", error);
-            alert("Terjadi kesalahan saat mengunduh surat penerimaan.");
+            SwalPlugin.toastError("Terjadi kesalahan saat mengunduh surat penerimaan.");
         } finally {
             downloading.value = false;
         }

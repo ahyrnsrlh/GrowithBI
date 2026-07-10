@@ -1,5 +1,6 @@
 import { router } from "@inertiajs/vue3";
 import { ref } from "vue";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 export function useAdminNotificationsIndexPage(initialFilters) {
     const filters = ref({ ...initialFilters });
@@ -54,16 +55,19 @@ export function useAdminNotificationsIndexPage(initialFilters) {
     };
 
     const deleteNotification = (notificationId) => {
-        if (!confirm("Apakah Anda yakin ingin menghapus notifikasi ini?")) {
-            return;
-        }
-
-        router.delete(`/admin/notifications/${notificationId}`, {
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: () => {
-                router.reload({ only: ["notifications", "stats"] });
-            },
+        SwalPlugin.confirmDestructive(
+            "Hapus Notifikasi",
+            "Apakah Anda yakin ingin menghapus notifikasi ini?"
+        ).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(`/admin/notifications/${notificationId}`, {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        router.reload({ only: ["notifications", "stats"] });
+                    },
+                });
+            }
         });
     };
 

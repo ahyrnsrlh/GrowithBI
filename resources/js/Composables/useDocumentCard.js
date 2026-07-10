@@ -1,4 +1,5 @@
 import { computed, onUnmounted, ref } from "vue";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 export function useDocumentCard(props, emit) {
     const showPreview = ref(false);
@@ -125,7 +126,7 @@ export function useDocumentCard(props, emit) {
             window.URL.revokeObjectURL(downloadUrl);
         } catch (error) {
             console.error("Download error:", error);
-            alert(`Gagal mengunduh dokumen. ${error.message}`);
+            SwalPlugin.toastError(`Gagal mengunduh dokumen. ${error.message}`);
         } finally {
             isDownloading.value = false;
         }
@@ -139,7 +140,7 @@ export function useDocumentCard(props, emit) {
 
         const maxSize = 5 * 1024 * 1024;
         if (file.size > maxSize) {
-            alert("Ukuran file terlalu besar. Maksimal 5MB.");
+            SwalPlugin.toastError("Ukuran file terlalu besar. Maksimal 5MB.");
             event.target.value = "";
             return;
         }
@@ -152,24 +153,26 @@ export function useDocumentCard(props, emit) {
         ];
 
         if (!allowedTypes.includes(file.type)) {
-            alert("Format file tidak didukung. Gunakan PDF, JPG, atau PNG.");
+            SwalPlugin.toastError("Format file tidak didukung. Gunakan PDF, JPG, atau PNG.");
             event.target.value = "";
             return;
         }
 
         if (props.documentPath) {
-            const shouldReplace = confirm(
+            SwalPlugin.confirmAction(
+                "Ganti File",
                 "Apakah Anda yakin ingin mengganti file yang sudah ada?",
-            );
-
-            if (!shouldReplace) {
+                "Ya, Ganti"
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    emit("upload", props.documentType, file);
+                }
                 event.target.value = "";
-                return;
-            }
+            });
+        } else {
+            emit("upload", props.documentType, file);
+            event.target.value = "";
         }
-
-        emit("upload", props.documentType, file);
-        event.target.value = "";
     };
 
     onUnmounted(() => {

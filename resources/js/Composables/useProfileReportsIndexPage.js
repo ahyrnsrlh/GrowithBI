@@ -1,4 +1,5 @@
 import { router } from "@inertiajs/vue3";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 export function useProfileReportsIndexPage() {
     const formatDate = (date) => {
@@ -19,9 +20,11 @@ export function useProfileReportsIndexPage() {
     };
 
     const deleteReport = (reportId) => {
-        if (confirm("Apakah Anda yakin ingin menghapus laporan ini?")) {
-            router.delete(route("profile.reports.destroy", reportId));
-        }
+        SwalPlugin.confirmDestructive("Konfirmasi Hapus", "Apakah Anda yakin ingin menghapus laporan ini?").then((result) => {
+            if (result.isConfirmed) {
+                router.delete(route("profile.reports.destroy", reportId));
+            }
+        });
     };
 
     const getStatusClass = (status) => {

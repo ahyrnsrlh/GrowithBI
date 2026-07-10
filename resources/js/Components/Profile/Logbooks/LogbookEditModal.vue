@@ -244,6 +244,7 @@ import { ref, watch, computed } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import axios from 'axios';
 import BaseModal from '@/Components/BaseModal.vue';
+import SwalPlugin from '@/Plugins/sweetalert';
 
 const props = defineProps({
     show: {
@@ -300,11 +301,18 @@ const handleClose = () => {
         form.removed_files.length > 0;
 
     if (hasChanges) {
-        if (!confirm('Anda memiliki perubahan yang belum disimpan. Yakin ingin membatalkan?')) {
-            return;
-        }
+        SwalPlugin.confirmAction(
+            "Batal Edit",
+            "Anda memiliki perubahan yang belum disimpan. Yakin ingin membatalkan?",
+            "Ya, Batalkan"
+        ).then((result) => {
+            if (result.isConfirmed) {
+                emit('close');
+            }
+        });
+    } else {
+        emit('close');
     }
-    emit('close');
 };
 
 const fetchLogbook = async () => {

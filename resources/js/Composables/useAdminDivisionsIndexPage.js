@@ -1,10 +1,7 @@
 import { router } from "@inertiajs/vue3";
-import { ref } from "vue";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 export function useAdminDivisionsIndexPage() {
-    const showDeleteModal = ref(false);
-    const divisionToDelete = ref(null);
-
     const formatDate = (dateString) => {
         if (!dateString) {
             return "-";
@@ -28,32 +25,23 @@ export function useAdminDivisionsIndexPage() {
     };
 
     const confirmDelete = (division) => {
-        divisionToDelete.value = division;
-        showDeleteModal.value = true;
-    };
-
-    const closeDeleteModal = () => {
-        showDeleteModal.value = false;
-        divisionToDelete.value = null;
-    };
-
-    const deleteDivision = () => {
-        if (!divisionToDelete.value?.id) {
-            return;
-        }
-
-        router.delete(`/admin/divisions/${divisionToDelete.value.id}`, {
-            onSuccess: closeDeleteModal,
+        SwalPlugin.confirmDestructive(
+            "Hapus Divisi",
+            `Apakah Anda yakin ingin menghapus divisi "${division?.name || 'N/A'}"? Seluruh data terkait akan ikut terhapus dan tindakan ini tidak dapat dibatalkan.`
+        ).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(`/admin/divisions/${division.id}`);
+            }
         });
     };
 
     return {
-        showDeleteModal,
-        divisionToDelete,
+        showDeleteModal: false,
+        divisionToDelete: null,
         formatDate,
         getProgressPercent,
         confirmDelete,
-        closeDeleteModal,
-        deleteDivision,
+        closeDeleteModal: () => {},
+        deleteDivision: () => {},
     };
 }

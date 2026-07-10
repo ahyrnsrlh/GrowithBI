@@ -10,7 +10,7 @@ export function useAdminLogbookShowPage(logbook) {
 
     const submitReview = () => {
         if (!reviewForm.status || !reviewForm.feedback.trim()) {
-            alert("Silakan pilih status dan berikan feedback");
+            SwalPlugin.toastWarning("Silakan pilih status dan berikan feedback");
             return;
         }
 
@@ -23,7 +23,7 @@ export function useAdminLogbookShowPage(logbook) {
             onSuccess: () => {
                 reviewForm.feedback = "";
                 reviewForm.status = "";
-                alert("Status logbook berhasil diperbarui!");
+                SwalPlugin.toastSuccess("Status logbook berhasil diperbarui!");
             },
             onError: (errors) => {
                 let errorMessage = "Terjadi kesalahan: ";
@@ -37,7 +37,7 @@ export function useAdminLogbookShowPage(logbook) {
                     errorMessage += Object.values(errors).join(", ");
                 }
 
-                alert(errorMessage);
+                SwalPlugin.toastError(errorMessage);
             },
             onFinish: () => {
                 processing.value = false;

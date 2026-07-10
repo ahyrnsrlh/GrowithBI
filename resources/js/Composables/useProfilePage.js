@@ -1,4 +1,5 @@
 import { ref, reactive, computed, watch } from "vue";
+import SwalPlugin from "@/Plugins/sweetalert";
 import { useForm, router, usePage } from "@inertiajs/vue3";
 import { useProfilePageBoot } from "@/Composables/useProfilePageBoot";
 
@@ -19,10 +20,7 @@ export function useProfilePage(props) {
     const user = reactive({ ...props.user });
     const activeTab = ref("profile");
     const editMode = ref(false);
-    const showNotification = ref(false);
-    const notificationType = ref("success");
-    const notificationMessage = ref("");
-    
+        
     const showToast = (type, message) => {
         notificationType.value = type;
         notificationMessage.value = message;
@@ -38,19 +36,7 @@ export function useProfilePage(props) {
     // Seeded from the dedicated Inertia prop (face_descriptor is hidden from user object).
     const page = usePage();
     const faceEnrolled = ref(props.face_enrolled ?? page.props.auth?.face_enrolled ?? false);
-    watch(
-        () => page.props.flash,
-        (flash) => {
-            if (flash?.success) {
-                showToast("success", flash.success);
-            }
-            if (flash?.error) {
-                showToast("error", flash.error);
-            }
-        },
-        { deep: true, immediate: true }
-    );
-
+    
     const acceptedStatuses = ["accepted", "letter_ready", "diterima"];
     const hasAcceptedApplication = computed(() =>
         props.applications.some((app) => acceptedStatuses.includes(app.status)),
@@ -122,26 +108,28 @@ export function useProfilePage(props) {
     };
 
     const deleteLogbook = (logbookId) => {
-        if (confirm("Apakah Anda yakin ingin menghapus entri logbook ini?")) {
-            router.delete(route("peserta.logbooks.destroy", logbookId), {
-                preserveScroll: true,
-                onSuccess: () => {
-                    showToast("success", "Logbook berhasil dihapus!");
-                    setTimeout(() => {
-                        router.reload({ only: ["logbooks", "logbookStats"] });
-                    }, 1000);
-                },
-                onError: (errors) => {
-                    console.error("Delete logbook error:", errors);
-                    showToast("error", "Gagal menghapus logbook.");
-                }
-            });
-        }
+        SwalPlugin.confirmDestructive("Konfirmasi", "Apakah Anda yakin ingin menghapus entri logbook ini?").then((result) => {
+            if (result.isConfirmed) {
+                router.delete(route("peserta.logbooks.destroy", logbookId), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        SwalPlugin.toastSuccess("Logbook berhasil dihapus!");
+                        setTimeout(() => {
+                            router.reload({ only: ["logbooks", "logbookStats"] });
+                        }, 1000);
+                    },
+                    onError: (errors) => {
+                        console.error("Delete logbook error:", errors);
+                        SwalPlugin.toastError("Gagal menghapus logbook.");
+                    }
+                });
+            }
+        });
     };
 
     const handleEditSuccess = () => {
         showEditLogbookModal.value = false;
-        showToast("success", "Logbook berhasil diperbarui!");
+        SwalPlugin.toastSuccess("Logbook berhasil diperbarui!");
         setTimeout(() => {
             router.reload({ only: ["logbooks", "logbookStats"] });
         }, 1000);
@@ -162,26 +150,28 @@ export function useProfilePage(props) {
     };
 
     const deleteReport = (reportId) => {
-        if (confirm("Apakah Anda yakin ingin menghapus laporan ini? File laporan juga akan dihapus dari server.")) {
-            router.delete(route("peserta.reports.destroy", reportId), {
-                preserveScroll: true,
-                onSuccess: () => {
-                    showToast("success", "Laporan berhasil dihapus!");
-                    setTimeout(() => {
-                        router.reload({ only: ["reports", "reportStats"] });
-                    }, 1000);
-                },
-                onError: (errors) => {
-                    console.error("Delete report errors:", errors);
-                    showToast("error", "Gagal menghapus laporan!");
-                }
-            });
-        }
+        SwalPlugin.confirmDestructive("Konfirmasi", "Apakah Anda yakin ingin menghapus laporan ini? File laporan juga akan dihapus dari server.").then((result) => {
+            if (result.isConfirmed) {
+                router.delete(route("peserta.reports.destroy", reportId), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        SwalPlugin.toastSuccess("Laporan berhasil dihapus!");
+                        setTimeout(() => {
+                            router.reload({ only: ["reports", "reportStats"] });
+                        }, 1000);
+                    },
+                    onError: (errors) => {
+                        console.error("Delete report errors:", errors);
+                        SwalPlugin.toastError("Gagal menghapus laporan!");
+                    }
+                });
+            }
+        });
     };
 
     const handleReportEditSuccess = () => {
         showEditReportModal.value = false;
-        showToast("success", "Laporan berhasil diperbarui!");
+        SwalPlugin.toastSuccess("Laporan berhasil diperbarui!");
         setTimeout(() => {
             router.reload({ only: ["reports", "reportStats"] });
         }, 1000);
@@ -204,11 +194,11 @@ export function useProfilePage(props) {
                     birth_date: normalizeDateValue(user.birth_date),
                     gender: user.gender,
                 };
-                showToast("success", "Profil berhasil diperbarui!");
+                SwalPlugin.toastSuccess("Profil berhasil diperbarui!");
             },
             onError: (errors) => {
                 console.error("Profile update errors:", errors);
-                showToast("error", "Gagal memperbarui profil!");
+                SwalPlugin.toastError("Gagal memperbarui profil!");
             },
         });
     };
@@ -248,7 +238,7 @@ export function useProfilePage(props) {
                 "Gagal menyimpan data biometrik!";
 
             console.error("Profile photo upload error:", error);
-            showToast("error", message);
+            SwalPlugin.toastError(message);
 
             if (typeof callback === 'function') callback(false);
         }
@@ -261,7 +251,7 @@ export function useProfilePage(props) {
             onSuccess: () => {
                 showCreateLogbookModal.value = false;
                 createLogbookForm.reset();
-                showToast("success", "Logbook berhasil ditambahkan!");
+                SwalPlugin.toastSuccess("Logbook berhasil ditambahkan!");
                 setTimeout(() => {
                     router.reload({ only: ["logbooks", "logbookStats"] });
                 }, 1000);
@@ -269,9 +259,9 @@ export function useProfilePage(props) {
             onError: (errors) => {
                 console.error("Logbook submission errors:", errors);
                 if (errors.error) {
-                    showToast("error", errors.error);
+                    SwalPlugin.toastError(errors.error);
                 } else if (errors.date) {
-                    showToast("error", errors.date);
+                    SwalPlugin.toastError(errors.date);
                 } else {
                     showToast(
                         "error",
@@ -288,7 +278,7 @@ export function useProfilePage(props) {
             onSuccess: () => {
                 showCreateReportModal.value = false;
                 reportForm.reset();
-                showToast("success", "Laporan berhasil diupload!");
+                SwalPlugin.toastSuccess("Laporan berhasil diupload!");
                 setTimeout(() => {
                     router.reload({ only: ["reports", "reportStats"] });
                 }, 1000);
@@ -296,11 +286,11 @@ export function useProfilePage(props) {
             onError: (errors) => {
                 console.error("Report submission errors:", errors);
                 if (errors.error) {
-                    showToast("error", errors.error);
+                    SwalPlugin.toastError(errors.error);
                 } else if (errors.title) {
-                    showToast("error", errors.title);
+                    SwalPlugin.toastError(errors.title);
                 } else if (errors.report_file) {
-                    showToast("error", errors.report_file);
+                    SwalPlugin.toastError(errors.report_file);
                 } else {
                     showToast(
                         "error",
@@ -355,7 +345,7 @@ export function useProfilePage(props) {
                 const message =
                     error.response?.data?.message ||
                     "Gagal mengunggah dokumen!";
-                showToast("error", message);
+                SwalPlugin.toastError(message);
             });
     };
 

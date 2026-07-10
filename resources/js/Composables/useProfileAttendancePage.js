@@ -79,7 +79,7 @@ export function useProfileAttendancePage(props, page) {
         () => page.props.flash?.success,
         (value) => {
             if (value) {
-                showToastFor("success");
+                SwalPlugin.toastSuccess(page.props.flash?.success);
             }
         },
     );
@@ -88,7 +88,7 @@ export function useProfileAttendancePage(props, page) {
         () => page.props.flash?.error,
         (value) => {
             if (value) {
-                showToastFor("error");
+                SwalPlugin.toastError(page.props.flash?.error);
             }
         },
     );
@@ -99,10 +99,10 @@ export function useProfileAttendancePage(props, page) {
 
     onMounted(() => {
         if (page.props.flash?.success) {
-            showToastFor("success");
+            SwalPlugin.toastSuccess(page.props.flash?.success);
         }
         if (page.props.flash?.error) {
-            showToastFor("error");
+            SwalPlugin.toastError(page.props.flash?.error);
         }
     });
 

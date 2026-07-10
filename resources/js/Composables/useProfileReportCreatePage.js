@@ -41,8 +41,7 @@ export function useProfileReportCreatePage() {
         ];
 
         if (!allowedTypes.includes(file.type)) {
-            alert(
-                "File type tidak didukung. Silakan pilih file PDF, Word (.doc/.docx), atau Excel (.xls/.xlsx)",
+            SwalPlugin.toastError("File type tidak didukung. Silakan pilih file PDF, Word (.doc/.docx), atau Excel (.xls/.xlsx)",
             );
             if (resetInput && fileInputRef.value) {
                 fileInputRef.value.value = "";
@@ -52,7 +51,7 @@ export function useProfileReportCreatePage() {
 
         const maxSize = 10 * 1024 * 1024;
         if (file.size > maxSize) {
-            alert("Ukuran file terlalu besar. Maksimal 10MB.");
+            SwalPlugin.toastError("Ukuran file terlalu besar. Maksimal 10MB.");
             if (resetInput && fileInputRef.value) {
                 fileInputRef.value.value = "";
             }
@@ -133,9 +132,7 @@ export function useProfileReportCreatePage() {
                     (errors.message.includes("419") ||
                         errors.message.includes("CSRF"))
                 ) {
-                    alert(
-                        "Session telah expired. Halaman akan di-refresh untuk memperbarui session.",
-                    );
+                    SwalPlugin.toastError("Session telah expired. Halaman akan di-refresh untuk memperbarui session.",);
                     setTimeout(() => {
                         window.location.reload();
                     }, 1000);
@@ -143,22 +140,22 @@ export function useProfileReportCreatePage() {
                 }
 
                 if (errors.report_file) {
-                    alert("Error file upload: " + errors.report_file);
+                    SwalPlugin.toastError("Error file upload: " + errors.report_file);
                 } else if (errors.message) {
-                    alert("Error: " + errors.message);
+                    SwalPlugin.toastError("Error: " + errors.message);
                 } else {
-                    alert("Terjadi kesalahan saat upload. Silakan coba lagi.");
+                    SwalPlugin.toastError("Terjadi kesalahan saat upload. Silakan coba lagi.");
                 }
             },
             onBefore: () => {
                 if (!form.title) {
-                    alert("Judul laporan harus diisi");
+                    SwalPlugin.toastWarning("Judul laporan harus diisi");
                     uploading.value = false;
                     return false;
                 }
 
                 if (!form.report_file) {
-                    alert("File laporan harus dipilih");
+                    SwalPlugin.toastWarning("File laporan harus dipilih");
                     uploading.value = false;
                     return false;
                 }

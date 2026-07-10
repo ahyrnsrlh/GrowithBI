@@ -1,5 +1,6 @@
 import { ref, reactive, watch } from "vue";
 import { router } from "@inertiajs/vue3";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 const ACCEPTED_STATUSES = ["accepted", "letter_ready", "diterima"];
 
@@ -117,10 +118,18 @@ export function useAdminApplicationShowPage(application, page) {
     };
 
     const updateStatus = () => {
-        router.put(`/admin/applications/${application.id}`, statusForm, {
-            onSuccess: () => {
-                showStatusModal.value = false;
-            },
+        SwalPlugin.confirmAction(
+            "Perbarui Status",
+            `Apakah Anda yakin ingin mengubah status pendaftaran ini menjadi "${statusForm.status.replace(/_/g, ' ')}"?`,
+            "Ya, Perbarui"
+        ).then((result) => {
+            if (result.isConfirmed) {
+                router.put(`/admin/applications/${application.id}`, statusForm, {
+                    onSuccess: () => {
+                        showStatusModal.value = false;
+                    },
+                });
+            }
         });
     };
 
@@ -200,24 +209,27 @@ export function useAdminApplicationShowPage(application, page) {
         resetLetterUploadState();
     };
 
-    const openDeleteModal = () => {
-        showDeleteModal.value = true;
-    };
-
-    const closeDeleteModal = () => {
-        showDeleteModal.value = false;
-    };
-
     const deleteApplication = () => {
-        router.delete(`/admin/applications/${application.id}`, {
-            onSuccess: () => {
-                // On success, navigate back to applications index (server usually redirects)
-            },
-            onError: (errors) => {
-                console.error("Failed to delete application", errors);
-            },
+        SwalPlugin.confirmDestructive(
+            "Hapus Pendaftar",
+            `Apakah Anda yakin ingin menghapus data pendaftar "${application.user?.name || 'N/A'}"? Seluruh data terkait akan ikut terhapus dan tindakan ini tidak dapat dibatalkan.`
+        ).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(`/admin/applications/${application.id}`, {
+                    onError: (errors) => {
+                        console.error("Failed to delete application", errors);
+                        SwalPlugin.toastError("Gagal menghapus pendaftaran.");
+                    },
+                });
+            }
         });
     };
+
+    const openDeleteModal = () => {
+        deleteApplication();
+    };
+
+    const closeDeleteModal = () => {};
 
     return {
         showStatusModal,

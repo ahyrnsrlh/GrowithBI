@@ -1,5 +1,6 @@
 import { onMounted, onUnmounted, reactive, ref } from "vue";
 import { router } from "@inertiajs/vue3";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 export function useAdminApplicationsPage(props) {
     const searchQuery = ref(props.filters?.search || "");
@@ -121,29 +122,23 @@ export function useAdminApplicationsPage(props) {
     };
 
     const confirmDelete = (application) => {
-        applicationToDelete.value = application;
-        showDeleteModal.value = true;
-    };
-
-    const closeDeleteModal = () => {
-        showDeleteModal.value = false;
-        applicationToDelete.value = null;
-    };
-
-    const deleteApplication = () => {
-        if (!applicationToDelete.value?.id) {
-            return;
-        }
-
-        router.delete(`/admin/applications/${applicationToDelete.value.id}`, {
-            onSuccess: () => {
-                closeDeleteModal();
-            },
-            onError: (errors) => {
-                console.error("Failed to delete application", errors);
-            },
+        SwalPlugin.confirmDestructive(
+            "Hapus Pendaftar",
+            `Apakah Anda yakin ingin menghapus data pendaftar "${application?.user?.name || application?.name || 'N/A'}"? Seluruh data terkait akan ikut terhapus dan tindakan ini tidak dapat dibatalkan.`
+        ).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(`/admin/applications/${application.id}`, {
+                    onError: (errors) => {
+                        console.error("Failed to delete application", errors);
+                        SwalPlugin.toastError("Gagal menghapus pendaftaran.");
+                    },
+                });
+            }
         });
     };
+
+    const closeDeleteModal = () => {};
+    const deleteApplication = () => {};
 
     const closeStatusModal = () => {
         showStatusModal.value = false;

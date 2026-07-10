@@ -1,5 +1,4 @@
 <script setup>
-import DivisionDeleteModal from "@/Components/Admin/Divisions/DivisionDeleteModal.vue";
 import DivisionIndexEmptyState from "@/Components/Admin/Divisions/DivisionIndexEmptyState.vue";
 import DivisionIndexGrid from "@/Components/Admin/Divisions/DivisionIndexGrid.vue";
 import DivisionIndexHeader from "@/Components/Admin/Divisions/DivisionIndexHeader.vue";
@@ -47,12 +46,5 @@ const {
         />
 
         <DivisionIndexEmptyState v-else create-href="/admin/divisions/create" />
-
-        <DivisionDeleteModal
-            :show="showDeleteModal"
-            :division="divisionToDelete"
-            @close="closeDeleteModal"
-            @confirm="deleteDivision"
-        />
     </AdminLayout>
 </template>

@@ -255,6 +255,7 @@
 
 <script setup>
 import { Link, router } from "@inertiajs/vue3";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 defineProps({
     filteredLogbooks: {
@@ -280,17 +281,22 @@ defineProps({
 });
 
 const deleteLogbook = (id) => {
-    if (confirm("Apakah Anda yakin ingin menghapus entri logbook ini?")) {
-        router.delete(route("peserta.logbooks.destroy", id), {
-            preserveScroll: true,
-            onSuccess: () => {
-                // Instantly reloads page state
-            },
-            onError: (errors) => {
-                console.error("Delete logbook error:", errors);
-            }
-        });
-    }
+    SwalPlugin.confirmDestructive(
+        "Hapus Logbook",
+        "Apakah Anda yakin ingin menghapus entri logbook ini?"
+    ).then((result) => {
+        if (result.isConfirmed) {
+            router.delete(route("peserta.logbooks.destroy", id), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Instantly reloads page state
+                },
+                onError: (errors) => {
+                    console.error("Delete logbook error:", errors);
+                }
+            });
+        }
+    });
 };
 </script>
 

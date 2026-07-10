@@ -1,4 +1,5 @@
 import { ref, computed } from "vue";
+import SwalPlugin from "@/Plugins/sweetalert";
 import { router } from "@inertiajs/vue3";
 
 export function useAttendanceCapture(options = {}) {
@@ -15,7 +16,7 @@ export function useAttendanceCapture(options = {}) {
             return;
         }
 
-        alert(message);
+        SwalPlugin.toastError(message);
     };
 
     const cameraTitle = computed(() =>
