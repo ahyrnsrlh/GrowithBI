@@ -64,31 +64,8 @@
 
     <!-- Vite assets: JS is module (non-blocking by spec); CSS is deferred below -->
     @routes
-    @vite('resources/js/app.js')
+    @vite(['resources/js/app.js', 'resources/css/app.css'])
     @inertiaHead
-
-    <!--
-        Defer the Vite-compiled app.css so it is NOT render-blocking.
-        Pattern: preload as="style" + onload swap (same as the font trick above).
-        The manifest key matches the Vite output for resources/css/app.css.
-    -->
-    @php
-        $manifest = null;
-        $manifestPath = public_path('build/.vite/manifest.json');
-        if (file_exists($manifestPath)) {
-            $manifest = json_decode(file_get_contents($manifestPath), true);
-        }
-        $cssFile = $manifest['resources/css/app.css']['file'] ?? null;
-    @endphp
-    @if($cssFile)
-    <link rel="preload"
-          href="{{ asset('build/' . $cssFile) }}"
-          as="style"
-          onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link rel="stylesheet" href="{{ asset('build/' . $cssFile) }}">
-    </noscript>
-    @endif
 </head>
 <body class="font-sans antialiased">
     @inertia
