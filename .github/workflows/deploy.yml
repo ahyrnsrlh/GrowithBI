@@ -31,7 +31,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           port: ${{ secrets.VPS_PORT }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "public/build/"
+          source: "public/build/**"
           target: "/var/www/GrowithBI"
 
       - name: Deploy commands on VPS via SSH
