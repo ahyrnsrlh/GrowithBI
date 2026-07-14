@@ -104,15 +104,29 @@
                             </div>
                         </div>
 
-                        <a
-                            :href="route('peserta.reports.download', report.id)"
-                            class="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md shadow-blue-500/10 hover:shadow-lg transition-all duration-200"
-                        >
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            </svg>
-                            Download Dokumen
-                        </a>
+                        <div class="mt-4 flex flex-col gap-2">
+                            <button
+                                type="button"
+                                @click="viewReportPreview"
+                                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-md shadow-indigo-500/10 hover:shadow-lg transition-all duration-200"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                Pratinjau Dokumen
+                            </button>
+
+                            <a
+                                :href="route('peserta.reports.download', report.id)"
+                                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md shadow-blue-500/10 hover:shadow-lg transition-all duration-200"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Download Dokumen
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -128,12 +142,25 @@
                 </div>
             </div>
         </div>
+
+        <DocumentCardPreviewModal
+            :show-preview="showPreview"
+            :document-name="report?.file_name || 'Pratinjau Laporan'"
+            :preview-loading="false"
+            :preview-error="null"
+            :preview-url="previewUrl"
+            :is-pdf="isPDF"
+            @close="showPreview = false"
+            @download="downloadReport"
+            @open-new-tab="openInNewTab"
+        />
     </BaseModal>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import BaseModal from "@/Components/BaseModal.vue";
+import DocumentCardPreviewModal from "@/Components/Documents/DocumentCardPreviewModal.vue";
 
 const props = defineProps({
     show: { type: Boolean, default: false },
@@ -145,6 +172,31 @@ const emit = defineEmits(["close"]);
 const report = ref(null);
 const loading = ref(false);
 const error = ref(null);
+
+const showPreview = ref(false);
+const previewUrl = ref(null);
+const isPDF = computed(() => {
+    if (!report.value || !report.value.file_path) return false;
+    return report.value.file_path.toLowerCase().endsWith(".pdf");
+});
+
+const viewReportPreview = () => {
+    if (!report.value || !report.value.file_path) return;
+    previewUrl.value = `/storage/${report.value.file_path}`;
+    showPreview.value = true;
+};
+
+const openInNewTab = () => {
+    if (previewUrl.value) {
+        window.open(previewUrl.value, "_blank", "noopener,noreferrer");
+    }
+};
+
+const downloadReport = () => {
+    if (report.value) {
+        window.location.href = route("peserta.reports.download", report.value.id);
+    }
+};
 
 const fetchReportDetails = () => {
     if (!props.reportId) return;

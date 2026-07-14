@@ -156,6 +156,45 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Pratinjau Dokumen Card -->
+                <div class="bg-white rounded-lg shadow-sm border p-6 mt-6">
+                    <div class="flex items-center justify-between mb-4 border-b pb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">
+                            Pratinjau Dokumen
+                        </h3>
+                        <a
+                            v-if="report.file_path"
+                            :href="`/storage/${report.file_path}`"
+                            target="_blank"
+                            class="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                        >
+                            <svg
+                                class="w-4 h-4 mr-1.5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                />
+                            </svg>
+                            Buka di Tab Baru
+                        </a>
+                    </div>
+
+                    <DocumentPreview
+                        v-if="report.file_path"
+                        :url="`/storage/${report.file_path}`"
+                        :file-name="report.file_name"
+                    />
+                    <div v-else class="text-center py-6 text-gray-500 text-sm">
+                        File tidak ditemukan atau tidak dapat ditampilkan
+                    </div>
+                </div>
             </div>
 
             <!-- Actions & Participant Info -->
@@ -275,6 +314,7 @@
 import { ref, reactive } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import DocumentPreview from "@/Components/DocumentPreview.vue";
 
 const props = defineProps({
     report: Object,

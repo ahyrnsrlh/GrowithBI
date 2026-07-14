@@ -22,11 +22,16 @@ export function useDocumentCard(props, emit) {
             return props.documentPath;
         }
 
-        if (props.documentPath.startsWith("/storage/")) {
-            return props.documentPath;
+        let path = props.documentPath;
+        if (path.startsWith("/")) {
+            path = path.slice(1);
         }
 
-        return `/storage/${props.documentPath}`;
+        if (path.startsWith("storage/")) {
+            return `/${path}`;
+        }
+
+        return `/storage/${path}`;
     });
 
     const hasDocument = computed(() => Boolean(props.documentPath));

@@ -3,7 +3,7 @@
         :show="show"
         :title="loading ? 'Memuat Detail Logbook...' : logbookData?.title || 'Detail Logbook'"
         subtitle="Lihat detail aktivitas harian dan ulasan pembimbing"
-        maxWidth="4xl"
+        maxWidth="max-w-2xl"
         @close="$emit('close')"
     >
         <!-- Loading State -->

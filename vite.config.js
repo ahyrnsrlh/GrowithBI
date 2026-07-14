@@ -20,7 +20,6 @@ export default defineConfig({
     build: {
         target: "esnext",
         sourcemap: false,
-        manifest: true,
         cssCodeSplit: true,
         chunkSizeWarningLimit: 1000,
         rollupOptions: {
