@@ -2,6 +2,7 @@
     <BaseModal
         :show="showPreview"
         :title="documentName"
+        :maxWidth="maxWidth"
         @close="$emit('close')"
     >
         <DocumentPreview
@@ -96,6 +97,10 @@ import BaseModal from "@/Components/BaseModal.vue";
 import DocumentPreview from "@/Components/DocumentPreview.vue";
 
 defineProps({
+    maxWidth: {
+        type: String,
+        default: "max-w-2xl",
+    },
     showPreview: {
         type: Boolean,
         default: false,

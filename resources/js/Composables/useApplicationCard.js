@@ -1,5 +1,6 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { router } from "@inertiajs/vue3";
+import SwalPlugin from "@/Plugins/sweetalert";
 
 export function useApplicationCard(application, emit) {
     const showModal = ref(false);
@@ -199,6 +200,32 @@ export function useApplicationCard(application, emit) {
         }
     };
 
+    const cancelApplication = () => {
+        SwalPlugin.confirmAction(
+            "Batalkan Pendaftaran",
+            "Apakah Anda yakin ingin membatalkan pendaftaran magang ini?",
+            "Ya, Batalkan"
+        ).then((result) => {
+            if (result.isConfirmed) {
+                router.post(
+                    route("profile.applications.cancel", application.id),
+                    {},
+                    {
+                        onSuccess: () => {
+                            SwalPlugin.toastSuccess("Pendaftaran berhasil dibatalkan.");
+                            closeModal();
+                        },
+                        onError: (errors) => {
+                            SwalPlugin.toastError(
+                                errors.message || "Gagal membatalkan pendaftaran."
+                            );
+                        },
+                    }
+                );
+            }
+        });
+    };
+
     return {
         showModal,
         downloading,
@@ -218,5 +245,6 @@ export function useApplicationCard(application, emit) {
         viewDetails,
         closeModal,
         downloadOffer,
+        cancelApplication,
     };
 }

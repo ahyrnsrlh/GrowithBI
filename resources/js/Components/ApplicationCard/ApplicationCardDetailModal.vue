@@ -315,6 +315,14 @@
                                 class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3"
                             >
                                 <button
+                                    v-if="application.status === 'menunggu'"
+                                    type="button"
+                                    @click="$emit('cancel-application')"
+                                    class="px-5 py-2.5 text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-xl transition-colors"
+                                >
+                                    Batalkan Pendaftaran
+                                </button>
+                                <button
                                     @click="$emit('close')"
                                     class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
                                 >
@@ -368,5 +376,5 @@ defineProps({
     formatDate: { type: Function, required: true },
 });
 
-defineEmits(["close", "download-offer"]);
+defineEmits(["close", "download-offer", "cancel-application"]);
 </script>

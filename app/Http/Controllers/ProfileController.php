@@ -534,4 +534,43 @@ class ProfileController extends Controller
             ]);
         }
     }
+
+    /**
+     * Cancel/delete a pending application
+     */
+    public function cancelApplication(Request $request, Application $application)
+    {
+        // Ownership verification (also handled by middleware)
+        if ($application->user_id !== $request->user()->id) {
+            abort(403, 'Anda tidak memiliki hak untuk membatalkan pendaftaran ini.');
+        }
+
+        // Only allow cancellation if status is 'menunggu'
+        if ($application->status !== 'menunggu') {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pendaftaran tidak dapat dibatalkan karena sudah dalam peninjauan.'
+                ], 400);
+            }
+            return redirect()->back()->with('error', 'Pendaftaran tidak dapat dibatalkan karena sudah dalam peninjauan.');
+        }
+
+        // Update application
+        $application->update([
+            'status' => 'cancelled',
+            'cancelled_at' => now(),
+            'cancelled_by' => 'Peserta',
+            'cancellation_reason' => 'Dibatalkan oleh Peserta'
+        ]);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pendaftaran berhasil dibatalkan.'
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Pendaftaran berhasil dibatalkan.');
+    }
 }

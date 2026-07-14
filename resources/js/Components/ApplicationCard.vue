@@ -28,6 +28,7 @@
                 :downloading="downloading"
                 @view-details="viewDetails"
                 @download-offer="downloadOffer"
+                @cancel-application="cancelApplication"
             />
         </div>
 
@@ -42,6 +43,7 @@
             :format-date="formatDate"
             @close="closeModal"
             @download-offer="downloadOffer"
+            @cancel-application="cancelApplication"
         />
 
     </div>
@@ -83,5 +85,6 @@ const {
     viewDetails,
     closeModal,
     downloadOffer,
+    cancelApplication,
 } = useApplicationCard(props.application, emit);
 </script>

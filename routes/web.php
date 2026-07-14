@@ -79,6 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/upload-photo', [ProfileController::class, 'uploadPhoto'])->name('profile.upload-photo')->middleware('throttle:5,1');
     Route::post('/profile/upload-document', [ProfileController::class, 'uploadDocument'])->name('profile.upload-document')->middleware('throttle:10,1');
     Route::post('/profile/create-application', [ProfileController::class, 'createApplication'])->name('profile.create-application')->middleware('throttle:3,1');
+    Route::post('/profile/applications/{application}/cancel', [ProfileController::class, 'cancelApplication'])->name('profile.applications.cancel')->middleware(['ownership:application', 'throttle:5,1']);
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy')->middleware('throttle:3,10');
     
     // Two-Factor Authentication - Trusted Devices Management
