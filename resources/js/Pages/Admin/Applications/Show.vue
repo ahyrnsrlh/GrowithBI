@@ -14,10 +14,20 @@
             />
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <ApplicationMainInformation
-                    :application="application"
-                    :formatDate="formatDate"
-                />
+                <div class="lg:col-span-2 space-y-6">
+                    <ApplicationMainInformation
+                        :application="application"
+                        :formatDate="formatDate"
+                    />
+
+                    <!-- Selection Scorecard Card -->
+                    <SelectionScorecardCard
+                        :evaluation="evaluation"
+                        :selectionWeights="selectionWeights"
+                        :application="application"
+                        @edit-evaluation="openEvaluationModal(evaluation)"
+                    />
+                </div>
 
                 <ApplicationSidebar
                     :application="application"
@@ -35,6 +45,7 @@
             :statusForm="statusForm"
             :current-status="application.status"
             :division="application.division"
+            :evaluation="evaluation"
             @close="showStatusModal = false"
             @submit="updateStatus"
         />
@@ -55,6 +66,14 @@
             :message="successMessage"
             @close="showSuccessModal = false"
         />
+
+        <EvaluationFormModal
+            :show="showEvaluationModal"
+            :form="evaluationForm"
+            :weights="selectionWeights"
+            @close="showEvaluationModal = false"
+            @submit="submitEvaluation"
+        />
     </AdminLayout>
 </template>
 
@@ -67,10 +86,14 @@ import ApplicationSidebar from "@/Components/Admin/Applications/Show/Application
 import StatusUpdateModal from "@/Components/Admin/Applications/Show/StatusUpdateModal.vue";
 import AcceptanceLetterUploadModal from "@/Components/Admin/Applications/Show/AcceptanceLetterUploadModal.vue";
 import UploadSuccessModal from "@/Components/Admin/Applications/Show/UploadSuccessModal.vue";
+import SelectionScorecardCard from "@/Components/Admin/Applications/Show/SelectionScorecardCard.vue";
+import EvaluationFormModal from "@/Components/Admin/Applications/Show/EvaluationFormModal.vue";
 import { useAdminApplicationShowPage } from "@/Composables/useAdminApplicationShowPage";
 
 const props = defineProps({
     application: Object,
+    evaluation: Object,
+    selectionWeights: Object,
 });
 
 const page = usePage();
@@ -95,9 +118,10 @@ const {
     handleFileChange,
     uploadAcceptanceLetter,
     closeLetterUpload,
-    showDeleteModal,
     openDeleteModal,
-    closeDeleteModal,
-    deleteApplication,
+    showEvaluationModal,
+    evaluationForm,
+    openEvaluationModal,
+    submitEvaluation,
 } = useAdminApplicationShowPage(props.application, page);
 </script>

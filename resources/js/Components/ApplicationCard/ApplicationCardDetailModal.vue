@@ -287,7 +287,67 @@
                                     </div>
                                 </div>
 
-                                <div></div>
+                                <!-- Selection Scorecard for Applicant -->
+                                <div v-if="application.formatted_evaluation" class="border border-slate-200 rounded-2xl p-5 bg-white space-y-4 shadow-sm">
+                                    <div class="border-b border-slate-100 pb-3">
+                                        <h4 class="text-sm font-bold text-slate-800">Hasil Penilaian Seleksi</h4>
+                                        <p class="text-[11px] text-slate-500 mt-0.5">Penilaian transparan kriteria seleksi magang</p>
+                                    </div>
+
+                                    <!-- Grid Criteria -->
+                                    <div class="space-y-3">
+                                        <div 
+                                            v-for="criterion in application.formatted_evaluation.criteria" 
+                                            :key="criterion.name"
+                                            class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs"
+                                        >
+                                            <div class="flex justify-between items-center mb-1.5">
+                                                <div>
+                                                    <span class="font-bold text-slate-800">{{ getCriteriaLabel(criterion.name) }}</span>
+                                                    <span class="text-slate-400 text-[10px] ml-1.5">(Bobot: {{ criterion.weight }}%)</span>
+                                                </div>
+                                                <div class="text-right">
+                                                    <span class="font-bold text-slate-900">{{ criterion.raw_score }}</span>
+                                                    <span class="text-[10px] text-slate-400 block">Weighted: {{ criterion.weighted_score }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                                                <div 
+                                                    :class="['h-full rounded-full', getProgressBarColor(criterion.raw_score)]" 
+                                                    :style="{ width: `${criterion.raw_score}%` }"
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Score Summary Card -->
+                                    <div class="grid grid-cols-2 gap-3 p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-slate-200 text-center">
+                                        <div>
+                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Skor Akhir</span>
+                                            <span :class="['text-2xl font-extrabold px-3 py-1 rounded-xl bg-white border shadow-sm inline-block', getScoreColorClass(application.formatted_evaluation.final_score)]">
+                                                {{ application.formatted_evaluation.final_score.toFixed(1) }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Rekomendasi</span>
+                                            <span :class="['inline-flex items-center px-2 py-1 text-[10px] font-bold rounded-full border mt-1', getRecommendationBadgeClass(application.formatted_evaluation.recommendation_level)]">
+                                                {{ getRecommendationLabel(application.formatted_evaluation.recommendation_level) }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Reviewer Notes -->
+                                    <div class="p-3 bg-blue-50/50 border border-blue-100 rounded-xl text-xs">
+                                        <span class="font-bold text-blue-900 block mb-1">Catatan Evaluasi:</span>
+                                        <p class="italic text-blue-800 leading-relaxed">
+                                            "{{ application.formatted_evaluation.reviewer_notes || 'Tidak ada catatan tertulis.' }}"
+                                        </p>
+                                    </div>
+
+                                    <div class="text-[10px] text-slate-400 text-right">
+                                        Dievaluasi oleh: <span class="font-semibold text-slate-500">{{ application.formatted_evaluation.reviewer_name }}</span> pada {{ application.formatted_evaluation.evaluation_date }}
+                                    </div>
+                                </div>
 
                                 <div
                                     v-if="
@@ -377,4 +437,47 @@ defineProps({
 });
 
 defineEmits(["close", "download-offer", "cancel-application"]);
+
+const getCriteriaLabel = (name) => {
+    const labels = {
+        'Competency': 'Kompetensi Teknis',
+        'Motivation Letter': 'Motivation Letter',
+        'Interview': 'Wawancara'
+    };
+    return labels[name] || name;
+};
+
+const getProgressBarColor = (score) => {
+    if (score >= 80) return "bg-emerald-500";
+    if (score >= 70) return "bg-blue-500";
+    if (score >= 60) return "bg-amber-500";
+    return "bg-rose-500";
+};
+
+const getScoreColorClass = (score) => {
+    if (score >= 90) return "text-emerald-600 border-emerald-200 bg-emerald-50/50";
+    if (score >= 80) return "text-blue-600 border-blue-200 bg-blue-50/50";
+    if (score >= 70) return "text-amber-600 border-amber-200 bg-amber-50/50";
+    return "text-red-600 border-red-200 bg-red-50/50";
+};
+
+const getRecommendationLabel = (level) => {
+    const levels = {
+        'Excellent Candidate': 'Sangat Direkomendasikan',
+        'Recommended': 'Direkomendasikan',
+        'Recommended with Consideration': 'Direkomendasikan dengan Pertimbangan',
+        'Not Recommended': 'Tidak Direkomendasikan'
+    };
+    return levels[level] || level;
+};
+
+const getRecommendationBadgeClass = (level) => {
+    const classes = {
+        'Excellent Candidate': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        'Recommended': 'bg-blue-50 text-blue-700 border-blue-200',
+        'Recommended with Consideration': 'bg-amber-50 text-amber-700 border-amber-200',
+        'Not Recommended': 'bg-red-50 text-red-700 border-red-200'
+    };
+    return classes[level] || 'bg-gray-50 text-gray-700 border-gray-200';
+};
 </script>

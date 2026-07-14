@@ -1,5 +1,5 @@
 <template>
-    <div class="lg:col-span-2 space-y-6">
+    <div class="space-y-6">
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">
                 Informasi Pribadi

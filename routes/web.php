@@ -178,6 +178,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'role:ad
     Route::put('/applications/{application}', [ApplicationController::class, 'update'])->name('applications.update');
     Route::delete('/applications/{application}', [ApplicationController::class, 'destroy'])->name('applications.destroy');
     Route::post('/applications/bulk-update', [ApplicationController::class, 'bulkUpdate'])->name('applications.bulk-update');
+    Route::post('/applications/{application}/evaluate', [ApplicationController::class, 'evaluate'])->name('applications.evaluate');
     
     // Acceptance Letter routes for admin
     Route::post('/applications/{application}/upload-acceptance-letter', [App\Http\Controllers\AcceptanceLetterController::class, 'upload'])->name('applications.upload-acceptance-letter');

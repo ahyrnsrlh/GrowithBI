@@ -231,10 +231,51 @@ export function useAdminApplicationShowPage(application, page) {
 
     const closeDeleteModal = () => {};
 
+    const showEvaluationModal = ref(false);
+    const evaluationForm = reactive({
+        competency_score: 0,
+        motivation_score: 0,
+        interview_score: 0,
+        reviewer_notes: "",
+    });
+
+    const openEvaluationModal = (evaluationData) => {
+        if (evaluationData) {
+            const comp = evaluationData.criteria.find(c => c.name === 'Competency');
+            const mot = evaluationData.criteria.find(c => c.name === 'Motivation Letter');
+            const intr = evaluationData.criteria.find(c => c.name === 'Interview');
+
+            evaluationForm.competency_score = comp ? comp.raw_score : 0;
+            evaluationForm.motivation_score = mot ? mot.raw_score : 0;
+            evaluationForm.interview_score = intr ? intr.raw_score : 0;
+            evaluationForm.reviewer_notes = evaluationData.reviewer_notes || "";
+        } else {
+            evaluationForm.competency_score = 0;
+            evaluationForm.motivation_score = 0;
+            evaluationForm.interview_score = 0;
+            evaluationForm.reviewer_notes = "";
+        }
+        showEvaluationModal.value = true;
+    };
+
+    const submitEvaluation = () => {
+        router.post(`/admin/applications/${application.id}/evaluate`, evaluationForm, {
+            onSuccess: () => {
+                showEvaluationModal.value = false;
+                SwalPlugin.toastSuccess("Evaluasi berhasil disimpan.");
+            },
+            onError: (errs) => {
+                console.error("Failed to save evaluation", errs);
+                SwalPlugin.toastError(Object.values(errs)[0] || "Gagal menyimpan evaluasi.");
+            }
+        });
+    };
+
     return {
         showStatusModal,
         showLetterUpload,
         showSuccessModal,
+        showDeleteModal,
         successMessage,
         selectedFile,
         isUploading,
@@ -251,9 +292,12 @@ export function useAdminApplicationShowPage(application, page) {
         handleFileChange,
         uploadAcceptanceLetter,
         closeLetterUpload,
-        showDeleteModal,
         openDeleteModal,
         closeDeleteModal,
         deleteApplication,
+        showEvaluationModal,
+        evaluationForm,
+        openEvaluationModal,
+        submitEvaluation,
     };
 }

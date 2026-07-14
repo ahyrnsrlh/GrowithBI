@@ -23,6 +23,7 @@ use App\Models\Division;
 use App\Models\Logbook;
 use App\Models\Report;
 use Carbon\Carbon;
+use App\Services\SelectionScoreService;
 
 class ProfileController extends Controller
 {
@@ -33,11 +34,23 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         
-        // Get user's applications with division info
+        // Get user's applications with division info and evaluation if finalized
         $applications = Application::where('user_id', $user->id)
-            ->with('division')
+            ->with(['division', 'evaluation.reviewer'])
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($app) {
+                $isFinalized = in_array($app->status, ['accepted', 'rejected', 'letter_ready', 'diterima', 'ditolak']);
+                
+                if ($app->evaluation && $isFinalized) {
+                    $app->formatted_evaluation = app(SelectionScoreService::class)->prepareScoreSummaryForFrontend($app->evaluation);
+                } else {
+                    $app->formatted_evaluation = null;
+                }
+                
+                $app->unsetRelation('evaluation');
+                return $app;
+            });
             
         // Check if user has a pending or accepted application
         $activeApplication = $applications->whereIn('status', ['menunggu', 'in_review', 'interview_scheduled', 'accepted', 'letter_ready'])->first();

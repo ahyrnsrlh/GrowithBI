@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\ApplicationDeletionService;
+use App\Models\ApplicationEvaluation;
+use App\Services\SelectionScoreService;
 
 use Inertia\Inertia;
 
@@ -96,9 +98,9 @@ class ApplicationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Application $application)
+    public function show(Application $application, SelectionScoreService $scoreService)
     {
-        $application->load(['division', 'user', 'letterUploader', 'reviewer']);
+        $application->load(['division', 'user', 'letterUploader', 'reviewer', 'evaluation.reviewer']);
 
         // Add computed attributes for frontend
         $application->status_info = $application->status_info;
@@ -106,9 +108,22 @@ class ApplicationController extends Controller
         $application->can_download_letter = $application->canDownloadAcceptanceLetter();
         $application->can_delete = Auth::user()?->role === 'admin';
 
+        // Prepare evaluation data and weights
+        $evaluationData = $application->evaluation 
+            ? $scoreService->prepareScoreSummaryForFrontend($application->evaluation) 
+            : null;
+
+        $weights = config('selection.weights', [
+            'competency' => 40,
+            'motivation' => 30,
+            'interview' => 30
+        ]);
+
         return Inertia::render('Admin/Applications/Show', [
             'application' => $application,
             'statusOptions' => RegistrationStatus::options(),
+            'evaluation' => $evaluationData,
+            'selectionWeights' => $weights,
         ]);
     }
 
@@ -321,5 +336,92 @@ class ApplicationController extends Controller
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ]);
+    }
+
+    /**
+     * Create or update evaluation scores for an application.
+     */
+    public function evaluate(Request $request, Application $application, SelectionScoreService $scoreService)
+    {
+        $request->validate([
+            'competency_score' => 'required|numeric|min:0|max:100',
+            'motivation_score' => 'required|numeric|min:0|max:100',
+            'interview_score' => 'required|numeric|min:0|max:100',
+            'reviewer_notes' => 'nullable|string|max:2000',
+        ]);
+
+        $admin = Auth::user();
+        if (!$admin || !in_array($admin->role, ['admin', 'pembimbing'])) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $weights = config('selection.weights', [
+            'competency' => 40,
+            'motivation' => 30,
+            'interview' => 30
+        ]);
+
+        try {
+            $compScore = (float) $request->competency_score;
+            $motScore = (float) $request->motivation_score;
+            $intScore = (float) $request->interview_score;
+
+            $finalScore = $scoreService->calculateFinalScore($compScore, $motScore, $intScore, $weights);
+            $recLevel = $scoreService->generateRecommendationLevel($finalScore);
+
+            $evaluation = $application->evaluation;
+
+            if ($evaluation) {
+                // Keep history (audit trail)
+                $history = $evaluation->score_history ?? [];
+                $history[] = [
+                    'reviewer_id' => $evaluation->reviewer_id,
+                    'reviewer_name' => $evaluation->reviewer?->name ?? 'Sebelumnya',
+                    'reviewed_at' => $evaluation->updated_at->toIso8601String(),
+                    'competency_score' => $evaluation->competency_score,
+                    'motivation_score' => $evaluation->motivation_score,
+                    'interview_score' => $evaluation->interview_score,
+                    'final_score' => $evaluation->final_score,
+                    'reviewer_notes' => $evaluation->reviewer_notes,
+                ];
+
+                $evaluation->update([
+                    'competency_score' => $compScore,
+                    'motivation_score' => $motScore,
+                    'interview_score' => $intScore,
+                    'competency_weight' => $weights['competency'],
+                    'motivation_weight' => $weights['motivation'],
+                    'interview_weight' => $weights['interview'],
+                    'final_score' => $finalScore,
+                    'recommendation_level' => $recLevel,
+                    'reviewer_notes' => $request->reviewer_notes,
+                    'reviewer_id' => $admin->id,
+                    'score_history' => $history,
+                ]);
+            } else {
+                $application->evaluation()->create([
+                    'competency_score' => $compScore,
+                    'motivation_score' => $motScore,
+                    'interview_score' => $intScore,
+                    'competency_weight' => $weights['competency'],
+                    'motivation_weight' => $weights['motivation'],
+                    'interview_weight' => $weights['interview'],
+                    'final_score' => $finalScore,
+                    'recommendation_level' => $recLevel,
+                    'reviewer_notes' => $request->reviewer_notes,
+                    'reviewer_id' => $admin->id,
+                    'score_history' => [],
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Evaluasi pendaftar berhasil disimpan.');
+
+        } catch (\Exception $e) {
+            Log::error('Failed to save evaluation', [
+                'application_id' => $application->id,
+                'error' => $e->getMessage(),
+            ]);
+            return redirect()->back()->with('error', 'Gagal menyimpan evaluasi: ' . $e->getMessage());
+        }
     }
 }

@@ -207,6 +207,11 @@ class Application extends Model
         return $this->belongsTo(Division::class);
     }
 
+    public function evaluation(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(ApplicationEvaluation::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
